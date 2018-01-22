@@ -476,38 +476,6 @@ public final class AssemblyFormatUtils
         return value;
     }
 
-    public static void warnForPlatformSpecifics( Logger logger, String destDirectory )
-    {
-        if ( Os.isFamily( Os.FAMILY_WINDOWS ) )
-        {
-            if ( isLinuxRootReference( destDirectory ) )
-            {
-                logger.error( "OS=Windows and the assembly descriptor contains a *nix-specific root-relative-reference"
-                                  + " (starting with slash) " + destDirectory );
-            }
-            else if ( isWindowsPath( destDirectory ) )
-            {
-                logger.warn( "The assembly descriptor contains a *nix-specific root-relative-reference"
-                                 + " (starting with slash). This is non-portable and will fail on windows "
-                                 + destDirectory );
-            }
-        }
-        else
-        {
-            if ( isWindowsPath( destDirectory ) )
-            {
-                logger.error(
-                    "OS=Non-Windows and the assembly descriptor contains a windows-specific directory reference"
-                        + " (with a drive letter) " + destDirectory );
-            }
-            else if ( isLinuxRootReference( destDirectory ) )
-            {
-                logger.warn( "The assembly descriptor contains a filesystem-root relative reference,"
-                                 + " which is not cross platform compatible " + destDirectory );
-            }
-        }
-    }
-
     static boolean isWindowsPath( String destDirectory )
     {
         return ( destDirectory != null && destDirectory.length() >= 2 && destDirectory.charAt( 1 ) == ':' );

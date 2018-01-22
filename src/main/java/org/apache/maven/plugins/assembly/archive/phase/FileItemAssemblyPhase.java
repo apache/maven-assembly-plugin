@@ -87,8 +87,6 @@ public class FileItemAssemblyPhase
 
             final String outputDirectory1 = fileItem.getOutputDirectory();
 
-            AssemblyFormatUtils.warnForPlatformSpecifics( getLogger(), outputDirectory1 );
-
             final String outputDirectory =
                 AssemblyFormatUtils.getOutputDirectory( outputDirectory1, configSource.getFinalName(), configSource,
                                                         AssemblyFormatUtils.moduleProjectInterpolator(

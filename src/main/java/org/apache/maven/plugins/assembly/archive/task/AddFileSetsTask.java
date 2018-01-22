@@ -112,8 +112,6 @@ public class AddFileSetsTask
             destDirectory = fileSet.getDirectory();
         }
 
-        AssemblyFormatUtils.warnForPlatformSpecifics( logger, destDirectory );
-
         destDirectory =
             AssemblyFormatUtils.getOutputDirectory( destDirectory, configSource.getFinalName(), configSource,
                                                     AssemblyFormatUtils.moduleProjectInterpolator( moduleProject ),
