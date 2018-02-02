@@ -20,20 +20,14 @@ package org.apache.maven.plugins.assembly.artifact;
  */
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.apache.maven.artifact.resolver.ArtifactResolutionRequest;
-import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
-import org.apache.maven.artifact.resolver.MultipleArtifactsNotFoundException;
-import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
 import org.apache.maven.plugins.assembly.archive.phase.ModuleSetAssemblyPhase;
@@ -49,7 +43,6 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.repository.RepositorySystem;
 import org.apache.maven.shared.artifact.filter.resolve.ScopeFilter;
-import org.apache.maven.shared.artifact.filter.resolve.transform.ArtifactIncludeFilterTransformer;
 import org.apache.maven.shared.artifact.resolve.ArtifactResult;
 import org.apache.maven.shared.dependencies.resolve.DependencyResolverException;
 import org.codehaus.plexus.component.annotations.Component;
@@ -93,43 +86,28 @@ public class DefaultDependencyResolver
                                                        currentProject );
             updateModuleSetResolutionRequirements( assemblyId, moduleSet, dependencySet, info, configSource );
 
-            resolve( assembly, configSource, result, dependencySet, info );
+            result.put( dependencySet, resolve( info, currentProject ) );
 
         }
         return result;
     }
 
-    private void resolve( Assembly assembly, AssemblerConfigurationSource configSource,
-                          Map<DependencySet, Set<Artifact>> result, DependencySet dependencySet,
-                          ResolutionManagementInfo info )
-        throws DependencyResolutionException
+    private Set<Artifact> resolve( ResolutionManagementInfo info, MavenProject project )
     {
-        Set<Artifact> artifacts;
-        if ( info.isResolutionRequired() )
+        Set<Artifact> artifacts = new HashSet<>();
+        if ( info.isResolvedTransitively() )
         {
-            final List<ArtifactRepository> repos =
-                aggregateRemoteArtifactRepositories( configSource.getRemoteRepositories(), info.getEnabledProjects() );
-
-            artifacts = info.getArtifacts();
-            if ( info.isResolvedTransitively() )
-            {
-                getLogger().debug( "Resolving project dependencies transitively." );
-                
-                ArtifactFilter filter = new ArtifactIncludeFilterTransformer().transform( info.getScopeFilter() );
-                artifacts = resolveTransitively( artifacts, repos, filter, configSource );
-            }
-            else
-            {
-                getLogger().debug( "Resolving project dependencies ONLY. "
-                                       + "Transitive dependencies WILL NOT be included in the results." );
-                artifacts = resolveNonTransitively( assembly, artifacts, configSource, repos );
-            }
+            getLogger().debug( "Resolving project dependencies transitively." );
+            artifacts = project.getArtifacts();
         }
         else
         {
-            artifacts = new HashSet<Artifact>();
+            getLogger().debug( "Resolving project dependencies ONLY. "
+                + "Transitive dependencies WILL NOT be included in the results." );
+            artifacts = project.getDependencyArtifacts();
         }
-        result.put( dependencySet, artifacts );
+
+        return artifacts;
     }
 
     @Override
@@ -152,114 +130,29 @@ public class DefaultDependencyResolver
                                                        configSource.getMavenSession().getProjectBuildingRequest(),
                                                        currentProject );
 
-            resolve( assembly, configSource, result, dependencySet, info );
+            result.put( dependencySet, resolve( info, currentProject ) );
 
         }
         return result;
     }
 
-    Set<Artifact> resolveNonTransitively( final Assembly assembly, final Set<Artifact> dependencyArtifacts,
-                                          final AssemblerConfigurationSource configSource,
-                                          final List<ArtifactRepository> repos )
-        throws DependencyResolutionException
-    {
-
-        final List<Artifact> missing = new ArrayList<Artifact>();
-        final Set<Artifact> resolved = new LinkedHashSet<Artifact>();
-        for ( final Artifact depArtifact : dependencyArtifacts )
-        {
-            ArtifactResolutionRequest req = new ArtifactResolutionRequest();
-            req.setLocalRepository( configSource.getLocalRepository() );
-            req.setRemoteRepositories( repos );
-            req.setArtifact( depArtifact );
-
-            ArtifactResolutionResult resolve = resolver.resolve( req );
-            if ( resolve.hasExceptions() )
-            {
-                if ( getLogger().isDebugEnabled() )
-                {
-                    getLogger().debug(
-                        "Failed to resolve: " + depArtifact.getId() + " for assembly: " + assembly.getId() );
-                }
-                missing.add( depArtifact );
-            }
-            else
-            {
-                resolved.add( depArtifact );
-            }
-        }
-
-        if ( !missing.isEmpty() )
-
-        {
-            final MavenProject project = configSource.getProject();
-            final Artifact rootArtifact = project.getArtifact();
-
-            final Throwable error =
-                new MultipleArtifactsNotFoundException( rootArtifact, new ArrayList<Artifact>( resolved ), missing,
-                                                        repos );
-
-            throw new DependencyResolutionException( "Failed to resolve dependencies for: " + assembly.getId(), error );
-        }
-
-        return resolved;
-    }
-
-    private Set<Artifact> resolveTransitively( final Set<Artifact> dependencyArtifacts,
-                                               final List<ArtifactRepository> repos,
-                                               final ArtifactFilter filter,
-                                               final AssemblerConfigurationSource configSource )
-        throws DependencyResolutionException
-    {
-        final MavenProject project = configSource.getProject();
-
-        ArtifactResolutionRequest req = new ArtifactResolutionRequest();
-        req.setLocalRepository( configSource.getLocalRepository() );
-        req.setResolveRoot( false );
-        req.setRemoteRepositories( repos );
-        req.setResolveTransitively( true );
-        req.setArtifact( project.getArtifact() );
-        req.setArtifactDependencies( dependencyArtifacts );
-        req.setManagedVersionMap( project.getManagedVersionMap() );
-        req.setCollectionFilter( filter );
-        req.setOffline( configSource.getMavenSession().isOffline() );
-        req.setForceUpdate( configSource.getMavenSession().getRequest().isUpdateSnapshots() );
-        req.setServers( configSource.getMavenSession().getRequest().getServers() );
-        req.setMirrors( configSource.getMavenSession().getRequest().getMirrors() );
-        req.setProxies( configSource.getMavenSession().getRequest().getProxies() );
-
-        ArtifactResolutionResult result;
-
-        result = resolver.resolve( req );
-        if ( result.hasExceptions() )
-        {
-            throw new DependencyResolutionException( "Failed to resolve dependencies for assembly: ",
-                                                     result.getExceptions().get( 0 ) );
-        }
-
-        getLogger().debug( "While resolving dependencies of " + project.getId() + ":" );
-
-        FilterUtils.reportFilteringStatistics( Collections.singleton( filter ), getLogger() );
-
-        return result.getArtifacts();
-    }
 
     void updateRepositoryResolutionRequirements( final Assembly assembly, final ResolutionManagementInfo requirements )
     {
         final List<Repository> repositories = assembly.getRepositories();
 
         Set<String> rootScopes = new HashSet<String>();
-        
+
         if ( repositories != null && !repositories.isEmpty() )
         {
-            
+
             requirements.setResolutionRequired( true );
             for ( final Repository repo : repositories )
             {
                 rootScopes.add( repo.getScope() );
             }
         }
-        
+
         requirements.setScopeFilter( FilterUtils.newScopeFilter( rootScopes ) );
     }
 
@@ -321,9 +214,9 @@ public class DefaultDependencyResolver
         requirements.setResolvedTransitively( set.isUseTransitiveDependencies() );
 
         ScopeFilter scopeFilter = FilterUtils.newScopeFilter( set.getScope() );
-        
+
         requirements.setScopeFilter( scopeFilter );
-        
+
         for ( final MavenProject project : projects )
         {
             if ( project == null )
