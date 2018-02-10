@@ -25,7 +25,7 @@ under the License.
   <parent>
     <artifactId>maven-plugins</artifactId>
     <groupId>org.apache.maven.plugins</groupId>
-    <version>30</version>
+    <version>31</version>
     <relativePath>../../pom/maven/maven-plugins/pom.xml</relativePath>
   </parent>
 
@@ -373,8 +373,6 @@ under the License.
       </pluginRepositories>
 
       <properties>
-        <!-- See https://issues.apache.org/jira/browse/MINVOKER-213 -->
-        <invokerPluginVersion>3.0.0</invokerPluginVersion>
         <test.remote.repo.url>file://${project.build.testOutputDirectory}/remote-repository</test.remote.repo.url>
         <it.streamLogs>false</it.streamLogs>
         <testVersion>${project.version}</testVersion>
@@ -386,7 +384,6 @@ under the License.
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-invoker-plugin</artifactId>
-            <version>${invokerPluginVersion}</version>
             <configuration>
               <properties>
                 <useJvmChmod>${useJvmChmod}</useJvmChmod>

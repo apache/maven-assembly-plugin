@@ -35,7 +35,7 @@ class RelativeFileLocatorStrategy
 
     private final File basedir;
 
-    public RelativeFileLocatorStrategy( File basedir )
+    RelativeFileLocatorStrategy( File basedir )
     {
         this.basedir = basedir;
     }

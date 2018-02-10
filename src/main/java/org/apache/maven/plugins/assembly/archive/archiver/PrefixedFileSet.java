@@ -43,7 +43,7 @@ class PrefixedFileSet
      * @param rootPrefix The root prefix
      * @param selectors  The file selectors.
      */
-    public PrefixedFileSet( final FileSet fileSet, final String rootPrefix, final FileSelector[] selectors )
+    PrefixedFileSet( final FileSet fileSet, final String rootPrefix, final FileSelector[] selectors )
     {
         this.fileSet = fileSet;
         this.selectors = selectors;

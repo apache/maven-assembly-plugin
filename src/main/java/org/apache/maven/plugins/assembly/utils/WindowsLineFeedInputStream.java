@@ -41,7 +41,7 @@ class WindowsLineFeedInputStream
 
     private boolean eofSeen = false;
 
-    public WindowsLineFeedInputStream( InputStream in, boolean ensureLineFeedAtEndOfFile )
+    WindowsLineFeedInputStream( InputStream in, boolean ensureLineFeedAtEndOfFile )
     {
         this.target = in;
         this.ensureLineFeedAtEndOfFile = ensureLineFeedAtEndOfFile;

@@ -39,7 +39,7 @@ class LinuxLineFeedInputStream
 
     private boolean eofSeen = false;
 
-    public LinuxLineFeedInputStream( InputStream in, boolean ensureLineFeedAtEndOfFile )
+    LinuxLineFeedInputStream( InputStream in, boolean ensureLineFeedAtEndOfFile )
     {
         this.target = in;
         this.ensureLineFeedAtEndOfFile = ensureLineFeedAtEndOfFile;

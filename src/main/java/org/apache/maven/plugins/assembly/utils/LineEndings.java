@@ -35,7 +35,7 @@ public enum LineEndings
 
     private final String lineEndingCharacters;
 
-    private LineEndings( String lineEndingCharacters )
+    LineEndings( String lineEndingCharacters )
     {
         this.lineEndingCharacters = lineEndingCharacters;
     }

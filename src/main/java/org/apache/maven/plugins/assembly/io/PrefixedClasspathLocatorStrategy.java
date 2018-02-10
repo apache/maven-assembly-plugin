@@ -32,7 +32,7 @@ class PrefixedClasspathLocatorStrategy
 
     private final String prefix;
 
-    public PrefixedClasspathLocatorStrategy( String prefix )
+    PrefixedClasspathLocatorStrategy( String prefix )
     {
         this.prefix = formatPrefix( prefix );
     }

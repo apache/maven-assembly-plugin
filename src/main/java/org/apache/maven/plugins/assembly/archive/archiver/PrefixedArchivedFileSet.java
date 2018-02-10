@@ -43,7 +43,7 @@ class PrefixedArchivedFileSet
      * @param rootPrefix The root prefix.
      * @param selectors  The file selectors.
      */
-    public PrefixedArchivedFileSet( ArchivedFileSet fileSet, String rootPrefix, FileSelector[] selectors )
+    PrefixedArchivedFileSet( ArchivedFileSet fileSet, String rootPrefix, FileSelector[] selectors )
     {
         this.fileSet = fileSet;
         this.selectors = selectors;

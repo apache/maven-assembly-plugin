@@ -158,7 +158,7 @@ public class AssemblyInterpolator
 
         private final File basedir;
 
-        public PathTranslatingPostProcessor( final File basedir )
+        PathTranslatingPostProcessor( final File basedir )
         {
             this.basedir = basedir;
         }

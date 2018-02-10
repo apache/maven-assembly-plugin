@@ -35,7 +35,7 @@ class GroupVersionAlignmentWrapper
     /**
      * @param alignment @{link {@link GroupVersionAlignment}
      */
-    public GroupVersionAlignmentWrapper( final GroupVersionAlignment alignment )
+    GroupVersionAlignmentWrapper( final GroupVersionAlignment alignment )
     {
         this.alignment = alignment;
     }
