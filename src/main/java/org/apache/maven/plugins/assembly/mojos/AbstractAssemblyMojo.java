@@ -318,6 +318,10 @@ public abstract class AbstractAssemblyMojo
      * <pre>
      * &lt;appxml&gt;${project.basedir}/somepath/app.xml&lt;/appxml&gt;
      * </pre>
+     * <p/>
+     * To set a method for dealing with duplicate files when creating the archive the &lt;duplicateBehavior&gt; tag 
+     * should be used with possible values of: fail, skip, or replace.
+     *
      *
      * @since 2.2-beta-3
      */
