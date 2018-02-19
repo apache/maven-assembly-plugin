@@ -20,8 +20,6 @@ package org.apache.maven.plugins.assembly.artifact;
  */
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.shared.artifact.filter.resolve.ScopeFilter;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -34,65 +32,7 @@ import java.util.Set;
  */
 class ResolutionManagementInfo
 {
-    private ScopeFilter scopeFilter;
-
-    private final Set<MavenProject> enabledProjects = new LinkedHashSet<MavenProject>();
-
     private final LinkedHashSet<Artifact> artifacts = new LinkedHashSet<Artifact>();
-
-    private boolean resolutionRequired;
-
-    private boolean resolvedTransitively;
-
-    ResolutionManagementInfo( final MavenProject currentProject )
-    {
-        enabledProjects.add( currentProject );
-    }
-
-    boolean isResolutionRequired()
-    {
-        return resolutionRequired;
-    }
-
-    void setResolutionRequired( final boolean resolutionRequired )
-    {
-        this.resolutionRequired = resolutionRequired;
-    }
-
-    boolean isResolvedTransitively()
-    {
-        return resolvedTransitively;
-    }
-
-    void setResolvedTransitively( final boolean resolvedTransitively )
-    {
-        this.resolvedTransitively = this.resolvedTransitively || resolvedTransitively;
-    }
-
-    ScopeFilter getScopeFilter()
-    {
-        return scopeFilter;
-    }
-    
-    void setScopeFilter( ScopeFilter scopeFilter )
-    {
-        this.scopeFilter = scopeFilter;
-    }
-
-
-
-    void enableProjectResolution( final MavenProject project )
-    {
-        if ( !enabledProjects.contains( project ) )
-        {
-            enabledProjects.add( project );
-        }
-    }
-
-    Set<MavenProject> getEnabledProjects()
-    {
-        return enabledProjects;
-    }
 
     Set<Artifact> getArtifacts()
     {

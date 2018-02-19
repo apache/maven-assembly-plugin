@@ -24,7 +24,6 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.artifact.handler.DefaultArtifactHandler;
 import org.apache.maven.artifact.versioning.VersionRange;
-import org.apache.maven.project.MavenProject;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -43,7 +42,7 @@ public class ResolutionManagementInfoTest
     public void testAddSingleArtifactWithReplacemen()
         throws Exception
     {
-        ResolutionManagementInfo rmi = new ResolutionManagementInfo( new MavenProject() );
+        ResolutionManagementInfo rmi = new ResolutionManagementInfo();
         Artifact a1 = new DefaultArtifact( "groupid", "1", VersionRange.createFromVersion( "1.0" ), "test", "jar", null,
                                            new DefaultArtifactHandler() );
         rmi.addArtifacts( Collections.singleton( a1 ) );
@@ -59,7 +58,7 @@ public class ResolutionManagementInfoTest
     public void testAddMultiArtifactWithReplacemen()
         throws Exception
     {
-        ResolutionManagementInfo rmi = new ResolutionManagementInfo( new MavenProject() );
+        ResolutionManagementInfo rmi = new ResolutionManagementInfo();
         Artifact a1 =
             new DefaultArtifact( "groupid", "a1", VersionRange.createFromVersion( "1.0" ), "test", "jar", null,
                                  new DefaultArtifactHandler() );
