@@ -388,7 +388,6 @@ under the License.
               <properties>
                 <useJvmChmod>${useJvmChmod}</useJvmChmod>
                 <testVersion>${testVersion}</testVersion>
-                <invokerPluginVersion>${invokerPluginVersion}</invokerPluginVersion>
               </properties>
               <showVersion>true</showVersion>
             </configuration>
