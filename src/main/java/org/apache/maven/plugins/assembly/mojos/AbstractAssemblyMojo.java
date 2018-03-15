@@ -311,6 +311,8 @@ public abstract class AbstractAssemblyMojo
      * Allows additional configuration options that are specific to a particular type of archive format. This is
      * intended to capture an XML configuration that will be used to reflectively setup the options on the archiver
      * instance. <br/>
+     * To see the possible options for archiver configuration visit the <a href="https://codehaus-plexus.github.io/plexus-archiver/apidocs/org/codehaus/plexus/archiver/Archiver.html"
+     * Plexus Archiver Documentation </a> <br/> 
      * For instance, to direct an assembly with the "ear" format to use a particular deployment descriptor, you should
      * specify the following for the archiverConfig value in your plugin configuration: <br/>
      * <p/>
@@ -319,9 +321,6 @@ public abstract class AbstractAssemblyMojo
      * &lt;appxml&gt;${project.basedir}/somepath/app.xml&lt;/appxml&gt;
      * </pre>
      * <p/>
-     * To set a method for dealing with duplicate files when creating the archive the &lt;duplicateBehavior&gt; tag 
-     * should be used with possible values of: fail, skip, or replace.
-     *
      *
      * @since 2.2-beta-3
      */
