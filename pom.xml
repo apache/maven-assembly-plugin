@@ -62,6 +62,7 @@ under the License.
   </distributionManagement>
 
   <properties>
+    <surefire.version>2.21.0</surefire.version>
     <javaVersion>7</javaVersion>
     <mdoVersion>2.0.0</mdoVersion>
     <mavenArchiverVersion>3.2.0</mavenArchiverVersion>
