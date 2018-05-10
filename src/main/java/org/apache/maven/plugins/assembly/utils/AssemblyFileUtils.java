@@ -19,11 +19,6 @@ package org.apache.maven.plugins.assembly.utils;
  * under the License.
  */
 
-import org.apache.maven.plugins.assembly.archive.ArchiveExpansionException;
-import org.codehaus.plexus.archiver.ArchiverException;
-import org.codehaus.plexus.archiver.UnArchiver;
-import org.codehaus.plexus.archiver.manager.ArchiverManager;
-import org.codehaus.plexus.archiver.manager.NoSuchArchiverException;
 import org.codehaus.plexus.components.io.fileselectors.FileInfo;
 
 import javax.annotation.Nonnull;
@@ -87,31 +82,6 @@ public final class AssemblyFileUtils
         if ( !tempDir.exists() )
         {
             tempDir.mkdirs();
-        }
-    }
-
-    /**
-     * Unpacks the archive file.
-     *
-     * @param source  File to be unpacked.
-     * @param destDir Location where to put the unpacked files.
-     */
-    public static void unpack( File source, File destDir, ArchiverManager archiverManager )
-        throws ArchiveExpansionException, NoSuchArchiverException
-    {
-        try
-        {
-            UnArchiver unArchiver = archiverManager.getUnArchiver( source );
-
-            unArchiver.setSourceFile( source );
-
-            unArchiver.setDestDirectory( destDir );
-
-            unArchiver.extract();
-        }
-        catch ( ArchiverException e )
-        {
-            throw new ArchiveExpansionException( "Error unpacking file: " + source + "to: " + destDir, e );
         }
     }
 
