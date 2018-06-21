@@ -165,6 +165,7 @@ public class AddFileSetsTask
             task.setExcludes( fileSet.getExcludes() );
             task.setIncludes( fileSet.getIncludes() );
             task.setOutputDirectory( destDirectory );
+            task.setFileSuffix( fileSet.getFileSuffix() );
 
             task.execute( archiver );
         }

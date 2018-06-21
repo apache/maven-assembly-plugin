@@ -177,4 +177,9 @@ class PrefixedFileSet
     {
         return fileSet.getStreamTransformer();
     }
+    
+    public String getFileSuffix()
+    {
+        return fileSet.getFileSuffix();
+    }
 }

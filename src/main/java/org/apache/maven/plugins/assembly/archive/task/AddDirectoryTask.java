@@ -51,6 +51,8 @@ public class AddDirectoryTask
     private int directoryMode = -1;
 
     private int fileMode = -1;
+    
+    private String fileSuffix;
 
     public AddDirectoryTask( final File directory, InputStreamTransformer transformers )
     {
@@ -139,6 +141,7 @@ public class AddDirectoryTask
                     fs.setDirectory( directory );
                     fs.setIncludes( includesArray );
                     fs.setExcludes( excludesArray );
+                    fs.setFileSuffix( fileSuffix );
                     if ( transformer != null )
                     {
                         fs.setStreamTransformer( transformer );
@@ -206,5 +209,9 @@ public class AddDirectoryTask
     {
         this.useDefaultExcludes = useDefaultExcludes;
     }
-
+      
+    public void setFileSuffix( String fileSuffix ) 
+    {
+        this.fileSuffix = fileSuffix;
+    }
 }

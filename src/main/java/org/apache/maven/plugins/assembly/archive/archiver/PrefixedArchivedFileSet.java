@@ -148,5 +148,10 @@ class PrefixedArchivedFileSet
     {
         return fileSet.getStreamTransformer();
     }
+    
+    public String getFileSuffix()
+    {
+        return fileSet.getFileSuffix();
+    }
 
 }

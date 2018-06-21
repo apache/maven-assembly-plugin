@@ -283,6 +283,16 @@
           <defaultValue>false</defaultValue>
           <type>boolean</type>
         </field>
+        <field>
+          <name>fileSuffix</name>
+          <version>3.2.0+</version>
+          <type>String</type>
+          <description>
+            <![CDATA[
+            Sets a suffix for copying  files in this fileSet. Example : test.xml => testSuffix.xml
+            ]]>
+          </description>
+        </field>
       </fields>
     </class>
     <class>
