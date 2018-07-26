@@ -20,11 +20,11 @@ package org.apache.maven.plugins.assembly.archive.archiver;
  */
 
 import org.codehaus.plexus.archiver.ArchivedFileSet;
+import org.codehaus.plexus.components.io.filemappers.FileMapper;
 import org.codehaus.plexus.components.io.fileselectors.FileSelector;
 import org.codehaus.plexus.components.io.functions.InputStreamTransformer;
 
 import java.io.File;
-import org.codehaus.plexus.components.io.filemappers.FileMapper;
 
 /**
  *
@@ -32,8 +32,6 @@ import org.codehaus.plexus.components.io.filemappers.FileMapper;
 class PrefixedArchivedFileSet
     implements ArchivedFileSet
 {
-    private final static FileMapper[] EMPTY_FILE_MAPPERS_ARRAY = new FileMapper[0];
-
     private final String rootPrefix;
 
     private final ArchivedFileSet fileSet;
@@ -150,10 +148,10 @@ class PrefixedArchivedFileSet
     {
         return fileSet.getStreamTransformer();
     }
-
+    
     @Override
     public FileMapper[] getFileMappers()
     {
-        return EMPTY_FILE_MAPPERS_ARRAY;
+        return fileSet.getFileMappers();
     }
 }

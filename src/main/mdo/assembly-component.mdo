@@ -283,6 +283,20 @@
           <defaultValue>false</defaultValue>
           <type>boolean</type>
         </field>
+        <field>
+          <name>fileMappers</name>
+          <version>2.0.0+</version>
+          <association>
+            <type>FileMapper</type>
+            <multiplicity>*</multiplicity>
+          </association>
+          <description>
+            <![CDATA[
+            When &lt;exclude&gt; subelements are present, they define a set of
+            file mappers, which will transform the filename of included elements.
+            ]]>
+          </description>
+        </field>
       </fields>
     </class>
     <class>
@@ -1295,6 +1309,56 @@
             Configuration options for the handler.
           </description>
           <type>DOM</type>
+        </field>
+      </fields>
+    </class>
+    <class>
+      <name>FileMapper</name>
+      <version>2.0.0+</version>
+      <description>
+        Interface of a component, which may be used to map file names.
+      </description>
+      <fields>
+        <field>
+            <name>type</name>
+            <version>2.0.0+</version>
+            <description>
+              <![CDATA[
+                  Type of mapper.
+                  Valid values:
+                  <ul>
+                    <li><b>"flatten"</b> - The target file name is identical to the source file name, with all leading directory information stripped off. Both to and from will be ignored</li>
+                    <li><b>"regexp"</b> -  Both to and from define regular expressions. If the source file name matches the from pattern, the target file name will be constructed from the to pattern, using \0 to \9 as back-references for the full match (\0) or the matches of the subexpressions in parentheses. Source files not matching the from pattern will be ignored.</li>
+                    <li><b>"merge"</b> - The target file name will always be the same, as defined by to. from will be ignored.</li>
+                    <li><b>"prefix"</b> - The target file name will be constructed by adding a prefix as defined by to. from will be ignored.</li>
+                    <li><b>"suffix"</b> - The target file name will be constructed by adding a suffix as defined by to. from will be ignored.</li>
+                  </ul>
+                  ]]>
+            </description>
+            <type>String</type>
+            <required>true</required>
+        </field>
+        <field>
+            <name>from</name>
+            <version>2.0.0+</version>
+            <description>
+              <![CDATA[
+                  Specifies a type-specific pattern for matching source paths which should be mapped
+               ]]>
+            </description>
+            <type>String</type>
+            <required>false</required>
+        </field>
+        <field>
+            <name>to</name>
+            <version>2.0.0+</version>
+            <description>
+              <![CDATA[
+                  Specifies a type-specific pattern for producing paths based on source paths
+               ]]>
+            </description>
+            <type>String</type>
+            <required>false</required>
         </field>
       </fields>
     </class>

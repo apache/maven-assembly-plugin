@@ -24,6 +24,12 @@ import org.apache.maven.plugins.assembly.utils.AssemblyFormatUtils;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.util.DefaultFileSet;
+import org.codehaus.plexus.components.io.filemappers.RegExpFileMapper;
+import org.codehaus.plexus.components.io.filemappers.FlattenFileMapper;
+import org.codehaus.plexus.components.io.filemappers.MergeFileMapper;
+import org.codehaus.plexus.components.io.filemappers.PrefixFileMapper;
+import org.codehaus.plexus.components.io.filemappers.SuffixFileMapper;
+import org.codehaus.plexus.components.io.filemappers.FileMapper;
 import org.codehaus.plexus.components.io.functions.InputStreamTransformer;
 
 import java.io.File;
@@ -51,6 +57,8 @@ public class AddDirectoryTask
     private int directoryMode = -1;
 
     private int fileMode = -1;
+    
+    private List<org.apache.maven.plugins.assembly.model.FileMapper> fileMappers = new ArrayList<>();
 
     public AddDirectoryTask( final File directory, InputStreamTransformer transformers )
     {
@@ -144,6 +152,43 @@ public class AddDirectoryTask
                         fs.setStreamTransformer( transformer );
                     }
 
+                    FileMapper[] filesMappersArray = new FileMapper[ fileMappers.size() ];
+
+                    int index = 0;
+                    for ( org.apache.maven.plugins.assembly.model.FileMapper fileMapperAssembly : fileMappers )
+                    {
+                        FileMapper fileMapper = null;
+                        if ( fileMapperAssembly.getType().equals( FlattenFileMapper.ROLE_HINT ) )
+                        {
+                            fileMapper = new FlattenFileMapper();
+                        }
+                        else if ( fileMapperAssembly.getType().equals( RegExpFileMapper.ROLE_HINT ) )
+                        {
+                            fileMapper = new RegExpFileMapper();
+                            ( (RegExpFileMapper) fileMapper ).setPattern( fileMapperAssembly.getFrom() );
+                            ( (RegExpFileMapper) fileMapper ).setReplacement( fileMapperAssembly.getTo() );
+                        }
+                        else if ( fileMapperAssembly.getType().equals( MergeFileMapper.ROLE_HINT ) )
+                        {
+                            fileMapper = new MergeFileMapper();
+                            ( (MergeFileMapper) fileMapper ).setTargetName( fileMapperAssembly.getTo() );
+                        }
+                        else if ( fileMapperAssembly.getType().equals( PrefixFileMapper.ROLE_HINT ) )
+                        {
+                            fileMapper = new PrefixFileMapper();
+                            ( (PrefixFileMapper) fileMapper ).setPrefix( fileMapperAssembly.getTo() );
+                        }
+                        else if ( fileMapperAssembly.getType().equals( SuffixFileMapper.ROLE_HINT ) )
+                        {
+                            fileMapper = new SuffixFileMapper();
+                            ( (SuffixFileMapper) fileMapper ).setSuffix( fileMapperAssembly.getTo() );
+                        }
+                        filesMappersArray[index] = fileMapper;
+                        index++;
+                    }
+
+                    fs.setFileMappers( filesMappersArray );
+
                     archiver.addFileSet( fs );
                 }
                 catch ( final ArchiverException e )
@@ -205,6 +250,11 @@ public class AddDirectoryTask
     public void setUseDefaultExcludes( final boolean useDefaultExcludes )
     {
         this.useDefaultExcludes = useDefaultExcludes;
+    }
+
+    public void setFileMappers( final List<org.apache.maven.plugins.assembly.model.FileMapper> fileMappers )
+    {
+        this.fileMappers = fileMappers;
     }
 
 }
