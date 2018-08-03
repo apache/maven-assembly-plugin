@@ -99,7 +99,7 @@ under the License.
            to be adjusted or have the files they reference moved into the new child module alongside the descriptor itself.
         </p>
         <p>In cases where you absolutely must use module-binaries references, you should create an assembly-child POM mentioned above, then insert
-           <code>&lt;useAllReactorProjects&gt;true&lt;useAllReactorProjects&gt;</code> to each of your <code>moduleSet</code> sections. Then, bind the assembly
+           <code>&lt;useAllReactorProjects&gt;true&lt;/useAllReactorProjects&gt;</code> to each of your <code>moduleSet</code> sections. Then, bind the assembly
            in your assembly-child POM (normally to the <code>package</code> phase) using the <code>single</code> goal. When you execute the build from the top-level POM,
            Maven should generated your assembly in the new child project.
         </p>
