@@ -360,12 +360,7 @@ public class DefaultAssemblyReader
             reader.close();
             reader = null;
         }
-        catch ( final IOException e )
-        {
-            throw new AssemblyReadException( "Error reading descriptor: " + locationDescription + ": " + e.getMessage(),
-                                             e );
-        }
-        catch ( final XmlPullParserException e )
+        catch ( final IOException | XmlPullParserException e )
         {
             throw new AssemblyReadException( "Error reading descriptor: " + locationDescription + ": " + e.getMessage(),
                                              e );
@@ -454,12 +449,7 @@ public class DefaultAssemblyReader
                 reader = new InputStreamReader( resolvedLocation.getInputStream() );
                 component = new ComponentXpp3Reader( transformer ).read( reader );
             }
-            catch ( final IOException e )
-            {
-                throw new AssemblyReadException( "Error reading component descriptor: " + location + " (resolved to: "
-                    + resolvedLocation.getSpecification() + ")", e );
-            }
-            catch ( final XmlPullParserException e )
+            catch ( final IOException | XmlPullParserException e )
             {
                 throw new AssemblyReadException( "Error reading component descriptor: " + location + " (resolved to: "
                     + resolvedLocation.getSpecification() + ")", e );

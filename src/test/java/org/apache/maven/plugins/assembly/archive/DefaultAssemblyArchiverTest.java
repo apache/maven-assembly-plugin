@@ -166,11 +166,7 @@ public class DefaultAssemblyArchiverTest
         {
             macMgr.archiver.createArchive();
         }
-        catch ( final ArchiverException e )
-        {
-            fail( "Should never happen" );
-        }
-        catch ( final IOException e )
+        catch ( final ArchiverException | IOException e )
         {
             fail( "Should never happen" );
         }

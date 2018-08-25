@@ -527,11 +527,7 @@ public abstract class AbstractAssemblyMojo
                     }
                 }
             }
-            catch ( final ArchiveCreationException e )
-            {
-                throw new MojoExecutionException( "Failed to create assembly: " + e.getMessage(), e );
-            }
-            catch ( final AssemblyFormattingException e )
+            catch ( final ArchiveCreationException | AssemblyFormattingException e )
             {
                 throw new MojoExecutionException( "Failed to create assembly: " + e.getMessage(), e );
             }

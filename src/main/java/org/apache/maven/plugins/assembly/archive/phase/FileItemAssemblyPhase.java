@@ -122,11 +122,7 @@ public class FileItemAssemblyPhase
                 int mode = TypeConversionUtils.modeToInt( fileItem.getFileMode(), getLogger() );
                 archiver.addResource( restoUse, target, mode );
             }
-            catch ( final ArchiverException e )
-            {
-                throw new ArchiveCreationException( "Error adding file to archive: " + e.getMessage(), e );
-            }
-            catch ( IOException e )
+            catch ( final ArchiverException | IOException e )
             {
                 throw new ArchiveCreationException( "Error adding file to archive: " + e.getMessage(), e );
             }
