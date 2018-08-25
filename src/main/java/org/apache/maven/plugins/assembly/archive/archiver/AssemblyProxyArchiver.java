@@ -117,10 +117,7 @@ public class AssemblyProxyArchiver
 
         if ( extraSelectors != null )
         {
-            for ( final FileSelector selector : extraSelectors )
-            {
-                selectors.add( selector );
-            }
+            selectors.addAll( extraSelectors );
         }
 
         if ( ( extraFinalizers != null ) && finalizer != null )

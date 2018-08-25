@@ -63,7 +63,7 @@ public abstract class AbstractAssemblyMojo
     extends AbstractMojo
     implements AssemblerConfigurationSource
 {
-    protected FixedStringSearchInterpolator commanndLinePropertiesInterpolator;
+    protected FixedStringSearchInterpolator commandLinePropertiesInterpolator;
 
     protected FixedStringSearchInterpolator envInterpolator;
 
@@ -888,11 +888,11 @@ public abstract class AbstractAssemblyMojo
     @Nonnull
     public FixedStringSearchInterpolator getCommandLinePropsInterpolator()
     {
-        if ( commanndLinePropertiesInterpolator == null )
+        if ( commandLinePropertiesInterpolator == null )
         {
-            this.commanndLinePropertiesInterpolator = createCommandLinePropertiesInterpolator();
+            this.commandLinePropertiesInterpolator = createCommandLinePropertiesInterpolator();
         }
-        return commanndLinePropertiesInterpolator;
+        return commandLinePropertiesInterpolator;
     }
 
     @Override

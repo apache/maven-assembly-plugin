@@ -203,8 +203,7 @@ public class ComponentsXmlArchiverFileFilter
                 catch ( final XmlPullParserException e )
                 {
                     final IOException error =
-                        new IOException( "Error finalizing component-set for archive. Reason: " + e.getMessage() );
-                    error.initCause( e );
+                        new IOException( "Error finalizing component-set for archive. Reason: " + e.getMessage(), e );
 
                     throw error;
                 }

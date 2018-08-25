@@ -39,6 +39,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -110,7 +111,7 @@ public class SimpleAggregatingDescriptorHandler
             f.deleteOnExit();
 
             writer = AssemblyFileUtils.isPropertyFile( f )
-                         ? new OutputStreamWriter( new FileOutputStream( f ), "ISO-8859-1" )
+                         ? new OutputStreamWriter( new FileOutputStream( f ), StandardCharsets.ISO_8859_1 )
                          : new OutputStreamWriter( new FileOutputStream( f ) ); // Still platform encoding
 
             writer.write( commentChars + " Aggregated on " + new Date() + " from: " );
@@ -196,7 +197,7 @@ public class SimpleAggregatingDescriptorHandler
             writer = new StringWriter();
 
             reader = AssemblyFileUtils.isPropertyFile( fileInfo.getName() )
-                         ? new InputStreamReader( fileInfo.getContents(), "ISO-8859-1" )
+                         ? new InputStreamReader( fileInfo.getContents(), StandardCharsets.ISO_8859_1 )
                          : new InputStreamReader( fileInfo.getContents() ); // platform encoding
 
             IOUtil.copy( reader, writer );

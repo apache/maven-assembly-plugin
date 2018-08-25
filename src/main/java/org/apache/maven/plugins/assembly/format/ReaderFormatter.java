@@ -85,15 +85,13 @@ public class ReaderFormatter
         }
         catch ( MavenFilteringException e )
         {
-            IOException ioe = new IOException( "Error filtering file '" + source + "': " + e.getMessage() );
-            ioe.initCause( e ); // plain old Java 5...
+            IOException ioe = new IOException( "Error filtering file '" + source + "': " + e.getMessage(), e );
             throw ioe;
         }
     }
 
 
     private static boolean isForbiddenFiletypes( PlexusIoResource plexusIoResource )
-        throws IOException
     {
         String fileName = plexusIoResource.getName().toLowerCase();
         return ( fileName.endsWith( ".zip" ) || fileName.endsWith( ".jar" ) );

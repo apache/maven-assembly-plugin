@@ -190,10 +190,10 @@ public class AddDependencySetsTask
 
     private boolean unpackTransformsContent( DependencySet dependencySet )
     {
-        return isUnpackWithOptions( dependencySet ) && isConentModifyingOption( dependencySet.getUnpackOptions() );
+        return isUnpackWithOptions( dependencySet ) && isContentModifyingOption( dependencySet.getUnpackOptions() );
     }
 
-    private boolean isConentModifyingOption( UnpackOptions opts )
+    private boolean isContentModifyingOption( UnpackOptions opts )
     {
         return ( opts.isFiltered() || opts.getLineEnding() != null );
     }
