@@ -59,7 +59,7 @@ public class ReaderFormatter
             // if these are NOT set, just use the defaults, which are '${*}' and '@'.
             if ( delimiters != null && !delimiters.isEmpty() )
             {
-                LinkedHashSet<String> delims = new LinkedHashSet<String>();
+                LinkedHashSet<String> delims = new LinkedHashSet<>();
                 for ( String delim : delimiters )
                 {
                     if ( delim == null )

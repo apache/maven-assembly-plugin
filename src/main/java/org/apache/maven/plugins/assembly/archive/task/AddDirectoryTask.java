@@ -103,11 +103,11 @@ public class AddDirectoryTask
                 List<String> directoryExcludes;
                 if ( excludes != null && !excludes.isEmpty() )
                 {
-                    directoryExcludes = new ArrayList<String>( excludes );
+                    directoryExcludes = new ArrayList<>( excludes );
                 }
                 else
                 {
-                    directoryExcludes = new ArrayList<String>();
+                    directoryExcludes = new ArrayList<>();
                 }
 
                 try

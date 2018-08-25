@@ -67,7 +67,7 @@ public class TypeConversionUtilsTest
 
     public void testVerifyModeSanity_WarnOnNonsensicalOctalValue_002()
     {
-        final List<String> messages = new ArrayList<String>( 2 );
+        final List<String> messages = new ArrayList<>( 2 );
         messages.add( "World has write access, but user does not." );
         messages.add( "World has write access, but group does not." );
 
@@ -76,7 +76,7 @@ public class TypeConversionUtilsTest
 
     public void testVerifyModeSanity_WarnOnNonsensicalOctalValue_020()
     {
-        final List<String> messages = new ArrayList<String>( 1 );
+        final List<String> messages = new ArrayList<>( 1 );
         messages.add( "Group has write access, but user does not." );
 
         checkFileModeSanity( "020", false, messages );

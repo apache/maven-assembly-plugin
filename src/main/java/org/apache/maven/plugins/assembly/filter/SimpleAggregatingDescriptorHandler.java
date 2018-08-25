@@ -59,7 +59,7 @@ public class SimpleAggregatingDescriptorHandler
 
     private final StringWriter aggregateWriter = new StringWriter();
 
-    private final List<String> filenames = new ArrayList<String>();
+    private final List<String> filenames = new ArrayList<>();
 
     // calculated, temporary values.
 

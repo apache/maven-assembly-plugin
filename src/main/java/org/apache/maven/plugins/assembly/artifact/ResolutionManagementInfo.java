@@ -32,7 +32,7 @@ import java.util.Set;
  */
 class ResolutionManagementInfo
 {
-    private final LinkedHashSet<Artifact> artifacts = new LinkedHashSet<Artifact>();
+    private final LinkedHashSet<Artifact> artifacts = new LinkedHashSet<>();
 
     Set<Artifact> getArtifacts()
     {

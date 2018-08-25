@@ -883,7 +883,7 @@ public class DefaultAssemblyReaderTest
         final Assembly assembly2 = new Assembly();
         assembly2.setId( "test2" );
 
-        final List<Assembly> assemblies = new ArrayList<Assembly>();
+        final List<Assembly> assemblies = new ArrayList<>();
         assemblies.add( assembly1 );
         assemblies.add( assembly2 );
 
@@ -935,7 +935,7 @@ public class DefaultAssemblyReaderTest
         final Assembly assembly2 = new Assembly();
         assembly2.setId( "test2" );
 
-        final List<Assembly> assemblies = new ArrayList<Assembly>();
+        final List<Assembly> assemblies = new ArrayList<>();
         assemblies.add( assembly1 );
         assemblies.add( assembly2 );
 
@@ -966,7 +966,7 @@ public class DefaultAssemblyReaderTest
         final Assembly assembly2 = new Assembly();
         assembly2.setId( "test2" );
 
-        final List<Assembly> assemblies = new ArrayList<Assembly>();
+        final List<Assembly> assemblies = new ArrayList<>();
         assemblies.add( assembly1 );
         assemblies.add( assembly2 );
 
@@ -993,7 +993,7 @@ public class DefaultAssemblyReaderTest
     private List<String> writeAssembliesToFile( final List<Assembly> assemblies, final File dir )
         throws IOException
     {
-        final List<String> files = new ArrayList<String>();
+        final List<String> files = new ArrayList<>();
 
         for ( final Assembly assembly : assemblies )
         {

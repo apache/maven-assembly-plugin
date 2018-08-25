@@ -54,7 +54,7 @@ public final class FilterUtils
                                                     final List<String> excludes, final boolean actTransitively,
                                                     final Logger logger )
     {
-        final List<PatternIncludesArtifactFilter> allFilters = new ArrayList<PatternIncludesArtifactFilter>();
+        final List<PatternIncludesArtifactFilter> allFilters = new ArrayList<>();
 
         final AndArtifactFilter filter = new AndArtifactFilter();
 
@@ -75,7 +75,7 @@ public final class FilterUtils
             allFilters.add( excludeFilter );
         }
 
-        Set<MavenProject> result = new LinkedHashSet<MavenProject>( projects.size() );
+        Set<MavenProject> result = new LinkedHashSet<>( projects.size() );
         for ( MavenProject project : projects )
         {
             final Artifact artifact = project.getArtifact();
@@ -102,7 +102,7 @@ public final class FilterUtils
                                         final ArtifactFilter... additionalFilters )
         throws InvalidAssemblerConfigurationException
     {
-        final List<ArtifactFilter> allFilters = new ArrayList<ArtifactFilter>();
+        final List<ArtifactFilter> allFilters = new ArrayList<>();
 
         final AndArtifactFilter filter = new AndArtifactFilter();
 
@@ -211,7 +211,7 @@ public final class FilterUtils
      */
     public static ScopeFilter newScopeFilter( final Collection<String> rootScopes )
     {
-        Set<String> scopes = new HashSet<String>();
+        Set<String> scopes = new HashSet<>();
         
         for ( String rootScope : rootScopes )
         {

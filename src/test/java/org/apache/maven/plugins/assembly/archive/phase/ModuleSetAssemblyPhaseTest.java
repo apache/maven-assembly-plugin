@@ -277,7 +277,7 @@ public class ModuleSetAssemblyPhaseTest
         final File moduleArtifactFile = moduleArtifactMock.setNewFile();
         module.setArtifact( moduleArtifactMock.getArtifact() );
 
-        final List<MavenProject> projects = new ArrayList<MavenProject>();
+        final List<MavenProject> projects = new ArrayList<>();
 
         projects.add( module );
 
@@ -648,7 +648,7 @@ public class ModuleSetAssemblyPhaseTest
 
         final MavenProject project2 = createProject( "group", "artifact2", "version", null );
 
-        final List<MavenProject> projects = new ArrayList<MavenProject>();
+        final List<MavenProject> projects = new ArrayList<>();
         projects.add( project );
         projects.add( project2 );
 
@@ -679,7 +679,7 @@ public class ModuleSetAssemblyPhaseTest
 
         final MavenProject project2 = createProject( "group", "artifact2", "version", project );
 
-        final List<MavenProject> projects = new ArrayList<MavenProject>();
+        final List<MavenProject> projects = new ArrayList<>();
         projects.add( project );
         projects.add( project2 );
 
@@ -715,7 +715,7 @@ public class ModuleSetAssemblyPhaseTest
         final MavenProject project2 = createProject( "group", "artifact2", "version", project );
         final MavenProject project3 = createProject( "group", "artifact3", "version", project2 );
 
-        final List<MavenProject> projects = new ArrayList<MavenProject>();
+        final List<MavenProject> projects = new ArrayList<>();
         projects.add( project );
         projects.add( project2 );
         projects.add( project3 );
@@ -732,7 +732,7 @@ public class ModuleSetAssemblyPhaseTest
 
         assertEquals( 2, moduleProjects.size() );
 
-        final List<MavenProject> check = new ArrayList<MavenProject>();
+        final List<MavenProject> check = new ArrayList<>();
         check.add( project2 );
         check.add( project3 );
 
@@ -758,7 +758,7 @@ public class ModuleSetAssemblyPhaseTest
         final MavenProject project3 = createProject( "group", "artifact3", "version", project2 );
         addArtifact( project3, mm, true );
 
-        final List<MavenProject> projects = new ArrayList<MavenProject>();
+        final List<MavenProject> projects = new ArrayList<>();
         projects.add( project );
         projects.add( project2 );
         projects.add( project3 );
@@ -789,7 +789,7 @@ public class ModuleSetAssemblyPhaseTest
 
         if ( expectDepTrailCheck )
         {
-            final LinkedList<String> depTrail = new LinkedList<String>();
+            final LinkedList<String> depTrail = new LinkedList<>();
 
             MavenProject parent = project.getParent();
             while ( parent != null )
@@ -811,7 +811,7 @@ public class ModuleSetAssemblyPhaseTest
     {
         boolean failed = false;
 
-        final Set<MavenProject> checkTooMany = new HashSet<MavenProject>( moduleProjects );
+        final Set<MavenProject> checkTooMany = new HashSet<>( moduleProjects );
         checkTooMany.removeAll( check );
 
         if ( !checkTooMany.isEmpty() )
@@ -826,7 +826,7 @@ public class ModuleSetAssemblyPhaseTest
             }
         }
 
-        final Set<MavenProject> checkTooFew = new HashSet<MavenProject>( check );
+        final Set<MavenProject> checkTooFew = new HashSet<>( check );
         checkTooFew.removeAll( moduleProjects );
 
         if ( !checkTooFew.isEmpty() )

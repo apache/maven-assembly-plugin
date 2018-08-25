@@ -57,7 +57,7 @@ public class DefaultDependencyResolver
                                                                     List<DependencySet> dependencySets )
         throws DependencyResolutionException
     {
-        Map<DependencySet, Set<Artifact>> result = new LinkedHashMap<DependencySet, Set<Artifact>>();
+        Map<DependencySet, Set<Artifact>> result = new LinkedHashMap<>();
 
         for ( DependencySet dependencySet : dependencySets )
         {
@@ -80,7 +80,7 @@ public class DefaultDependencyResolver
                                                                     List<DependencySet> dependencySets )
         throws DependencyResolutionException
     {
-        Map<DependencySet, Set<Artifact>> result = new LinkedHashMap<DependencySet, Set<Artifact>>();
+        Map<DependencySet, Set<Artifact>> result = new LinkedHashMap<>();
 
         for ( DependencySet dependencySet : dependencySets )
         {

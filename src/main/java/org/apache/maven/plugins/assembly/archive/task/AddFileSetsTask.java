@@ -58,7 +58,7 @@ public class AddFileSetsTask
 
     public AddFileSetsTask( final FileSet... fileSets )
     {
-        this.fileSets = new ArrayList<FileSet>( Arrays.asList( fileSets ) );
+        this.fileSets = new ArrayList<>( Arrays.asList( fileSets ) );
     }
 
     public void execute( final Archiver archiver, final AssemblerConfigurationSource configSource )

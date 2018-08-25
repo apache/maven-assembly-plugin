@@ -83,7 +83,7 @@ public class ComponentsXmlArchiverFileFilter
             {
                 if ( components == null )
                 {
-                    components = new LinkedHashMap<String, Xpp3Dom>();
+                    components = new LinkedHashMap<>();
                 }
 
                 final String role = component.getChild( "role" ).getValue();

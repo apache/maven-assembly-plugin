@@ -68,14 +68,14 @@ public class ResolutionManagementInfoTest
         Artifact a3 =
             new DefaultArtifact( "groupid", "a3", VersionRange.createFromVersion( "1.0" ), "test", "jar", null,
                                  new DefaultArtifactHandler() );
-        rmi.addArtifacts( new HashSet<Artifact>( Arrays.asList( a1, a2, a3 ) ) );
+        rmi.addArtifacts( new HashSet<>( Arrays.asList( a1, a2, a3 ) ) );
         Artifact b2 =
             new DefaultArtifact( "groupid", "a2", VersionRange.createFromVersion( "1.0" ), "compile", "jar", null,
                                  new DefaultArtifactHandler() );
         Artifact b3 =
             new DefaultArtifact( "groupid", "a3", VersionRange.createFromVersion( "1.0" ), "compile", "jar", null,
                                  new DefaultArtifactHandler() );
-        rmi.addArtifacts( new HashSet<Artifact>( Arrays.asList( b2, b3 ) ) );
+        rmi.addArtifacts( new HashSet<>( Arrays.asList( b2, b3 ) ) );
         assertEquals( 3, rmi.getArtifacts().size() );
         int compile = 0;
         int test = 0;

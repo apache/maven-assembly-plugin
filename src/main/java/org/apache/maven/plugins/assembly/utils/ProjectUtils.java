@@ -62,9 +62,9 @@ public final class ProjectUtils
     {
         final Set<MavenProject> singleParentSet = Collections.singleton( project );
 
-        final Set<MavenProject> moduleCandidates = new LinkedHashSet<MavenProject>( reactorProjects );
+        final Set<MavenProject> moduleCandidates = new LinkedHashSet<>( reactorProjects );
 
-        final Set<MavenProject> modules = new LinkedHashSet<MavenProject>();
+        final Set<MavenProject> modules = new LinkedHashSet<>();
 
         // we temporarily add the master project to the modules set, since this
         // set is pulling double duty as a set of
@@ -96,7 +96,7 @@ public final class ProjectUtils
                 Set<MavenProject> currentPotentialParents;
                 if ( includeSubModules )
                 {
-                    currentPotentialParents = new LinkedHashSet<MavenProject>( modules );
+                    currentPotentialParents = new LinkedHashSet<>( modules );
                 }
                 else
                 {

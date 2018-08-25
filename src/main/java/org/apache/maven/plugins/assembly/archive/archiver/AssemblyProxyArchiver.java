@@ -64,7 +64,7 @@ public class AssemblyProxyArchiver
 
     private final Archiver delegate;
 
-    private final ThreadLocal<Boolean> inPublicApi = new ThreadLocal<Boolean>();
+    private final ThreadLocal<Boolean> inPublicApi = new ThreadLocal<>();
 
     private final Logger logger;
 
@@ -98,7 +98,7 @@ public class AssemblyProxyArchiver
             this.rootPrefix += "/";
         }
 
-        final List<FileSelector> selectors = new ArrayList<FileSelector>();
+        final List<FileSelector> selectors = new ArrayList<>();
 
         FinalizerEnabled finalizer = ( delegate instanceof FinalizerEnabled ) ? (FinalizerEnabled) delegate : null;
 
@@ -734,7 +734,7 @@ public class AssemblyProxyArchiver
         }
         else if ( assemblyWorkPath.startsWith( fsPath ) )
         {
-            final List<String> newEx = new ArrayList<String>();
+            final List<String> newEx = new ArrayList<>();
             if ( fs.getExcludes() != null )
             {
                 newEx.addAll( Arrays.asList( fs.getExcludes() ) );
@@ -748,7 +748,7 @@ public class AssemblyProxyArchiver
 
             newEx.add( workDirExclude );
 
-            final List<String> newIn = new ArrayList<String>();
+            final List<String> newIn = new ArrayList<>();
             if ( fs.getIncludes() != null )
             {
                 for ( final String include : fs.getIncludes() )

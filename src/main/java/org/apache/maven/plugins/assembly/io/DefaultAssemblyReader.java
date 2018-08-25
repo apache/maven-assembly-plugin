@@ -94,14 +94,14 @@ public class DefaultAssemblyReader
     {
         final Locator locator = new Locator();
 
-        final List<LocatorStrategy> strategies = new ArrayList<LocatorStrategy>();
+        final List<LocatorStrategy> strategies = new ArrayList<>();
         strategies.add( new RelativeFileLocatorStrategy( configSource.getBasedir() ) );
         strategies.add( new FileLocatorStrategy() );
 
-        final List<LocatorStrategy> refStrategies = new ArrayList<LocatorStrategy>();
+        final List<LocatorStrategy> refStrategies = new ArrayList<>();
         refStrategies.add( new PrefixedClasspathLocatorStrategy( "/assemblies/" ) );
 
-        final List<Assembly> assemblies = new ArrayList<Assembly>();
+        final List<Assembly> assemblies = new ArrayList<>();
 
         final String[] descriptors = configSource.getDescriptors();
         final String[] descriptorRefs = configSource.getDescriptorReferences();
@@ -161,7 +161,7 @@ public class DefaultAssemblyReader
         }
 
         // check unique IDs
-        final Set<String> ids = new HashSet<String>();
+        final Set<String> ids = new HashSet<>();
         for ( final Assembly assembly : assemblies )
         {
             if ( !ids.add( assembly.getId() ) )

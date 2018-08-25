@@ -47,7 +47,7 @@ public class AssemblyInterpolator
 
     static
     {
-        final Set<String> blacklist = new HashSet<String>();
+        final Set<String> blacklist = new HashSet<>();
 
         blacklist.add( "outputFileNameMapping" );
         blacklist.add( "outputDirectoryMapping" );
@@ -65,7 +65,7 @@ public class AssemblyInterpolator
         final FixedStringSearchInterpolator interpolator, final InterpolationState is, final Logger logger )
     {
         final Set<String> blacklistFields =
-            new HashSet<String>( FieldBasedObjectInterpolator.DEFAULT_BLACKLISTED_FIELD_NAMES );
+            new HashSet<>( FieldBasedObjectInterpolator.DEFAULT_BLACKLISTED_FIELD_NAMES );
         blacklistFields.addAll( INTERPOLATION_BLACKLIST );
 
         return new AssemblyXpp3Reader.ContentTransformer()
@@ -93,7 +93,7 @@ public class AssemblyInterpolator
         final FixedStringSearchInterpolator interpolator, final InterpolationState is, final Logger logger )
     {
         final Set<String> blacklistFields =
-            new HashSet<String>( FieldBasedObjectInterpolator.DEFAULT_BLACKLISTED_FIELD_NAMES );
+            new HashSet<>( FieldBasedObjectInterpolator.DEFAULT_BLACKLISTED_FIELD_NAMES );
         blacklistFields.addAll( INTERPOLATION_BLACKLIST );
 
         return new ComponentXpp3Reader.ContentTransformer()

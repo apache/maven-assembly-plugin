@@ -117,7 +117,7 @@ public class ComponentsXmlArchiverFileFilterTest
     public void testAddComponentsXml_ShouldAddTwoComponentsWithRoleHints()
         throws IOException, XmlPullParserException
     {
-        final List<ComponentDef> defs = new ArrayList<ComponentDef>();
+        final List<ComponentDef> defs = new ArrayList<>();
 
         defs.add( new ComponentDef( "role", "hint", "org.apache.maven.Impl" ) );
         defs.add( new ComponentDef( "role", "hint2", "org.apache.maven.Impl2" ) );
@@ -146,7 +146,7 @@ public class ComponentsXmlArchiverFileFilterTest
     {
         final Xpp3Dom dom = createComponentDom( new ComponentDef( "role", null, "impl" ) );
 
-        filter.components = new LinkedHashMap<String, Xpp3Dom>();
+        filter.components = new LinkedHashMap<>();
         filter.components.put( "role", dom );
 
         final FileCatchingArchiver fca = new FileCatchingArchiver();
@@ -173,7 +173,7 @@ public class ComponentsXmlArchiverFileFilterTest
     {
         final Xpp3Dom dom = createComponentDom( new ComponentDef( "role", "hint", "impl" ) );
 
-        filter.components = new LinkedHashMap<String, Xpp3Dom>();
+        filter.components = new LinkedHashMap<>();
         filter.components.put( "rolehint", dom );
 
         final FileCatchingArchiver fca = new FileCatchingArchiver();
@@ -198,7 +198,7 @@ public class ComponentsXmlArchiverFileFilterTest
     public void testAddToArchive_ShouldWriteTwoComponentToFile()
         throws IOException, ArchiverException, JDOMException
     {
-        filter.components = new LinkedHashMap<String, Xpp3Dom>();
+        filter.components = new LinkedHashMap<>();
 
         final Xpp3Dom dom = createComponentDom( new ComponentDef( "role", "hint", "impl" ) );
 
@@ -239,7 +239,7 @@ public class ComponentsXmlArchiverFileFilterTest
     public void testAddToArchive_ShouldWriteTwoComponentToArchivedFile()
         throws IOException, ArchiverException, JDOMException
     {
-        filter.components = new LinkedHashMap<String, Xpp3Dom>();
+        filter.components = new LinkedHashMap<>();
 
         final Xpp3Dom dom = createComponentDom( new ComponentDef( "role", "hint", "impl" ) );
 

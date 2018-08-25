@@ -123,7 +123,7 @@ public class DefaultAssemblyArchiver
 
     private List<AssemblyArchiverPhase> sortedPhases()
     {
-        List<AssemblyArchiverPhase> sorted = new ArrayList<AssemblyArchiverPhase>( assemblyPhases );
+        List<AssemblyArchiverPhase> sorted = new ArrayList<>( assemblyPhases );
         Collections.sort( sorted, new AssemblyArchiverPhaseComparator() );
         return sorted;
     }
@@ -225,11 +225,11 @@ public class DefaultAssemblyArchiver
 
         if ( requestedContainerDescriptorHandlers == null )
         {
-            requestedContainerDescriptorHandlers = new ArrayList<ContainerDescriptorHandlerConfig>();
+            requestedContainerDescriptorHandlers = new ArrayList<>();
         }
 
-        final List<ContainerDescriptorHandler> handlers = new ArrayList<ContainerDescriptorHandler>();
-        final List<String> hints = new ArrayList<String>();
+        final List<ContainerDescriptorHandler> handlers = new ArrayList<>();
+        final List<String> hints = new ArrayList<>();
 
         if ( !requestedContainerDescriptorHandlers.isEmpty() )
         {
@@ -306,8 +306,8 @@ public class DefaultAssemblyArchiver
             ( (AbstractZipArchiver) archiver ).setRecompressAddedZips( recompressZippedFiles );
         }
 
-        final List<FileSelector> extraSelectors = new ArrayList<FileSelector>();
-        final List<ArchiveFinalizer> extraFinalizers = new ArrayList<ArchiveFinalizer>();
+        final List<FileSelector> extraSelectors = new ArrayList<>();
+        final List<ArchiveFinalizer> extraFinalizers = new ArrayList<>();
         if ( archiver instanceof JarArchiver )
         {
             if ( mergeManifestMode != null )

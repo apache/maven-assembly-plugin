@@ -149,7 +149,7 @@ public class ModuleSetAssemblyPhase
         {
             if ( !moduleSet.isIncludeSubModules() )
             {
-                moduleProjects = new LinkedHashSet<MavenProject>( configSource.getReactorProjects() );
+                moduleProjects = new LinkedHashSet<>( configSource.getReactorProjects() );
             }
 
             project = configSource.getReactorProjects().get( 0 );
@@ -254,13 +254,13 @@ public class ModuleSetAssemblyPhase
             return;
         }
 
-        final Set<MavenProject> moduleProjects = new LinkedHashSet<MavenProject>();
+        final Set<MavenProject> moduleProjects = new LinkedHashSet<>();
 
         MavenProjects.select( projects, "pom", log( getLogger() ), addTo( moduleProjects ) );
 
         final String classifier = binaries.getAttachmentClassifier();
 
-        final Map<MavenProject, Artifact> chosenModuleArtifacts = new HashMap<MavenProject, Artifact>();
+        final Map<MavenProject, Artifact> chosenModuleArtifacts = new HashMap<>();
 
         for ( final MavenProject project : moduleProjects )
         {
@@ -347,7 +347,7 @@ public class ModuleSetAssemblyPhase
 
     private List<MavenProject> validateModuleVersions( Set<MavenProject> moduleProjects )
     {
-        List<MavenProject> result = new ArrayList<MavenProject>();
+        List<MavenProject> result = new ArrayList<>();
 
         if ( moduleProjects != null && !moduleProjects.isEmpty() )
         {
@@ -416,7 +416,7 @@ public class ModuleSetAssemblyPhase
             return;
         }
 
-        final List<FileSet> fileSets = new ArrayList<FileSet>();
+        final List<FileSet> fileSets = new ArrayList<>();
 
         if ( isDeprecatedModuleSourcesConfigPresent( sources ) )
         {
@@ -445,7 +445,7 @@ public class ModuleSetAssemblyPhase
         {
             getLogger().info( "Processing sources for module project: " + moduleProject.getId() );
 
-            final List<FileSet> moduleFileSets = new ArrayList<FileSet>();
+            final List<FileSet> moduleFileSets = new ArrayList<>();
 
             for ( final FileSet fileSet : fileSets )
             {
@@ -514,7 +514,7 @@ public class ModuleSetAssemblyPhase
         fs.setDirectory( sourcePath );
         fs.setDirectoryMode( fileSet.getDirectoryMode() );
 
-        final List<String> excludes = new ArrayList<String>();
+        final List<String> excludes = new ArrayList<>();
 
         final List<String> originalExcludes = fileSet.getExcludes();
         if ( ( originalExcludes != null ) && !originalExcludes.isEmpty() )
