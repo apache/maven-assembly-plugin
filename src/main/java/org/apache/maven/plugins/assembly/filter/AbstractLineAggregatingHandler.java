@@ -44,7 +44,7 @@ abstract class AbstractLineAggregatingHandler
     implements ContainerDescriptorHandler
 {
 
-    private Map<String, List<String>> catalog = new HashMap<String, List<String>>();
+    private Map<String, List<String>> catalog = new HashMap<>();
 
     private boolean excludeOverride = false;
 
@@ -121,7 +121,7 @@ abstract class AbstractLineAggregatingHandler
     @Override
     public List<String> getVirtualFiles()
     {
-        return new ArrayList<String>( catalog.keySet() );
+        return new ArrayList<>( catalog.keySet() );
     }
 
     @Override
@@ -142,7 +142,7 @@ abstract class AbstractLineAggregatingHandler
             List<String> lines = catalog.get( name );
             if ( lines == null )
             {
-                lines = new ArrayList<String>();
+                lines = new ArrayList<>();
                 catalog.put( name, lines );
             }
 

@@ -299,7 +299,7 @@ public class AddDependencySetsTaskTest
     {
         final MavenProject project = new MavenProject( new Model() );
 
-        final Set<Artifact> artifacts = new HashSet<Artifact>();
+        final Set<Artifact> artifacts = new HashSet<>();
 
         final ArtifactMock am = new ArtifactMock( mockManager, "group", "artifact", "1.0", "jar", false );
         am.setDependencyTrail( Collections.singletonList( project.getId() ) );
@@ -335,7 +335,7 @@ public class AddDependencySetsTaskTest
     {
         final MavenProject project = new MavenProject( new Model() );
 
-        final Set<Artifact> artifacts = new HashSet<Artifact>();
+        final Set<Artifact> artifacts = new HashSet<>();
 
         final ArtifactMock am = new ArtifactMock( mockManager, "group", "artifact", "1.0", "jar", false );
         artifacts.add( am.getArtifact() );

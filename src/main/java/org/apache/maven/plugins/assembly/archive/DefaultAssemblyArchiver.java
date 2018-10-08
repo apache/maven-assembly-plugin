@@ -123,7 +123,7 @@ public class DefaultAssemblyArchiver
 
     private List<AssemblyArchiverPhase> sortedPhases()
     {
-        List<AssemblyArchiverPhase> sorted = new ArrayList<AssemblyArchiverPhase>( assemblyPhases );
+        List<AssemblyArchiverPhase> sorted = new ArrayList<>( assemblyPhases );
         Collections.sort( sorted, new AssemblyArchiverPhaseComparator() );
         return sorted;
     }
@@ -183,12 +183,7 @@ public class DefaultAssemblyArchiver
 
             archiver.createArchive();
         }
-        catch ( final ArchiverException e )
-        {
-            throw new ArchiveCreationException(
-                "Error creating assembly archive " + assembly.getId() + ": " + e.getMessage(), e );
-        }
-        catch ( final IOException e )
+        catch ( final ArchiverException | IOException e )
         {
             throw new ArchiveCreationException(
                 "Error creating assembly archive " + assembly.getId() + ": " + e.getMessage(), e );
@@ -230,11 +225,11 @@ public class DefaultAssemblyArchiver
 
         if ( requestedContainerDescriptorHandlers == null )
         {
-            requestedContainerDescriptorHandlers = new ArrayList<ContainerDescriptorHandlerConfig>();
+            requestedContainerDescriptorHandlers = new ArrayList<>();
         }
 
-        final List<ContainerDescriptorHandler> handlers = new ArrayList<ContainerDescriptorHandler>();
-        final List<String> hints = new ArrayList<String>();
+        final List<ContainerDescriptorHandler> handlers = new ArrayList<>();
+        final List<String> hints = new ArrayList<>();
 
         if ( !requestedContainerDescriptorHandlers.isEmpty() )
         {
@@ -311,8 +306,8 @@ public class DefaultAssemblyArchiver
             ( (AbstractZipArchiver) archiver ).setRecompressAddedZips( recompressZippedFiles );
         }
 
-        final List<FileSelector> extraSelectors = new ArrayList<FileSelector>();
-        final List<ArchiveFinalizer> extraFinalizers = new ArrayList<ArchiveFinalizer>();
+        final List<FileSelector> extraSelectors = new ArrayList<>();
+        final List<ArchiveFinalizer> extraFinalizers = new ArrayList<>();
         if ( archiver instanceof JarArchiver )
         {
             if ( mergeManifestMode != null )
@@ -385,12 +380,7 @@ public class DefaultAssemblyArchiver
         {
             config = Xpp3DomBuilder.build( new StringReader( configSource.getArchiverConfig() ) );
         }
-        catch ( final XmlPullParserException e )
-        {
-            throw new ArchiverException( "Failed to parse archiver configuration for: " + archiver.getClass().getName(),
-                                         e );
-        }
-        catch ( final IOException e )
+        catch ( final XmlPullParserException | IOException e )
         {
             throw new ArchiverException( "Failed to parse archiver configuration for: " + archiver.getClass().getName(),
                                          e );
@@ -443,11 +433,7 @@ public class DefaultAssemblyArchiver
             configureComponent.invoke( configurator, component, configuration, expressionEvaluator, containerRealm[0],
                                        listener );
         }
-        catch ( final NoSuchMethodException e )
-        {
-            throw new RuntimeException( e );
-        }
-        catch ( final IllegalAccessException e )
+        catch ( final NoSuchMethodException | IllegalAccessException e )
         {
             throw new RuntimeException( e );
         }
@@ -472,11 +458,7 @@ public class DefaultAssemblyArchiver
             final Method getContainerRealm = container.getClass().getMethod( "getContainerRealm" );
             return new Object[]{ getContainerRealm.invoke( container ), getContainerRealm.getReturnType() };
         }
-        catch ( final NoSuchMethodException e )
-        {
-            throw new RuntimeException( e );
-        }
-        catch ( final IllegalAccessException e )
+        catch ( final NoSuchMethodException | IllegalAccessException e )
         {
             throw new RuntimeException( e );
         }

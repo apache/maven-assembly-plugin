@@ -60,7 +60,7 @@ public class ProjectUtilsTest
 
         module.setFile( new File( "module/pom.xml" ) );
 
-        final List<MavenProject> projects = new ArrayList<MavenProject>( 2 );
+        final List<MavenProject> projects = new ArrayList<>( 2 );
 
         projects.add( master );
         projects.add( module );
@@ -105,7 +105,7 @@ public class ProjectUtilsTest
 
         subModule.setFile( new File( "project/module/submodule/pom.xml" ) );
 
-        final List<MavenProject> projects = new ArrayList<MavenProject>( 3 );
+        final List<MavenProject> projects = new ArrayList<>( 3 );
 
         projects.add( master );
         projects.add( module );
@@ -117,7 +117,7 @@ public class ProjectUtilsTest
         assertNotNull( result );
         assertEquals( 2, result.size() );
 
-        final List<MavenProject> verify = new ArrayList<MavenProject>( projects );
+        final List<MavenProject> verify = new ArrayList<>( projects );
         verify.remove( master );
 
         verifyProjectsPresent( verify, result );
@@ -142,7 +142,7 @@ public class ProjectUtilsTest
 
         subModule.setFile( new File( "project/module/submodule/pom.xml" ) );
 
-        final List<MavenProject> projects = new ArrayList<MavenProject>( 3 );
+        final List<MavenProject> projects = new ArrayList<>( 3 );
 
         projects.add( master );
         projects.add( module );
@@ -154,7 +154,7 @@ public class ProjectUtilsTest
         assertNotNull( result );
         assertEquals( 1, result.size() );
 
-        final List<MavenProject> verify = new ArrayList<MavenProject>( projects );
+        final List<MavenProject> verify = new ArrayList<>( projects );
         verify.remove( master );
         verify.remove( subModule );
 
@@ -172,7 +172,7 @@ public class ProjectUtilsTest
 
         other.setFile( new File( "other/pom.xml" ) );
 
-        final List<MavenProject> projects = new ArrayList<MavenProject>( 3 );
+        final List<MavenProject> projects = new ArrayList<>( 3 );
 
         projects.add( master );
         projects.add( other );
@@ -186,9 +186,9 @@ public class ProjectUtilsTest
 
     private void verifyProjectsPresent( final List<MavenProject> verify, final Set<MavenProject> result )
     {
-        final List<MavenProject> verifyCopy = new ArrayList<MavenProject>( verify );
+        final List<MavenProject> verifyCopy = new ArrayList<>( verify );
 
-        final List<MavenProject> unexpected = new ArrayList<MavenProject>();
+        final List<MavenProject> unexpected = new ArrayList<>();
 
         for ( final MavenProject project : result )
         {

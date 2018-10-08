@@ -65,7 +65,7 @@ public class RepoInfoWrapper
 
         if ( convertedAlignments == null || alignments.size() != convertedAlignments.size() )
         {
-            final List<GroupVersionAlignment> l = new ArrayList<GroupVersionAlignment>( alignments.size() );
+            final List<GroupVersionAlignment> l = new ArrayList<>( alignments.size() );
 
             for ( final org.apache.maven.plugins.assembly.model.GroupVersionAlignment alignment : alignments )
             {

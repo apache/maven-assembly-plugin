@@ -81,13 +81,13 @@ public class FilterUtilsTest
 
         expect( artifact.getDependencyConflictId() ).andReturn( "group:artifact:type" ).atLeastOnce();
 
-        final List<String> includes = new ArrayList<String>();
+        final List<String> includes = new ArrayList<>();
 
         includes.add( "other.group:other-artifact:type:version" );
 
         final List<String> excludes = Collections.emptyList();
 
-        final Set<Artifact> artifacts = new HashSet<Artifact>();
+        final Set<Artifact> artifacts = new HashSet<>();
         artifacts.add( artifact );
 
         mockManager.replayAll();
@@ -258,7 +258,7 @@ public class FilterUtilsTest
             exclusions = Collections.emptyList();
         }
 
-        final Set<Artifact> artifacts = new HashSet<Artifact>();
+        final Set<Artifact> artifacts = new HashSet<>();
         artifacts.add( mac.artifact );
 
         FilterUtils.filterArtifacts( artifacts, inclusions, exclusions, false, depTrail != null, logger,
@@ -307,7 +307,7 @@ public class FilterUtilsTest
         // make sure the mock is satisfied...you can't disable this expectation.
         pmac.mac.artifact.getDependencyConflictId();
 
-        final Set<MavenProject> projects = new HashSet<MavenProject>();
+        final Set<MavenProject> projects = new HashSet<>();
         projects.add( pmac );
 
         List<String> inclusions;

@@ -41,7 +41,7 @@ public class AssemblyArchiverPhaseComparatorTest
     public void comparatorSortsCorrectly()
         throws Exception
     {
-        List<AssemblyArchiverPhase> items = new ArrayList<AssemblyArchiverPhase>();
+        List<AssemblyArchiverPhase> items = new ArrayList<>();
         Unordered2 u2 = new Unordered2();
         items.add( u2 );
         Ordered2 o2 = new Ordered2();

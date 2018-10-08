@@ -38,6 +38,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 
@@ -84,7 +85,8 @@ public class ManifestCreationFinalizer
                     Reader manifestFileReader = null;
                     try
                     {
-                        manifestFileReader = new InputStreamReader( new FileInputStream( manifestFile ), "UTF-8" );
+                        manifestFileReader = new InputStreamReader( new FileInputStream( manifestFile ),
+                            StandardCharsets.UTF_8 );
                         manifest = new Manifest( manifestFileReader );
                         manifestFileReader.close();
                         manifestFileReader = null;
@@ -136,11 +138,7 @@ public class ManifestCreationFinalizer
                     return Collections.singletonList( "META-INF/MANIFEST.MF" );
                 }
             }
-            catch ( final ManifestException ignore )
-            {
-                // noop
-            }
-            catch ( final DependencyResolutionRequiredException ignore )
+            catch ( final ManifestException | DependencyResolutionRequiredException ignore )
             {
                 // noop
             }

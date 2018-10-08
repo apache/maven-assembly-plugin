@@ -64,7 +64,7 @@ public class AddDependencySetsTask
 
     static
     {
-        final List<String> nonArch = new ArrayList<String>();
+        final List<String> nonArch = new ArrayList<>();
 
         nonArch.add( "pom" );
 
@@ -190,10 +190,10 @@ public class AddDependencySetsTask
 
     private boolean unpackTransformsContent( DependencySet dependencySet )
     {
-        return isUnpackWithOptions( dependencySet ) && isConentModifyingOption( dependencySet.getUnpackOptions() );
+        return isUnpackWithOptions( dependencySet ) && isContentModifyingOption( dependencySet.getUnpackOptions() );
     }
 
-    private boolean isConentModifyingOption( UnpackOptions opts )
+    private boolean isContentModifyingOption( UnpackOptions opts )
     {
         return ( opts.isFiltered() || opts.getLineEnding() != null );
     }
@@ -283,7 +283,7 @@ public class AddDependencySetsTask
     Set<Artifact> resolveDependencyArtifacts( final DependencySet dependencySet )
         throws InvalidAssemblerConfigurationException
     {
-        final Set<Artifact> dependencyArtifacts = new LinkedHashSet<Artifact>();
+        final Set<Artifact> dependencyArtifacts = new LinkedHashSet<>();
         if ( resolvedArtifacts != null )
         {
             dependencyArtifacts.addAll( resolvedArtifacts );

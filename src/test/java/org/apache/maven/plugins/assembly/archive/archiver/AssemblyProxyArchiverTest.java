@@ -126,7 +126,7 @@ public class AssemblyProxyArchiverTest
         EasyMock.expectLastCall().anyTimes();
 
         final CounterSelector counter = new CounterSelector( true );
-        final List<FileSelector> selectors = new ArrayList<FileSelector>();
+        final List<FileSelector> selectors = new ArrayList<>();
         selectors.add( counter );
 
         mm.replayAll();
@@ -157,7 +157,7 @@ public class AssemblyProxyArchiverTest
         delegate.setDestFile( output );
 
         final CounterSelector counter = new CounterSelector( true );
-        final List<FileSelector> selectors = new ArrayList<FileSelector>();
+        final List<FileSelector> selectors = new ArrayList<>();
         selectors.add( counter );
 
         final AssemblyProxyArchiver archiver =

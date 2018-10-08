@@ -161,7 +161,7 @@ public class DefaultRepositoryAssembler
 
         if ( ( includes == null ) || includes.isEmpty() )
         {
-            List<String> patterns = new ArrayList<String>();
+            List<String> patterns = new ArrayList<>();
 
             Set<Artifact> projectArtifacts = project.getDependencyArtifacts();
 
@@ -244,7 +244,7 @@ public class DefaultRepositoryAssembler
     protected Map<String, GroupVersionAlignment> createGroupVersionAlignments( List<GroupVersionAlignment> versionAlignments )
     // CHECKSTYLE_ON: LineLength
     {
-        Map<String, GroupVersionAlignment> groupVersionAlignments = new HashMap<String, GroupVersionAlignment>();
+        Map<String, GroupVersionAlignment> groupVersionAlignments = new HashMap<>();
 
         if ( versionAlignments != null )
         {

@@ -37,13 +37,13 @@ public final class InterpolationConstants
 
     static
     {
-        final List<String> projectPrefixes = new ArrayList<String>();
+        final List<String> projectPrefixes = new ArrayList<>();
         projectPrefixes.add( "pom." );
         projectPrefixes.add( "project." );
 
         PROJECT_PREFIXES = Collections.unmodifiableList( projectPrefixes );
 
-        final List<String> projectPropertiesPrefixes = new ArrayList<String>();
+        final List<String> projectPropertiesPrefixes = new ArrayList<>();
 
         projectPropertiesPrefixes.add( "pom.properties." );
         projectPropertiesPrefixes.add( "project.properties." );

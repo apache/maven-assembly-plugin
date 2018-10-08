@@ -83,7 +83,7 @@ public class ComponentsXmlArchiverFileFilter
             {
                 if ( components == null )
                 {
-                    components = new LinkedHashMap<String, Xpp3Dom>();
+                    components = new LinkedHashMap<>();
                 }
 
                 final String role = component.getChild( "role" ).getValue();
@@ -203,8 +203,7 @@ public class ComponentsXmlArchiverFileFilter
                 catch ( final XmlPullParserException e )
                 {
                     final IOException error =
-                        new IOException( "Error finalizing component-set for archive. Reason: " + e.getMessage() );
-                    error.initCause( e );
+                        new IOException( "Error finalizing component-set for archive. Reason: " + e.getMessage(), e );
 
                     throw error;
                 }

@@ -46,7 +46,7 @@ public interface AssemblerConfigurationSource
     String[] getDescriptorReferences();
 
     /**
-     * @return The descriptor source direcotoy.
+     * @return The descriptor source directory.
      */
     File getDescriptorSourceDirectory();
 
@@ -86,7 +86,7 @@ public interface AssemblerConfigurationSource
     File getOutputDirectory();
 
     /**
-     * @return The working direcotory.
+     * @return The working directory.
      */
     File getWorkingDirectory();
 
@@ -151,7 +151,7 @@ public interface AssemblerConfigurationSource
     MavenSession getMavenSession();
 
     /**
-     * @return The archiver configu.
+     * @return The archiver configuration.
      */
     String getArchiverConfig();
 

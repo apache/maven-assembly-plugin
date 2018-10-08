@@ -44,6 +44,6 @@ public class AssemblyArchiverPhaseComparator
         {
             return +1;
         }
-        return new Integer( ( (PhaseOrder) o1 ).order() ).compareTo( ( (PhaseOrder) o2 ).order() );
+        return Integer.compare( ( (PhaseOrder) o1 ).order(), ( (PhaseOrder) o2 ).order() );
     }
 }
