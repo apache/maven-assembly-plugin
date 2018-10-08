@@ -22,7 +22,7 @@
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
-  <!-- TODO: a jarjar format would be better -->
+  <!-- TODO: a jar format would be better -->
   <id>jar-with-dependencies</id>
   <formats>
     <format>jar</format>
