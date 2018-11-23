@@ -24,7 +24,7 @@ import org.apache.maven.plugins.assembly.model.GroupVersionAlignment;
 import java.util.List;
 
 /**
- * @version $Id$
+ *
  */
 class GroupVersionAlignmentWrapper
     implements org.apache.maven.plugins.assembly.repository.model.GroupVersionAlignment

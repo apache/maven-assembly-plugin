@@ -50,7 +50,7 @@ import java.util.Map;
  * Components XML file filter.
  *
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
- * @version $Id$
+ *
  */
 @Component( role = ContainerDescriptorHandler.class, hint = "plexus", instantiationStrategy = "per-lookup" )
 public class ComponentsXmlArchiverFileFilter

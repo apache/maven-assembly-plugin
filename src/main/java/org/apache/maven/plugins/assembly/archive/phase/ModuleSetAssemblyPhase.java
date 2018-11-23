@@ -69,7 +69,7 @@ import static org.apache.maven.plugins.assembly.functions.MavenProjects.log;
 /**
  * Handles the &lt;moduleSets/&gt; top-level section of the assembly descriptor.
  *
- * @version $Id$
+ *
  */
 @Component( role = AssemblyArchiverPhase.class, hint = "module-sets" )
 public class ModuleSetAssemblyPhase

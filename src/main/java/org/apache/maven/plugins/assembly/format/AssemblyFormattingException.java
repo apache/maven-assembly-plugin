@@ -20,7 +20,7 @@ package org.apache.maven.plugins.assembly.format;
  */
 
 /**
- * @version $Id$
+ *
  */
 public class AssemblyFormattingException
     extends Exception

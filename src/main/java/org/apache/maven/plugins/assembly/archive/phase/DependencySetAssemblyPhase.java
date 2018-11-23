@@ -44,7 +44,7 @@ import java.util.Set;
 /**
  * Handles the top-level &lt;dependencySets/&gt; section of the assembly descriptor.
  *
- * @version $Id$
+ *
  */
 @Component( role = AssemblyArchiverPhase.class, hint = "dependency-sets" )
 public class DependencySetAssemblyPhase

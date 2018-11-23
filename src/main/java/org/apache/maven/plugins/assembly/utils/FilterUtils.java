@@ -41,7 +41,7 @@ import org.apache.maven.shared.artifact.filter.resolve.ScopeFilter;
 import org.codehaus.plexus.logging.Logger;
 
 /**
- * @version $Id$
+ *
  */
 public final class FilterUtils
 {

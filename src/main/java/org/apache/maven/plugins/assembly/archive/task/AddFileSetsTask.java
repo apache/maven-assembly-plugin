@@ -38,7 +38,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * @version $Id$
+ *
  */
 public class AddFileSetsTask
 {

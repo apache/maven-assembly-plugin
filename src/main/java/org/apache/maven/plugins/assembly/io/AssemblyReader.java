@@ -28,7 +28,7 @@ import java.io.File;
 import java.util.List;
 
 /**
- * @version $Id$
+ *
  */
 public interface AssemblyReader
 {

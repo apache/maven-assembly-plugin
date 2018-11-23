@@ -20,7 +20,7 @@ package org.apache.maven.plugins.assembly.archive;
  */
 
 /**
- * @version $Id$
+ *
  */
 public class ArchiveExpansionException
     extends Exception

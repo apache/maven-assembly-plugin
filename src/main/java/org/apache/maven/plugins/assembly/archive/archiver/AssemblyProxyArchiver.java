@@ -56,7 +56,7 @@ import java.util.Map;
  * </ul>
  *
  * @author jdcasey
- * @version $Id$
+ *
  */
 public class AssemblyProxyArchiver
     implements Archiver

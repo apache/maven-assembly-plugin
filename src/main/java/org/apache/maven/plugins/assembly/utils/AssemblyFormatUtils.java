@@ -42,7 +42,7 @@ import java.util.ListIterator;
 import java.util.Properties;
 
 /**
- * @version $Id$
+ *
  */
 public final class AssemblyFormatUtils
 {

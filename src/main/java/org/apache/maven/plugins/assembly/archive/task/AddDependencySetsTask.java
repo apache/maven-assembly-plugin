@@ -55,7 +55,7 @@ import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
 import org.codehaus.plexus.logging.Logger;
 
 /**
- * @version $Id$
+ *
  */
 public class AddDependencySetsTask
 {

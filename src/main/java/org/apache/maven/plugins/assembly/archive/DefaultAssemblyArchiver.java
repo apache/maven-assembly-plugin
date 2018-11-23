@@ -83,7 +83,7 @@ import java.util.Map;
  * interpret the various sections of the assembly descriptor and determine which files to add, and other associated
  * activities.
  *
- * @version $Id$
+ *
  */
 @Component( role = AssemblyArchiver.class, instantiationStrategy = "per-lookup" )
 public class DefaultAssemblyArchiver

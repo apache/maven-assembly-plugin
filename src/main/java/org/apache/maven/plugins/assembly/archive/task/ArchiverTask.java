@@ -26,7 +26,7 @@ import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.codehaus.plexus.archiver.Archiver;
 
 /**
- * @version $Id$
+ *
  */
 public interface ArchiverTask
 {

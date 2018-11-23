@@ -70,7 +70,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @version $Id$
+ *
  */
 @org.codehaus.plexus.component.annotations.Component( role = AssemblyReader.class )
 public class DefaultAssemblyReader

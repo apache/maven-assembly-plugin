@@ -25,7 +25,7 @@ import org.codehaus.plexus.logging.Logger;
 import java.util.List;
 
 /**
- * @version $Id$
+ *
  */
 public final class TypeConversionUtils
 {

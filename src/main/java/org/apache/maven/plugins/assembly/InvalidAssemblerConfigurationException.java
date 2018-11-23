@@ -20,7 +20,7 @@ package org.apache.maven.plugins.assembly;
  */
 
 /**
- * @version $Id$
+ *
  */
 public class InvalidAssemblerConfigurationException
     extends Exception

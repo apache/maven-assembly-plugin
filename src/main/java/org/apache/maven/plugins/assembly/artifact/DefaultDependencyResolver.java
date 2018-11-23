@@ -41,7 +41,7 @@ import org.codehaus.plexus.util.StringUtils;
 
 /**
  * @author jdcasey
- * @version $Id$
+ *
  */
 @Component( role = DependencyResolver.class )
 public class DefaultDependencyResolver

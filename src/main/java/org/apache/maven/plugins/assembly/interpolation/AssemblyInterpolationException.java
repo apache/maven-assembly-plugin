@@ -20,7 +20,7 @@ package org.apache.maven.plugins.assembly.interpolation;
  */
 
 /**
- * @version $Id$
+ *
  */
 public class AssemblyInterpolationException
     extends Exception

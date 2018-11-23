@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @version $Id$
+ *
  */
 public class AssemblyInterpolator
 {

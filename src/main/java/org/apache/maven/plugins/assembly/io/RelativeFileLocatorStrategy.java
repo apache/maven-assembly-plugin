@@ -27,7 +27,7 @@ import org.apache.maven.shared.io.logging.MessageHolder;
 import java.io.File;
 
 /**
- * @version $Id$
+ *
  */
 class RelativeFileLocatorStrategy
     implements LocatorStrategy

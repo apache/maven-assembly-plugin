@@ -31,7 +31,7 @@ import org.codehaus.plexus.archiver.Archiver;
  * Handles one top-level section of the assembly descriptor, to determine which files to include in the assembly archive
  * for that section.
  *
- * @version $Id$
+ *
  */
 public interface AssemblyArchiverPhase
 {

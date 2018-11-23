@@ -43,7 +43,7 @@ import java.io.File;
 import java.util.List;
 
 /**
- * @version $Id$
+ *
  */
 @Component( role = AssemblyArchiverPhase.class, hint = "repositories" )
 public class RepositoryAssemblyPhase

@@ -29,7 +29,7 @@ import java.io.File;
 /**
  * Creates an archive
  *
- * @version $Id$
+ *
  */
 public interface AssemblyArchiver
 {

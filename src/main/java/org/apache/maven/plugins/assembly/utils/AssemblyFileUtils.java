@@ -26,7 +26,7 @@ import java.io.File;
 import java.util.Locale;
 
 /**
- * @version $Id$
+ *
  */
 public final class AssemblyFileUtils
 {

@@ -26,7 +26,7 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuildingRequest;
 
 /**
- * @version $Id$
+ *
  */
 public class RepoBuilderConfigSourceWrapper
     implements RepositoryBuilderConfigSource

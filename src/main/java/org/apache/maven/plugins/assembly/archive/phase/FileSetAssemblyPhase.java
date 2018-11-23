@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * Handles the &lt;fileSets/&gt; top-level section of the assembly descriptor.
  *
- * @version $Id$
+ *
  */
 @Component( role = AssemblyArchiverPhase.class, hint = "file-sets" )
 public class FileSetAssemblyPhase

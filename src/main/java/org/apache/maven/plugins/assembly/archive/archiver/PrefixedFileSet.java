@@ -26,7 +26,7 @@ import org.codehaus.plexus.components.io.functions.InputStreamTransformer;
 import java.io.File;
 
 /**
- * @version $Id$
+ *
  */
 class PrefixedFileSet
     implements FileSet

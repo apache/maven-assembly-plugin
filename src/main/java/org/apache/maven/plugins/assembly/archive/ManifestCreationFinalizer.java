@@ -43,7 +43,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @version $Id$
+ *
  */
 public class ManifestCreationFinalizer
     extends AbstractArchiveFinalizer

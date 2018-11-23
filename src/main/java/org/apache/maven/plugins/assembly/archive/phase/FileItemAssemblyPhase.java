@@ -43,7 +43,7 @@ import static org.codehaus.plexus.components.io.resources.ResourceFactory.create
 /**
  * Handles the top-level &lt;files/&gt; section of the assembly descriptor.
  *
- * @version $Id$
+ *
  */
 @Component( role = AssemblyArchiverPhase.class, hint = "file-items" )
 public class FileItemAssemblyPhase

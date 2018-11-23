@@ -39,7 +39,7 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
  *
  * @author <a href="mailto:jdcasey@apache.org">John Casey</a>
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
- * @version $Id$
+ *
  */
 @Mojo( name = "single", inheritByDefault = false, requiresDependencyResolution = ResolutionScope.TEST,
     threadSafe = true )

@@ -20,7 +20,7 @@ package org.apache.maven.plugins.assembly.artifact;
  */
 
 /**
- * @version $Id$
+ *
  */
 public class DependencyResolutionException
     extends Exception

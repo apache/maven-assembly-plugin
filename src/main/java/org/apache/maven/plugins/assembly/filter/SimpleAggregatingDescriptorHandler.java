@@ -46,7 +46,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @version $Id$
+ *
  */
 @Component( role = ContainerDescriptorHandler.class, hint = "file-aggregator", instantiationStrategy = "per-lookup" )
 public class SimpleAggregatingDescriptorHandler

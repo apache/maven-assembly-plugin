@@ -20,7 +20,7 @@ package org.apache.maven.plugins.assembly.io;
  */
 
 /**
- * @version $Id$
+ *
  */
 public class AssemblyReadException
     extends Exception
