@@ -190,32 +190,15 @@ public class SimpleAggregatingDescriptorHandler
     private void readProperties( final FileInfo fileInfo )
         throws IOException
     {
-        Reader reader = null;
-        StringWriter writer = null;
-        try
+        try ( StringWriter writer = new StringWriter();
+            Reader reader = AssemblyFileUtils.isPropertyFile( fileInfo.getName() )
+                ? new InputStreamReader( fileInfo.getContents(), StandardCharsets.ISO_8859_1 )
+                : new InputStreamReader( fileInfo.getContents() ) ) // platform encoding
         {
-            writer = new StringWriter();
-
-            reader = AssemblyFileUtils.isPropertyFile( fileInfo.getName() )
-                         ? new InputStreamReader( fileInfo.getContents(), StandardCharsets.ISO_8859_1 )
-                         : new InputStreamReader( fileInfo.getContents() ); // platform encoding
-
             IOUtil.copy( reader, writer );
-
-            writer.close();
             final String content = writer.toString();
-            writer = null;
-
-            reader.close();
-            reader = null;
-
             aggregateWriter.write( "\n" );
             aggregateWriter.write( content );
-        }
-        finally
-        {
-            IOUtil.close( writer );
-            IOUtil.close( reader );
         }
     }
 
