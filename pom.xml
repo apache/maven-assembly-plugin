@@ -377,7 +377,6 @@ under the License.
         <test.remote.repo.url>file://${project.build.testOutputDirectory}/remote-repository</test.remote.repo.url>
         <it.streamLogs>false</it.streamLogs>
         <testVersion>${project.version}</testVersion>
-        <useJvmChmod>false</useJvmChmod>
       </properties>
 
       <build>
@@ -387,7 +386,6 @@ under the License.
             <artifactId>maven-invoker-plugin</artifactId>
             <configuration>
               <properties>
-                <useJvmChmod>${useJvmChmod}</useJvmChmod>
                 <testVersion>${testVersion}</testVersion>
                 <!-- e.g. ensure that Java7 picks up TLSv1.2 when connecting with Central -->
                 <https.protocols>${https.protocols}</https.protocols>
