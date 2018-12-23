@@ -346,11 +346,7 @@ public abstract class AbstractAssemblyMojo
     private boolean updateOnly;
 
     /**
-     * <p>
-     * will use the jvm chmod, this is available for user and all level group level will be ignored As of
-     * assembly-plugin 2.5, this flag is ignored for users of java7+
-     * </p>
-     *
+     * @deprecated Not used anymore and will be removed in future version
      * @since 2.2
      */
     @Parameter( property = "assembly.useJvmChmod", defaultValue = "false" )
@@ -840,6 +836,7 @@ public abstract class AbstractAssemblyMojo
     }
 
     @Override
+    @Deprecated
     public boolean isUseJvmChmod()
     {
         return useJvmChmod;
