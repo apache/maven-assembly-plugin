@@ -24,6 +24,7 @@ import org.codehaus.plexus.components.io.fileselectors.FileSelector;
 import org.codehaus.plexus.components.io.functions.InputStreamTransformer;
 
 import java.io.File;
+import org.codehaus.plexus.components.io.filemappers.FileMapper;
 
 /**
  *
@@ -31,6 +32,7 @@ import java.io.File;
 class PrefixedArchivedFileSet
     implements ArchivedFileSet
 {
+    private final static FileMapper[] EMPTY_FILE_MAPPERS_ARRAY = new FileMapper[0];
 
     private final String rootPrefix;
 
@@ -149,4 +151,9 @@ class PrefixedArchivedFileSet
         return fileSet.getStreamTransformer();
     }
 
+    @Override
+    public FileMapper[] getFileMappers()
+    {
+        return EMPTY_FILE_MAPPERS_ARRAY;
+    }
 }
