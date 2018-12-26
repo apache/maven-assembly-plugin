@@ -26,12 +26,4 @@ under the License.
   <version>1</version>
   <artifactId>handler-def</artifactId>
   
-  <dependencies>
-    <dependency>
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-assembly-plugin</artifactId>
-      <version>${testVersion}</version>
-      <scope>provided</scope>
-    </dependency>
-  </dependencies>
 </project>

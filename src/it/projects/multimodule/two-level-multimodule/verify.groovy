@@ -17,15 +17,5 @@
  * under the License.
  */
 
-import java.io.*;
-
-boolean result = true;
-
-String finalName = "assembly/target/assembly-1.0-SNAPSHOT-bin/assembly-1.0-SNAPSHOT";
-String rootDir = finalName + "/modules/";
-
-result = result && new File( basedir, rootDir + "child-level1-project1-1.0-SNAPSHOT.jar" ).exists();   
-
-result = result && new File( basedir, rootDir + "child-level2-project1-1.0-SNAPSHOT.jar" ).exists();   
-
-return result;
+assert new File( basedir, "assembly/target/assembly-1.0-SNAPSHOT-bin/modules/child-level1-project1-1.0-SNAPSHOT.jar" ).exists()
+assert new File( basedir, "assembly/target/assembly-1.0-SNAPSHOT-bin/modules/child-level2-project1-1.0-SNAPSHOT.jar" ).exists()

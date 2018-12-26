@@ -375,7 +375,6 @@ under the License.
 
       <properties>
         <test.remote.repo.url>file://${project.build.testOutputDirectory}/remote-repository</test.remote.repo.url>
-        <it.streamLogs>false</it.streamLogs>
         <testVersion>${project.version}</testVersion>
       </properties>
 
@@ -384,6 +383,7 @@ under the License.
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-invoker-plugin</artifactId>
+            <version>3.1.0</version>
             <configuration>
               <properties>
                 <testVersion>${testVersion}</testVersion>
@@ -396,8 +396,6 @@ under the License.
               <execution>
                 <id>integration-test</id>
                 <configuration>
-                  <cloneClean>true</cloneClean>
-                  <testPropertiesFile>test.properties</testPropertiesFile>
                   <setupIncludes>
                     <setupInclude>it-project-parent/pom.xml</setupInclude>
                   </setupIncludes>
@@ -406,7 +404,6 @@ under the License.
                     <pomInclude>projects/descriptor-refs/*/*/pom.xml</pomInclude>
                     <pomInclude>projects/multimodule/multimodule-siblingParent/parent/pom.xml</pomInclude>
                   </pomIncludes>
-                  <streamLogs>${it.streamLogs}</streamLogs>
                   <pomExcludes>
                     <pomExclude>projects/repositories/repo-with-snapshot-parents/pom.xml</pomExclude>
                     <pomExclude>projects/dependency-sets/depSet-transFromProfile/pom.xml</pomExclude>

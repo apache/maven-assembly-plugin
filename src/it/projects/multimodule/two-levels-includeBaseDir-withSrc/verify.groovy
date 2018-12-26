@@ -17,21 +17,11 @@
  * under the License.
  */
 
-import java.io.*;
-import java.net.*;
-import java.util.jar.*;
+String finalName = "assembly/target/assembly-1.0-SNAPSHOT-src/assembly-1.0-SNAPSHOT"
+String rootDir = finalName + "/modules/"
 
-boolean result = true;
+assert new File( basedir, rootDir + "child-level1-project1/pom.xml" ).exists()   
 
-try
-{
-    result = new File( basedir, "assembly/target/assembly-1.0-SNAPSHOT-bin/modules/child-level1-project1-1.0-SNAPSHOT.jar" ).exists();
-    result = result && new File( basedir, "assembly/target/assembly-1.0-SNAPSHOT-bin/modules/child-level2-project1-1.0-SNAPSHOT.jar" ).exists();
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-    result = false;
-}
+assert new File( basedir, rootDir + "child-level1-project2/pom.xml" ).exists()   
 
-return result;
+assert new File( basedir, rootDir + "child-level2-project1/pom.xml" ).exists()   
