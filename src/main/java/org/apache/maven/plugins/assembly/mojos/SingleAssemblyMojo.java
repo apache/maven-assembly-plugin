@@ -33,7 +33,7 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
  * Assemble an application bundle or distribution from an assembly descriptor. This goal is suitable either for binding
  * to the lifecycle or calling directly from the command line (provided all required files are available before the
  * build starts, or are produced by another goal specified before this one on the command line).
- * <br />
+ * <br >
  * Note that the parameters {@code descriptors}, {@code descriptorRefs}, and {@code descriptorSourceDirectory}
  * are disjoint, i.e., they are not combined during descriptor location calculation.
  *

@@ -158,7 +158,7 @@ public interface AssemblerConfigurationSource
     /**
      * Maven shared filtering utility.
      *
-     * @ return the maven reader filter
+     * @return the maven reader filter
      */
     MavenReaderFilter getMavenReaderFilter();
 

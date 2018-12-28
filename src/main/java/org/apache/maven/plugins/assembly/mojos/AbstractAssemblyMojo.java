@@ -57,7 +57,6 @@ import java.util.Properties;
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
  * @author <a href="mailto:vincent.siveton@gmail.com">Vincent Siveton</a>
  *
- * @threadSafe
  */
 public abstract class AbstractAssemblyMojo
     extends AbstractMojo
