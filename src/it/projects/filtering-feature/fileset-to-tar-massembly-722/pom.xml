@@ -45,6 +45,7 @@ under the License.
                       <phase>package</phase>
                       <goals><goal>single</goal></goals>
                       <configuration>
+                          <tarLongFileMode>posix</tarLongFileMode>
                           <descriptors>
                               <descriptors>src/main/assemblies/prod-assemble.xml</descriptors>
                           </descriptors>
