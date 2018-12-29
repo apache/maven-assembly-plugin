@@ -585,9 +585,9 @@
         a project's pom.xml. This allows you to include sources or binaries
         belonging to a project's &lt;modules&gt;.
 
-        <br><b>NOTE:</b> When using &lt;moduleSets&gt; from the command-line, it
+        <p><b>NOTE:</b> When using &lt;moduleSets&gt; from the command-line, it
         is required to pass first the package phase by doing: "mvn package
-        assembly:assembly". This bug/issue is scheduled to be addressed by Maven 2.1.
+        assembly:assembly". This bug/issue is scheduled to be addressed by Maven 2.1.</p>
         ]]>
       </description>
       <version>1.1.2+</version>
@@ -1010,8 +1010,8 @@
         and also contains both sha1 and md5 checksums. This is useful for creating
         archives which will be deployed to internal repositories.
 
-        <br><b>NOTE:</b> Currently, only artifacts from the central repository
-        are allowed.
+        <p><b>NOTE:</b> Currently, only artifacts from the central repository
+        are allowed.</p>
         ]]>
       </description>
       <fields>
