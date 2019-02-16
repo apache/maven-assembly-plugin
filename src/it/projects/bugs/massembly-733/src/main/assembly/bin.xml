@@ -27,8 +27,8 @@ under the License.
 
   <files>
     <file>
-      <outputDirectory>/root</outputDirectory>
       <source>src/main/assembly/bin.xml</source>
+      <outputDirectory>root</outputDirectory>
     </file>
   </files>
 

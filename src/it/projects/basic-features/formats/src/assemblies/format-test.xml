@@ -39,7 +39,7 @@ under the License.
   <files>
     <file>
       <source>TODO.txt</source>
-      <outputDirectory>/</outputDirectory>
+      <outputDirectory></outputDirectory>
     </file>
   </files>
 </assembly>

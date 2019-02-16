@@ -28,7 +28,7 @@ under the License.
   <includeBaseDirectory>false</includeBaseDirectory>
   <fileSets>
     <fileSet>
-      <outputDirectory>/</outputDirectory>
+      <outputDirectory></outputDirectory>
       <directory>src/main/assembly-resources</directory>
       <filtered>true</filtered>
       <lineEnding>unix</lineEnding>

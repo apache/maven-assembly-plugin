@@ -792,7 +792,7 @@ public class AssemblyFormatUtilsTest
 
     public void testLinuxRootReferencePath()
     {
-        assertTrue( AssemblyFormatUtils.isLinuxRootReference( "/etc/home" ) );
+        assertTrue( AssemblyFormatUtils.isUnixRootReference( "/etc/home" ) );
     }
 
 
@@ -820,8 +820,6 @@ public class AssemblyFormatUtilsTest
 
             expect( configSource.getFinalName() ).andReturn( finalName ).atLeastOnce();
         }
-
-
     }
 
 }

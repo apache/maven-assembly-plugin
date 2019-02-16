@@ -33,7 +33,7 @@ under the License.
   <fileSets>
     <fileSet>
       <directory>${project.build.outputDirectory}</directory>
-      <outputDirectory>/</outputDirectory>
+      <outputDirectory></outputDirectory>
     </fileSet>
   </fileSets>
 </assembly>

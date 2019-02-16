@@ -34,7 +34,7 @@ under the License.
       <sources>
         <fileSets>
           <fileSet>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory></outputDirectory>
             <directory>src/main/assembly-resources</directory>
             <filtered>true</filtered>
           </fileSet>

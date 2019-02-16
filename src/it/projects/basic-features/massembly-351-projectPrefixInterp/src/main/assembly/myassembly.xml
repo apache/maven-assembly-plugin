@@ -31,21 +31,21 @@ under the License.
     <fileSets>
         <fileSet>
             <directory>src/main/files</directory>
-            <outputDirectory>/files</outputDirectory>
+            <outputDirectory>files</outputDirectory>
             <includes>
               <include>${artifactId}1.file</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>src/main/files</directory>
-            <outputDirectory>/files</outputDirectory>
+            <outputDirectory>files</outputDirectory>
             <includes>
               <include>${pom.artifactId}2.file</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>src/main/files</directory>
-            <outputDirectory>/files</outputDirectory>
+            <outputDirectory>files</outputDirectory>
             <includes>
               <include>${project.artifactId}3.file</include>
             </includes>
