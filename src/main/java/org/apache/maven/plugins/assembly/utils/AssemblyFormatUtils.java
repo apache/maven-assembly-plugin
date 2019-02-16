@@ -480,15 +480,15 @@ public final class AssemblyFormatUtils
     {
         if ( Os.isFamily( Os.FAMILY_WINDOWS ) )
         {
-            if ( isLinuxRootReference( destDirectory ) )
+            if ( isUnixRootReference( destDirectory ) )
             {
-                logger.error( "OS=Windows and the assembly descriptor contains a *nix-specific root-relative-reference"
-                                  + " (starting with slash) " + destDirectory );
+                logger.error( "OS=Windows and the assembly descriptor contains a *nix-specific root-relative reference"
+                                  + " (starting with slash): " + destDirectory );
             }
             else if ( isWindowsPath( destDirectory ) )
             {
-                logger.warn( "The assembly descriptor contains a *nix-specific root-relative-reference"
-                                 + " (starting with slash). This is non-portable and will fail on windows "
+                logger.warn( "The assembly descriptor contains a Windows-specific directory reference"
+                                 + " (with a drive letter). This is not portable and will fail on non-Windows: "
                                  + destDirectory );
             }
         }
@@ -497,13 +497,14 @@ public final class AssemblyFormatUtils
             if ( isWindowsPath( destDirectory ) )
             {
                 logger.error(
-                    "OS=Non-Windows and the assembly descriptor contains a windows-specific directory reference"
-                        + " (with a drive letter) " + destDirectory );
+                    "OS=Non-Windows and the assembly descriptor contains a Windows-specific directory reference"
+                        + " (with a drive letter): " + destDirectory );
             }
-            else if ( isLinuxRootReference( destDirectory ) )
+            else if ( isUnixRootReference( destDirectory ) )
             {
-                logger.warn( "The assembly descriptor contains a filesystem-root relative reference,"
-                                 + " which is not cross platform compatible " + destDirectory );
+                logger.warn( "The assembly descriptor contains a *nix-specific root-relative reference"
+                                 + " (starting with slash). This is not portable and might fail on Windows: "
+                                 + destDirectory );
             }
         }
     }
@@ -513,7 +514,7 @@ public final class AssemblyFormatUtils
         return ( destDirectory != null && destDirectory.length() >= 2 && destDirectory.charAt( 1 ) == ':' );
     }
 
-    static boolean isLinuxRootReference( String destDirectory )
+    static boolean isUnixRootReference( String destDirectory )
     {
         return ( destDirectory != null && destDirectory.startsWith( "/" ) );
     }

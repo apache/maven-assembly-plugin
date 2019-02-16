@@ -194,7 +194,7 @@ public class FileItemAssemblyPhaseTest
         if ( Os.isFamily( Os.FAMILY_WINDOWS ) )
         {
             macLogger.logger.error( "OS=Windows and the assembly descriptor contains a *nix-specific "
-                                        + "root-relative-reference (starting with slash) /" );
+                                        + "root-relative reference (starting with slash): /" );
         }
         else
         {
@@ -275,7 +275,7 @@ public class FileItemAssemblyPhaseTest
         if ( Os.isFamily( Os.FAMILY_WINDOWS ) )
         {
             macLogger.logger.error( "OS=Windows and the assembly descriptor contains a *nix-specific "
-                                        + "root-relative-reference (starting with slash) /" );
+                                        + "root-relative reference (starting with slash): /" );
         }
         else
         {

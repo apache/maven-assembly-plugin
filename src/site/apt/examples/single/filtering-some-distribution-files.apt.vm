@@ -88,16 +88,16 @@ variable2=value2
   <files>
     <file>
       <source>README.txt</source>
-      <outputDirectory>/</outputDirectory>
+      <outputDirectory></outputDirectory>
       <filtered>true</filtered>
     </file>
     <file>
       <source>LICENSE.txt</source>
-      <outputDirectory>/</outputDirectory>
+      <outputDirectory></outputDirectory>
     </file>
     <file>
       <source>NOTICE.txt</source>
-      <outputDirectory>/</outputDirectory>
+      <outputDirectory></outputDirectory>
       <filtered>true</filtered>
     </file>
   </files>
@@ -133,12 +133,12 @@ variable2=value2
   <files>
     <file>
       <source>README.txt</source>
-      <outputDirectory>/</outputDirectory>
+      <outputDirectory></outputDirectory>
       <filtered>true</filtered>
     </file>
     <file>
       <source>NOTICE.txt</source>
-      <outputDirectory>/</outputDirectory>
+      <outputDirectory></outputDirectory>
       <filtered>true</filtered>
     </file>
   </files>

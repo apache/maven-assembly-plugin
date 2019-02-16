@@ -230,7 +230,7 @@ Advanced Assembly-Descriptor Topics
   <fileSets>
     <fileSet>
       <directory>${project.basedir}</directory>
-      <outputDirectory>/</outputDirectory>
+      <outputDirectory></outputDirectory>
       <excludes>
         <exclude>%regex[(?!.*src/).*target.*]</exclude>
       </excludes>

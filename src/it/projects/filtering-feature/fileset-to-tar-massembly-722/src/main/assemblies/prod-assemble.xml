@@ -26,7 +26,7 @@ under the License.
     <fileSets>
         <fileSet>
             <directory>src/main/filtered-config</directory>
-            <outputDirectory>/config</outputDirectory>
+            <outputDirectory>config</outputDirectory>
             <filtered>true</filtered>
         </fileSet>
     </fileSets>

@@ -31,7 +31,7 @@
   <fileSets>
     <fileSet>
       <directory>\${project.basedir}</directory>
-      <outputDirectory>/</outputDirectory>
+      <outputDirectory></outputDirectory>
       <includes>
         <include>README*</include>
         <include>LICENSE*</include>
@@ -40,7 +40,7 @@
     </fileSet>
     <fileSet>
       <directory>\${project.build.directory}</directory>
-      <outputDirectory>/</outputDirectory>
+      <outputDirectory></outputDirectory>
       <includes>
         <include>*.jar</include>
       </includes>

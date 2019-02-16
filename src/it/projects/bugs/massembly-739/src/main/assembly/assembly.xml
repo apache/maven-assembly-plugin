@@ -31,8 +31,8 @@ under the License.
     </dependencySets>
     <fileSets>
         <fileSet>
-            <outputDirectory>/bin</outputDirectory>
             <directory>${basedir}/src/main/scripts</directory>
+            <outputDirectory>bin</outputDirectory>
         </fileSet>
     </fileSets>
 </assembly>

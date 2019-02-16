@@ -27,7 +27,7 @@ under the License.
   <fileSets>
     <fileSet>
       <directory>${project.basedir}</directory>
-      <outputDirectory>/</outputDirectory>
+      <outputDirectory></outputDirectory>
       <excludes>
         <exclude>**/*.log</exclude>
         <exclude>target/**</exclude>

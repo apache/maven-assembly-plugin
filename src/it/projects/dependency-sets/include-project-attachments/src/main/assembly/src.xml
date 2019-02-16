@@ -29,7 +29,7 @@ under the License.
   <fileSets>
     <fileSet>
       <directory>${basedir}</directory>
-      <outputDirectory>/</outputDirectory>
+      <outputDirectory></outputDirectory>
       <excludes>
         <exclude>target</exclude>
       </excludes>

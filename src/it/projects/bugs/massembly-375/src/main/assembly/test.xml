@@ -27,7 +27,7 @@ under the License.
   <fileSets>
     <fileSet>
       <directory>src/main/assembly</directory>
-      <outputDirectory>/</outputDirectory>
+      <outputDirectory></outputDirectory>
       <includes>
         <include>test.txt</include>
       </includes>
