@@ -64,7 +64,7 @@ under the License.
   <properties>
     <javaVersion>7</javaVersion>
     <mdoVersion>2.0.0</mdoVersion>
-    <mavenArchiverVersion>3.2.0</mavenArchiverVersion>
+    <mavenArchiverVersion>3.4.0</mavenArchiverVersion>
     <mavenFilteringVersion>3.1.1</mavenFilteringVersion>
     <mavenVersion>3.0</mavenVersion>
     <testOutputToFile>true</testOutputToFile>
@@ -137,7 +137,7 @@ under the License.
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-archiver</artifactId>
-      <version>4.0.0</version>
+      <version>4.1.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.shared</groupId>
