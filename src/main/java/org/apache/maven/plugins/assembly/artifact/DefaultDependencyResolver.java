@@ -20,11 +20,15 @@ package org.apache.maven.plugins.assembly.artifact;
  */
 
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
+import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
 import org.apache.maven.plugins.assembly.archive.phase.ModuleSetAssemblyPhase;
@@ -32,8 +36,14 @@ import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.model.DependencySet;
 import org.apache.maven.plugins.assembly.model.ModuleBinaries;
 import org.apache.maven.plugins.assembly.model.ModuleSet;
+import org.apache.maven.project.DefaultProjectBuildingRequest;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.repository.RepositorySystem;
+import org.apache.maven.shared.dependency.graph.DependencyGraphBuilder;
+import org.apache.maven.shared.dependency.graph.DependencyGraphBuilderException;
+import org.apache.maven.shared.dependency.graph.DependencyNode;
+import org.apache.maven.shared.dependency.graph.traversal.CollectingDependencyNodeVisitor;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
@@ -50,7 +60,10 @@ public class DefaultDependencyResolver
 {
     @Requirement
     private RepositorySystem resolver;
-    
+
+    @Requirement
+    private DependencyGraphBuilder dependencyGraphBuilder;
+
     @Override
     public Map<DependencySet, Set<Artifact>> resolveDependencySets( final Assembly assembly, ModuleSet moduleSet,
                                                                     final AssemblerConfigurationSource configSource,
@@ -58,6 +71,7 @@ public class DefaultDependencyResolver
         throws DependencyResolutionException
     {
         Map<DependencySet, Set<Artifact>> result = new LinkedHashMap<>();
+        MavenSession mavenSession = configSource.getMavenSession();
 
         for ( DependencySet dependencySet : dependencySets )
         {
@@ -65,7 +79,7 @@ public class DefaultDependencyResolver
             final MavenProject currentProject = configSource.getProject();
 
             final ResolutionManagementInfo info = new ResolutionManagementInfo();
-            updateDependencySetResolutionRequirements( dependencySet, info, currentProject );
+            updateDependencySetResolutionRequirements( dependencySet, info, mavenSession,  currentProject );
             updateModuleSetResolutionRequirements( moduleSet, dependencySet, info, configSource );
 
             result.put( dependencySet, info.getArtifacts() );
@@ -81,6 +95,7 @@ public class DefaultDependencyResolver
         throws DependencyResolutionException
     {
         Map<DependencySet, Set<Artifact>> result = new LinkedHashMap<>();
+        final MavenSession mavenSession = configSource.getMavenSession();
 
         for ( DependencySet dependencySet : dependencySets )
         {
@@ -88,7 +103,7 @@ public class DefaultDependencyResolver
             final MavenProject currentProject = configSource.getProject();
 
             final ResolutionManagementInfo info = new ResolutionManagementInfo();
-            updateDependencySetResolutionRequirements( dependencySet, info, currentProject );
+            updateDependencySetResolutionRequirements( dependencySet, info, mavenSession, currentProject );
 
             result.put( dependencySet, info.getArtifacts() );
 
@@ -128,7 +143,7 @@ public class DefaultDependencyResolver
 
             if ( binaries.isIncludeDependencies() )
             {
-                updateDependencySetResolutionRequirements( dependencySet, requirements,
+                updateDependencySetResolutionRequirements( dependencySet, requirements, configSource.getMavenSession(),
                                                            projects.toArray( new MavenProject[projects.size()] ) );
             }
         }
@@ -136,6 +151,7 @@ public class DefaultDependencyResolver
 
     void updateDependencySetResolutionRequirements( final DependencySet set,
                                                     final ResolutionManagementInfo requirements,
+                                                    final MavenSession mavenSession,
                                                     final MavenProject... projects )
         throws DependencyResolutionException
     {
@@ -149,7 +165,7 @@ public class DefaultDependencyResolver
             Set<Artifact> dependencyArtifacts = null;
             if ( set.isUseTransitiveDependencies() )
             {
-                dependencyArtifacts = project.getArtifacts();
+                dependencyArtifacts = getTransitiveDependencies( mavenSession, project, set );
             }
             else
             {
@@ -160,6 +176,56 @@ public class DefaultDependencyResolver
             getLogger().debug( "Dependencies for project: " + project.getId() + " are:\n" + StringUtils.join(
                 dependencyArtifacts.iterator(), "\n" ) );
         }
+    }
+
+    private Set<Artifact> getTransitiveDependencies ( final MavenSession mavenSession,
+                                                      final MavenProject project,
+                                                      final DependencySet set ) throws DependencyResolutionException
+    {
+        ProjectBuildingRequest buildingRequest = new DefaultProjectBuildingRequest(
+                mavenSession.getProjectBuildingRequest() );
+
+        buildingRequest.setProject( project );
+        try
+        {
+            DependencyNode rootNode = dependencyGraphBuilder.buildDependencyGraph( buildingRequest,
+                    createArtifactFilter( set ) );
+            CollectingDependencyNodeVisitor collectingVisitor = new CollectingDependencyNodeVisitor();
+            rootNode.accept( collectingVisitor );
+            List<DependencyNode> collectedNodes = collectingVisitor.getNodes();
+            if ( set.isUseProjectArtifact() )
+            {
+                return toSet( collectedNodes, null );
+            }
+            return toSet( collectedNodes, rootNode );
+        }
+        catch ( DependencyGraphBuilderException e )
+        {
+            throw new DependencyResolutionException(
+                    "Unable to resolve " + project.getArtifactId() + ", error:" + e.getMessage(), e );
+        }
+    }
+
+    private Set<Artifact> toSet ( List<DependencyNode> nodes, DependencyNode exclude )
+    {
+        Set<Artifact> result = new LinkedHashSet<>();
+        for ( DependencyNode node : nodes )
+        {
+            if ( node != exclude )
+            {
+                result.add( node.getArtifact() );
+            }
+        }
+        return result;
+    }
+
+    private ArtifactFilter createArtifactFilter ( DependencySet set )
+    {
+        if ( set.getScope() != null )
+        {
+            return new ScopeArtifactFilter( set.getScope() );
+        }
+        return null;
     }
 
 }

@@ -61,7 +61,6 @@ public class DependencySetAssemblyPhase
     @Requirement
     private DependencyResolver dependencyResolver;
 
-
     /**
      * Default constructor.
      */
