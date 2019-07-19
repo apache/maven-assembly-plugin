@@ -75,9 +75,10 @@ Including Module Binaries
       <!-- Now, select which projects to include in this module-set. -->
       <includes>
         <include>org.test:child1</include>
+        <include>org.test:child2</include>
       </includes>
       <binaries>
-        <outputDirectory>modules/${module.artifactId}</outputDirectory>
+        <outputDirectory>modules</outputDirectory>
         <unpack>false</unpack>
       </binaries>
     </moduleSet>
@@ -237,8 +238,7 @@ mvn clean package
 +---+
 target/distribution/distribution-1.0-bin
 `-- modules
-    `-- child1
-        |-- child1-1.0.jar
-        `-- junit-3.8.1.jar
+    `-- child1-1.0.jar
+    `-- child2-1.0.jar
 +---+
 
