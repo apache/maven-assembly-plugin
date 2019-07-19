@@ -201,6 +201,12 @@ public class DefaultDependencyResolverTest
         runDependencyResolution( Artifact.SCOPE_COMPILE, Artifact.SCOPE_TEST, false, Artifact.SCOPE_TEST, false );
     }
 
+    public void test_2ndLevelDependencyResolution_provided_provided_test ()
+            throws DependencyResolutionException, ModelBuildingException
+    {
+        runDependencyResolution( Artifact.SCOPE_PROVIDED, Artifact.SCOPE_PROVIDED, true, Artifact.SCOPE_TEST, false );
+    }
+
     private void runDependencyResolution(final String dependencySetScope, String dependencyScope, boolean added) throws DependencyResolutionException, ModelBuildingException
     {
         runDependencyResolution(dependencySetScope, dependencyScope, added, null, false);

@@ -19,6 +19,7 @@ package org.apache.maven.plugins.assembly.artifact;
  * under the License.
  */
 
+import java.io.StringWriter;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -26,8 +27,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
-import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
@@ -44,10 +43,14 @@ import org.apache.maven.shared.dependency.graph.DependencyGraphBuilder;
 import org.apache.maven.shared.dependency.graph.DependencyGraphBuilderException;
 import org.apache.maven.shared.dependency.graph.DependencyNode;
 import org.apache.maven.shared.dependency.graph.traversal.CollectingDependencyNodeVisitor;
+import org.apache.maven.shared.dependency.graph.traversal.SerializingDependencyNodeVisitor;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.StringUtils;
+import org.sonatype.aether.util.DefaultRepositorySystemSession;
+import org.sonatype.aether.util.graph.selector.StaticDependencySelector;
 
 /**
  * @author jdcasey
@@ -182,14 +185,13 @@ public class DefaultDependencyResolver
                                                       final MavenProject project,
                                                       final DependencySet set ) throws DependencyResolutionException
     {
-        ProjectBuildingRequest buildingRequest = new DefaultProjectBuildingRequest(
-                mavenSession.getProjectBuildingRequest() );
-
-        buildingRequest.setProject( project );
+        ProjectBuildingRequest buildingRequest = createProjectBuildingRequest( mavenSession, project, set );
         try
         {
+            getLogger().debug( "Traversing " + project.getId() + " with scope " + set.getScope() );
             DependencyNode rootNode = dependencyGraphBuilder.buildDependencyGraph( buildingRequest,
-                    createArtifactFilter( set ) );
+                    null );
+            logDependencyTree( rootNode );
             CollectingDependencyNodeVisitor collectingVisitor = new CollectingDependencyNodeVisitor();
             rootNode.accept( collectingVisitor );
             List<DependencyNode> collectedNodes = collectingVisitor.getNodes();
@@ -206,6 +208,41 @@ public class DefaultDependencyResolver
         }
     }
 
+    private ProjectBuildingRequest createProjectBuildingRequest ( final MavenSession mavenSession,
+            final MavenProject project, DependencySet set )
+    {
+        ProjectBuildingRequest originalBuildingRequest = mavenSession.getProjectBuildingRequest();
+        DefaultRepositorySystemSession drss = new DefaultRepositorySystemSession(
+                originalBuildingRequest.getRepositorySession() );
+        ProjectBuildingRequest buildingRequest = new DefaultProjectBuildingRequest( originalBuildingRequest );
+
+        if ( set.getScope() != null )
+        {
+            drss.setDependencySelector( new ScopeBasedDependencySelector( set.getScope() ) );
+        }
+        else
+        {
+            drss.setDependencySelector( new StaticDependencySelector( true ) );
+        }
+        buildingRequest.setRepositorySession( drss );
+
+        buildingRequest.setProject( project );
+        return buildingRequest;
+    }
+
+    private void logDependencyTree ( DependencyNode rootNode )
+    {
+        final Logger logger = getLogger();
+        if ( logger.isDebugEnabled() )
+        {
+            StringWriter out = new StringWriter();
+            SerializingDependencyNodeVisitor sdnv = new SerializingDependencyNodeVisitor( out,
+                SerializingDependencyNodeVisitor.EXTENDED_TOKENS );
+            rootNode.accept( sdnv );
+            logger.debug( "Dependencies :\n" + out.getBuffer() );
+        }
+    }
+
     private Set<Artifact> toSet ( List<DependencyNode> nodes, DependencyNode exclude )
     {
         Set<Artifact> result = new LinkedHashSet<>();
@@ -217,15 +254,6 @@ public class DefaultDependencyResolver
             }
         }
         return result;
-    }
-
-    private ArtifactFilter createArtifactFilter ( DependencySet set )
-    {
-        if ( set.getScope() != null )
-        {
-            return new ScopeArtifactFilter( set.getScope() );
-        }
-        return null;
     }
 
 }
