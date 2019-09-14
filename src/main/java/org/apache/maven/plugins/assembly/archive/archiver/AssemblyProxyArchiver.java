@@ -44,6 +44,8 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -1027,6 +1029,78 @@ public class AssemblyProxyArchiver
         {
             return false;
         }
+    }
+
+    @Override
+    public void setLastModifiedDate( Date lastModifiedDate )
+    {
+        delegate.setLastModifiedDate( lastModifiedDate );
+    }
+
+    @Override
+    public Date getLastModifiedDate()
+    {
+        return delegate.getLastModifiedDate();
+    }
+
+    @Override
+    public void setFilenameComparator( Comparator<String> filenameComparator )
+    {
+        delegate.setFilenameComparator( filenameComparator );
+    }
+
+    @Override
+    public void configureReproducible( Date outputTimestamp )
+    {
+        delegate.configureReproducible( outputTimestamp );
+    }
+
+    @Override
+    public void setOverrideUid( int uid )
+    {
+        delegate.setOverrideUid( uid );
+    }
+
+    @Override
+    public void setOverrideUserName( String userName )
+    {
+        delegate.setOverrideUserName( userName );
+    }
+
+    @Override
+    public int getOverrideUid()
+    {
+        return delegate.getOverrideUid();
+    }
+
+    @Override
+    public String getOverrideUserName()
+    {
+        return delegate.getOverrideUserName();
+    }
+
+    @Override
+    public void setOverrideGid( int gid )
+    {
+        delegate.setOverrideGid( gid );
+    }
+
+    @Override
+    public void setOverrideGroupName( String groupName )
+    {
+        delegate.setOverrideGroupName( groupName );
+    }
+
+    @Override
+    public int getOverrideGid()
+    {
+        return delegate.getOverrideGid();
+    }
+
+    @Override
+    public String getOverrideGroupName()
+    {
+        return delegate.getOverrideGroupName();
     }
 
 }

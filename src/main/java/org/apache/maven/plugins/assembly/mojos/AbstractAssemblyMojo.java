@@ -20,6 +20,7 @@ package org.apache.maven.plugins.assembly.mojos;
  */
 
 import org.apache.maven.archiver.MavenArchiveConfiguration;
+import org.apache.maven.archiver.MavenArchiver;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
@@ -50,6 +51,7 @@ import org.codehaus.plexus.interpolation.fixed.PropertiesBasedValueSource;
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -390,6 +392,16 @@ public abstract class AbstractAssemblyMojo
     @Parameter
     private List<String> delimiters;
 
+    /**
+     * Timestamp for reproducible output archive entries, either formatted as ISO 8601
+     * <code>yyyy-MM-dd'T'HH:mm:ssXXX</code> or as an int representing seconds since the epoch (like
+     * <a href="https://reproducible-builds.org/docs/source-date-epoch/">SOURCE_DATE_EPOCH</a>).
+     *
+     * @since 3.2.0
+     */
+    @Parameter( defaultValue = "${project.build.outputTimestamp}" )
+    private String outputTimestamp;
+
     public static FixedStringSearchInterpolator mainProjectInterpolator( MavenProject mainProject )
     {
         if ( mainProject != null )
@@ -450,6 +462,9 @@ public abstract class AbstractAssemblyMojo
         // TODO: include dependencies marked for distribution under certain formats
         // TODO: how, might we plug this into an installer, such as NSIS?
 
+        MavenArchiver mavenArchiver = new MavenArchiver();
+        Date outputDate = mavenArchiver.parseOutputTimestamp( outputTimestamp );
+
         boolean warnedAboutMainProjectArtifact = false;
         for ( final Assembly assembly : assemblies )
         {
@@ -472,7 +487,7 @@ public abstract class AbstractAssemblyMojo
                 {
                     final File destFile =
                         assemblyArchiver.createArchive( assembly, fullName, format,
-                            this, isRecompressZippedFiles(), getMergeManifestMode() );
+                            this, isRecompressZippedFiles(), getMergeManifestMode(), outputDate );
 
                     final MavenProject project = getProject();
                     final String type = project.getArtifact().getType();

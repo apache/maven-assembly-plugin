@@ -30,7 +30,7 @@ under the License.
   </parent>
 
   <artifactId>maven-assembly-plugin</artifactId>
-  <version>3.1.2-SNAPSHOT</version>
+  <version>3.2.0-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>Apache Maven Assembly Plugin</name>
@@ -64,7 +64,7 @@ under the License.
   <properties>
     <javaVersion>7</javaVersion>
     <mdoVersion>2.0.0</mdoVersion>
-    <mavenArchiverVersion>3.4.0</mavenArchiverVersion>
+    <mavenArchiverVersion>3.5.0</mavenArchiverVersion>
     <mavenFilteringVersion>3.1.1</mavenFilteringVersion>
     <mavenVersion>3.0</mavenVersion>
     <testOutputToFile>true</testOutputToFile>
@@ -137,7 +137,7 @@ under the License.
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-archiver</artifactId>
-      <version>4.1.0</version>
+      <version>4.2.1</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.shared</groupId>
@@ -162,7 +162,7 @@ under the License.
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-io</artifactId>
-      <version>3.1.1</version>
+      <version>3.2.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -172,13 +172,14 @@ under the License.
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
-      <version>3.2.0</version>
+      <version>3.3.0</version>
     </dependency>
     <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
       <version>1.6</version>
     </dependency>
+
     <dependency>
       <groupId>org.apache.maven.plugin-testing</groupId>
       <artifactId>maven-plugin-testing-harness</artifactId>
@@ -267,7 +268,6 @@ under the License.
       <plugin>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-component-metadata</artifactId>
-        <version>1.7</version>
         <executions>
           <execution>
             <id>descriptors</id>
@@ -402,6 +402,7 @@ under the License.
                     <pomInclude>projects/*/*/pom.xml</pomInclude>
                     <pomInclude>projects/descriptor-refs/*/*/pom.xml</pomInclude>
                     <pomInclude>projects/multimodule/multimodule-siblingParent/parent/pom.xml</pomInclude>
+                    <pomInclude>projects/reproducible/pom.xml</pomInclude>
                   </pomIncludes>
                   <pomExcludes>
                     <pomExclude>projects/repositories/repo-with-snapshot-parents/pom.xml</pomExclude>
