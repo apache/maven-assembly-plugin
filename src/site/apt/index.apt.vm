@@ -31,12 +31,13 @@ ${project.name}
 
 * Introduction
 
-  The Assembly Plugin for Maven is primarily intended to allow users to
-  aggregate the project output along with its dependencies, modules, site
-  documentation, and other files into a single distributable archive.
+  The Assembly Plugin for Maven enables developers to
+  combine project output into a single distributable archive
+  that also contains dependencies, modules, site
+  documentation, and other files.
 
-  Your project can build distribution "assemblies" easily, using one of the
-  convenient, {{{./descriptor-refs.html}prefabricated assembly descriptors}}.
+  Your project can easily build distribution "assemblies" using one of the
+  {{{./descriptor-refs.html}prefabricated assembly descriptors}}.
   These descriptors handle many common operations, such as packaging a project's
   artifact along with generated documentation into a
   {{{./descriptor-refs.html#bin}single zip archive}}.
