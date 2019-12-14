@@ -1,0 +1,9 @@
+# see https://s.apache.org/asfyaml
+github:
+  description: "Apache Maven Assembly Plugin"
+  homepage: https://maven.apache.org/plugins/maven-assembly-plugin/
+  labels:
+    - java
+    - build-management
+    - maven-plugins
+    - maven
