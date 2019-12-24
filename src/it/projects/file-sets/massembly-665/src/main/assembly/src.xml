@@ -36,6 +36,7 @@ under the License.
 		</includes>
 	</fileSet>
 	<fileSet>
+		<!-- This points to an absolute path on the current drive -->
 		<directory>/src/test/java/test</directory>
 		<outputDirectory>conf</outputDirectory>
 		<includes>
