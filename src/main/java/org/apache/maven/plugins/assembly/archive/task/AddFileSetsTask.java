@@ -110,9 +110,10 @@ public class AddFileSetsTask
         if ( destDirectory == null )
         {
             destDirectory = fileSet.getDirectory();
+
+            AssemblyFormatUtils.warnForPlatformSpecifics( logger, destDirectory );
         }
 
-        AssemblyFormatUtils.warnForPlatformSpecifics( logger, destDirectory );
 
         destDirectory =
             AssemblyFormatUtils.getOutputDirectory( destDirectory, configSource.getFinalName(), configSource,
@@ -186,7 +187,12 @@ public class AddFileSetsTask
         {
             fileSetDir = new File( sourceDirectory );
 
-            if ( !fileSetDir.isAbsolute() )
+            // If the file is not absolute then it's a subpath of the current project basedir
+            // For OS compatibility we also must treat any path starting with "/" as absolute
+            // as File#isAbsolute() returns false for /absolutePath under Windows :(
+            // Note that in Windows an absolute path with / will be on the 'current drive'.
+            // But I think we can live with this.
+            if ( !fileSetDir.isAbsolute() && !fileSetDir.getPath().startsWith( "/" ) )
             {
                 fileSetDir = new File( basedir, sourceDirectory );
             }
