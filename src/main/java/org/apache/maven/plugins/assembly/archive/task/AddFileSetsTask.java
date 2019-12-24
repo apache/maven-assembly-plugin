@@ -110,9 +110,10 @@ public class AddFileSetsTask
         if ( destDirectory == null )
         {
             destDirectory = fileSet.getDirectory();
+
+            AssemblyFormatUtils.warnForPlatformSpecifics( logger, destDirectory );
         }
 
-        AssemblyFormatUtils.warnForPlatformSpecifics( logger, destDirectory );
 
         destDirectory =
             AssemblyFormatUtils.getOutputDirectory( destDirectory, configSource.getFinalName(), configSource,
