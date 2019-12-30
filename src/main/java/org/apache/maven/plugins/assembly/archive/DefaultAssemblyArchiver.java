@@ -62,6 +62,7 @@ import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
+import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
@@ -351,6 +352,23 @@ public class DefaultAssemblyArchiver
         if ( outputTimestamp != null )
         {
             archiver.configureReproducible( outputTimestamp );
+        }
+
+        if ( configSource.getOverrideUid() != null )
+        {
+            archiver.setOverrideUid( configSource.getOverrideUid() );
+        }
+        if ( StringUtils.isNotBlank( configSource.getOverrideUserName() ) )
+        {
+            archiver.setOverrideUserName( StringUtils.trim( configSource.getOverrideUserName() ) );
+        }
+        if ( configSource.getOverrideGid() != null )
+        {
+            archiver.setOverrideGid( configSource.getOverrideGid() );
+        }
+        if ( StringUtils.isNotBlank( configSource.getOverrideGroupName() ) )
+        {
+            archiver.setOverrideGroupName( StringUtils.trim( configSource.getOverrideGroupName() ) );
         }
 
         return archiver;

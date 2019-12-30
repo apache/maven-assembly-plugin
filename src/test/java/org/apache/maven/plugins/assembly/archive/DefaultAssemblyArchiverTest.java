@@ -47,6 +47,7 @@ import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.codehaus.plexus.util.FileUtils;
+import org.easymock.EasyMock;
 import org.easymock.classextension.EasyMockSupport;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -60,6 +61,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.easymock.EasyMock.anyBoolean;
+import static org.easymock.EasyMock.anyInt;
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
@@ -171,6 +173,10 @@ public class DefaultAssemblyArchiverTest
             fail( "Should never happen" );
         }
 
+        expect( configSource.getOverrideUid() ).andReturn( 0 ).atLeastOnce();
+        expect( configSource.getOverrideUserName() ).andReturn( "root" ).atLeastOnce();
+        expect( configSource.getOverrideGid() ).andReturn( 0 ).atLeastOnce();
+        expect( configSource.getOverrideGroupName() ).andReturn( "root" ).atLeastOnce();
         expect( configSource.getOutputDirectory() ).andReturn( outDir );
         expect( configSource.getFinalName() ).andReturn( "finalName" );
         expect( configSource.getArchiverConfig() ).andReturn( null ).anyTimes();
@@ -240,6 +246,11 @@ public class DefaultAssemblyArchiverTest
         expect( configSource.isIgnorePermissions() ).andReturn( true );
         setupInterpolators( configSource, project );
 
+        expect( configSource.getOverrideUid() ).andReturn( 0 ).atLeastOnce();
+        expect( configSource.getOverrideUserName() ).andReturn( "root" ).atLeastOnce();
+        expect( configSource.getOverrideGid() ).andReturn( 0 ).atLeastOnce();
+        expect( configSource.getOverrideGroupName() ).andReturn( "root" ).atLeastOnce();
+
         mm.replayAll();
 
         final DefaultAssemblyArchiver subject =
@@ -295,6 +306,11 @@ public class DefaultAssemblyArchiverTest
 
         expect( configSource.isIgnorePermissions() ).andReturn( true ).anyTimes();
 
+        expect( configSource.getOverrideUid() ).andReturn( 0 ).atLeastOnce();
+        expect( configSource.getOverrideUserName() ).andReturn( "root" ).atLeastOnce();
+        expect( configSource.getOverrideGid() ).andReturn( 0 ).atLeastOnce();
+        expect( configSource.getOverrideGroupName() ).andReturn( "root" ).atLeastOnce();
+
         mm.replayAll();
 
         return createSubject( macArchiverManager, new ArrayList<AssemblyArchiverPhase>(), null );
@@ -344,6 +360,11 @@ public class DefaultAssemblyArchiverTest
         expect( configSource.isUpdateOnly() ).andReturn( false ).anyTimes();
         expect( configSource.getJarArchiveConfiguration() ).andReturn( null ).anyTimes();
         expect( configSource.isIgnorePermissions() ).andReturn( true ).anyTimes();
+
+        expect( configSource.getOverrideUid() ).andReturn( 0 ).atLeastOnce();
+        expect( configSource.getOverrideUserName() ).andReturn( "root" ).atLeastOnce();
+        expect( configSource.getOverrideGid() ).andReturn( 0 ).atLeastOnce();
+        expect( configSource.getOverrideGroupName() ).andReturn( "root" ).atLeastOnce();
 
         mm.replayAll();
 
@@ -650,6 +671,18 @@ public class DefaultAssemblyArchiverTest
             expectLastCall().anyTimes();
 
             archiver.setIgnorePermissions( false );
+            expectLastCall().anyTimes();
+
+            archiver.setOverrideUid( anyInt() );
+            expectLastCall().anyTimes();
+
+            archiver.setOverrideUserName( EasyMock.<String>anyObject() );
+            expectLastCall().anyTimes();
+
+            archiver.setOverrideGid( anyInt() );
+            expectLastCall().anyTimes();
+
+            archiver.setOverrideGroupName( EasyMock.<String>anyObject() );
             expectLastCall().anyTimes();
         }
 
