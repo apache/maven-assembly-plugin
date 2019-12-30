@@ -407,26 +407,26 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     /**
      * Override of user ID in archive type which can store it.
      */
-    @Parameter( property = "assembly.overrideUid" )
+    @Parameter
     private Integer overrideUid;
 
     /**
      * Override of user name in archive type which can store it.
      */
-    @Parameter( property = "assembly.overrideUserName" )
+    @Parameter
     private String overrideUserName;
 
 
     /**
      * Override of group ID in archive type which can store it.
      */
-    @Parameter( property = "assembly.overrideGid" )
+    @Parameter
     private Integer overrideGid;
 
     /**
      * Override of group name in archive type which can store it.
      */
-    @Parameter( property = "assembly.overrideGroupName" )
+    @Parameter
     private String overrideGroupName;
 
 
