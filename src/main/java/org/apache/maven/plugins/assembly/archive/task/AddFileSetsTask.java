@@ -24,6 +24,7 @@ import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.format.ReaderFormatter;
 import org.apache.maven.plugins.assembly.model.FileSet;
+import org.apache.maven.plugins.assembly.utils.AssemblyFileUtils;
 import org.apache.maven.plugins.assembly.utils.AssemblyFormatUtils;
 import org.apache.maven.plugins.assembly.utils.TypeConversionUtils;
 import org.apache.maven.project.MavenProject;
@@ -192,7 +193,7 @@ public class AddFileSetsTask
             // as File#isAbsolute() returns false for /absolutePath under Windows :(
             // Note that in Windows an absolute path with / will be on the 'current drive'.
             // But I think we can live with this.
-            if ( !fileSetDir.isAbsolute() && !fileSetDir.getPath().startsWith( "/" ) )
+            if ( ! AssemblyFileUtils.isAbsolutePath( fileSetDir ) )
             {
                 fileSetDir = new File( basedir, sourceDirectory );
             }

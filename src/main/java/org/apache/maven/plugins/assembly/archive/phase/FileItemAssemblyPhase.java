@@ -25,6 +25,7 @@ import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.format.ReaderFormatter;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.model.FileItem;
+import org.apache.maven.plugins.assembly.utils.AssemblyFileUtils;
 import org.apache.maven.plugins.assembly.utils.AssemblyFormatUtils;
 import org.apache.maven.plugins.assembly.utils.TypeConversionUtils;
 import org.codehaus.plexus.archiver.Archiver;
@@ -73,7 +74,7 @@ public class FileItemAssemblyPhase
             // create a temp file with a different name.
             final String sourceName = source.getName();
 
-            if ( !source.isAbsolute() )
+            if ( !AssemblyFileUtils.isAbsolutePath( source ) )
             {
                 source = new File( basedir, sourcePath );
             }

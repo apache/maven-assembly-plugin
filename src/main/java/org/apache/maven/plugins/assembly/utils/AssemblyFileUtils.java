@@ -108,4 +108,16 @@ public final class AssemblyFileUtils
     {
         return isPropertyFile( file.getName() );
     }
+
+    /**
+     * This method exists because {@link File#isAbsolute()} is not OS independent.
+     *
+     * In addition to the check in {@link File#isAbsolute()} we will also test for a leading '/'.
+     *
+     * @return {@code true} if {@code File#isAbsolute()} or starts with a '/'
+     */
+    public static boolean isAbsolutePath( File dir )
+    {
+        return dir != null && ( dir.isAbsolute() || dir.getPath().startsWith( "/" ) );
+    }
 }

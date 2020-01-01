@@ -38,6 +38,7 @@ import org.apache.maven.plugins.assembly.model.FileSet;
 import org.apache.maven.plugins.assembly.model.ModuleBinaries;
 import org.apache.maven.plugins.assembly.model.ModuleSet;
 import org.apache.maven.plugins.assembly.model.ModuleSources;
+import org.apache.maven.plugins.assembly.utils.AssemblyFileUtils;
 import org.apache.maven.plugins.assembly.utils.AssemblyFormatUtils;
 import org.apache.maven.plugins.assembly.utils.FilterUtils;
 import org.apache.maven.plugins.assembly.utils.ProjectUtils;
@@ -501,7 +502,7 @@ public class ModuleSetAssemblyPhase
         {
             final File sourceDir = new File( sourcePath );
 
-            if ( !sourceDir.isAbsolute() )
+            if ( !AssemblyFileUtils.isAbsolutePath( sourceDir ) )
             {
                 sourcePath = new File( moduleBasedir, sourcePath ).getAbsolutePath();
             }
