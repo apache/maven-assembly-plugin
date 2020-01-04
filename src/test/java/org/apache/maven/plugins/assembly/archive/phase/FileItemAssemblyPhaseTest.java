@@ -191,11 +191,6 @@ public class FileItemAssemblyPhaseTest
         macCS.expectInterpolators();
 
         final MockAndControlForLogger macLogger = new MockAndControlForLogger( mm );
-        if ( Os.isFamily( Os.FAMILY_WINDOWS ) )
-        {
-            macLogger.logger.error( "OS=Windows and the assembly descriptor contains a *nix-specific "
-                                        + "root-relative reference (starting with slash): /" );
-        }
 
         final MockAndControlForArchiver macArchiver = new MockAndControlForArchiver( mm );
 

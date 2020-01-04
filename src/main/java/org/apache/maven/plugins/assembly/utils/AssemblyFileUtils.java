@@ -118,6 +118,8 @@ public final class AssemblyFileUtils
      */
     public static boolean isAbsolutePath( File dir )
     {
-        return dir != null && ( dir.isAbsolute() || dir.getPath().startsWith( "/" ) );
+        return dir != null
+                && ( dir.isAbsolute()
+                   || dir.getPath().startsWith( "\\" ) ); // on Win* platforms
     }
 }
