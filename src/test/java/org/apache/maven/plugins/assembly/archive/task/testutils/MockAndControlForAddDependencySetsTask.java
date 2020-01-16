@@ -22,7 +22,10 @@ package org.apache.maven.plugins.assembly.archive.task.testutils;
 import junit.framework.Assert;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.artifact.repository.MavenArtifactRepository;
 import org.apache.maven.execution.MavenSession;
+import org.apache.maven.model.Profile;
+import org.apache.maven.model.building.ModelBuildingRequest;
 import org.apache.maven.model.building.ModelProblem;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.artifact.DependencyResolutionException;
@@ -35,6 +38,7 @@ import org.apache.maven.project.ProjectBuilder;
 import org.apache.maven.project.ProjectBuildingException;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.project.ProjectBuildingResult;
+import org.apache.maven.repository.internal.MavenRepositorySystemSession;
 import org.codehaus.plexus.archiver.ArchivedFileSet;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
@@ -44,6 +48,9 @@ import org.easymock.classextension.EasyMockSupport;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Properties;
@@ -105,6 +112,35 @@ public class MockAndControlForAddDependencySetsTask
         expect( session.getSystemProperties() ).andReturn( new Properties() ).anyTimes();
         expect( session.getUserProperties() ).andReturn( new Properties() ).anyTimes();
         expect( session.getExecutionProperties() ).andReturn( new Properties() ).anyTimes();
+
+        expect( projectBuildingRequest.isProcessPlugins() )
+                .andReturn( false ).anyTimes();
+        expect( projectBuildingRequest.getProfiles() )
+                .andReturn( Collections.<Profile>emptyList() ).anyTimes();
+        expect( projectBuildingRequest.getActiveProfileIds() )
+                .andReturn( Collections.<String>emptyList() ).anyTimes();
+        expect( projectBuildingRequest.getInactiveProfileIds() )
+                .andReturn( Collections.<String>emptyList() ).anyTimes();
+        expect( projectBuildingRequest.getSystemProperties() )
+                .andReturn( new Properties() ).anyTimes();
+        expect( projectBuildingRequest.getUserProperties() )
+                .andReturn( new Properties() ).anyTimes();
+        expect( projectBuildingRequest.getRemoteRepositories() )
+                .andReturn( new ArrayList<ArtifactRepository>() ).anyTimes();
+        expect( projectBuildingRequest.getPluginArtifactRepositories() )
+                .andReturn( Collections.<ArtifactRepository>emptyList() ).anyTimes();
+        expect( projectBuildingRequest.getRepositorySession() )
+                .andReturn( new MavenRepositorySystemSession() ).anyTimes();
+        expect( projectBuildingRequest.getLocalRepository() )
+                .andReturn( new MavenArtifactRepository() ).anyTimes();
+        expect( projectBuildingRequest.getBuildStartTime() )
+                .andReturn( new Date() ).anyTimes();
+        expect( projectBuildingRequest.getProject() )
+                .andReturn( project ).anyTimes();
+        expect( projectBuildingRequest.isResolveDependencies() )
+                .andReturn( false ).anyTimes();
+        expect( projectBuildingRequest.getValidationLevel() )
+                .andReturn( ModelBuildingRequest.VALIDATION_LEVEL_STRICT ).anyTimes();
 
         expectGetSession( session );
     }
