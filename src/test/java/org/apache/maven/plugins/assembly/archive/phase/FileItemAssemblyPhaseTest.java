@@ -19,90 +19,76 @@ package org.apache.maven.plugins.assembly.archive.phase;
  * under the License.
  */
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.Arrays;
+
 import org.apache.maven.model.Model;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
-import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
-import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.model.FileItem;
-import org.apache.maven.plugins.assembly.testutils.TestFileManager;
 import org.apache.maven.plugins.assembly.utils.TypeConversionUtils;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.shared.utils.Os;
 import org.codehaus.plexus.archiver.Archiver;
-import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.components.io.resources.PlexusIoResource;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
-import org.easymock.classextension.EasyMockSupport;
-
-import java.io.File;
-import java.io.IOException;
-
-import static org.easymock.EasyMock.anyInt;
-import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.expect;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 public class FileItemAssemblyPhaseTest
-    extends TestCase
 {
-
-    private final TestFileManager fileManager = new TestFileManager( "file-item-phase.test.", "" );
-
-    @Override
-    public void tearDown()
-        throws IOException
-    {
-        fileManager.cleanUp();
-    }
-
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+    
+    @Test
     public void testExecute_ShouldAddNothingWhenNoFileItemsArePresent()
-        throws ArchiveCreationException, AssemblyFormattingException
+        throws Exception
     {
-        final EasyMockSupport mm = new EasyMockSupport();
+        final AssemblerConfigurationSource macCS = mock( AssemblerConfigurationSource.class );
 
-        final MockAndControlForConfigSource macCS = new MockAndControlForConfigSource( mm );
+        final File basedir = temporaryFolder.getRoot();
 
-        final File basedir = fileManager.createTempDir();
+        when( macCS.getBasedir()).thenReturn( basedir );
 
-        macCS.expectGetBasedir( basedir );
-
-        final MockAndControlForLogger macLogger = new MockAndControlForLogger( mm );
+        final Logger macLogger = mock( Logger.class );
 
         final Assembly assembly = new Assembly();
         assembly.setId( "test" );
 
-        mm.replayAll();
+        createPhase( macLogger ).execute( assembly, null, macCS );
 
-        createPhase( macLogger.logger ).execute( assembly, null, macCS.configSource );
-
-        mm.verifyAll();
+        verify( macCS ).getBasedir();
     }
 
+    @Test
     public void testExecute_ShouldAddAbsoluteFileNoFilterNoLineEndingConversion()
-        throws ArchiveCreationException, AssemblyFormattingException, IOException
+        throws Exception
     {
-        final EasyMockSupport mm = new EasyMockSupport();
+        final AssemblerConfigurationSource macCS = mock( AssemblerConfigurationSource.class );
 
-        final MockAndControlForConfigSource macCS = new MockAndControlForConfigSource( mm );
+        final File basedir = temporaryFolder.getRoot();
 
-        final File basedir = fileManager.createTempDir();
+        final File file = temporaryFolder.newFile( "file.txt" );
+        Files.write( file.toPath(), Arrays.asList( "This is a test file." ), StandardCharsets.UTF_8 );
 
-        final File file = fileManager.createFile( basedir, "file.txt", "This is a test file." );
+        when( macCS.getBasedir() ).thenReturn( basedir );
+        when( macCS.getProject() ).thenReturn( new MavenProject( new Model() ) );
+        when( macCS.getFinalName() ) .thenReturn( "final-name" );
+        prepareInterpolators( macCS );
 
-        macCS.expectGetBasedir( basedir );
+        final Logger macLogger = mock( Logger.class );
 
-        macCS.expectGetProject( new MavenProject( new Model() ) );
-
-        macCS.expectGetFinalName( "final-name" );
-        macCS.expectInterpolators();
-
-        final MockAndControlForLogger macLogger = new MockAndControlForLogger( mm );
-
-        final MockAndControlForArchiver macArchiver = new MockAndControlForArchiver( mm );
+        final Archiver macArchiver = mock( Archiver.class );
 
         final Assembly assembly = new Assembly();
         assembly.setId( "test" );
@@ -113,39 +99,36 @@ public class FileItemAssemblyPhaseTest
         fi.setLineEnding( "keep" );
         fi.setFileMode( "777" );
 
-        macArchiver.expectAddFile( file, "file.txt", TypeConversionUtils.modeToInt( "777", new ConsoleLogger(
-            Logger.LEVEL_DEBUG, "test" ) ) );
-
         assembly.addFile( fi );
 
-        mm.replayAll();
+        createPhase( macLogger ).execute( assembly, macArchiver, macCS );
 
-        createPhase( macLogger.logger ).execute( assembly, macArchiver.archiver, macCS.configSource );
-
-        mm.verifyAll();
+        verify( macArchiver ).addResource( any( PlexusIoResource.class ),
+                                           eq( "file.txt" ),
+                                           eq( TypeConversionUtils.modeToInt( "777",
+                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
+                                                                                                 "test" ) ) ) );
     }
 
+    @Test
     public void testExecute_ShouldAddRelativeFileNoFilterNoLineEndingConversion()
-        throws ArchiveCreationException, AssemblyFormattingException, IOException
+        throws Exception
     {
-        final EasyMockSupport mm = new EasyMockSupport();
+        final AssemblerConfigurationSource macCS = mock( AssemblerConfigurationSource.class );
 
-        final MockAndControlForConfigSource macCS = new MockAndControlForConfigSource( mm );
+        final File basedir = temporaryFolder.getRoot();
 
-        final File basedir = fileManager.createTempDir();
+        final File file = temporaryFolder.newFile( "file.txt" );
+        Files.write( file.toPath(), Arrays.asList( "This is a test file." ), StandardCharsets.UTF_8 );
 
-        final File file = fileManager.createFile( basedir, "file.txt", "This is a test file." );
+        when( macCS.getBasedir() ).thenReturn( basedir );
+        when( macCS.getProject() ).thenReturn( new MavenProject( new Model() ) );
+        when( macCS.getFinalName() ) .thenReturn( "final-name" );
+        prepareInterpolators( macCS );
 
-        macCS.expectGetBasedir( basedir );
+        final Logger macLogger = mock( Logger.class );
 
-        macCS.expectGetProject( new MavenProject( new Model() ) );
-
-        macCS.expectGetFinalName( "final-name" );
-        macCS.expectInterpolators();
-
-        final MockAndControlForLogger macLogger = new MockAndControlForLogger( mm );
-
-        final MockAndControlForArchiver macArchiver = new MockAndControlForArchiver( mm );
+        final Archiver macArchiver = mock( Archiver.class );
 
         final Assembly assembly = new Assembly();
         assembly.setId( "test" );
@@ -156,43 +139,42 @@ public class FileItemAssemblyPhaseTest
         fi.setLineEnding( "keep" );
         fi.setFileMode( "777" );
 
-        macArchiver.expectAddFile( file, "file.txt", TypeConversionUtils.modeToInt( "777", new ConsoleLogger(
-            Logger.LEVEL_DEBUG, "test" ) ) );
-
         assembly.addFile( fi );
 
-        mm.replayAll();
+        createPhase( macLogger ).execute( assembly, macArchiver, macCS );
 
-        createPhase( macLogger.logger ).execute( assembly, macArchiver.archiver, macCS.configSource );
-
-        mm.verifyAll();
+        verify( macArchiver ).addResource( any( PlexusIoResource.class ),
+                                           eq( "file.txt" ),
+                                           eq( TypeConversionUtils.modeToInt( "777",
+                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
+                                                                                                 "test" ) ) ) );
     }
 
+    @Test
     public void testExecute_WithOutputDirectory()
         throws Exception
     {
-        final EasyMockSupport mm = new EasyMockSupport();
+        final AssemblerConfigurationSource macCS = mock( AssemblerConfigurationSource.class );
 
-        final MockAndControlForConfigSource macCS = new MockAndControlForConfigSource( mm );
+        final File basedir = temporaryFolder.getRoot();
 
-        final File basedir = fileManager.createTempDir();
+        final File readmeFile = temporaryFolder.newFile( "README.txt" );
+        Files.write( readmeFile.toPath(), Arrays.asList( "This is a test file for README.txt." ), StandardCharsets.UTF_8 );
 
-        final File readmeFile = fileManager.createFile( basedir, "README.txt", "This is a test file for README.txt." );
-        final File licenseFile =
-            fileManager.createFile( basedir, "LICENSE.txt", "This is a test file for LICENSE.txt." );
-        final File configFile =
-            fileManager.createFile( basedir, "config/config.txt", "This is a test file for config/config.txt" );
+        final File licenseFile = temporaryFolder.newFile( "LICENSE.txt" );
+        Files.write( licenseFile.toPath(), Arrays.asList( "This is a test file for LICENSE.txt." ), StandardCharsets.UTF_8 );
 
-        macCS.expectGetBasedir( basedir );
+        final File configFile = new File( temporaryFolder.newFolder( "config" ), "config.txt" );
+        Files.write( configFile.toPath(), Arrays.asList( "This is a test file for config/config.txt" ), StandardCharsets.UTF_8 );
 
-        macCS.expectGetProject( new MavenProject( new Model() ) );
+        when( macCS.getBasedir() ).thenReturn( basedir );
+        when( macCS.getProject() ).thenReturn( new MavenProject( new Model() ) );
+        when( macCS.getFinalName() ) .thenReturn( "final-name" );
+        prepareInterpolators( macCS );
 
-        macCS.expectGetFinalName( "final-name" );
-        macCS.expectInterpolators();
+        final Logger macLogger = mock( Logger.class );
 
-        final MockAndControlForLogger macLogger = new MockAndControlForLogger( mm );
-
-        final MockAndControlForArchiver macArchiver = new MockAndControlForArchiver( mm );
+        final Archiver macArchiver = mock( Archiver.class );
 
         final Assembly assembly = new Assembly();
         assembly.setId( "test" );
@@ -219,52 +201,55 @@ public class FileItemAssemblyPhaseTest
         configFileItem.setLineEnding( "keep" );
         configFileItem.setFileMode( "777" );
 
-        macArchiver.expectAddFile( readmeFile, "README.txt", TypeConversionUtils.modeToInt( "777", new ConsoleLogger(
-            Logger.LEVEL_DEBUG, "test" ) ) );
-        macArchiver.expectAddFile( licenseFile, "LICENSE.txt", TypeConversionUtils.modeToInt( "777", new ConsoleLogger(
-            Logger.LEVEL_DEBUG, "test" ) ) );
-        macArchiver.expectAddFile( configFile, "config/config.txt", TypeConversionUtils.modeToInt( "777",
-                                                                                                   new ConsoleLogger(
-                                                                                                       Logger
-                                                                                                           .LEVEL_DEBUG,
-                                                                                                       "test" ) ) );
-
         assembly.addFile( readmeFileItem );
         assembly.addFile( licenseFileItem );
         assembly.addFile( configFileItem );
 
-        mm.replayAll();
+        createPhase( macLogger ).execute( assembly, macArchiver, macCS );
 
-        createPhase( macLogger.logger ).execute( assembly, macArchiver.archiver, macCS.configSource );
-
-        mm.verifyAll();
+        verify( macArchiver ).addResource( any( PlexusIoResource.class ),
+                                           eq( "README.txt" ),
+                                           eq( TypeConversionUtils.modeToInt( "777",
+                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
+                                                                                                 "test" ) ) ) );
+        verify( macArchiver ).addResource( any( PlexusIoResource.class ),
+                                           eq( "LICENSE.txt" ),
+                                           eq( TypeConversionUtils.modeToInt( "777",
+                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
+                                                                                                 "test" ) ) ) );
+        verify( macArchiver ).addResource( any( PlexusIoResource.class ),
+                                           eq( "config/config.txt" ),
+                                           eq( TypeConversionUtils.modeToInt( "777",
+                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
+                                                                                                 "test" ) ) ) );
+    
     }
 
+    @Test
     public void testExecute_WithOutputDirectoryAndDestName()
         throws Exception
     {
-        final EasyMockSupport mm = new EasyMockSupport();
+        final AssemblerConfigurationSource macCS = mock( AssemblerConfigurationSource.class );
 
-        final MockAndControlForConfigSource macCS = new MockAndControlForConfigSource( mm );
+        final File basedir = temporaryFolder.getRoot();
 
-        final File basedir = fileManager.createTempDir();
+        final File readmeFile = temporaryFolder.newFile( "README.txt" );
+        Files.write( readmeFile.toPath(), Arrays.asList( "This is a test file for README.txt." ), StandardCharsets.UTF_8 );
 
-        final File readmeFile = fileManager.createFile( basedir, "README.txt", "This is a test file for README.txt." );
-        final File licenseFile =
-            fileManager.createFile( basedir, "LICENSE.txt", "This is a test file for LICENSE.txt." );
-        final File configFile =
-            fileManager.createFile( basedir, "config/config.txt", "This is a test file for config/config.txt" );
+        final File licenseFile = temporaryFolder.newFile( "LICENSE.txt" );
+        Files.write( licenseFile.toPath(), Arrays.asList( "This is a test file for LICENSE.txt." ), StandardCharsets.UTF_8 );
 
-        macCS.expectGetBasedir( basedir );
+        final File configFile = new File( temporaryFolder.newFolder( "config" ), "config.txt" );
+        Files.write( configFile.toPath(), Arrays.asList( "This is a test file for config/config.txt" ), StandardCharsets.UTF_8 );
 
-        macCS.expectGetProject( new MavenProject( new Model() ) );
+        when( macCS.getBasedir() ).thenReturn( basedir );
+        when( macCS.getProject() ).thenReturn( new MavenProject( new Model() ) );
+        when( macCS.getFinalName() ) .thenReturn( "final-name" );
+        prepareInterpolators( macCS );
 
-        macCS.expectGetFinalName( "final-name" );
-        macCS.expectInterpolators();
+        final Logger macLogger = mock( Logger.class );
 
-        final MockAndControlForLogger macLogger = new MockAndControlForLogger( mm );
-
-        final MockAndControlForArchiver macArchiver = new MockAndControlForArchiver( mm );
+        final Archiver macArchiver = mock( Archiver.class );
 
         final Assembly assembly = new Assembly();
         assembly.setId( "test" );
@@ -294,59 +279,54 @@ public class FileItemAssemblyPhaseTest
         configFileItem.setLineEnding( "keep" );
         configFileItem.setFileMode( "777" );
 
-        macArchiver.expectAddFile( readmeFile, "README_renamed.txt", TypeConversionUtils.modeToInt( "777",
-                                                                                                    new ConsoleLogger(
-                                                                                                        Logger
-                                                                                                            .LEVEL_DEBUG,
-                                                                                                        "test" ) ) );
-        macArchiver.expectAddFile( licenseFile, "LICENSE_renamed.txt", TypeConversionUtils.modeToInt( "777",
-                                                                                                      new ConsoleLogger(
-                                                                                                          Logger
-                                                                                                              .LEVEL_DEBUG,
-                                                                                                          "test" ) ) );
-        macArchiver.expectAddFile( configFile, "config/config_renamed.txt", TypeConversionUtils.modeToInt( "777",
-                                                                                                           new ConsoleLogger(
-                                                                                                               Logger
-                                                                                                                   .LEVEL_DEBUG,
-                                                                                                               "test"
-                                                                                                           ) ) );
-
         assembly.addFile( readmeFileItem );
         assembly.addFile( licenseFileItem );
         assembly.addFile( configFileItem );
 
-        mm.replayAll();
+        createPhase( macLogger ).execute( assembly, macArchiver, macCS );
 
-        createPhase( macLogger.logger ).execute( assembly, macArchiver.archiver, macCS.configSource );
-
-        mm.verifyAll();
+        verify( macArchiver ).addResource( any( PlexusIoResource.class ), 
+                                           eq( "README_renamed.txt" ),
+                                           eq( TypeConversionUtils.modeToInt( "777",
+                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
+                                                                                                 "test" ) ) ) );
+        verify( macArchiver ).addResource( any( PlexusIoResource.class ), 
+                                           eq( "LICENSE_renamed.txt" ),
+                                           eq( TypeConversionUtils.modeToInt( "777",
+                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
+                                                                                                 "test" ) ) ) );
+        verify( macArchiver ).addResource( any( PlexusIoResource.class ), 
+                                           eq( "config/config_renamed.txt" ),
+                                           eq( TypeConversionUtils.modeToInt( "777",
+                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
+                                                                                                 "test" ) ) ) );
     }
 
+    @Test
     public void testExecute_WithOutputDirectoryAndDestNameAndIncludeBaseDirectoryFalse()
         throws Exception
     {
-        final EasyMockSupport mm = new EasyMockSupport();
+        final AssemblerConfigurationSource macCS = mock( AssemblerConfigurationSource.class );
 
-        final MockAndControlForConfigSource macCS = new MockAndControlForConfigSource( mm );
+        final File basedir = temporaryFolder.getRoot();
 
-        final File basedir = fileManager.createTempDir();
+        final File readmeFile = temporaryFolder.newFile( "README.txt" );
+        Files.write( readmeFile.toPath(), Arrays.asList( "This is a test file for README.txt." ), StandardCharsets.UTF_8 );
 
-        final File readmeFile = fileManager.createFile( basedir, "README.txt", "This is a test file for README.txt." );
-        final File licenseFile =
-            fileManager.createFile( basedir, "LICENSE.txt", "This is a test file for LICENSE.txt." );
-        final File configFile =
-            fileManager.createFile( basedir, "config/config.txt", "This is a test file for config/config.txt" );
+        final File licenseFile = temporaryFolder.newFile( "LICENSE.txt" );
+        Files.write( licenseFile.toPath(), Arrays.asList( "This is a test file for LICENSE.txt." ), StandardCharsets.UTF_8 );
 
-        macCS.expectGetBasedir( basedir );
+        final File configFile = new File( temporaryFolder.newFolder( "config" ), "config.txt" );
+        Files.write( configFile.toPath(), Arrays.asList( "This is a test file for config/config.txt" ), StandardCharsets.UTF_8 );
 
-        macCS.expectGetProject( new MavenProject( new Model() ) );
+        when( macCS.getBasedir() ).thenReturn( basedir );
+        when( macCS.getProject() ).thenReturn( new MavenProject( new Model() ) );
+        when( macCS.getFinalName() ) .thenReturn( "final-name" );
+        prepareInterpolators( macCS );
 
-        macCS.expectGetFinalName( "final-name" );
-        macCS.expectInterpolators();
+        final Logger macLogger = mock( Logger.class );
 
-        final MockAndControlForLogger macLogger = new MockAndControlForLogger( mm );
-
-        final MockAndControlForArchiver macArchiver = new MockAndControlForArchiver( mm );
+        final Archiver macArchiver = mock( Archiver.class );
 
         final Assembly assembly = new Assembly();
         assembly.setId( "test" );
@@ -374,32 +354,27 @@ public class FileItemAssemblyPhaseTest
         configFileItem.setLineEnding( "keep" );
         configFileItem.setFileMode( "777" );
 
-        macArchiver.expectAddFile( readmeFile, "README_renamed.txt", TypeConversionUtils.modeToInt( "777",
-                                                                                                    new ConsoleLogger(
-                                                                                                        Logger
-                                                                                                            .LEVEL_DEBUG,
-                                                                                                        "test" ) ) );
-        macArchiver.expectAddFile( licenseFile, "LICENSE_renamed.txt", TypeConversionUtils.modeToInt( "777",
-                                                                                                      new ConsoleLogger(
-                                                                                                          Logger
-                                                                                                              .LEVEL_DEBUG,
-                                                                                                          "test" ) ) );
-        macArchiver.expectAddFile( configFile, "config/config_renamed.txt", TypeConversionUtils.modeToInt( "777",
-                                                                                                           new ConsoleLogger(
-                                                                                                               Logger
-                                                                                                                   .LEVEL_DEBUG,
-                                                                                                               "test"
-                                                                                                           ) ) );
-
         assembly.addFile( readmeFileItem );
         assembly.addFile( licenseFileItem );
         assembly.addFile( configFileItem );
 
-        mm.replayAll();
+        createPhase( macLogger ).execute( assembly, macArchiver, macCS );
 
-        createPhase( macLogger.logger ).execute( assembly, macArchiver.archiver, macCS.configSource );
-
-        mm.verifyAll();
+        verify( macArchiver ).addResource( any( PlexusIoResource.class ), 
+                                           eq( "README_renamed.txt" ),
+                                           eq( TypeConversionUtils.modeToInt( "777",
+                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
+                                                                                                 "test" ) ) ) );
+        verify( macArchiver ).addResource( any( PlexusIoResource.class ),
+                                           eq( "LICENSE_renamed.txt" ),
+                                           eq( TypeConversionUtils.modeToInt( "777",
+                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
+                                                                                                 "test" ) ) ) );
+        verify( macArchiver ).addResource( any( PlexusIoResource.class ), 
+                                           eq( "config/config_renamed.txt" ),
+                                           eq( TypeConversionUtils.modeToInt( "777",
+                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
+                                                                                                 "test" ) ) ) );
     }
 
     private FileItemAssemblyPhase createPhase( final Logger logger )
@@ -410,75 +385,11 @@ public class FileItemAssemblyPhaseTest
         return phase;
     }
 
-    private final class MockAndControlForArchiver
+    private void prepareInterpolators( AssemblerConfigurationSource configSource )
     {
-        final Archiver archiver;
-
-        public MockAndControlForArchiver( final EasyMockSupport mockManager )
-        {
-            archiver = mockManager.createMock( Archiver.class );
-        }
-
-        public void expectAddFile( final File file, final String outputLocation, final int fileMode )
-        {
-            try
-            {
-                archiver.addResource( (PlexusIoResource) anyObject(), (String) anyObject(), anyInt() );
-            }
-            catch ( final ArchiverException e )
-            {
-                Assert.fail( "Should never happen." );
-            }
-        }
-    }
-
-    private final class MockAndControlForConfigSource
-    {
-        final AssemblerConfigurationSource configSource;
-
-        public MockAndControlForConfigSource( final EasyMockSupport mockManager )
-        {
-
-            configSource = mockManager.createMock( AssemblerConfigurationSource.class );
-
-            expect( configSource.getMavenSession() ).andReturn( null ).anyTimes();
-        }
-
-        public void expectGetProject( final MavenProject project )
-        {
-            expect( configSource.getProject() ).andReturn( project ).atLeastOnce();
-        }
-
-        public void expectGetFinalName( final String finalName )
-        {
-            expect( configSource.getFinalName() ).andReturn( finalName ).atLeastOnce();
-        }
-
-        public void expectInterpolators()
-        {
-            expect( configSource.getCommandLinePropsInterpolator() ).andReturn(
-                FixedStringSearchInterpolator.empty() ).anyTimes();
-            expect( configSource.getEnvInterpolator() ).andReturn( FixedStringSearchInterpolator.empty() ).anyTimes();
-            expect( configSource.getMainProjectInterpolator() ).andReturn(
-                FixedStringSearchInterpolator.empty() ).anyTimes();
-        }
-
-
-        public void expectGetBasedir( final File basedir )
-        {
-            expect( configSource.getBasedir() ).andReturn( basedir ).atLeastOnce();
-        }
-    }
-
-    private final class MockAndControlForLogger
-    {
-        final Logger logger;
-
-        public MockAndControlForLogger( final EasyMockSupport mockManager )
-        {
-
-            logger = mockManager.createMock( Logger.class );
-        }
+        when( configSource.getCommandLinePropsInterpolator() ).thenReturn( FixedStringSearchInterpolator.empty() );
+        when( configSource.getEnvInterpolator() ).thenReturn( FixedStringSearchInterpolator.empty() );
+        when( configSource.getMainProjectInterpolator() ).thenReturn( FixedStringSearchInterpolator.empty() );
     }
 
 }

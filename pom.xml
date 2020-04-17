@@ -62,7 +62,7 @@ under the License.
 
   <properties>
     <javaVersion>7</javaVersion>
-    <mdoVersion>2.0.0</mdoVersion>
+    <mdoVersion>2.1.0</mdoVersion>
     <mavenArchiverVersion>3.5.0</mavenArchiverVersion>
     <mavenFilteringVersion>3.1.1</mavenFilteringVersion>
     <mavenVersion>3.0</mavenVersion>
@@ -199,6 +199,12 @@ under the License.
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>2.28.2</version>
+      <scope>test</scope> 
+    </dependency>
+    <dependency>
       <groupId>org.easymock</groupId>
       <artifactId>easymockclassextension</artifactId>
       <version>2.5.2</version>
@@ -281,7 +287,6 @@ under the License.
       <plugin>
         <groupId>org.codehaus.modello</groupId>
         <artifactId>modello-maven-plugin</artifactId>
-        <version>1.8.3</version>
         <configuration>
           <version>${mdoVersion}</version>
           <models>

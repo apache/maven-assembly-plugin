@@ -411,17 +411,29 @@
       <description>
         A file allows individual file inclusion with the option to change
         the destination filename not supported by fileSets.
+        Note: either source or sources is required
       </description>
       <fields>
         <field>
           <name>source</name>
           <version>1.0.0+</version>
           <type>String</type>
-          <required>true</required>
           <description>
             Sets the absolute or relative path from the module's directory
             of the file to be included in the assembly.
           </description>
+        </field>
+        <field>
+          <name>sources</name>
+          <version>2.1.0+</version>
+          <description>
+            Set of absolute or relative paths from the module's directory
+            of the files be combined and included in the assembly.
+          </description>
+           <association>
+            <type>String</type>
+            <multiplicity>*</multiplicity>
+          </association>
         </field>
         <field>
           <name>outputDirectory</name>

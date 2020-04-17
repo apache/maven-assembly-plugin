@@ -304,6 +304,18 @@
           </description>
         </field>
         <field>
+          <name>sources</name>
+          <version>2.1.0+</version>
+          <description>
+            Set of absolute or relative paths from the module's directory
+            of the files be combined and included in the assembly.
+          </description>
+           <association>
+            <type>String</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+        <field>
           <name>outputDirectory</name>
           <version>1.0.0+</version>
           <type>String</type>
