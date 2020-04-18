@@ -769,7 +769,7 @@ public class AssemblyProxyArchiver
             dfs.setIncludingEmptyDirectories( fs.isIncludingEmptyDirectories() );
             dfs.setPrefix( fs.getPrefix() );
             dfs.setUsingDefaultExcludes( fs.isUsingDefaultExcludes() );
-            dfs.setStreamTransformer(fs.getStreamTransformer());
+            dfs.setStreamTransformer( fs.getStreamTransformer() );
 
             delegate.addFileSet( dfs );
         }
