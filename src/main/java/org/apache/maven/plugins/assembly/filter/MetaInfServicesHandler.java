@@ -19,6 +19,8 @@ package org.apache.maven.plugins.assembly.filter;
  * under the License.
  */
 
+import java.nio.file.Paths;
+
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.components.io.fileselectors.FileInfo;
 
@@ -35,7 +37,7 @@ public class MetaInfServicesHandler
     @Override
     protected String getOutputPathPrefix( final FileInfo fileInfo )
     {
-        return SERVICES_PATH_PREFIX;
+        return Paths.get( fileInfo.getName() ).getParent().toString() + "/";
     }
 
     @Override
