@@ -209,4 +209,24 @@ public interface AssemblerConfigurationSource
 
     @Nonnull
     FixedStringSearchInterpolator getMainProjectInterpolator();
+
+    /**
+     * @return Override UID.
+     */
+    Integer getOverrideUid();
+
+    /**
+     * @return Override user name.
+     */
+    String getOverrideUserName();
+
+    /**
+     * @return Override GID.
+     */
+    Integer getOverrideGid();
+
+    /**
+     * @return Override group name.
+     */
+    String getOverrideGroupName();
 }

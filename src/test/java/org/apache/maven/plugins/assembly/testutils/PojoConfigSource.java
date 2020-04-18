@@ -505,4 +505,28 @@ public class PojoConfigSource
     {
         this.environmentInterpolator = environmentInterpolator;
     }
+
+    @Override
+    public Integer getOverrideUid()
+    {
+        return 0;
+    }
+
+    @Override
+    public String getOverrideUserName()
+    {
+        return "root";
+    }
+
+    @Override
+    public Integer getOverrideGid()
+    {
+        return 0;
+    }
+
+    @Override
+    public String getOverrideGroupName()
+    {
+        return "root";
+    }
 }

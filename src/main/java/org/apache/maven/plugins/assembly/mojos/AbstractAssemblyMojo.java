@@ -404,6 +404,32 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     @Parameter( defaultValue = "${project.build.outputTimestamp}" )
     private String outputTimestamp;
 
+    /**
+     * Override of user ID in archive type which can store it.
+     */
+    @Parameter
+    private Integer overrideUid;
+
+    /**
+     * Override of user name in archive type which can store it.
+     */
+    @Parameter
+    private String overrideUserName;
+
+
+    /**
+     * Override of group ID in archive type which can store it.
+     */
+    @Parameter
+    private Integer overrideGid;
+
+    /**
+     * Override of group name in archive type which can store it.
+     */
+    @Parameter
+    private String overrideGroupName;
+
+
     public static FixedStringSearchInterpolator mainProjectInterpolator( MavenProject mainProject )
     {
         if ( mainProject != null )
@@ -938,4 +964,27 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
         return mainProjectInterpolator;
     }
 
+    @Override
+    public Integer getOverrideUid()
+    {
+        return this.overrideUid;
+    }
+
+    @Override
+    public String getOverrideUserName()
+    {
+        return this.overrideUserName;
+    }
+
+    @Override
+    public Integer getOverrideGid()
+    {
+        return this.overrideGid;
+    }
+
+    @Override
+    public String getOverrideGroupName()
+    {
+        return this.overrideGroupName;
+    }
 }
