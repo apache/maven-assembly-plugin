@@ -19,51 +19,44 @@ package org.apache.maven.plugins.assembly.archive.task;
  * under the License.
  */
 
-import junit.framework.TestCase;
-import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
-import org.apache.maven.plugins.assembly.testutils.TestFileManager;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.FileSet;
 import org.easymock.classextension.EasyMockSupport;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
 
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.fail;
 
 public class AddDirectoryTaskTest
-    extends TestCase
 {
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     private EasyMockSupport mockManager;
 
-    private TestFileManager fileManager;
-
     private Archiver archiver;
 
-
+    @Before
     public void setUp()
     {
-        fileManager = new TestFileManager( "ArchiveAssemblyUtils.test.", "" );
-
         mockManager = new EasyMockSupport();
 
         archiver = mockManager.createMock( Archiver.class );
     }
 
-    public void tearDown()
-        throws IOException
-    {
-        fileManager.cleanUp();
-    }
-
+    @Test
     public void testAddDirectory_ShouldNotAddDirectoryIfNonExistent()
-        throws ArchiveCreationException
+        throws Exception
     {
-        File dir = new File( System.getProperty( "java.io.tmpdir" ), "non-existent." + System.currentTimeMillis() );
+        File dir = new File( temporaryFolder.getRoot(), "non-existent." + System.currentTimeMillis() );
 
         configureModeExpectations( -1, -1, -1, -1, false );
 
@@ -76,10 +69,12 @@ public class AddDirectoryTaskTest
         mockManager.verifyAll();
     }
 
+    @Test
+
     public void testAddDirectory_ShouldAddDirectory()
-        throws ArchiveCreationException
+        throws Exception
     {
-        File dir = fileManager.createTempDir();
+        File dir = temporaryFolder.getRoot();
 
         try
         {
@@ -103,10 +98,11 @@ public class AddDirectoryTaskTest
         mockManager.verifyAll();
     }
 
+    @Test
     public void testAddDirectory_ShouldAddDirectoryWithDirMode()
-        throws ArchiveCreationException
+        throws Exception
     {
-        File dir = fileManager.createTempDir();
+        File dir = temporaryFolder.getRoot();
 
         try
         {
@@ -135,10 +131,11 @@ public class AddDirectoryTaskTest
         mockManager.verifyAll();
     }
 
+    @Test
     public void testAddDirectory_ShouldAddDirectoryWithIncludesAndExcludes()
-        throws ArchiveCreationException
+        throws Exception
     {
-        File dir = fileManager.createTempDir();
+        File dir = temporaryFolder.getRoot();
 
         try
         {

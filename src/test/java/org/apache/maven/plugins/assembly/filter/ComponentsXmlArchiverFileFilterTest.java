@@ -19,9 +19,6 @@ package org.apache.maven.plugins.assembly.filter;
  * under the License.
  */
 
-import junit.framework.TestCase;
-
-import org.apache.maven.plugins.assembly.testutils.TestFileManager;
 import org.codehaus.plexus.archiver.ArchiveEntry;
 import org.codehaus.plexus.archiver.ArchiveFinalizer;
 import org.codehaus.plexus.archiver.ArchivedFileSet;
@@ -33,24 +30,30 @@ import org.codehaus.plexus.archiver.diags.NoOpArchiver;
 import org.codehaus.plexus.archiver.zip.ZipArchiver;
 import org.codehaus.plexus.components.io.resources.PlexusIoResource;
 import org.codehaus.plexus.components.io.resources.PlexusIoResourceCollection;
-import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.xml.PrettyPrintXMLWriter;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.jdom.Document;
-import org.jdom.JDOMException;
 import org.jdom.Text;
 import org.jdom.input.SAXBuilder;
 import org.jdom.xpath.XPath;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import javax.annotation.Nonnull;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -61,27 +64,22 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class ComponentsXmlArchiverFileFilterTest
-    extends TestCase
 {
-    private final TestFileManager fileManager = new TestFileManager( "componentsXmlArchiverFileFilter.test", ".zip" );
+//    private final TestFileManager fileManager = new TestFileManager( "componentsXmlArchiverFileFilter.test", ".zip" );
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     private ComponentsXmlArchiverFileFilter filter;
 
-    @Override
+    @Before
     public void setUp()
     {
         filter = new ComponentsXmlArchiverFileFilter();
     }
 
-    @Override
-    public void tearDown()
-        throws IOException
-    {
-        fileManager.cleanUp();
-    }
-
+    @Test
     public void testAddComponentsXml_ShouldAddComponentWithoutRoleHint()
-        throws IOException, XmlPullParserException
+        throws Exception
     {
         final Reader reader = writeComponentsXml(
             Collections.singletonList( new ComponentDef( "role", null, "org.apache.maven.Impl" ) ) );
@@ -97,8 +95,9 @@ public class ComponentsXmlArchiverFileFilterTest
         assertEquals( "org.apache.maven.Impl", componentDom.getChild( "implementation" ).getValue() );
     }
 
+    @Test
     public void testAddComponentsXml_ShouldAddComponentWithRoleHint()
-        throws IOException, XmlPullParserException
+        throws Exception
     {
         final Reader reader = writeComponentsXml(
             Collections.singletonList( new ComponentDef( "role", "hint", "org.apache.maven.Impl" ) ) );
@@ -114,8 +113,9 @@ public class ComponentsXmlArchiverFileFilterTest
         assertEquals( "org.apache.maven.Impl", componentDom.getChild( "implementation" ).getValue() );
     }
 
+    @Test
     public void testAddComponentsXml_ShouldAddTwoComponentsWithRoleHints()
-        throws IOException, XmlPullParserException
+        throws Exception
     {
         final List<ComponentDef> defs = new ArrayList<>();
 
@@ -141,8 +141,9 @@ public class ComponentsXmlArchiverFileFilterTest
         assertEquals( "org.apache.maven.Impl2", componentDom.getChild( "implementation" ).getValue() );
     }
 
+    @Test
     public void testAddToArchive_ShouldWriteComponentWithoutHintToFile()
-        throws IOException, ArchiverException, JDOMException
+        throws Exception
     {
         final Xpp3Dom dom = createComponentDom( new ComponentDef( "role", null, "impl" ) );
 
@@ -168,8 +169,9 @@ public class ComponentsXmlArchiverFileFilterTest
         assertEquals( "impl", ( (Text) implementation.selectSingleNode( doc ) ).getText() );
     }
 
+    @Test
     public void testAddToArchive_ShouldWriteComponentWithHintToFile()
-        throws IOException, ArchiverException, JDOMException
+        throws Exception
     {
         final Xpp3Dom dom = createComponentDom( new ComponentDef( "role", "hint", "impl" ) );
 
@@ -195,8 +197,9 @@ public class ComponentsXmlArchiverFileFilterTest
         assertEquals( "impl", ( (Text) implementation.selectSingleNode( doc ) ).getText() );
     }
 
+    @Test
     public void testAddToArchive_ShouldWriteTwoComponentToFile()
-        throws IOException, ArchiverException, JDOMException
+        throws Exception
     {
         filter.components = new LinkedHashMap<>();
 
@@ -236,8 +239,9 @@ public class ComponentsXmlArchiverFileFilterTest
 
     }
 
+    @Test
     public void testAddToArchive_ShouldWriteTwoComponentToArchivedFile()
-        throws IOException, ArchiverException, JDOMException
+        throws Exception
     {
         filter.components = new LinkedHashMap<>();
 
@@ -251,50 +255,24 @@ public class ComponentsXmlArchiverFileFilterTest
 
         final ZipArchiver archiver = new ZipArchiver();
 
-        final File archiveFile = fileManager.createTempFile();
+        final File archiveFile = temporaryFolder.newFile( "archive" );
 
         archiver.setDestFile( archiveFile );
 
-        final File descriptorFile = fileManager.createTempFile();
+        final File descriptorFile = new File( temporaryFolder.getRoot(), "descriptor.xml" );
 
         archiver.setArchiveFinalizers( Collections.<ArchiveFinalizer>singletonList( filter ) );
 
         archiver.createArchive();
-
-        ZipFile zf = null;
-        FileOutputStream out = null;
-        try
+        
+        try ( ZipFile zf = new ZipFile( archiveFile ) )
         {
-            zf = new ZipFile( archiveFile );
-
             final ZipEntry ze = zf.getEntry( ComponentsXmlArchiverFileFilter.COMPONENTS_XML_PATH );
 
             assertNotNull( ze );
 
-            out = new FileOutputStream( descriptorFile );
-
-            IOUtil.copy( zf.getInputStream( ze ), out );
-            out.close();
-            out = null;
-            zf.close();
-            zf = null;
+            Files.copy( zf.getInputStream( ze ), descriptorFile.toPath() );
         }
-        finally
-        {
-            IOUtil.close( out );
-            try
-            {
-                if ( zf != null )
-                {
-                    zf.close();
-                }
-            }
-            catch ( final IOException e )
-            {
-                // Suppressed.
-            }
-        }
-        
 
         final SAXBuilder builder = new SAXBuilder( false );
 

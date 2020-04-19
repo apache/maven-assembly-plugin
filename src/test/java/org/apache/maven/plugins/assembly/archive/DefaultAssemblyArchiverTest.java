@@ -29,7 +29,6 @@ import org.apache.maven.plugins.assembly.artifact.DependencyResolver;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.mojos.AbstractAssemblyMojo;
-import org.apache.maven.plugins.assembly.testutils.TestFileManager;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.DefaultPlexusContainer;
 import org.codehaus.plexus.PlexusContainer;
@@ -46,13 +45,13 @@ import org.codehaus.plexus.archiver.zip.ZipArchiver;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
-import org.codehaus.plexus.util.FileUtils;
 import org.easymock.EasyMock;
 import org.easymock.classextension.EasyMockSupport;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.io.IOException;
@@ -72,17 +71,10 @@ import static org.junit.Assert.fail;
 
 public class DefaultAssemblyArchiverTest
 {
-
-    private static final TestFileManager fileManager = new TestFileManager( "def-assy-archiver.test.", "" );
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     private PlexusContainer container;
-
-    @AfterClass
-    public static void tearDown()
-        throws Exception
-    {
-        fileManager.cleanUp();
-    }
 
     public static void setupInterpolators( AssemblerConfigurationSource configSource )
     {
@@ -153,14 +145,13 @@ public class DefaultAssemblyArchiverTest
         final AssemblerConfigurationSource configSource =
             mm.createControl().createMock( AssemblerConfigurationSource.class );
 
-        final File tempDir = fileManager.createTempDir();
-        FileUtils.deleteDirectory( tempDir );
+        final File tempDir = new File ( temporaryFolder.getRoot(), "temp" );
 
         expect( configSource.getTemporaryRootDirectory() ).andReturn( tempDir ).anyTimes();
         expect( configSource.isDryRun() ).andReturn( false ).anyTimes();
         expect( configSource.isIgnoreDirFormatExtensions() ).andReturn( false ).anyTimes();
 
-        final File outDir = fileManager.createTempDir();
+        final File outDir = temporaryFolder.newFolder( "out" );
 
         macMgr.archiver.setDestFile( new File( outDir, "full-name.zip" ) );
 

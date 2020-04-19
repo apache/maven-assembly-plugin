@@ -19,8 +19,6 @@ package org.apache.maven.plugins.assembly.archive.phase;
  * under the License.
  */
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
 import org.apache.maven.model.Model;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
 import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
@@ -37,7 +35,6 @@ import org.apache.maven.plugins.assembly.model.FileSet;
 import org.apache.maven.plugins.assembly.model.ModuleBinaries;
 import org.apache.maven.plugins.assembly.model.ModuleSet;
 import org.apache.maven.plugins.assembly.model.ModuleSources;
-import org.apache.maven.plugins.assembly.testutils.TestFileManager;
 import org.apache.maven.plugins.assembly.utils.TypeConversionUtils;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
@@ -45,6 +42,9 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.easymock.classextension.EasyMock;
 import org.easymock.classextension.EasyMockSupport;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,23 +56,19 @@ import java.util.List;
 import java.util.Set;
 
 import static java.util.Collections.singleton;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class ModuleSetAssemblyPhaseTest
-    extends TestCase
 {
-
-    private final TestFileManager fileManager = new TestFileManager( "module-set-phase.test.", "" );
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     private final Logger logger = new ConsoleLogger( Logger.LEVEL_INFO, "test" );
 
-    @Override
-    public void tearDown()
-        throws IOException
-    {
-        fileManager.cleanUp();
-    }
-
+    @Test
     public void testIsDeprecatedModuleSourcesConfigPresent_ShouldCatchOutputDir()
     {
         final ModuleSources sources = new ModuleSources();
@@ -83,6 +79,7 @@ public class ModuleSetAssemblyPhaseTest
         assertTrue( phase.isDeprecatedModuleSourcesConfigPresent( sources ) );
     }
 
+    @Test
     public void testIsDeprecatedModuleSourcesConfigPresent_ShouldCatchInclude()
     {
         final ModuleSources sources = new ModuleSources();
@@ -93,6 +90,7 @@ public class ModuleSetAssemblyPhaseTest
         assertTrue( phase.isDeprecatedModuleSourcesConfigPresent( sources ) );
     }
 
+    @Test
     public void testIsDeprecatedModuleSourcesConfigPresent_ShouldCatchExclude()
     {
         final ModuleSources sources = new ModuleSources();
@@ -103,6 +101,7 @@ public class ModuleSetAssemblyPhaseTest
         assertTrue( phase.isDeprecatedModuleSourcesConfigPresent( sources ) );
     }
 
+    @Test
     public void testIsDeprecatedModuleSourcesConfigPresent_ShouldNotCatchFileMode()
     {
         final ModuleSources sources = new ModuleSources();
@@ -113,6 +112,7 @@ public class ModuleSetAssemblyPhaseTest
         assertFalse( phase.isDeprecatedModuleSourcesConfigPresent( sources ) );
     }
 
+    @Test
     public void testIsDeprecatedModuleSourcesConfigPresent_ShouldNotCatchDirMode()
     {
         final ModuleSources sources = new ModuleSources();
@@ -123,6 +123,7 @@ public class ModuleSetAssemblyPhaseTest
         assertFalse( phase.isDeprecatedModuleSourcesConfigPresent( sources ) );
     }
 
+    @Test
     public void testCreateFileSet_ShouldUseModuleDirOnlyWhenOutDirIsNull()
         throws AssemblyFormattingException
     {
@@ -142,7 +143,7 @@ public class ModuleSetAssemblyPhaseTest
         final ModuleSources sources = new ModuleSources();
         sources.setIncludeModuleDirectory( true );
 
-        final File basedir = fileManager.createTempDir();
+        final File basedir = temporaryFolder.getRoot();
 
         final MavenProject artifactProject = new MavenProject( new Model() );
 
@@ -166,6 +167,7 @@ public class ModuleSetAssemblyPhaseTest
         mm.verifyAll();
     }
 
+    @Test
     public void testCreateFileSet_ShouldPrependModuleDirWhenOutDirIsProvided()
         throws AssemblyFormattingException
     {
@@ -188,7 +190,7 @@ public class ModuleSetAssemblyPhaseTest
 
         final MavenProject artifactProject = new MavenProject( new Model() );
 
-        final File basedir = fileManager.createTempDir();
+        final File basedir = temporaryFolder.getRoot();
 
         artifactProject.setFile( new File( basedir, "pom.xml" ) );
 
@@ -209,6 +211,7 @@ public class ModuleSetAssemblyPhaseTest
         mm.verifyAll();
     }
 
+    @Test
     public void testCreateFileSet_ShouldAddExcludesForSubModulesWhenExcludeSubModDirsIsTrue()
         throws AssemblyFormattingException
     {
@@ -230,7 +233,7 @@ public class ModuleSetAssemblyPhaseTest
 
         final MavenProject project = new MavenProject( model );
 
-        final File basedir = fileManager.createTempDir();
+        final File basedir = temporaryFolder.getRoot();
 
         project.setFile( new File( basedir, "pom.xml" ) );
 
@@ -251,6 +254,7 @@ public class ModuleSetAssemblyPhaseTest
         mm.verifyAll();
     }
 
+    @Test
     public void testExecute_ShouldSkipIfNoModuleSetsFound()
         throws ArchiveCreationException, AssemblyFormattingException, InvalidAssemblerConfigurationException,
         DependencyResolutionException
@@ -261,6 +265,7 @@ public class ModuleSetAssemblyPhaseTest
         createPhase( null, null ).execute( assembly, null, null );
     }
 
+    @Test
     public void testExecute_ShouldAddOneModuleSetWithOneModuleInIt()
         throws ArchiveCreationException, AssemblyFormattingException, IOException,
         InvalidAssemblerConfigurationException, DependencyResolutionException
@@ -320,6 +325,7 @@ public class ModuleSetAssemblyPhaseTest
         mm.verifyAll();
     }
 
+    @Test
     public void testAddModuleBinaries_ShouldReturnImmediatelyWhenBinariesIsNull()
         throws ArchiveCreationException, AssemblyFormattingException, InvalidAssemblerConfigurationException,
         DependencyResolutionException
@@ -327,6 +333,7 @@ public class ModuleSetAssemblyPhaseTest
         createPhase( null, null ).addModuleBinaries( null, null, null, null, null, null );
     }
 
+    @Test
     public void testAddModuleBinaries_ShouldFilterPomModule()
         throws ArchiveCreationException, AssemblyFormattingException, IOException,
         InvalidAssemblerConfigurationException, DependencyResolutionException
@@ -360,6 +367,7 @@ public class ModuleSetAssemblyPhaseTest
         mm.verifyAll();
     }
 
+    @Test
     public void testAddModuleBinaries_ShouldAddOneModuleAttachmentArtifactAndNoDeps()
         throws ArchiveCreationException, AssemblyFormattingException, IOException,
         InvalidAssemblerConfigurationException, DependencyResolutionException
@@ -374,8 +382,9 @@ public class ModuleSetAssemblyPhaseTest
         macTask.expectGetFinalName( "final-name" );
         macTask.expectGetDestFile( new File( "junk" ) );
         macTask.expectGetMode( 0222, 0222 );
-        macTask.expectAddFile( artifactFile, "out/artifact", TypeConversionUtils.modeToInt( "777", new ConsoleLogger(
-            Logger.LEVEL_DEBUG, "test" ) ) );
+        macTask.expectAddFile( artifactFile, "out/artifact",
+                               TypeConversionUtils.modeToInt( "777",
+                                                              new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) ) );
 
         final ModuleBinaries binaries = new ModuleBinaries();
 
@@ -405,6 +414,7 @@ public class ModuleSetAssemblyPhaseTest
         mm.verifyAll();
     }
 
+    @Test
     public void testAddModuleBinaries_ShouldFailWhenOneModuleDoesntHaveAttachmentWithMatchingClassifier()
         throws ArchiveCreationException, AssemblyFormattingException, IOException, DependencyResolutionException
     {
@@ -447,6 +457,7 @@ public class ModuleSetAssemblyPhaseTest
         mm.verifyAll();
     }
 
+    @Test
     public void testAddModuleBinaries_ShouldAddOneModuleArtifactAndNoDeps()
         throws ArchiveCreationException, AssemblyFormattingException, IOException,
         InvalidAssemblerConfigurationException, DependencyResolutionException
@@ -460,8 +471,9 @@ public class ModuleSetAssemblyPhaseTest
 
         macTask.expectGetFinalName( "final-name" );
         macTask.expectGetDestFile( new File( "junk" ) );
-        macTask.expectAddFile( artifactFile, "out/artifact", TypeConversionUtils.modeToInt( "777", new ConsoleLogger(
-            Logger.LEVEL_DEBUG, "test" ) ) );
+        macTask.expectAddFile( artifactFile, "out/artifact",
+                               TypeConversionUtils.modeToInt( "777",
+                                                              new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) ) );
         macTask.expectGetMode( 0222, 0222 );
 
         final ModuleBinaries binaries = new ModuleBinaries();
@@ -491,7 +503,7 @@ public class ModuleSetAssemblyPhaseTest
         mm.verifyAll();
     }
 
-
+    @Test
     public void testAddModuleArtifact_ShouldThrowExceptionWhenArtifactFileIsNull()
         throws AssemblyFormattingException, IOException
     {
@@ -504,8 +516,8 @@ public class ModuleSetAssemblyPhaseTest
 
         try
         {
-            createPhase( new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ), null ).addModuleArtifact(
-                artifactMock.getArtifact(), null, null, null, null );
+            createPhase( new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ),
+                         null ).addModuleArtifact( artifactMock.getArtifact(), null, null, null, null );
 
             fail( "Expected ArchiveCreationException since artifact file is null." );
         }
@@ -517,6 +529,7 @@ public class ModuleSetAssemblyPhaseTest
         mm.verifyAll();
     }
 
+    @Test
     public void testAddModuleArtifact_ShouldAddOneArtifact()
         throws AssemblyFormattingException, IOException, ArchiveCreationException
     {
@@ -534,8 +547,9 @@ public class ModuleSetAssemblyPhaseTest
         macTask.expectGetDestFile( new File( "junk" ) );
         macTask.expectGetMode( 0222, 0222 );
 
-        macTask.expectAddFile( artifactFile, "out/artifact", TypeConversionUtils.modeToInt( "777", new ConsoleLogger(
-            Logger.LEVEL_DEBUG, "test" ) ) );
+        macTask.expectAddFile( artifactFile, "out/artifact",
+                               TypeConversionUtils.modeToInt( "777",
+                                                              new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) ) );
 
         final ModuleBinaries binaries = new ModuleBinaries();
         binaries.setOutputDirectory( "out" );
@@ -546,12 +560,14 @@ public class ModuleSetAssemblyPhaseTest
 
         mm.replayAll();
 
-        createPhase( new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ), null ).addModuleArtifact(
-            artifactMock.getArtifact(), project, macTask.archiver, macTask.configSource, binaries );
+        createPhase( new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ),
+                     null ).addModuleArtifact( artifactMock.getArtifact(), project, macTask.archiver,
+                                               macTask.configSource, binaries );
 
         mm.verifyAll();
     }
 
+    @Test
     public void testAddModuleSourceFileSets_ShouldReturnImmediatelyIfSourcesIsNull()
         throws ArchiveCreationException, AssemblyFormattingException
     {
@@ -565,12 +581,13 @@ public class ModuleSetAssemblyPhaseTest
         mm.verifyAll();
     }
 
+    @Test
     public void testAddModuleSourceFileSets_ShouldAddOneSourceDirectory()
         throws ArchiveCreationException, AssemblyFormattingException
     {
         final EasyMockSupport mm = new EasyMockSupport();
 
-        final MockAndControlForAddFileSetsTask macTask = new MockAndControlForAddFileSetsTask( mm, fileManager );
+        final MockAndControlForAddFileSetsTask macTask = new MockAndControlForAddFileSetsTask( mm );
 
         final MavenProject project = createProject( "group", "artifact", "version", null );
 
@@ -609,6 +626,7 @@ public class ModuleSetAssemblyPhaseTest
         mm.verifyAll();
     }
 
+    @Test
     public void testGetModuleProjects_ShouldReturnNothingWhenReactorContainsOnlyCurrentProject()
         throws ArchiveCreationException
     {
@@ -636,6 +654,7 @@ public class ModuleSetAssemblyPhaseTest
         mm.verifyAll();
     }
 
+    @Test
     public void testGetModuleProjects_ShouldReturnNothingWhenReactorContainsTwoSiblingProjects()
         throws ArchiveCreationException
     {
@@ -667,6 +686,7 @@ public class ModuleSetAssemblyPhaseTest
         mm.verifyAll();
     }
 
+    @Test
     public void testGetModuleProjects_ShouldReturnModuleOfCurrentProject()
         throws ArchiveCreationException
     {
@@ -702,6 +722,7 @@ public class ModuleSetAssemblyPhaseTest
         mm.verifyAll();
     }
 
+    @Test
     public void testGetModuleProjects_ShouldReturnDescendentModulesOfCurrentProject()
         throws ArchiveCreationException
     {
@@ -741,6 +762,7 @@ public class ModuleSetAssemblyPhaseTest
         mm.verifyAll();
     }
 
+    @Test
     public void testGetModuleProjects_ShouldExcludeModuleAndDescendentsTransitively()
         throws ArchiveCreationException
     {
@@ -783,9 +805,8 @@ public class ModuleSetAssemblyPhaseTest
     private ArtifactMock addArtifact( final MavenProject project, final EasyMockSupport mm,
                                       final boolean expectDepTrailCheck )
     {
-        final ArtifactMock macArtifact =
-            new ArtifactMock( mm, project.getGroupId(), project.getArtifactId(), project.getVersion(),
-                              project.getPackaging(), false );
+        final ArtifactMock macArtifact = new ArtifactMock( mm, project.getGroupId(), project.getArtifactId(),
+                                                           project.getVersion(), project.getPackaging(), false );
 
         if ( expectDepTrailCheck )
         {
@@ -843,7 +864,7 @@ public class ModuleSetAssemblyPhaseTest
 
         if ( failed )
         {
-            Assert.fail( "See system output for more information." );
+            fail( "See system output for more information." );
         }
     }
 
@@ -860,7 +881,7 @@ public class ModuleSetAssemblyPhaseTest
         File pomFile;
         if ( parentProject == null )
         {
-            final File basedir = fileManager.createTempDir();
+            final File basedir = temporaryFolder.getRoot();
             pomFile = new File( basedir, "pom.xml" );
         }
         else

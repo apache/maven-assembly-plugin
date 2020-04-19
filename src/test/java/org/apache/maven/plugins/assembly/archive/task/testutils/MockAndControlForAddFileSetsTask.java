@@ -21,7 +21,6 @@ package org.apache.maven.plugins.assembly.archive.task.testutils;
 
 import junit.framework.Assert;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
-import org.apache.maven.plugins.assembly.testutils.TestFileManager;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
@@ -39,16 +38,14 @@ public class MockAndControlForAddFileSetsTask
 
     public final AssemblerConfigurationSource configSource;
 
-
     public final Archiver archiver;
 
     public File archiveBaseDir;
 
-    public MockAndControlForAddFileSetsTask( EasyMockSupport mockManager, TestFileManager fileManager )
+    public MockAndControlForAddFileSetsTask( EasyMockSupport mockManager )
     {
         configSource = mockManager.createMock( AssemblerConfigurationSource.class );
         archiver = mockManager.createMock( Archiver.class );
-        archiveBaseDir = fileManager.createTempDir();
 
         expect( configSource.getMavenSession() ).andReturn( null ).anyTimes();
     }

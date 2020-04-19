@@ -19,7 +19,6 @@ package org.apache.maven.plugins.assembly.archive.phase;
  * under the License.
  */
 
-import junit.framework.TestCase;
 import org.apache.maven.model.Model;
 import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
 import org.apache.maven.plugins.assembly.archive.DefaultAssemblyArchiverTest;
@@ -27,41 +26,29 @@ import org.apache.maven.plugins.assembly.archive.task.testutils.MockAndControlFo
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.model.FileSet;
-import org.apache.maven.plugins.assembly.testutils.TestFileManager;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.logging.Logger;
 import org.easymock.EasyMock;
 import org.easymock.classextension.EasyMockSupport;
-
-import java.io.IOException;
+import org.junit.Test;
 
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.expect;
 
 public class FileSetAssemblyPhaseTest
-    extends TestCase
 {
-
     final EasyMockSupport mm = new EasyMockSupport();
 
-    private final TestFileManager fileManager = new TestFileManager( "file-set-assembly.test.", "" );
-
-    @Override
-    public void tearDown()
-        throws IOException
-    {
-        fileManager.cleanUp();
-    }
-
+    @Test
     public void testShouldNotFailWhenNoFileSetsSpecified()
-        throws ArchiveCreationException, AssemblyFormattingException
+        throws Exception
     {
         final Assembly assembly = new Assembly();
 
         assembly.setId( "test" );
 
         final MockAndControlForLogger macLogger = new MockAndControlForLogger();
-        final MockAndControlForAddFileSetsTask macTask = new MockAndControlForAddFileSetsTask( mm, fileManager );
+        final MockAndControlForAddFileSetsTask macTask = new MockAndControlForAddFileSetsTask( mm );
 
         mm.replayAll();
 
@@ -70,7 +57,7 @@ public class FileSetAssemblyPhaseTest
         mm.verifyAll();
     }
 
-    public void testShouldAddOneFileSet()
+    @Test public void testShouldAddOneFileSet()
         throws ArchiveCreationException, AssemblyFormattingException
     {
         final Assembly assembly = new Assembly();
@@ -87,7 +74,7 @@ public class FileSetAssemblyPhaseTest
         assembly.addFileSet( fs );
 
         final MockAndControlForLogger macLogger = new MockAndControlForLogger();
-        final MockAndControlForAddFileSetsTask macTask = new MockAndControlForAddFileSetsTask( mm, fileManager );
+        final MockAndControlForAddFileSetsTask macTask = new MockAndControlForAddFileSetsTask( mm );
 
         macTask.expectGetArchiveBaseDirectory();
 

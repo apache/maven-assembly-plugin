@@ -19,7 +19,6 @@ package org.apache.maven.plugins.assembly.archive.archiver;
  * under the License.
  */
 
-import org.apache.maven.plugins.assembly.testutils.TestFileManager;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.diags.TrackingArchiver;
@@ -29,16 +28,19 @@ import org.codehaus.plexus.components.io.fileselectors.FileInfo;
 import org.codehaus.plexus.components.io.fileselectors.FileSelector;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
-import org.codehaus.plexus.util.FileUtils;
 import org.easymock.EasyMock;
 import org.easymock.classextension.EasyMockSupport;
-import org.junit.AfterClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.easymock.EasyMock.anyObject;
@@ -48,22 +50,16 @@ import static org.junit.Assert.assertTrue;
 
 public class AssemblyProxyArchiverTest
 {
-
-    private static final TestFileManager fileManager = new TestFileManager( "massembly-proxyArchiver", "" );
-
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+    
     private static final Logger logger = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
-
-    @AfterClass
-    public static void cleanupFiles()
-    {
-        fileManager.cleanUp();
-    }
 
     @Test( timeout = 5000 )
     public void addFileSet_SkipWhenSourceIsAssemblyWorkDir()
         throws IOException, ArchiverException
     {
-        final File sources = fileManager.createTempDir();
+        final File sources = temporaryFolder.getRoot();
 
         final File workdir = new File( sources, "workdir" );
 
@@ -85,13 +81,15 @@ public class AssemblyProxyArchiverTest
     public void addFileSet_addExcludeWhenSourceContainsAssemblyWorkDir()
         throws IOException, ArchiverException
     {
-        final File sources = fileManager.createTempDir();
+        final File sources = temporaryFolder.getRoot();
 
         final File workdir = new File( sources, "workdir" );
         workdir.mkdir();
 
-        fileManager.createFile( sources, "test-included.txt", "This is included" );
-        fileManager.createFile( workdir, "test-excluded.txt", "This is excluded" );
+        Files.write( sources.toPath().resolve( "test-included.txt" ), Arrays.asList( "This is included" ),
+                     StandardCharsets.UTF_8 );
+        Files.write( workdir.toPath().resolve( "test-excluded.txt" ), Arrays.asList( "This is excluded" ),
+                     StandardCharsets.UTF_8 );
 
         final TrackingArchiver tracker = new TrackingArchiver();
         final AssemblyProxyArchiver archiver =
@@ -137,7 +135,7 @@ public class AssemblyProxyArchiverTest
 
         archiver.setForced( true );
 
-        final File inputFile = fileManager.createTempFile();
+        final File inputFile = temporaryFolder.newFile();
 
         archiver.addFile( inputFile, "file.txt" );
 
@@ -152,7 +150,7 @@ public class AssemblyProxyArchiverTest
     {
         final Archiver delegate = new JarArchiver();
 
-        final File output = fileManager.createTempFile();
+        final File output = temporaryFolder.newFile();
 
         delegate.setDestFile( output );
 
@@ -166,9 +164,8 @@ public class AssemblyProxyArchiverTest
 
         archiver.setForced( true );
 
-        final File dir = fileManager.createTempDir();
-        FileUtils.cleanDirectory( dir );
-        fileManager.createFile( dir, "file.txt", "This is a test." );
+        final File dir = temporaryFolder.newFolder();
+        Files.write( dir.toPath().resolve( "file.txt" ), Arrays.asList( "This is a test." ), StandardCharsets.UTF_8 );
 
         archiver.addDirectory( dir );
 

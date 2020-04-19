@@ -19,56 +19,49 @@ package org.apache.maven.plugins.assembly.archive.task;
  * under the License.
  */
 
-import junit.framework.TestCase;
 import org.apache.maven.model.Model;
 import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
 import org.apache.maven.plugins.assembly.archive.DefaultAssemblyArchiverTest;
 import org.apache.maven.plugins.assembly.archive.task.testutils.MockAndControlForAddFileSetsTask;
-import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.model.FileSet;
-import org.apache.maven.plugins.assembly.testutils.TestFileManager;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.easymock.classextension.EasyMockSupport;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class AddFileSetsTaskTest
-    extends TestCase
 {
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     private EasyMockSupport mockManager;
 
-    private TestFileManager fileManager;
-
     private MockAndControlForAddFileSetsTask macTask;
 
-    @Override
+    @Before
     public void setUp()
     {
         mockManager = new EasyMockSupport();
 
-        fileManager = new TestFileManager( "add-fileset.test.", "" );
-
-        macTask = new MockAndControlForAddFileSetsTask( mockManager, fileManager );
+        macTask = new MockAndControlForAddFileSetsTask( mockManager );
     }
 
-    @Override
-    public void tearDown()
-        throws IOException
-    {
-        fileManager.cleanUp();
-    }
-
+    @Test
     public void testGetFileSetDirectory_ShouldReturnAbsoluteSourceDir()
-        throws ArchiveCreationException, AssemblyFormattingException
+        throws Exception
     {
-        final File dir = fileManager.createTempDir();
+        final File dir = temporaryFolder.newFolder();
 
         final FileSet fs = new FileSet();
 
@@ -79,10 +72,11 @@ public class AddFileSetsTaskTest
         assertEquals( dir.getAbsolutePath(), result.getAbsolutePath() );
     }
 
+    @Test
     public void testGetFileSetDirectory_ShouldReturnBasedir()
-        throws ArchiveCreationException, AssemblyFormattingException
+        throws Exception
     {
-        final File dir = fileManager.createTempDir();
+        final File dir = temporaryFolder.newFolder();
 
         final FileSet fs = new FileSet();
 
@@ -91,10 +85,11 @@ public class AddFileSetsTaskTest
         assertEquals( dir.getAbsolutePath(), result.getAbsolutePath() );
     }
 
+    @Test
     public void testGetFileSetDirectory_ShouldReturnDirFromBasedirAndSourceDir()
-        throws ArchiveCreationException, AssemblyFormattingException
+        throws Exception
     {
-        final File dir = fileManager.createTempDir();
+        final File dir = temporaryFolder.newFolder();
 
         final String srcPath = "source";
 
@@ -109,10 +104,11 @@ public class AddFileSetsTaskTest
         assertEquals( srcDir.getAbsolutePath(), result.getAbsolutePath() );
     }
 
+    @Test
     public void testGetFileSetDirectory_ShouldReturnDirFromArchiveBasedirAndSourceDir()
-        throws ArchiveCreationException, AssemblyFormattingException
+        throws Exception
     {
-        final File dir = fileManager.createTempDir();
+        final File dir = temporaryFolder.newFolder();
 
         final String srcPath = "source";
 
@@ -127,8 +123,9 @@ public class AddFileSetsTaskTest
         assertEquals( srcDir.getAbsolutePath(), result.getAbsolutePath() );
     }
 
+    @Test
     public void testAddFileSet_ShouldAddDirectory()
-        throws ArchiveCreationException, AssemblyFormattingException
+        throws Exception
     {
         final FileSet fs = new FileSet();
 
@@ -162,8 +159,9 @@ public class AddFileSetsTaskTest
         mockManager.verifyAll();
     }
 
+    @Test
     public void testAddFileSet_ShouldAddDirectoryUsingSourceDirNameForDestDir()
-        throws ArchiveCreationException, AssemblyFormattingException
+        throws Exception
     {
         final FileSet fs = new FileSet();
 
@@ -171,7 +169,7 @@ public class AddFileSetsTaskTest
 
         fs.setDirectory( dirname );
 
-        final File archiveBaseDir = fileManager.createTempDir();
+        final File archiveBaseDir = temporaryFolder.newFolder();
 
         // ensure this exists, so the directory addition will proceed.
         final File srcDir = new File( archiveBaseDir, dirname );
@@ -198,8 +196,9 @@ public class AddFileSetsTaskTest
         mockManager.verifyAll();
     }
 
+    @Test
     public void testAddFileSet_ShouldNotAddDirectoryWhenSourceDirNonExistent()
-        throws ArchiveCreationException, AssemblyFormattingException
+        throws Exception
     {
         final FileSet fs = new FileSet();
 
@@ -207,7 +206,7 @@ public class AddFileSetsTaskTest
 
         fs.setDirectory( dirname );
 
-        final File archiveBaseDir = fileManager.createTempDir();
+        final File archiveBaseDir = temporaryFolder.newFolder();
 
         macTask.expectGetFinalName( "finalName" );
 
@@ -231,11 +230,11 @@ public class AddFileSetsTaskTest
         mockManager.verifyAll();
     }
 
+    @Test
     public void testExecute_ShouldThrowExceptionIfArchiveBasedirProvidedIsNonExistent()
-        throws AssemblyFormattingException
+        throws Exception
     {
-        macTask.archiveBaseDir.delete();
-
+        macTask.archiveBaseDir = new File( temporaryFolder.getRoot(), "archive");
         macTask.expectGetArchiveBaseDirectory();
 
         mockManager.replayAll();
@@ -256,11 +255,11 @@ public class AddFileSetsTaskTest
         mockManager.verifyAll();
     }
 
+    @Test
     public void testExecute_ShouldThrowExceptionIfArchiveBasedirProvidedIsNotADirectory()
-        throws AssemblyFormattingException, IOException
+        throws Exception
     {
-
-        macTask.archiveBaseDir = fileManager.createTempFile();
+        macTask.archiveBaseDir = temporaryFolder.newFile();
         macTask.expectGetArchiveBaseDirectory();
 
         mockManager.replayAll();

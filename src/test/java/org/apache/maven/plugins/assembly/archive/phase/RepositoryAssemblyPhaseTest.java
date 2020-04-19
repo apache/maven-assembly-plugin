@@ -19,20 +19,20 @@ package org.apache.maven.plugins.assembly.archive.phase;
  * under the License.
  */
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.fail;
+
+import java.io.File;
+
 import org.apache.maven.model.Model;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
-import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
-import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
-import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.model.Repository;
 import org.apache.maven.plugins.assembly.repository.RepositoryAssembler;
 import org.apache.maven.plugins.assembly.repository.RepositoryAssemblyException;
 import org.apache.maven.plugins.assembly.repository.RepositoryBuilderConfigSource;
 import org.apache.maven.plugins.assembly.repository.model.RepositoryInfo;
-import org.apache.maven.plugins.assembly.testutils.TestFileManager;
 import org.apache.maven.plugins.assembly.utils.TypeConversionUtils;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.archiver.Archiver;
@@ -44,28 +44,18 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.easymock.classextension.EasyMock;
 import org.easymock.classextension.EasyMockSupport;
-
-import java.io.File;
-import java.io.IOException;
-
-import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.expect;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 public class RepositoryAssemblyPhaseTest
-    extends TestCase
 {
-
-    private final TestFileManager fileManager = new TestFileManager( "repository-phase.test.", "" );
-
-    @Override
-    public void tearDown()
-        throws IOException
-    {
-        fileManager.cleanUp();
-    }
-
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+    
+    @Test
     public void testExecute_ShouldNotIncludeRepositoryIfNonSpecifiedInAssembly()
-        throws ArchiveCreationException, AssemblyFormattingException, InvalidAssemblerConfigurationException
+        throws Exception
     {
         final EasyMockSupport mm = new EasyMockSupport();
 
@@ -73,7 +63,7 @@ public class RepositoryAssemblyPhaseTest
         final MockAndControlForArchiver macArchiver = new MockAndControlForArchiver( mm );
         final MockAndControlForConfigSource macCS = new MockAndControlForConfigSource( mm );
 
-        final File tempRoot = fileManager.createTempDir();
+        final File tempRoot = temporaryFolder.getRoot();
 
         macCS.expectGetTemporaryRootDirectory( tempRoot );
 
@@ -91,8 +81,9 @@ public class RepositoryAssemblyPhaseTest
         mm.verifyAll();
     }
 
+    @Test
     public void testExecute_ShouldIncludeOneRepository()
-        throws ArchiveCreationException, AssemblyFormattingException, InvalidAssemblerConfigurationException
+        throws Exception
     {
         final EasyMockSupport mm = new EasyMockSupport();
 
@@ -100,7 +91,7 @@ public class RepositoryAssemblyPhaseTest
         final MockAndControlForArchiver macArchiver = new MockAndControlForArchiver( mm );
         final MockAndControlForConfigSource macCS = new MockAndControlForConfigSource( mm );
 
-        final File tempRoot = fileManager.createTempDir();
+        final File tempRoot = temporaryFolder.getRoot();
 
         macCS.expectGetTemporaryRootDirectory( tempRoot );
         macCS.expectGetProject( new MavenProject( new Model() ) );
@@ -171,7 +162,7 @@ public class RepositoryAssemblyPhaseTest
             }
             catch ( final ArchiverException e )
             {
-                Assert.fail( "Should never happen." );
+                fail( "Should never happen." );
             }
 
             EasyMock.expectLastCall().atLeastOnce();
@@ -269,7 +260,7 @@ public class RepositoryAssemblyPhaseTest
             }
             catch ( final RepositoryAssemblyException e )
             {
-                Assert.fail( "Should never happen" );
+                fail( "Should never happen" );
             }
 
         }
