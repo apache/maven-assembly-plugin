@@ -19,13 +19,18 @@ package org.apache.maven.plugins.assembly.archive.task;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.handler.ArtifactHandler;
 import org.apache.maven.model.Model;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
 import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
 import org.apache.maven.plugins.assembly.archive.DefaultAssemblyArchiverTest;
-import org.apache.maven.plugins.assembly.archive.task.testutils.ArtifactMock;
 import org.apache.maven.plugins.assembly.archive.task.testutils.MockAndControlForAddDependencySetsTask;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.model.DependencySet;
@@ -34,6 +39,9 @@ import org.apache.maven.project.ProjectBuildingException;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.easymock.classextension.EasyMockSupport;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,14 +50,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class AddDependencySetsTaskTest
-    extends TestCase
 {
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     private final EasyMockSupport mockManager = new EasyMockSupport();
 
+    @Test
     public void testAddDependencySet_ShouldInterpolateDefaultOutputFileNameMapping()
-        throws AssemblyFormattingException, ArchiveCreationException, InvalidAssemblerConfigurationException,
-        IOException
+        throws Exception
     {
         final String outDir = "tmp/";
         final String mainAid = "main";
@@ -71,10 +80,9 @@ public class AddDependencySetsTaskTest
         mainModel.setVersion( mainVer );
 
         final MavenProject mainProject = new MavenProject( mainModel );
-
-        final ArtifactMock mainArtifactMock = new ArtifactMock( mockManager, mainGid, mainAid, mainVer, "jar", false );
-
-        mainProject.setArtifact( mainArtifactMock.getArtifact() );
+        
+        Artifact mainArtifact = mock( Artifact.class );
+        mainProject.setArtifact( mainArtifact );
 
         final Model depModel = new Model();
         depModel.setArtifactId( depAid );
@@ -84,11 +92,14 @@ public class AddDependencySetsTaskTest
 
         final MavenProject depProject = new MavenProject( depModel );
 
-        final ArtifactMock depArtifactMock = new ArtifactMock( mockManager, depGid, depAid, depVer, depExt, false );
+        Artifact depArtifact = mock( Artifact.class );
+        ArtifactHandler artifactHandler = mock( ArtifactHandler.class );
+        when( artifactHandler.getExtension() ).thenReturn( depExt );
+        when( depArtifact.getArtifactHandler() ).thenReturn( artifactHandler );
+        final File newFile = temporaryFolder.newFile();
+        when( depArtifact.getFile() ).thenReturn( newFile );
 
-        final File newFile = depArtifactMock.setNewFile();
-
-        depProject.setArtifact( depArtifactMock.getArtifact() );
+        depProject.setArtifact( depArtifact );
 
         final MockAndControlForAddDependencySetsTask macTask =
             new MockAndControlForAddDependencySetsTask( mockManager, mainProject );
@@ -101,7 +112,6 @@ public class AddDependencySetsTaskTest
         macTask.expectGetDestFile( new File( "junk" ) );
         macTask.expectAddFile( newFile, outDir + depAid + "-" + depVer + "." + depExt, 10 );
 
-//        macTask.expectGetSession( null );
         macTask.expectGetMode( 0222, 0222 );
 
         DefaultAssemblyArchiverTest.setupInterpolators( macTask.configSource );
@@ -110,18 +120,18 @@ public class AddDependencySetsTaskTest
 
         final Logger logger = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
 
-        final AddDependencySetsTask task = new AddDependencySetsTask( Collections.singletonList( ds ),
-                                                                      Collections.singleton(
-                                                                          depArtifactMock.getArtifact() ), depProject,
-                                                                      macTask.projectBuilder, logger );
+        final AddDependencySetsTask task =
+            new AddDependencySetsTask( Collections.singletonList( ds ), Collections.singleton( depArtifact ),
+                                       depProject, macTask.projectBuilder, logger );
 
         task.addDependencySet( ds, macTask.archiver, macTask.configSource );
 
         mockManager.verifyAll();
     }
 
+    @Test
     public void testAddDependencySet_ShouldNotAddDependenciesWhenProjectHasNone()
-        throws AssemblyFormattingException, ArchiveCreationException, InvalidAssemblerConfigurationException
+        throws Exception
     {
         final MavenProject project = new MavenProject( new Model() );
 
@@ -144,9 +154,9 @@ public class AddDependencySetsTaskTest
     }
 
     // TODO: Find a better way of testing the project-stubbing behavior when a ProjectBuildingException takes place.
+    @Test
     public void testAddDependencySet_ShouldNotAddDependenciesWhenProjectIsStubbed()
-        throws AssemblyFormattingException, ArchiveCreationException, InvalidAssemblerConfigurationException,
-        IOException
+        throws Exception
     {
         final MavenProject project = new MavenProject( new Model() );
 
@@ -155,16 +165,19 @@ public class AddDependencySetsTaskTest
         final MockAndControlForAddDependencySetsTask macTask =
             new MockAndControlForAddDependencySetsTask( mockManager, new MavenProject( new Model() ) );
 
-        final String gid = "org.test";
         final String aid = "test-dep";
         final String version = "2.0-SNAPSHOT";
         final String type = "jar";
 
         final File file = new File( "dep-artifact.jar" );
 
-        final ArtifactMock depMock = new ArtifactMock( mockManager, gid, aid, version, type, true );
-        depMock.setBaseVersion( version );
-        depMock.setFile( file );
+        Artifact depArtifact = mock( Artifact.class );
+        when( depArtifact.getArtifactId() ).thenReturn( aid );
+        when( depArtifact.getBaseVersion() ).thenReturn( version );
+        when( depArtifact.getFile() ).thenReturn( file );
+        ArtifactHandler artifactHandler = mock( ArtifactHandler.class );
+        when( artifactHandler.getExtension() ).thenReturn( type );
+        when( depArtifact.getArtifactHandler() ).thenReturn( artifactHandler );
 
         final File destFile = new File( "assembly-dep-set.zip" );
 
@@ -185,7 +198,7 @@ public class AddDependencySetsTaskTest
         final Logger logger = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
 
         final AddDependencySetsTask task =
-            new AddDependencySetsTask( Collections.singletonList( ds ), Collections.singleton( depMock.getArtifact() ),
+            new AddDependencySetsTask( Collections.singletonList( ds ), Collections.singleton( depArtifact ),
                                        project, macTask.projectBuilder, logger );
 
         task.addDependencySet( ds, macTask.archiver, macTask.configSource );
@@ -193,6 +206,7 @@ public class AddDependencySetsTaskTest
         mockManager.verifyAll();
     }
 
+    @Test
     public void testAddDependencySet_ShouldAddOneDependencyFromProjectWithoutUnpacking()
         throws AssemblyFormattingException, ArchiveCreationException, IOException,
         InvalidAssemblerConfigurationException
@@ -200,9 +214,9 @@ public class AddDependencySetsTaskTest
         verifyOneDependencyAdded( "out", false );
     }
 
+    @Test
     public void testAddDependencySet_ShouldAddOneDependencyFromProjectUnpacked()
-        throws AssemblyFormattingException, ArchiveCreationException, IOException,
-        InvalidAssemblerConfigurationException
+        throws Exception
     {
         verifyOneDependencyAdded( "out", true );
     }
@@ -225,13 +239,13 @@ public class AddDependencySetsTaskTest
         final MockAndControlForAddDependencySetsTask macTask =
             new MockAndControlForAddDependencySetsTask( mockManager, new MavenProject( new Model() ) );
 
-        final ArtifactMock artifactMock = new ArtifactMock( mockManager, "group", "artifact", "version", "jar", false );
-        final File artifactFile = artifactMock.setNewFile();
+        Artifact artifact = mock( Artifact.class );
+        final File artifactFile = temporaryFolder.newFile();
+        when( artifact.getFile() ).thenReturn( artifactFile );
 
         if ( unpack )
         {
             macTask.expectAddArchivedFileSet();
-//            macTask.expectModeChange( -1, -1, 10, 10, 2 );
         }
         else
         {
@@ -251,7 +265,7 @@ public class AddDependencySetsTaskTest
 
         final AddDependencySetsTask task = new AddDependencySetsTask( Collections.singletonList( ds ),
                                                                       Collections.singleton(
-                                                                          artifactMock.getArtifact() ), project,
+                                                                          artifact ), project,
                                                                       macTask.projectBuilder, logger );
         DefaultAssemblyArchiverTest.setupInterpolators( macTask.configSource );
 
@@ -262,17 +276,17 @@ public class AddDependencySetsTaskTest
         mockManager.verifyAll();
     }
 
+    @Test
     public void testGetDependencyArtifacts_ShouldGetOneDependencyArtifact()
-        throws ArchiveCreationException, InvalidAssemblerConfigurationException
+        throws Exception
     {
         final MavenProject project = new MavenProject( new Model() );
 
         final MockAndControlForAddDependencySetsTask macTask =
             new MockAndControlForAddDependencySetsTask( mockManager );
 
-        final ArtifactMock artifactMock = new ArtifactMock( mockManager, "group", "artifact", "version", "jar", false );
-
-        project.setArtifacts( Collections.singleton( artifactMock.getArtifact() ) );
+        Artifact artifact = mock( Artifact.class );
+        project.setArtifacts( Collections.singleton( artifact ) );
 
         final DependencySet dependencySet = new DependencySet();
 
@@ -282,32 +296,38 @@ public class AddDependencySetsTaskTest
 
         final AddDependencySetsTask task = new AddDependencySetsTask( Collections.singletonList( dependencySet ),
                                                                       Collections.singleton(
-                                                                          artifactMock.getArtifact() ), project,
+                                                                      artifact ), project,
                                                                       macTask.projectBuilder, logger );
 
         final Set<Artifact> result = task.resolveDependencyArtifacts( dependencySet );
 
         assertNotNull( result );
         assertEquals( 1, result.size() );
-        assertSame( artifactMock.getArtifact(), result.iterator().next() );
+        assertSame( artifact, result.iterator().next() );
 
         mockManager.verifyAll();
     }
 
+    @Test
     public void testGetDependencyArtifacts_ShouldFilterOneDependencyArtifactViaInclude()
-        throws ArchiveCreationException, InvalidAssemblerConfigurationException
+        throws Exception
     {
         final MavenProject project = new MavenProject( new Model() );
 
         final Set<Artifact> artifacts = new HashSet<>();
 
-        final ArtifactMock am = new ArtifactMock( mockManager, "group", "artifact", "1.0", "jar", false );
-        am.setDependencyTrail( Collections.singletonList( project.getId() ) );
-        artifacts.add( am.getArtifact() );
+        Artifact am1 = mock( Artifact.class );
+        when( am1.getGroupId() ).thenReturn( "group" );
+        when( am1.getArtifactId() ).thenReturn( "artifact" );
+        when( am1.getId() ).thenReturn( "group:artifact:1.0:jar" );
+        artifacts.add( am1 );
 
-        final ArtifactMock am2 = new ArtifactMock( mockManager, "group2", "artifact2", "1.0", "jar", false );
-        am2.setDependencyTrail( Collections.singletonList( project.getId() ) );
-        artifacts.add( am2.getArtifact() );
+        Artifact am2 = mock( Artifact.class );
+        when( am2.getGroupId() ).thenReturn( "group2" );
+        when( am2.getArtifactId() ).thenReturn( "artifact2" );
+        when( am2.getId() ).thenReturn( "group2:artifact2:1.0:jar" );
+        when( am2.getDependencyConflictId() ).thenReturn( "group2:artifact2:jar" );
+        artifacts.add( am2 );
 
         final DependencySet dependencySet = new DependencySet();
 
@@ -325,23 +345,31 @@ public class AddDependencySetsTaskTest
 
         assertNotNull( result );
         assertEquals( 1, result.size() );
-        assertSame( am.getArtifact(), result.iterator().next() );
+        assertSame( am1, result.iterator().next() );
 
         mockManager.verifyAll();
     }
 
+    @Test
     public void testGetDependencyArtifacts_ShouldIgnoreTransitivePathFilteringWhenIncludeNotTransitive()
-        throws ArchiveCreationException, InvalidAssemblerConfigurationException
+        throws Exception
     {
         final MavenProject project = new MavenProject( new Model() );
 
         final Set<Artifact> artifacts = new HashSet<>();
 
-        final ArtifactMock am = new ArtifactMock( mockManager, "group", "artifact", "1.0", "jar", false );
-        artifacts.add( am.getArtifact() );
+        Artifact am1 = mock( Artifact.class );
+        when( am1.getGroupId() ).thenReturn( "group" );
+        when( am1.getArtifactId() ).thenReturn( "artifact" );
+        when( am1.getId() ).thenReturn( "group:artifact:1.0:jar" );
+        artifacts.add( am1 );
 
-        final ArtifactMock am2 = new ArtifactMock( mockManager, "group2", "artifact2", "1.0", "jar", false );
-        artifacts.add( am2.getArtifact() );
+        Artifact am2 = mock( Artifact.class );
+        when( am2.getGroupId() ).thenReturn( "group2" );
+        when( am2.getArtifactId() ).thenReturn( "artifact2" );
+        when( am2.getId() ).thenReturn( "group2:artifact2:1.0:jar" );
+        when( am2.getDependencyConflictId() ).thenReturn( "group2:artifact2:jar" );
+        artifacts.add( am2 );
 
         final DependencySet dependencySet = new DependencySet();
 
@@ -359,7 +387,7 @@ public class AddDependencySetsTaskTest
 
         assertNotNull( result );
         assertEquals( 1, result.size() );
-        assertSame( am.getArtifact(), result.iterator().next() );
+        assertSame( am1, result.iterator().next() );
 
         mockManager.verifyAll();
     }

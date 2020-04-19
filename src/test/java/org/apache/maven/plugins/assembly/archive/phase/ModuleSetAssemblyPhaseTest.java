@@ -19,17 +19,32 @@ package org.apache.maven.plugins.assembly.archive.phase;
  * under the License.
  */
 
+import static java.util.Collections.singleton;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Model;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
 import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
 import org.apache.maven.plugins.assembly.archive.DefaultAssemblyArchiverTest;
-import org.apache.maven.plugins.assembly.archive.task.testutils.ArtifactMock;
 import org.apache.maven.plugins.assembly.archive.task.testutils.MockAndControlForAddArtifactTask;
 import org.apache.maven.plugins.assembly.archive.task.testutils.MockAndControlForAddDependencySetsTask;
 import org.apache.maven.plugins.assembly.archive.task.testutils.MockAndControlForAddFileSetsTask;
-import org.apache.maven.plugins.assembly.artifact.DependencyResolutionException;
 import org.apache.maven.plugins.assembly.artifact.DependencyResolver;
-import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.model.FileSet;
 import org.apache.maven.plugins.assembly.model.ModuleBinaries;
@@ -45,21 +60,6 @@ import org.easymock.classextension.EasyMockSupport;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
-import static java.util.Collections.singleton;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class ModuleSetAssemblyPhaseTest
 {
@@ -125,7 +125,7 @@ public class ModuleSetAssemblyPhaseTest
 
     @Test
     public void testCreateFileSet_ShouldUseModuleDirOnlyWhenOutDirIsNull()
-        throws AssemblyFormattingException
+        throws Exception
     {
         final EasyMockSupport mm = new EasyMockSupport();
 
@@ -146,12 +146,12 @@ public class ModuleSetAssemblyPhaseTest
         final File basedir = temporaryFolder.getRoot();
 
         final MavenProject artifactProject = new MavenProject( new Model() );
-
         artifactProject.setFile( new File( basedir, "pom.xml" ) );
 
-        final ArtifactMock artifactMock = new ArtifactMock( mm, "group", "artifact", "version", "jar", false );
+        Artifact artifact = mock( Artifact.class );
+        when( artifact.getArtifactId() ).thenReturn( "artifact" );
 
-        artifactProject.setArtifact( artifactMock.getArtifact() );
+        artifactProject.setArtifact( artifact );
 
         DefaultAssemblyArchiverTest.setupInterpolators( macTask.configSource );
 
@@ -169,7 +169,7 @@ public class ModuleSetAssemblyPhaseTest
 
     @Test
     public void testCreateFileSet_ShouldPrependModuleDirWhenOutDirIsProvided()
-        throws AssemblyFormattingException
+        throws Exception
     {
         final EasyMockSupport mm = new EasyMockSupport();
 
@@ -194,9 +194,10 @@ public class ModuleSetAssemblyPhaseTest
 
         artifactProject.setFile( new File( basedir, "pom.xml" ) );
 
-        final ArtifactMock artifactMock = new ArtifactMock( mm, "group", "artifact", "version", "jar", false );
+        Artifact artifact = mock( Artifact.class );
+        when( artifact.getArtifactId() ).thenReturn( "artifact" );
 
-        artifactProject.setArtifact( artifactMock.getArtifact() );
+        artifactProject.setArtifact( artifact );
         DefaultAssemblyArchiverTest.setupInterpolators( macTask.configSource );
 
         mm.replayAll();
@@ -213,7 +214,7 @@ public class ModuleSetAssemblyPhaseTest
 
     @Test
     public void testCreateFileSet_ShouldAddExcludesForSubModulesWhenExcludeSubModDirsIsTrue()
-        throws AssemblyFormattingException
+        throws Exception
     {
         final EasyMockSupport mm = new EasyMockSupport();
 
@@ -237,9 +238,9 @@ public class ModuleSetAssemblyPhaseTest
 
         project.setFile( new File( basedir, "pom.xml" ) );
 
-        final ArtifactMock artifactMock = new ArtifactMock( mm, "group", "artifact", "version", "jar", false );
+        Artifact artifact = mock( Artifact.class );
 
-        project.setArtifact( artifactMock.getArtifact() );
+        project.setArtifact( artifact );
         DefaultAssemblyArchiverTest.setupInterpolators( macTask.configSource );
 
         mm.replayAll();
@@ -256,8 +257,7 @@ public class ModuleSetAssemblyPhaseTest
 
     @Test
     public void testExecute_ShouldSkipIfNoModuleSetsFound()
-        throws ArchiveCreationException, AssemblyFormattingException, InvalidAssemblerConfigurationException,
-        DependencyResolutionException
+        throws Exception
     {
         final Assembly assembly = new Assembly();
         assembly.setIncludeBaseDirectory( false );
@@ -267,8 +267,7 @@ public class ModuleSetAssemblyPhaseTest
 
     @Test
     public void testExecute_ShouldAddOneModuleSetWithOneModuleInIt()
-        throws ArchiveCreationException, AssemblyFormattingException, IOException,
-        InvalidAssemblerConfigurationException, DependencyResolutionException
+        throws Exception
     {
         final EasyMockSupport mm = new EasyMockSupport();
 
@@ -278,9 +277,10 @@ public class ModuleSetAssemblyPhaseTest
 
         final MavenProject module = createProject( "group", "module", "version", project );
 
-        final ArtifactMock moduleArtifactMock = new ArtifactMock( mm, "group", "module", "version", "jar", false );
-        final File moduleArtifactFile = moduleArtifactMock.setNewFile();
-        module.setArtifact( moduleArtifactMock.getArtifact() );
+        Artifact artifact = mock( Artifact.class );
+        final File moduleArtifactFile = temporaryFolder.newFile();
+        when( artifact.getFile() ).thenReturn( moduleArtifactFile );
+        module.setArtifact( artifact );
 
         final List<MavenProject> projects = new ArrayList<>();
 
@@ -327,16 +327,14 @@ public class ModuleSetAssemblyPhaseTest
 
     @Test
     public void testAddModuleBinaries_ShouldReturnImmediatelyWhenBinariesIsNull()
-        throws ArchiveCreationException, AssemblyFormattingException, InvalidAssemblerConfigurationException,
-        DependencyResolutionException
+        throws Exception
     {
         createPhase( null, null ).addModuleBinaries( null, null, null, null, null, null );
     }
 
     @Test
     public void testAddModuleBinaries_ShouldFilterPomModule()
-        throws ArchiveCreationException, AssemblyFormattingException, IOException,
-        InvalidAssemblerConfigurationException, DependencyResolutionException
+        throws Exception
     {
         final EasyMockSupport mm = new EasyMockSupport();
 
@@ -352,8 +350,8 @@ public class ModuleSetAssemblyPhaseTest
         final MavenProject project = createProject( "group", "artifact", "version", null );
         project.setPackaging( "pom" );
 
-        final ArtifactMock artifactMock = new ArtifactMock( mm, "group", "artifact", "version", "pom", false );
-        project.setArtifact( artifactMock.getArtifact() );
+        Artifact artifact = mock( Artifact.class );
+        project.setArtifact( artifact );
 
         final Set<MavenProject> projects = singleton( project );
 
@@ -369,15 +367,16 @@ public class ModuleSetAssemblyPhaseTest
 
     @Test
     public void testAddModuleBinaries_ShouldAddOneModuleAttachmentArtifactAndNoDeps()
-        throws ArchiveCreationException, AssemblyFormattingException, IOException,
-        InvalidAssemblerConfigurationException, DependencyResolutionException
+        throws Exception
     {
         final EasyMockSupport mm = new EasyMockSupport();
 
         final MockAndControlForAddArtifactTask macTask = new MockAndControlForAddArtifactTask( mm, null );
 
-        final ArtifactMock artifactMock = new ArtifactMock( mm, "group", "artifact", "version", "jar", "test", false );
-        final File artifactFile = artifactMock.setNewFile();
+        Artifact artifact = mock( Artifact.class );
+        when( artifact.getClassifier() ).thenReturn( "test" );
+        final File artifactFile = temporaryFolder.newFile();
+        when( artifact.getFile() ).thenReturn( artifactFile );
 
         macTask.expectGetFinalName( "final-name" );
         macTask.expectGetDestFile( new File( "junk" ) );
@@ -396,7 +395,7 @@ public class ModuleSetAssemblyPhaseTest
         binaries.setAttachmentClassifier( "test" );
 
         final MavenProject project = createProject( "group", "artifact", "version", null );
-        project.addAttachedArtifact( artifactMock.getArtifact() );
+        project.addAttachedArtifact( artifact );
 
         final Set<MavenProject> projects = singleton( project );
 
@@ -416,14 +415,14 @@ public class ModuleSetAssemblyPhaseTest
 
     @Test
     public void testAddModuleBinaries_ShouldFailWhenOneModuleDoesntHaveAttachmentWithMatchingClassifier()
-        throws ArchiveCreationException, AssemblyFormattingException, IOException, DependencyResolutionException
+        throws Exception
     {
         final EasyMockSupport mm = new EasyMockSupport();
 
         final MockAndControlForAddArtifactTask macTask = new MockAndControlForAddArtifactTask( mm );
-
-        final ArtifactMock artifactMock = new ArtifactMock( mm, "group", "artifact", "version", "jar", "test", false );
-        artifactMock.setNewFile();
+        
+        Artifact artifact = mock( Artifact.class );
+        when( artifact.getClassifier() ).thenReturn( "test" );
 
         final ModuleBinaries binaries = new ModuleBinaries();
 
@@ -434,7 +433,7 @@ public class ModuleSetAssemblyPhaseTest
         binaries.setAttachmentClassifier( "test" );
 
         final MavenProject project = createProject( "group", "artifact", "version", null );
-        project.setArtifact( artifactMock.getArtifact() );
+        project.setArtifact( artifact );
 
         final Set<MavenProject> projects = singleton( project );
 
@@ -451,6 +450,8 @@ public class ModuleSetAssemblyPhaseTest
         }
         catch ( final InvalidAssemblerConfigurationException e )
         {
+            assertEquals( "Cannot find attachment with classifier: test in module project: group:artifact:jar:version. "
+                + "Please exclude this module from the module-set.", e.getMessage());
             // should throw this because of missing attachment.
         }
 
@@ -459,15 +460,15 @@ public class ModuleSetAssemblyPhaseTest
 
     @Test
     public void testAddModuleBinaries_ShouldAddOneModuleArtifactAndNoDeps()
-        throws ArchiveCreationException, AssemblyFormattingException, IOException,
-        InvalidAssemblerConfigurationException, DependencyResolutionException
+        throws Exception
     {
         final EasyMockSupport mm = new EasyMockSupport();
 
         final MockAndControlForAddArtifactTask macTask = new MockAndControlForAddArtifactTask( mm );
 
-        final ArtifactMock artifactMock = new ArtifactMock( mm, "group", "artifact", "version", "jar", false );
-        final File artifactFile = artifactMock.setNewFile();
+        Artifact artifact = mock( Artifact.class );
+        final File artifactFile = temporaryFolder.newFile();
+        when( artifact.getFile() ).thenReturn( artifactFile );
 
         macTask.expectGetFinalName( "final-name" );
         macTask.expectGetDestFile( new File( "junk" ) );
@@ -485,7 +486,7 @@ public class ModuleSetAssemblyPhaseTest
         binaries.setOutputFileNameMapping( "artifact" );
 
         final MavenProject project = createProject( "group", "artifact", "version", null );
-        project.setArtifact( artifactMock.getArtifact() );
+        project.setArtifact( artifact );
 
         final Set<MavenProject> projects = singleton( project );
 
@@ -505,19 +506,13 @@ public class ModuleSetAssemblyPhaseTest
 
     @Test
     public void testAddModuleArtifact_ShouldThrowExceptionWhenArtifactFileIsNull()
-        throws AssemblyFormattingException, IOException
+        throws Exception
     {
-        final EasyMockSupport mm = new EasyMockSupport();
-
-        final ArtifactMock artifactMock = new ArtifactMock( mm, "group", "artifact", "version", "type", false );
-        artifactMock.setNullFile();
-
-        mm.replayAll();
-
+        Artifact artifact = mock( Artifact.class );
         try
         {
             createPhase( new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ),
-                         null ).addModuleArtifact( artifactMock.getArtifact(), null, null, null, null );
+                         null ).addModuleArtifact( artifact, null, null, null, null );
 
             fail( "Expected ArchiveCreationException since artifact file is null." );
         }
@@ -525,23 +520,22 @@ public class ModuleSetAssemblyPhaseTest
         {
             // expected
         }
-
-        mm.verifyAll();
     }
 
     @Test
     public void testAddModuleArtifact_ShouldAddOneArtifact()
-        throws AssemblyFormattingException, IOException, ArchiveCreationException
+        throws Exception
     {
         final EasyMockSupport mm = new EasyMockSupport();
 
         final MockAndControlForAddArtifactTask macTask = new MockAndControlForAddArtifactTask( mm );
 
-        final ArtifactMock artifactMock = new ArtifactMock( mm, "group", "artifact", "version", "type", false );
-        final File artifactFile = artifactMock.setNewFile();
+        Artifact artifact = mock( Artifact.class );
+        final File artifactFile = temporaryFolder.newFile();
+        when( artifact.getFile() ).thenReturn( artifactFile );
 
         final MavenProject project = createProject( "group", "artifact", "version", null );
-        project.setArtifact( artifactMock.getArtifact() );
+        project.setArtifact( artifact );
 
         macTask.expectGetFinalName( "final-name" );
         macTask.expectGetDestFile( new File( "junk" ) );
@@ -561,7 +555,7 @@ public class ModuleSetAssemblyPhaseTest
         mm.replayAll();
 
         createPhase( new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ),
-                     null ).addModuleArtifact( artifactMock.getArtifact(), project, macTask.archiver,
+                     null ).addModuleArtifact( artifact, project, macTask.archiver,
                                                macTask.configSource, binaries );
 
         mm.verifyAll();
@@ -569,21 +563,15 @@ public class ModuleSetAssemblyPhaseTest
 
     @Test
     public void testAddModuleSourceFileSets_ShouldReturnImmediatelyIfSourcesIsNull()
-        throws ArchiveCreationException, AssemblyFormattingException
+        throws Exception
     {
-        final EasyMockSupport mm = new EasyMockSupport();
-
-        mm.replayAll();
-
         createPhase( new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ), null ).addModuleSourceFileSets( null, null, null,
                                                                                                       null );
-
-        mm.verifyAll();
     }
 
     @Test
     public void testAddModuleSourceFileSets_ShouldAddOneSourceDirectory()
-        throws ArchiveCreationException, AssemblyFormattingException
+        throws Exception
     {
         final EasyMockSupport mm = new EasyMockSupport();
 
@@ -593,9 +581,7 @@ public class ModuleSetAssemblyPhaseTest
 
         macTask.expectGetProject( project );
 
-        final ArtifactMock artifactMock = new ArtifactMock( mm, "group", "artifact", "version", "jar", false );
-
-        project.setArtifact( artifactMock.getArtifact() );
+        project.setArtifact( mock( Artifact.class ) );
 
         final Set<MavenProject> projects = singleton( project );
 
@@ -628,7 +614,7 @@ public class ModuleSetAssemblyPhaseTest
 
     @Test
     public void testGetModuleProjects_ShouldReturnNothingWhenReactorContainsOnlyCurrentProject()
-        throws ArchiveCreationException
+        throws Exception
     {
         final EasyMockSupport mm = new EasyMockSupport();
 
@@ -656,7 +642,7 @@ public class ModuleSetAssemblyPhaseTest
 
     @Test
     public void testGetModuleProjects_ShouldReturnNothingWhenReactorContainsTwoSiblingProjects()
-        throws ArchiveCreationException
+        throws Exception
     {
         final EasyMockSupport mm = new EasyMockSupport();
 
@@ -688,7 +674,7 @@ public class ModuleSetAssemblyPhaseTest
 
     @Test
     public void testGetModuleProjects_ShouldReturnModuleOfCurrentProject()
-        throws ArchiveCreationException
+        throws Exception
     {
         final EasyMockSupport mm = new EasyMockSupport();
 
@@ -724,7 +710,7 @@ public class ModuleSetAssemblyPhaseTest
 
     @Test
     public void testGetModuleProjects_ShouldReturnDescendentModulesOfCurrentProject()
-        throws ArchiveCreationException
+        throws Exception
     {
         final EasyMockSupport mm = new EasyMockSupport();
 
@@ -764,7 +750,7 @@ public class ModuleSetAssemblyPhaseTest
 
     @Test
     public void testGetModuleProjects_ShouldExcludeModuleAndDescendentsTransitively()
-        throws ArchiveCreationException
+        throws Exception
     {
         final EasyMockSupport mm = new EasyMockSupport();
 
@@ -773,12 +759,25 @@ public class ModuleSetAssemblyPhaseTest
         final MockAndControlForAddDependencySetsTask macTask =
             new MockAndControlForAddDependencySetsTask( mm, project );
 
-        addArtifact( project, mm, false );
+        Artifact artifact1 = mock( Artifact.class );
+        project.setArtifact( artifact1 );
 
         final MavenProject project2 = createProject( "group", "artifact2", "version", project );
-        addArtifact( project2, mm, false );
+        Artifact artifact2 = mock( Artifact.class );
+        when( artifact2.getGroupId() ).thenReturn( "group" );
+        when( artifact2.getArtifactId() ).thenReturn( "artifact2" );
+        when( artifact2.getId() ).thenReturn( "group:artifact2:version:jar" );
+        when( artifact2.getDependencyConflictId() ).thenReturn( "group:artifact2:jar" );
+        project2.setArtifact( artifact2 );
+
         final MavenProject project3 = createProject( "group", "artifact3", "version", project2 );
-        addArtifact( project3, mm, true );
+        Artifact artifact3 = mock( Artifact.class );
+        when( artifact3.getGroupId() ).thenReturn( "group" );
+        when( artifact3.getArtifactId() ).thenReturn( "artifact3" );
+        when( artifact3.getId() ).thenReturn( "group:artifact3:version:jar" );
+        when( artifact3.getDependencyConflictId() ).thenReturn( "group:artifact3:jar" );
+        when( artifact3.getDependencyTrail() ).thenReturn( Arrays.asList( project2.getId(), project.getId() ) );
+        project3.setArtifact( artifact3 );
 
         final List<MavenProject> projects = new ArrayList<>();
         projects.add( project );
@@ -800,32 +799,6 @@ public class ModuleSetAssemblyPhaseTest
         assertTrue( moduleProjects.isEmpty() );
 
         mm.verifyAll();
-    }
-
-    private ArtifactMock addArtifact( final MavenProject project, final EasyMockSupport mm,
-                                      final boolean expectDepTrailCheck )
-    {
-        final ArtifactMock macArtifact = new ArtifactMock( mm, project.getGroupId(), project.getArtifactId(),
-                                                           project.getVersion(), project.getPackaging(), false );
-
-        if ( expectDepTrailCheck )
-        {
-            final LinkedList<String> depTrail = new LinkedList<>();
-
-            MavenProject parent = project.getParent();
-            while ( parent != null )
-            {
-                depTrail.addLast( parent.getId() );
-
-                parent = parent.getParent();
-            }
-
-            macArtifact.setDependencyTrail( depTrail );
-        }
-
-        project.setArtifact( macArtifact.getArtifact() );
-
-        return macArtifact;
     }
 
     private void verifyResultIs( final List<MavenProject> check, final Set<MavenProject> moduleProjects )

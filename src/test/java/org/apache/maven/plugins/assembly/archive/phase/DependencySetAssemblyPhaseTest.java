@@ -19,17 +19,16 @@ package org.apache.maven.plugins.assembly.archive.phase;
  * under the License.
  */
 
+import static org.mockito.Mockito.mock;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
-
-import junit.framework.TestCase;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Model;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
 import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
-import org.apache.maven.plugins.assembly.archive.task.testutils.ArtifactMock;
 import org.apache.maven.plugins.assembly.archive.task.testutils.MockAndControlForAddDependencySetsTask;
 import org.apache.maven.plugins.assembly.artifact.DependencyResolutionException;
 import org.apache.maven.plugins.assembly.artifact.DependencyResolver;
@@ -40,13 +39,14 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.easymock.classextension.EasyMockSupport;
+import org.junit.Test;
 
 public class DependencySetAssemblyPhaseTest
-    extends TestCase
 {
 
     final EasyMockSupport mm = new EasyMockSupport();
 
+    @Test
     public void testExecute_ShouldAddOneDependencyFromProject()
         throws AssemblyFormattingException, ArchiveCreationException, IOException,
         InvalidAssemblerConfigurationException, DependencyResolutionException
@@ -55,9 +55,8 @@ public class DependencySetAssemblyPhaseTest
 
         final MavenProject project = newMavenProject( "group", "project", "0" );
 
-        final ArtifactMock projectArtifactMock = new ArtifactMock( mm, "group", "project", "0", "jar", false );
-
-        project.setArtifact( projectArtifactMock.getArtifact() );
+        Artifact artifact = mock( Artifact.class );
+        project.setArtifact( artifact );
 
         final DependencySet ds = new DependencySet();
         ds.setUseProjectArtifact( false );
@@ -76,17 +75,12 @@ public class DependencySetAssemblyPhaseTest
         final MockAndControlForAddDependencySetsTask macTask =
             new MockAndControlForAddDependencySetsTask( mm, project );
 
-        final ArtifactMock artifactMock = new ArtifactMock( mm, "group", "dep", "1", "jar", false );
-
-        System.out.println(
-            "On test setup, hashcode for dependency artifact: " + artifactMock.getArtifact().hashCode() );
-
         macTask.expectCSGetRepositories( null, null );
 
         macTask.expectGetDestFile( new File( "junk" ) );
 //        macTask.expectAddFile( artifactFile, "out/dep", 10 );
 
-        project.setArtifacts( Collections.singleton( artifactMock.getArtifact() ) );
+        project.setArtifacts( Collections.singleton( artifact ) );
 
         macTask.expectCSGetFinalName( "final-name" );
 
@@ -116,6 +110,7 @@ public class DependencySetAssemblyPhaseTest
         return new MavenProject( model );
     }
 
+    @Test
     public void testExecute_ShouldNotAddDependenciesWhenProjectHasNone()
         throws AssemblyFormattingException, ArchiveCreationException, IOException,
         InvalidAssemblerConfigurationException, DependencyResolutionException

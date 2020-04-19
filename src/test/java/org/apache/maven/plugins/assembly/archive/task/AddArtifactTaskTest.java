@@ -20,18 +20,19 @@ package org.apache.maven.plugins.assembly.archive.task;
  */
 
 import static org.easymock.EasyMock.anyObject;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
-import junit.framework.TestCase;
-
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.handler.ArtifactHandler;
 import org.apache.maven.model.Model;
 import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
-import org.apache.maven.plugins.assembly.archive.task.testutils.ArtifactMock;
 import org.apache.maven.plugins.assembly.archive.task.testutils.MockAndControlForAddArtifactTask;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.model.DependencySet;
@@ -42,15 +43,21 @@ import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.easymock.classextension.EasyMockSupport;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 public class AddArtifactTaskTest
-    extends TestCase
 {
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     private EasyMockSupport mockManager;
 
     private MockAndControlForAddArtifactTask mac;
 
+    @Before
     public void setUp()
         throws IOException
     {
@@ -67,13 +74,15 @@ public class AddArtifactTaskTest
         mac.expectGetFinalName( "final-name" );
     }
 
+    @Test
     public void testShouldAddArchiveFileWithoutUnpacking()
         throws ArchiveCreationException, AssemblyFormattingException, IOException
     {
         String outputLocation = "artifact";
 
-        ArtifactMock artifactMock = new ArtifactMock( mockManager, "group", "artifact", "version", "jar", false );
-        File artifactFile = artifactMock.setNewFile();
+        Artifact artifact = mock( Artifact.class );
+        File artifactFile = temporaryFolder.newFile();
+        when( artifact.getFile() ).thenReturn( artifactFile );
 
         mac.expectGetMode( 0222, 0222 );
         mac.expectGetDestFile( new File( "junk" ) );
@@ -82,13 +91,14 @@ public class AddArtifactTaskTest
 
         mockManager.replayAll();
 
-        AddArtifactTask task = createTask( artifactMock.getArtifact() );
+        AddArtifactTask task = createTask( artifact );
 
         task.execute( mac.archiver, mac.configSource );
 
         mockManager.verifyAll();
     }
 
+    @Test
     public void testShouldAddArchiveFileWithDefaultOutputLocation()
         throws ArchiveCreationException, AssemblyFormattingException, IOException
     {
@@ -97,20 +107,22 @@ public class AddArtifactTaskTest
         String ext = "jar";
         String outputDir = "tmp/";
 
-        ArtifactMock mock = new ArtifactMock( mockManager, "group", artifactId, version, ext, false );
-
-        File file = mock.setNewFile();
-        mock.setExtension( ext );
+        Artifact artifact = mock( Artifact.class );
+        ArtifactHandler artifactHandler = mock( ArtifactHandler.class );
+        when( artifactHandler.getExtension() ).thenReturn( ext );
+        when( artifact.getArtifactHandler() ).thenReturn( artifactHandler );
+        File artifactFile = temporaryFolder.newFile();
+        when( artifact.getFile() ).thenReturn( artifactFile );
 
         mac.expectGetMode( 0222, 0222 );
 
         mac.expectGetDestFile( new File( "junk" ) );
-        mac.expectAddFile( file, outputDir + artifactId + "-" + version + "." + ext );
+        mac.expectAddFile( artifactFile, outputDir + artifactId + "-" + version + "." + ext );
         mac.expectInterpolators();
         mockManager.replayAll();
 
         AddArtifactTask task =
-            new AddArtifactTask( mock.getArtifact(), new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ), null );
+            new AddArtifactTask( artifact, new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ), null );
         task.setOutputDirectory( outputDir );
         task.setFileNameMapping( new DependencySet().getOutputFileNameMapping() );
 
@@ -135,20 +147,19 @@ public class AddArtifactTaskTest
         return task;
     }
 
+    @Test
     public void testShouldAddArchiveFileWithUnpack()
         throws ArchiveCreationException, AssemblyFormattingException, IOException
     {
         mac.expectModeChange( -1, -1, -1, -1, 1 );
         mac.expectInterpolators();
 
-        ArtifactMock artifactMock = new ArtifactMock( mockManager, "group", "artifact", "version", "jar", false );
-        artifactMock.setNewFile();
-
+        Artifact artifact = mock( Artifact.class );
+        when( artifact.getFile() ).thenReturn( temporaryFolder.newFile() );
+        
         mac.expectGetDestFile( new File( "junk" ) );
         try
         {
-//            mac.archiver.addArchivedFileSet( artifactFile, outputLocation, AddArtifactTask.DEFAULT_INCLUDES_ARRAY,
-// null );
             mac.archiver.addArchivedFileSet( (ArchivedFileSet) anyObject(), (Charset) anyObject() );
         }
         catch ( ArchiverException e )
@@ -158,7 +169,7 @@ public class AddArtifactTaskTest
 
         mockManager.replayAll();
 
-        AddArtifactTask task = createTask( artifactMock.getArtifact() );
+        AddArtifactTask task = createTask( artifact );
 
         task.setUnpack( true );
 
@@ -167,6 +178,7 @@ public class AddArtifactTaskTest
         mockManager.verifyAll();
     }
 
+    @Test
     public void testShouldAddArchiveFileWithUnpackAndModes()
         throws ArchiveCreationException, AssemblyFormattingException, IOException
     {
@@ -176,9 +188,9 @@ public class AddArtifactTaskTest
         mac.expectModeChange( -1, -1, directoryMode, fileMode, 2 );
         mac.expectInterpolators();
 
-        ArtifactMock artifactMock = new ArtifactMock( mockManager, "group", "artifact", "version", "jar", false );
-        artifactMock.setNewFile();
-
+        Artifact artifact = mock( Artifact.class );
+        when( artifact.getFile() ).thenReturn( temporaryFolder.newFile() );
+        
         mac.expectGetDestFile( new File( "junk" ) );
         try
         {
@@ -191,7 +203,7 @@ public class AddArtifactTaskTest
 
         mockManager.replayAll();
 
-        AddArtifactTask task = createTask( artifactMock.getArtifact() );
+        AddArtifactTask task = createTask( artifact );
 
         task.setUnpack( true );
 
@@ -203,6 +215,7 @@ public class AddArtifactTaskTest
         mockManager.verifyAll();
     }
 
+    @Test
     public void testShouldAddArchiveFileWithUnpackIncludesAndExcludes()
         throws ArchiveCreationException, AssemblyFormattingException, IOException
     {
@@ -211,8 +224,8 @@ public class AddArtifactTaskTest
         String[] includes = { "**/*.txt" };
         String[] excludes = { "**/README.txt" };
 
-        ArtifactMock artifactMock = new ArtifactMock( mockManager, "group", "artifact", "version", "jar", false );
-        artifactMock.setNewFile();
+        Artifact artifact = mock( Artifact.class );
+        when( artifact.getFile() ).thenReturn( temporaryFolder.newFile() );
 
         mac.expectGetDestFile( new File( "junk" ) );
         mac.expectAddArchivedFileSet();
@@ -220,7 +233,7 @@ public class AddArtifactTaskTest
 
         mockManager.replayAll();
 
-        AddArtifactTask task = createTask( artifactMock.getArtifact() );
+        AddArtifactTask task = createTask( artifact );
 
         task.setUnpack( true );
         task.setIncludes( Arrays.asList( includes ) );
