@@ -283,6 +283,17 @@
           <defaultValue>false</defaultValue>
           <type>boolean</type>
         </field>
+        <field>
+          <name>nonFilteredFileExtensions</name>
+          <version>2.1.0+</version>
+          <description>
+             Additional file extensions to not apply filtering (Since 3.2.0)
+          </description>
+           <association>
+            <type>String</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
       </fields>
     </class>
     <class>
@@ -1238,6 +1249,17 @@
           </description>
           <defaultValue>false</defaultValue>
           <type>boolean</type>
+        </field>
+        <field>
+          <name>nonFilteredFileExtensions</name>
+          <version>2.1.0+</version>
+          <description>
+             Additional file extensions to not apply filtering (Since 3.2.0)
+          </description>
+           <association>
+            <type>String</type>
+            <multiplicity>*</multiplicity>
+          </association>
         </field>
         <field>
           <name>lineEnding</name>

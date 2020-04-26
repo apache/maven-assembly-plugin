@@ -19,6 +19,12 @@ package org.apache.maven.plugins.assembly.archive.task;
  * under the License.
  */
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
@@ -32,11 +38,6 @@ import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.components.io.functions.InputStreamTransformer;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  *
@@ -137,7 +138,10 @@ public class AddFileSetsTask
         if ( fileSetDir.exists() )
         {
             InputStreamTransformer fileSetTransformers =
-                ReaderFormatter.getFileSetTransformers( configSource, fileSet.isFiltered(), fileSet.getLineEnding() );
+                ReaderFormatter.getFileSetTransformers( configSource, 
+                                                        fileSet.isFiltered(),
+                                                        new HashSet<>( fileSet.getNonFilteredFileExtensions() ),
+                                                        fileSet.getLineEnding() );
             if ( fileSetTransformers == null )
             {
                 logger.debug( "NOT reformatting any files in " + fileSetDir );

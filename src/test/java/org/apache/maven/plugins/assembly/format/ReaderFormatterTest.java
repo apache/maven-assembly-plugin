@@ -19,6 +19,22 @@ package org.apache.maven.plugins.assembly.format;
  * under the License.
  */
 
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.sameInstance;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.model.Model;
 import org.apache.maven.plugins.assembly.testutils.PojoConfigSource;
@@ -26,15 +42,9 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.filtering.DefaultMavenReaderFilter;
 import org.codehaus.plexus.archiver.resources.PlexusIoVirtualFileResource;
 import org.codehaus.plexus.components.io.functions.InputStreamTransformer;
+import org.codehaus.plexus.components.io.resources.PlexusIoResource;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.junit.Test;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-
-import static org.junit.Assert.assertEquals;
 
 
 public class ReaderFormatterTest
@@ -44,7 +54,7 @@ public class ReaderFormatterTest
         throws IOException, AssemblyFormattingException
     {
         final PojoConfigSource cfg = getPojoConfigSource();
-        InputStreamTransformer fileSetTransformers = ReaderFormatter.getFileSetTransformers( cfg, true, "dos" );
+        InputStreamTransformer fileSetTransformers = ReaderFormatter.getFileSetTransformers( cfg, true, Collections.<String>emptySet(), "dos" );
         InputStream fud = fileSetTransformers.transform( dummyResource(), payload( "This is a\ntest." ) );
         assertEquals( "This is a\r\ntest.", readResultStream( fud ) );
     }
@@ -54,7 +64,7 @@ public class ReaderFormatterTest
         throws IOException, AssemblyFormattingException
     {
         final PojoConfigSource cfg = getPojoConfigSource();
-        InputStreamTransformer fileSetTransformers = ReaderFormatter.getFileSetTransformers( cfg, false, "dos" );
+        InputStreamTransformer fileSetTransformers = ReaderFormatter.getFileSetTransformers( cfg, false, Collections.<String>emptySet(), "dos" );
         InputStream fud = fileSetTransformers.transform( dummyResource(), payload( "This is a\ntest." ) );
         assertEquals( "This is a\r\ntest.", readResultStream( fud ) );
     }
@@ -64,12 +74,30 @@ public class ReaderFormatterTest
         throws IOException, AssemblyFormattingException
     {
         final PojoConfigSource cfg = getPojoConfigSource();
-        InputStreamTransformer fileSetTransformers = ReaderFormatter.getFileSetTransformers( cfg, true, "unix" );
+        InputStreamTransformer fileSetTransformers = ReaderFormatter.getFileSetTransformers( cfg, true, Collections.<String>emptySet(), "unix" );
         InputStream fud = fileSetTransformers.transform( dummyResource(), payload(
             "This is a test for project: ${artifactId} @artifactId@." ) );
         assertEquals( "This is a test for project: anArtifact anArtifact.", readResultStream( fud ) );
     }
 
+    @Test
+    public void nonFilteredFileExtensions() throws Exception
+    {
+        final PojoConfigSource cfg = getPojoConfigSource();
+        Set<String> nonFilteredFileExtensions = new HashSet<>( Arrays.asList( "jpg", "tar.gz" ) );
+        InputStreamTransformer transformer = ReaderFormatter.getFileSetTransformers( cfg, true, nonFilteredFileExtensions, "unix" );
+
+        final InputStream is = new ByteArrayInputStream( new byte[0] );
+        PlexusIoResource resource = mock( PlexusIoResource.class );
+
+        when( resource.getName() ).thenReturn( "file.jpg", "file.tar.gz", "file.txt", "file.nojpg", "file.gz", "file" );
+        assertThat( transformer.transform( resource, is ), sameInstance( is ) );
+        assertThat( transformer.transform( resource, is ), sameInstance( is ) );
+        assertThat( transformer.transform( resource, is ), not( sameInstance( is ) ) );
+        assertThat( transformer.transform( resource, is ), not( sameInstance( is ) ) );
+        assertThat( transformer.transform( resource, is ), not( sameInstance( is ) ) );
+        assertThat( transformer.transform( resource, is ), not( sameInstance( is ) ) );
+    }
 
     private MavenProject createBasicMavenProject()
     {
@@ -104,13 +132,6 @@ public class ReaderFormatterTest
         cfg.setMavenReaderFilter( mavenReaderFilter );
         cfg.setEscapeString( null );
         cfg.setMavenProject( createBasicMavenProject() );
-
-/*        expect( configSource.getFilters()).andReturn( filters );
-
-        expect( configSource.isIncludeProjectBuildFilters()).andReturn( includeProjectBuildFilters );
-
-        expect( configSource.getDelimiters()).andReturn( delimiters );
-*/
         return cfg;
     }
 

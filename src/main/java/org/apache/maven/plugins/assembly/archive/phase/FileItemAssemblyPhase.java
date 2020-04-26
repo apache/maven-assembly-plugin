@@ -142,6 +142,7 @@ public class FileItemAssemblyPhase
             {
                 final InputStreamTransformer fileSetTransformers =
                     ReaderFormatter.getFileSetTransformers( configSource, fileItem.isFiltered(),
+                                                            Collections.<String>emptySet(),
                                                             fileItem.getLineEnding() );
                 
                 final PlexusIoResource restoUse;

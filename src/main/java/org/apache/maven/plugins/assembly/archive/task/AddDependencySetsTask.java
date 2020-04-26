@@ -23,6 +23,7 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -142,11 +143,13 @@ public class AddDependencySetsTask
 
         logger.debug( "Adding " + dependencyArtifacts.size() + " dependency artifacts." );
 
-        InputStreamTransformer fileSetTransformers =
-            isUnpackWithOptions( dependencySet )
-                ? ReaderFormatter.getFileSetTransformers( configSource, dependencySet.getUnpackOptions().isFiltered(),
-                                                          dependencySet.getUnpackOptions().getLineEnding() )
-                : null;
+        UnpackOptions unpackOptions = dependencySet.getUnpackOptions();
+        InputStreamTransformer fileSetTransformers = isUnpackWithOptions( dependencySet )
+                        ? ReaderFormatter.getFileSetTransformers( configSource,
+                                                          unpackOptions.isFiltered(),
+                                                          new HashSet<>( unpackOptions.getNonFilteredFileExtensions() ),
+                                                          unpackOptions.getLineEnding() )
+                        : null;
 
         for ( final Artifact depArtifact : dependencyArtifacts )
         {

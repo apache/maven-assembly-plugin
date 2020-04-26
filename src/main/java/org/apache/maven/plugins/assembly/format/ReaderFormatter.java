@@ -37,6 +37,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -114,7 +115,9 @@ public class ReaderFormatter
 
     @Nullable
     public static InputStreamTransformer getFileSetTransformers( final AssemblerConfigurationSource configSource,
-                                                                 final boolean isFiltered, String fileSetLineEnding )
+                                                                 final boolean isFiltered,
+                                                                 final Set<String> nonFilteredFileExtensions,
+                                                                 String fileSetLineEnding )
         throws AssemblyFormattingException
     {
         final LineEndings lineEndingToUse = LineEndingsUtils.getLineEnding( fileSetLineEnding );
@@ -131,6 +134,15 @@ public class ReaderFormatter
                                               @Nonnull InputStream inputStream )
                     throws IOException
                 {
+                    final String fileName = plexusIoResource.getName();
+                    for ( String extension : nonFilteredFileExtensions )
+                    {
+                        if ( fileName.endsWith( '.' + extension ) )
+                        {
+                            return inputStream;
+                        }
+                    }
+                    
                     InputStream result = inputStream;
                     if ( isFiltered )
                     {
