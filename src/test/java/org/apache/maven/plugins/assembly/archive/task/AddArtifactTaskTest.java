@@ -19,10 +19,12 @@ package org.apache.maven.plugins.assembly.archive.task;
  * under the License.
  */
 
-import static org.easymock.EasyMock.anyObject;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.isNull;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,46 +34,56 @@ import java.util.Arrays;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.handler.ArtifactHandler;
 import org.apache.maven.model.Model;
+import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
-import org.apache.maven.plugins.assembly.archive.task.testutils.MockAndControlForAddArtifactTask;
+import org.apache.maven.plugins.assembly.archive.DefaultAssemblyArchiverTest;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.model.DependencySet;
 import org.apache.maven.plugins.assembly.utils.TypeConversionUtils;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.archiver.ArchivedFileSet;
-import org.codehaus.plexus.archiver.ArchiverException;
+import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
-import org.easymock.classextension.EasyMockSupport;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 
+@RunWith( MockitoJUnitRunner.class )
 public class AddArtifactTaskTest
 {
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
-    private EasyMockSupport mockManager;
-
-    private MockAndControlForAddArtifactTask mac;
+    private MavenProject mainProject;
+    
+    private AssemblerConfigurationSource configSource;
 
     @Before
     public void setUp()
         throws IOException
     {
-        mockManager = new EasyMockSupport();
-
         Model model = new Model();
         model.setGroupId( "group" );
         model.setArtifactId( "main" );
         model.setVersion( "1000" );
 
-        MavenProject mainProject = new MavenProject( model );
+        this.mainProject = new MavenProject( model );
 
-        mac = new MockAndControlForAddArtifactTask( mockManager, mainProject );
-        mac.expectGetFinalName( "final-name" );
+        this.configSource = mock( AssemblerConfigurationSource.class );
+        when( configSource.getFinalName() ).thenReturn( "final-name" );
+    }
+    
+    @After
+    public void tearDown()
+    {
+        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
+        verify( configSource, atLeastOnce() ).getFinalName();
+        verify( configSource, atLeastOnce() ).getMavenSession();
     }
 
     @Test
@@ -84,18 +96,25 @@ public class AddArtifactTaskTest
         File artifactFile = temporaryFolder.newFile();
         when( artifact.getFile() ).thenReturn( artifactFile );
 
-        mac.expectGetMode( 0222, 0222 );
-        mac.expectGetDestFile( new File( "junk" ) );
-        mac.expectAddFile( artifactFile, outputLocation );
-        mac.expectInterpolators();
-
-        mockManager.replayAll();
+        final Archiver archiver = mock( Archiver.class );
+        when( archiver.getOverrideDirectoryMode() ).thenReturn( 0222 );
+        when( archiver.getOverrideFileMode() ).thenReturn( 0222 );
+        when( archiver.getDestFile() ).thenReturn( new File( "junk" ) );
+        
+        when( configSource.getProject() ).thenReturn( mainProject );
+        DefaultAssemblyArchiverTest.setupInterpolators( configSource, mainProject );
 
         AddArtifactTask task = createTask( artifact );
 
-        task.execute( mac.archiver, mac.configSource );
+        task.execute( archiver, configSource );
 
-        mockManager.verifyAll();
+        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
+        verify( configSource, atLeastOnce() ).getProject();
+
+        verify( archiver ).getOverrideDirectoryMode();
+        verify( archiver ).getOverrideFileMode();
+        verify( archiver, atLeastOnce() ).getDestFile();
+        verify( archiver ).addFile( artifactFile, outputLocation );
     }
 
     @Test
@@ -114,15 +133,16 @@ public class AddArtifactTaskTest
         File artifactFile = temporaryFolder.newFile();
         when( artifact.getFile() ).thenReturn( artifactFile );
 
-        mac.expectGetMode( 0222, 0222 );
+        final Archiver archiver = mock( Archiver.class );
+        when( archiver.getOverrideDirectoryMode() ).thenReturn( 0222 );
+        when( archiver.getOverrideFileMode() ).thenReturn( 0222 );
+        when( archiver.getDestFile() ).thenReturn( new File( "junk" ) );
 
-        mac.expectGetDestFile( new File( "junk" ) );
-        mac.expectAddFile( artifactFile, outputDir + artifactId + "-" + version + "." + ext );
-        mac.expectInterpolators();
-        mockManager.replayAll();
+        when( configSource.getProject() ).thenReturn( mainProject );
 
-        AddArtifactTask task =
-            new AddArtifactTask( artifact, new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ), null );
+        DefaultAssemblyArchiverTest.setupInterpolators( configSource, mainProject );
+
+        AddArtifactTask task = new AddArtifactTask( artifact, new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ), null );
         task.setOutputDirectory( outputDir );
         task.setFileNameMapping( new DependencySet().getOutputFileNameMapping() );
 
@@ -133,9 +153,15 @@ public class AddArtifactTaskTest
         MavenProject project = new MavenProject( model );
         task.setProject( project );
 
-        task.execute( mac.archiver, mac.configSource );
+        task.execute( archiver, configSource );
 
-        mockManager.verifyAll();
+        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
+        verify( configSource, atLeastOnce() ).getProject();
+        
+        verify( archiver ).getOverrideDirectoryMode();
+        verify( archiver ).getOverrideFileMode();
+        verify( archiver, atLeastOnce() ).getDestFile();
+        verify( archiver ).addFile( artifactFile, outputDir + artifactId + "-" + version + "." + ext );
     }
 
     private AddArtifactTask createTask( Artifact artifact )
@@ -151,75 +177,79 @@ public class AddArtifactTaskTest
     public void testShouldAddArchiveFileWithUnpack()
         throws ArchiveCreationException, AssemblyFormattingException, IOException
     {
-        mac.expectModeChange( -1, -1, -1, -1, 1 );
-        mac.expectInterpolators();
+        final int originalDirMode = -1;
+        final int originalFileMode = -1;
+
+        final Archiver archiver = mock( Archiver.class );
+        when( archiver.getDestFile() ).thenReturn( new File( "junk" ) );
+        when( archiver.getOverrideDirectoryMode() ).thenReturn( originalDirMode );
+        when( archiver.getOverrideFileMode() ).thenReturn( originalFileMode );
+        
+        DefaultAssemblyArchiverTest.setupInterpolators( configSource, mainProject );
 
         Artifact artifact = mock( Artifact.class );
         when( artifact.getFile() ).thenReturn( temporaryFolder.newFile() );
         
-        mac.expectGetDestFile( new File( "junk" ) );
-        try
-        {
-            mac.archiver.addArchivedFileSet( (ArchivedFileSet) anyObject(), (Charset) anyObject() );
-        }
-        catch ( ArchiverException e )
-        {
-            fail( "Should never happen." );
-        }
-
-        mockManager.replayAll();
-
         AddArtifactTask task = createTask( artifact );
-
         task.setUnpack( true );
 
-        task.execute( mac.archiver, mac.configSource );
-
-        mockManager.verifyAll();
+        task.execute( archiver, configSource );
+        
+        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
+        verify( archiver ).addArchivedFileSet( any( ArchivedFileSet.class ), isNull( Charset.class ) );
+        verify( archiver, atLeastOnce() ).getDestFile();
+        verify( archiver ).getOverrideDirectoryMode();
+        verify( archiver ).getOverrideFileMode();
     }
 
     @Test
     public void testShouldAddArchiveFileWithUnpackAndModes()
         throws ArchiveCreationException, AssemblyFormattingException, IOException
     {
-        int directoryMode = TypeConversionUtils.modeToInt( "777", new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) );
-        int fileMode = TypeConversionUtils.modeToInt( "777", new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) );
-
-        mac.expectModeChange( -1, -1, directoryMode, fileMode, 2 );
-        mac.expectInterpolators();
+        final int directoryMode = TypeConversionUtils.modeToInt( "777", new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) );
+        final int fileMode = TypeConversionUtils.modeToInt( "777", new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) );
+        final int originalDirMode = -1;
+        final int originalFileMode = -1;
+        
+        final Archiver archiver = mock( Archiver.class );
+        when( archiver.getDestFile() ).thenReturn( new File( "junk" ) );
+        when( archiver.getOverrideDirectoryMode() ).thenReturn( originalDirMode );
+        when( archiver.getOverrideFileMode() ).thenReturn( originalFileMode );
+        
+        DefaultAssemblyArchiverTest.setupInterpolators( configSource, mainProject );
 
         Artifact artifact = mock( Artifact.class );
         when( artifact.getFile() ).thenReturn( temporaryFolder.newFile() );
-        
-        mac.expectGetDestFile( new File( "junk" ) );
-        try
-        {
-            mac.archiver.addArchivedFileSet( (ArchivedFileSet) anyObject(), (Charset) anyObject() );
-        }
-        catch ( ArchiverException e )
-        {
-            fail( "Should never happen." );
-        }
-
-        mockManager.replayAll();
 
         AddArtifactTask task = createTask( artifact );
-
         task.setUnpack( true );
-
         task.setDirectoryMode( directoryMode );
         task.setFileMode( fileMode );
 
-        task.execute( mac.archiver, mac.configSource );
+        task.execute( archiver, configSource );
 
-        mockManager.verifyAll();
+        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
+        verify( archiver ).addArchivedFileSet( any( ArchivedFileSet.class ), isNull( Charset.class ) );
+        verify( archiver, atLeastOnce() ).getDestFile();
+        verify( archiver ).getOverrideDirectoryMode();
+        verify( archiver ).getOverrideFileMode();
+        verify( archiver ).setDirectoryMode( directoryMode );
+        verify( archiver ).setFileMode( fileMode );
+        verify( archiver ).setDirectoryMode( originalDirMode );
+        verify( archiver ).setFileMode( originalFileMode );
     }
 
     @Test
     public void testShouldAddArchiveFileWithUnpackIncludesAndExcludes()
         throws ArchiveCreationException, AssemblyFormattingException, IOException
     {
-        mac.expectModeChange( -1, -1, -1, -1, 1 );
+        final int originalDirMode = -1;
+        final int originalFileMode = -1;
+        
+        final Archiver archiver = mock( Archiver.class );
+        when( archiver.getOverrideDirectoryMode() ).thenReturn( originalDirMode );
+        when( archiver.getOverrideFileMode() ).thenReturn( originalFileMode );
+        when( archiver.getDestFile() ).thenReturn( new File( "junk" ) );
 
         String[] includes = { "**/*.txt" };
         String[] excludes = { "**/README.txt" };
@@ -227,21 +257,19 @@ public class AddArtifactTaskTest
         Artifact artifact = mock( Artifact.class );
         when( artifact.getFile() ).thenReturn( temporaryFolder.newFile() );
 
-        mac.expectGetDestFile( new File( "junk" ) );
-        mac.expectAddArchivedFileSet();
-        mac.expectInterpolators();
-
-        mockManager.replayAll();
+        DefaultAssemblyArchiverTest.setupInterpolators( configSource, mainProject );
 
         AddArtifactTask task = createTask( artifact );
-
         task.setUnpack( true );
         task.setIncludes( Arrays.asList( includes ) );
         task.setExcludes( Arrays.asList( excludes ) );
 
-        task.execute( mac.archiver, mac.configSource );
+        task.execute( archiver, configSource );
 
-        mockManager.verifyAll();
+        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
+        verify( archiver ).addArchivedFileSet( any( ArchivedFileSet.class ), isNull( Charset.class ) );
+        verify( archiver, atLeastOnce() ).getDestFile();
+        verify( archiver ).getOverrideDirectoryMode();
+        verify( archiver ).getOverrideFileMode();
     }
-
 }

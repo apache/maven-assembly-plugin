@@ -1,8 +1,5 @@
 package org.apache.maven.plugins.assembly.utils;
 
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.handler.ArtifactHandler;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,6 +19,17 @@ import org.apache.maven.artifact.handler.ArtifactHandler;
  * under the License.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Properties;
+
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.handler.ArtifactHandler;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
@@ -30,23 +38,13 @@ import org.apache.maven.plugins.assembly.archive.DefaultAssemblyArchiverTest;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.project.MavenProject;
-import org.easymock.classextension.EasyMockSupport;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Properties;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import static org.easymock.EasyMock.expect;
-
+@RunWith( MockitoJUnitRunner.class )
 public class AssemblyFormatUtilsTest
 {
-
-    private final EasyMockSupport mockManager = new EasyMockSupport();
-
     @Test
     public void testFixRelativePathRefs_ShouldRemoveRelativeRefToCurrentDir()
         throws Exception
@@ -339,19 +337,15 @@ public class AssemblyFormatUtilsTest
         final MavenProject artifactProject = createProject( "group", "artifact", artifactVersion, null );
 
         Artifact artifact = mock( Artifact.class );
-        when( artifact.getVersion() ).thenReturn( artifactVersion );
         when( artifact.getBaseVersion() ).thenReturn( artifactBaseVersion );
 
         artifactProject.setArtifact( artifact );
 
         final MavenSession session = mock( MavenSession.class );
-        when( session.getUserProperties() ).thenReturn( new Properties() );
 
-        final AssemblerConfigurationSource cs = mockManager.createMock( AssemblerConfigurationSource.class );
-        expect( cs.getMavenSession() ).andReturn( session );
-        DefaultAssemblyArchiverTest.setupInterpolators( cs );
-
-        mockManager.replayAll();
+        final AssemblerConfigurationSource cs = mock( AssemblerConfigurationSource.class );
+        when( cs.getMavenSession() ).thenReturn( session );
+        DefaultAssemblyArchiverTest.setupInterpolators( cs, mainProject );
 
         final String result =
             AssemblyFormatUtils.evaluateFileNameMapping( "${artifact.artifactId}-${artifact.baseVersion}",
@@ -360,11 +354,9 @@ public class AssemblyFormatUtilsTest
                                                          AssemblyFormatUtils.artifactProjectInterpolator( artifactProject ) );
 
         assertEquals( "artifact-2-SNAPSHOT", result );
-
-        mockManager.verifyAll();
-
-        // clear out for next call.
-        mockManager.resetAll();
+        
+        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
+        verify( cs ).getMavenSession();
     }
 
     @Test
@@ -683,13 +675,11 @@ public class AssemblyFormatUtilsTest
 
         final MavenSession session = mock( MavenSession.class );
         when( session.getExecutionProperties() ).thenReturn( System.getProperties() );
-        when( session.getUserProperties() ).thenReturn( new Properties() );
 
-        final AssemblerConfigurationSource cs = mockManager.createMock( AssemblerConfigurationSource.class );
-        expect( cs.getMavenSession() ).andReturn( session ).anyTimes();
+        final AssemblerConfigurationSource cs = mock( AssemblerConfigurationSource.class );
+        when( cs.getMavenSession() ).thenReturn( session );
+        
         DefaultAssemblyArchiverTest.setupInterpolators( cs, mainProject );
-
-        mockManager.replayAll();
 
         final String result =
             AssemblyFormatUtils.evaluateFileNameMapping( expression, artifactMock, mainProject,
@@ -699,10 +689,8 @@ public class AssemblyFormatUtilsTest
 
         assertEquals( checkValue, result );
 
-        mockManager.verifyAll();
-
-        // clear out for next call.
-        mockManager.resetAll();
+        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
+        verify( cs ).getMavenSession();
     }
 
     private void verifyOutputDir( final String outDir, final String finalName, final String projectFinalName,
@@ -786,45 +774,39 @@ public class AssemblyFormatUtilsTest
 
         final MavenSession session = mock( MavenSession.class );
         when( session.getExecutionProperties() ).thenReturn( System.getProperties() );
-        when( session.getUserProperties() ).thenReturn( new Properties() );
 
-        final AssemblerConfigurationSource cs = mockManager.createMock( AssemblerConfigurationSource.class );
-        expect( cs.getMavenSession() ).andReturn( session ).anyTimes();
+        final AssemblerConfigurationSource cs = mock( AssemblerConfigurationSource.class );
+        when( cs.getMavenSession() ).thenReturn( session );
+        
         DefaultAssemblyArchiverTest.setupInterpolators( cs, mainProject );
 
-        String result;
-
-        mockManager.replayAll();
-        result =
+        String result =
             AssemblyFormatUtils.getOutputDirectory( outDir, finalName, cs,
                                                     AssemblyFormatUtils.moduleProjectInterpolator( moduleProject ),
                                                     AssemblyFormatUtils.artifactProjectInterpolator( artifactProject ) );
 
         assertEquals( checkValue, result );
 
-        mockManager.verifyAll();
-
-        mockManager.resetAll();
+        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
+        verify( cs ).getMavenSession();
     }
 
     private void verifyDistroName( final String assemblyId, final String finalName, final boolean appendAssemblyId,
                                    final String checkValue )
     {
-        final MockAndControlForGetDistroName mac = new MockAndControlForGetDistroName( finalName, appendAssemblyId );
-
-        mockManager.replayAll();
+        final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
+        when( configSource.isAssemblyIdAppended() ).thenReturn( appendAssemblyId );
+        when( configSource.getFinalName() ).thenReturn( finalName );
 
         final Assembly assembly = new Assembly();
         assembly.setId( assemblyId );
 
-        final String result = AssemblyFormatUtils.getDistributionName( assembly, mac.configSource );
+        final String result = AssemblyFormatUtils.getDistributionName( assembly, configSource );
 
         assertEquals( checkValue, result );
 
-        mockManager.verifyAll();
-
-        // clear it out for the next call.
-        mockManager.resetAll();
+        verify( configSource, atLeast( 1 ) ).isAssemblyIdAppended();
+        verify( configSource, atLeast( 1 ) ).getFinalName();
     }
 
     @Test
@@ -837,32 +819,6 @@ public class AssemblyFormatUtilsTest
     public void testLinuxRootReferencePath()
     {
         assertTrue( AssemblyFormatUtils.isUnixRootReference( "/etc/home" ) );
-    }
-
-    private final class MockAndControlForGetDistroName
-    {
-        final AssemblerConfigurationSource configSource;
-
-        private final boolean isAssemblyIdAppended;
-
-        private final String finalName;
-
-        public MockAndControlForGetDistroName( final String finalName, final boolean isAssemblyIdAppended )
-        {
-            this.finalName = finalName;
-            this.isAssemblyIdAppended = isAssemblyIdAppended;
-
-            configSource = mockManager.createMock( AssemblerConfigurationSource.class );
-
-            enableExpectations();
-        }
-
-        private void enableExpectations()
-        {
-            expect( configSource.isAssemblyIdAppended() ).andReturn( isAssemblyIdAppended ).atLeastOnce();
-
-            expect( configSource.getFinalName() ).andReturn( finalName ).atLeastOnce();
-        }
     }
 
 }

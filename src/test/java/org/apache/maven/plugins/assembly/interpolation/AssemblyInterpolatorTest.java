@@ -19,9 +19,15 @@ package org.apache.maven.plugins.assembly.interpolation;
  * under the License.
  */
 
-import junit.framework.TestCase;
-import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.apache.maven.execution.MavenSession;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.List;
+import java.util.Properties;
+
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
@@ -35,19 +41,14 @@ import org.apache.maven.plugins.assembly.testutils.PojoConfigSource;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
 import org.codehaus.plexus.interpolation.fixed.PropertiesBasedValueSource;
-import org.easymock.classextension.EasyMockSupport;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.List;
-import java.util.Properties;
-
-import static org.easymock.EasyMock.expect;
-
+@RunWith( MockitoJUnitRunner.class )
 public class AssemblyInterpolatorTest
-    extends TestCase
 {
-
+    @Test
     public void testDependencySetOutputFileNameMappingsAreNotInterpolated()
         throws IOException, AssemblyInterpolationException, AssemblyReadException,
         InvalidAssemblerConfigurationException
@@ -86,6 +87,7 @@ public class AssemblyInterpolatorTest
         assertEquals( "${artifactId}.${packaging}", outputSet.getOutputFileNameMapping() );
     }
 
+    @Test
     public void testDependencySetOutputDirectoryIsNotInterpolated()
         throws IOException, AssemblyInterpolationException, AssemblyReadException,
         InvalidAssemblerConfigurationException
@@ -122,13 +124,14 @@ public class AssemblyInterpolatorTest
         assertEquals( "${artifactId}.${packaging}", outputSet.getOutputDirectory() );
     }
 
-    public Assembly roundTripInterpolation( Assembly assembly, AssemblerConfigurationSource configSource )
+    private Assembly roundTripInterpolation( Assembly assembly, AssemblerConfigurationSource configSource )
         throws IOException, AssemblyReadException, InvalidAssemblerConfigurationException
     {
         final StringReader stringReader = DefaultAssemblyReaderTest.writeToStringReader( assembly );
         return new DefaultAssemblyReader().readAssembly( stringReader, "testLocation", null, configSource );
     }
 
+    @Test
     public void testShouldResolveModelGroupIdInAssemblyId()
         throws AssemblyInterpolationException, InvalidAssemblerConfigurationException, AssemblyReadException,
         IOException
@@ -153,6 +156,7 @@ public class AssemblyInterpolatorTest
         assertEquals( "assembly.group.id", outputAssembly.getId() );
     }
 
+    @Test
     public void testShouldResolveModelPropertyBeforeModelGroupIdInAssemblyId()
         throws AssemblyInterpolationException, InvalidAssemblerConfigurationException, AssemblyReadException,
         IOException
@@ -184,9 +188,9 @@ public class AssemblyInterpolatorTest
         assertEquals( "assembly.other.id", result.getId() );
     }
 
+    @Test
     public void testShouldResolveContextValueBeforeModelPropertyOrModelGroupIdInAssemblyId()
-        throws AssemblyInterpolationException, InvalidAssemblerConfigurationException, AssemblyReadException,
-        IOException
+        throws Exception
     {
         final Model model = new Model();
         model.setArtifactId( "artifact-id" );
@@ -203,42 +207,23 @@ public class AssemblyInterpolatorTest
 
         assembly.setId( "assembly.${groupId}" );
 
-        final EasyMockSupport mm = new EasyMockSupport();
-
-        final MavenSession session = mm.createMock( MavenSession.class );
-
         final Properties execProps = new Properties();
         execProps.setProperty( "groupId", "still.another.id" );
 
-        expect( session.getExecutionProperties() ).andReturn( execProps ).anyTimes();
-
-        expect( session.getUserProperties() ).andReturn( new Properties() ).anyTimes();
-
-        final PojoConfigSource cs = new PojoConfigSource();
-
-        final ArtifactRepository lr = mm.createMock( ArtifactRepository.class );
-
-        cs.setLocalRepository( lr );
-        cs.setMavenSession( session );
-        cs.setRootInterpolator( FixedStringSearchInterpolator.create() );
-        cs.setEnvironmentInterpolator(
-            FixedStringSearchInterpolator.create( new PropertiesBasedValueSource( execProps ) ) );
-        cs.setEnvInterpolator( FixedStringSearchInterpolator.empty() );
-
-        expect( lr.getBasedir() ).andReturn( "/path/to/local/repo" ).anyTimes();
-
-        mm.replayAll();
+        final AssemblerConfigurationSource cs = mock( AssemblerConfigurationSource.class );
+        when( cs.getRepositoryInterpolator() ).thenReturn( FixedStringSearchInterpolator.create() );
+        when( cs.getCommandLinePropsInterpolator() ).thenReturn( FixedStringSearchInterpolator.create( new PropertiesBasedValueSource( execProps ) ) );
+        when( cs.getEnvInterpolator() ).thenReturn( FixedStringSearchInterpolator.empty() );
 
         final MavenProject project = new MavenProject( model );
-        cs.setMavenProject( project );
+        when( cs.getProject() ) .thenReturn( project );
+
         final Assembly result = roundTripInterpolation( assembly, cs );
 
         assertEquals( "assembly.still.another.id", result.getId() );
-
-        mm.verifyAll();
-        mm.resetAll();
     }
 
+    @Test
     public void testShouldNotTouchUnresolvedExpression()
         throws AssemblyInterpolationException, InvalidAssemblerConfigurationException, AssemblyReadException,
         IOException
@@ -264,6 +249,7 @@ public class AssemblyInterpolatorTest
         assertEquals( "assembly.${unresolved}", result.getId() );
     }
 
+    @Test
     public void testShouldInterpolateMultiDotProjectExpression()
         throws AssemblyInterpolationException, InvalidAssemblerConfigurationException, AssemblyReadException,
         IOException

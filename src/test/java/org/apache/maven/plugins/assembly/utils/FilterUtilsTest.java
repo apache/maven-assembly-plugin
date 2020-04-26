@@ -19,18 +19,11 @@ package org.apache.maven.plugins.assembly.utils;
  * under the License.
  */
 
-import org.hamcrest.Matchers;
-
-import junit.framework.TestCase;
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
-import org.apache.maven.model.Model;
-import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
-import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
-import org.easymock.classextension.EasyMockSupport;
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,47 +32,38 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.easymock.EasyMock.expect;
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
+import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
+import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.logging.console.ConsoleLogger;
+import org.hamcrest.Matchers;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 
+@RunWith( MockitoJUnitRunner.class )
 public class FilterUtilsTest
-    extends TestCase
 {
-
-    private final EasyMockSupport mockManager = new EasyMockSupport();
-
     private Logger logger;
 
-    private static Model buildModel( final String groupId, final String artifactId )
-    {
-        final Model model = new Model();
-        model.setGroupId( groupId );
-        model.setArtifactId( artifactId );
-
-        return model;
-    }
-
-    @Override
+    @Before
     public void setUp()
-    {
-        clearAll();
-    }
-
-    private void clearAll()
     {
         logger = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
     }
 
+    @Test
     public void testFilterArtifacts_ShouldThrowExceptionUsingStrictModeWithUnmatchedInclude()
     {
-        final Artifact artifact = mockManager.createMock( Artifact.class );
-
-        expect( artifact.getGroupId() ).andReturn( "group" ).atLeastOnce();
-
-        expect( artifact.getArtifactId() ).andReturn( "artifact" ).atLeastOnce();
-
-        expect( artifact.getId() ).andReturn( "group:artifact:type:version" ).atLeastOnce();
-
-        expect( artifact.getDependencyConflictId() ).andReturn( "group:artifact:type" ).atLeastOnce();
+        final Artifact artifact = mock( Artifact.class );
+        when( artifact.getGroupId() ).thenReturn( "group" );
+        when( artifact.getArtifactId() ).thenReturn( "artifact" );
+        when( artifact.getId() ).thenReturn( "group:artifact:type:version" );
+        when( artifact.getDependencyConflictId() ).thenReturn( "group:artifact:type" );
 
         final List<String> includes = new ArrayList<>();
 
@@ -89,8 +73,6 @@ public class FilterUtilsTest
 
         final Set<Artifact> artifacts = new HashSet<>();
         artifacts.add( artifact );
-
-        mockManager.replayAll();
 
         try
         {
@@ -102,52 +84,53 @@ public class FilterUtilsTest
         {
             // expected.
         }
-
-        mockManager.verifyAll();
     }
 
+    @Test
     public void testFilterArtifacts_ShouldNotRemoveArtifactDirectlyIncluded()
-        throws InvalidAssemblerConfigurationException
+        throws Exception
     {
         verifyArtifactInclusion( "group", "artifact", "group:artifact", null, null, null );
         verifyArtifactInclusion( "group", "artifact", "group:artifact:jar", null, null, null );
     }
 
+    @Test
     public void testFilterArtifacts_ShouldNotRemoveArtifactTransitivelyIncluded()
-        throws InvalidAssemblerConfigurationException
+        throws Exception
     {
         verifyArtifactInclusion( "group", "artifact", "group:dependentArtifact", null,
                                  Arrays.asList( "current:project:jar:1.0", "group:dependentArtifact:jar:version" ),
                                  null );
     }
 
+    @Test
     public void testFilterArtifacts_ShouldRemoveArtifactTransitivelyExcluded()
-        throws InvalidAssemblerConfigurationException
+        throws Exception
     {
         verifyArtifactExclusion( "group", "artifact", null, "group:dependentArtifact",
                                  Arrays.asList( "current:project:jar:1.0", "group:dependentArtifact:jar:version" ),
                                  null );
     }
 
+    @Test
     public void testFilterArtifacts_ShouldRemoveArtifactDirectlyExcluded()
-        throws InvalidAssemblerConfigurationException
+        throws Exception
     {
         verifyArtifactExclusion( "group", "artifact", null, "group:artifact", null, null );
-
-        clearAll();
-
         verifyArtifactExclusion( "group", "artifact", null, "group:artifact:jar", null, null );
     }
 
+    @Test
     public void testFilterArtifacts_ShouldNotRemoveArtifactNotIncludedAndNotExcluded()
-        throws InvalidAssemblerConfigurationException
+        throws Exception
     {
         verifyArtifactInclusion( "group", "artifact", null, null, null, null );
         verifyArtifactInclusion( "group", "artifact", null, null, null, null );
     }
 
+    @Test
     public void testFilterArtifacts_ShouldRemoveArtifactExcludedByAdditionalFilter()
-        throws InvalidAssemblerConfigurationException
+        throws Exception
     {
         final ArtifactFilter filter = new ArtifactFilter()
         {
@@ -162,36 +145,42 @@ public class FilterUtilsTest
         verifyArtifactExclusion( "group", "artifact", "fail:fail", null, null, filter );
     }
 
+    @Test
     public void testFilterProjects_ShouldNotRemoveProjectDirectlyIncluded()
     {
         verifyProjectInclusion( "group", "artifact", "group:artifact", null, null );
         verifyProjectInclusion( "group", "artifact", "group:artifact:jar", null, null );
     }
 
+    @Test
     public void testFilterProjects_ShouldNotRemoveProjectTransitivelyIncluded()
     {
         verifyProjectInclusion( "group", "artifact", "group:dependentArtifact", null,
                                 Arrays.asList( "current:project:jar:1.0", "group:dependentArtifact:jar:version" ) );
     }
 
+    @Test
     public void testFilterProjects_ShouldRemoveProjectTransitivelyExcluded()
     {
         verifyProjectExclusion( "group", "artifact", null, "group:dependentArtifact",
                                 Arrays.asList( "current:project:jar:1.0", "group:dependentArtifact:jar:version" ) );
     }
 
+    @Test
     public void testFilterProjects_ShouldRemoveProjectDirectlyExcluded()
     {
         verifyProjectExclusion( "group", "artifact", null, "group:artifact", null );
         verifyProjectExclusion( "group", "artifact", null, "group:artifact:jar", null );
     }
 
+    @Test
     public void testFilterProjects_ShouldNotRemoveProjectNotIncludedAndNotExcluded()
     {
         verifyProjectInclusion( "group", "artifact", null, null, null );
         verifyProjectInclusion( "group", "artifact", null, null, null );
     }
 
+    @Test
     public void testTransitiveScopes()
     {
         Assert.assertThat( FilterUtils.newScopeFilter( "compile" ).getIncluded(),
@@ -234,9 +223,18 @@ public class FilterUtilsTest
                                           final boolean verifyInclusion, final ArtifactFilter additionalFilter )
         throws InvalidAssemblerConfigurationException
     {
-        final ArtifactMockAndControl mac = new ArtifactMockAndControl( groupId, artifactId, depTrail );
+        Artifact artifact = mock( Artifact.class );
 
-        mockManager.replayAll();
+        // this is always enabled, for verification purposes.
+        when( artifact.getDependencyConflictId() ).thenReturn( groupId + ":" + artifactId + ":jar" );
+        when( artifact.getGroupId() ).thenReturn( groupId );
+        when( artifact.getArtifactId() ).thenReturn( artifactId );
+        when( artifact.getId() ).thenReturn( groupId + ":" + artifactId + ":version:null:jar" );
+
+        if ( depTrail != null )
+        {
+            when( artifact.getDependencyTrail() ).thenReturn( depTrail );
+        }
 
         List<String> inclusions;
         if ( inclusionPattern != null )
@@ -258,8 +256,7 @@ public class FilterUtilsTest
             exclusions = Collections.emptyList();
         }
 
-        final Set<Artifact> artifacts = new HashSet<>();
-        artifacts.add( mac.artifact );
+        final Set<Artifact> artifacts = new HashSet<>( Collections.singleton( artifact ) );
 
         FilterUtils.filterArtifacts( artifacts, inclusions, exclusions, false, depTrail != null, logger,
                                      additionalFilter );
@@ -267,21 +264,16 @@ public class FilterUtilsTest
         if ( verifyInclusion )
         {
             assertEquals( 1, artifacts.size() );
-            assertEquals( mac.artifact.getDependencyConflictId(),
+            assertEquals( artifact.getDependencyConflictId(),
                           artifacts.iterator().next().getDependencyConflictId() );
         }
         else
         {
             // just make sure this trips, to meet the mock's expectations.
-            mac.artifact.getDependencyConflictId();
+            artifact.getDependencyConflictId();
 
             assertTrue( artifacts.isEmpty() );
         }
-
-        mockManager.verifyAll();
-
-        // get ready for multiple calls per test.
-        mockManager.resetAll();
     }
 
     private void verifyProjectInclusion( final String groupId, final String artifactId, final String inclusionPattern,
@@ -300,15 +292,25 @@ public class FilterUtilsTest
                                          final String exclusionPattern, final List<String> depTrail,
                                          final boolean verifyInclusion )
     {
-        final ProjectWithArtifactMockControl pmac = new ProjectWithArtifactMockControl( groupId, artifactId, depTrail );
+        final Artifact artifact = mock( Artifact.class );
 
-        mockManager.replayAll();
+        // this is always enabled, for verification purposes.
+        when( artifact.getDependencyConflictId() ).thenReturn( groupId + ":" + artifactId + ":jar" );
+        when( artifact.getGroupId() ).thenReturn( groupId );
+        when( artifact.getArtifactId() ).thenReturn( artifactId );
+        when( artifact.getId() ).thenReturn( groupId + ":" + artifactId + ":version:null:jar" );
 
-        // make sure the mock is satisfied...you can't disable this expectation.
-        pmac.mac.artifact.getDependencyConflictId();
+        if ( depTrail != null )
+        {
+            when( artifact.getDependencyTrail() ).thenReturn( depTrail );
+        }
+
+        MavenProject project = mock( MavenProject.class );
+        when( project.getId() ).thenReturn( "group:artifact:jar:1.0" );
+        when( project.getArtifact() ).thenReturn( artifact );
 
         final Set<MavenProject> projects = new HashSet<>();
-        projects.add( pmac );
+        projects.add( project );
 
         List<String> inclusions;
         if ( inclusionPattern != null )
@@ -334,87 +336,15 @@ public class FilterUtilsTest
 
         Set<MavenProject> result =
             FilterUtils.filterProjects( projects, inclusions, exclusions, depTrail != null, logger );
-
+        
         if ( verifyInclusion )
         {
             assertEquals( 1, result.size() );
-            assertEquals( pmac.getId(), result.iterator().next().getId() );
+            assertEquals( project.getId(), result.iterator().next().getId() );
         }
         else
         {
             assertTrue( result.isEmpty() );
         }
-
-        mockManager.verifyAll();
-
-        // get ready for multiple calls per test.
-        mockManager.resetAll();
     }
-
-    private final class ProjectWithArtifactMockControl
-        extends MavenProject
-    {
-        final ArtifactMockAndControl mac;
-
-        ProjectWithArtifactMockControl( final String groupId, final String artifactId, final List<String> depTrail )
-        {
-            super( buildModel( groupId, artifactId ) );
-
-            mac = new ArtifactMockAndControl( groupId, artifactId, depTrail );
-
-            setArtifact( mac.artifact );
-
-            setVersion( "1.0" );
-        }
-
-    }
-
-    private final class ArtifactMockAndControl
-    {
-        final Artifact artifact;
-
-        final String groupId;
-
-        final String artifactId;
-
-        final List<String> dependencyTrail;
-
-        ArtifactMockAndControl( final String groupId, final String artifactId, final List<String> dependencyTrail )
-        {
-            this.groupId = groupId;
-            this.artifactId = artifactId;
-            this.dependencyTrail = dependencyTrail;
-
-            artifact = mockManager.createMock( Artifact.class );
-
-            // this is always enabled, for verification purposes.
-            enableGetDependencyConflictId();
-            enableGetGroupIdArtifactIdAndId();
-
-            if ( dependencyTrail != null )
-            {
-                enableGetDependencyTrail();
-            }
-        }
-
-        void enableGetDependencyTrail()
-        {
-            expect( artifact.getDependencyTrail() ).andReturn( dependencyTrail ).anyTimes();
-        }
-
-        void enableGetDependencyConflictId()
-        {
-            expect( artifact.getDependencyConflictId() ).andReturn( groupId + ":" + artifactId + ":jar" ).anyTimes();
-        }
-
-        void enableGetGroupIdArtifactIdAndId()
-        {
-            expect( artifact.getGroupId() ).andReturn( groupId ).anyTimes();
-
-            expect( artifact.getArtifactId() ).andReturn( artifactId ).anyTimes();
-
-            expect( artifact.getId() ).andReturn( groupId + ":" + artifactId + ":version:null:jar" ).anyTimes();
-        }
-    }
-
 }

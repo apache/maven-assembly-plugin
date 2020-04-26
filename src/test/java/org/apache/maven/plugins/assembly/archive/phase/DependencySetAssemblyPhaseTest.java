@@ -19,32 +19,48 @@ package org.apache.maven.plugins.assembly.archive.phase;
  * under the License.
  */
 
+import static org.mockito.ArgumentMatchers.anyListOf;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Model;
+import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
 import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
-import org.apache.maven.plugins.assembly.archive.task.testutils.MockAndControlForAddDependencySetsTask;
 import org.apache.maven.plugins.assembly.artifact.DependencyResolutionException;
 import org.apache.maven.plugins.assembly.artifact.DependencyResolver;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.model.DependencySet;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
-import org.easymock.classextension.EasyMockSupport;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 
+@RunWith( MockitoJUnitRunner.class )
 public class DependencySetAssemblyPhaseTest
 {
-
-    final EasyMockSupport mm = new EasyMockSupport();
+    private DependencySetAssemblyPhase phase;
+    
+    private DependencyResolver dependencyResolver;
+    
+    @Before
+    public void setUp()
+    {
+        this.dependencyResolver = mock( DependencyResolver.class );
+        
+        this.phase = new DependencySetAssemblyPhase( null, dependencyResolver, null );
+    }
 
     @Test
     public void testExecute_ShouldAddOneDependencyFromProject()
@@ -72,34 +88,40 @@ public class DependencySetAssemblyPhaseTest
         assembly.setIncludeBaseDirectory( false );
         assembly.addDependencySet( ds );
 
-        final MockAndControlForAddDependencySetsTask macTask =
-            new MockAndControlForAddDependencySetsTask( mm, project );
-
-        macTask.expectCSGetRepositories( null, null );
-
-        macTask.expectGetDestFile( new File( "junk" ) );
-//        macTask.expectAddFile( artifactFile, "out/dep", 10 );
-
         project.setArtifacts( Collections.singleton( artifact ) );
 
-        macTask.expectCSGetFinalName( "final-name" );
+        when( dependencyResolver.resolveDependencySets( eq( assembly ),
+                                                        isNull(AssemblerConfigurationSource.class),
+                                                        anyListOf( DependencySet.class ) ) ).thenReturn( new LinkedHashMap<DependencySet, Set<Artifact>>() );
+        
+        this.phase.execute( assembly, null, null );
 
-        final Logger logger = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
-
-        final MavenProject depProject = newMavenProject( "group", "dep", "1" );
-
-        macTask.expectBuildFromRepository( depProject );
-
-        macTask.expectResolveDependencySets();
-
-        mm.replayAll();
-
-        createPhase( macTask, logger, macTask.dependencyResolver ).execute( assembly, macTask.archiver,
-                                                                            macTask.configSource );
-
-        mm.verifyAll();
+        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
+        verify( dependencyResolver ).resolveDependencySets( eq( assembly ),
+                                                            isNull(AssemblerConfigurationSource.class),
+                                                            anyListOf( DependencySet.class ) );
     }
 
+    @Test
+    public void testExecute_ShouldNotAddDependenciesWhenProjectHasNone()
+        throws Exception
+    {
+        final Assembly assembly = new Assembly();
+        assembly.setId( "test" );
+        assembly.setIncludeBaseDirectory( false );
+        
+        when( dependencyResolver.resolveDependencySets( eq( assembly ), 
+                                                        isNull( AssemblerConfigurationSource.class ),
+                                                        anyListOf( DependencySet.class ) ) ).thenReturn( new LinkedHashMap<DependencySet, Set<Artifact>>() );
+
+        this.phase.execute( assembly, null, null );
+
+        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
+        verify( dependencyResolver ).resolveDependencySets( eq( assembly ),
+                                                            isNull( AssemblerConfigurationSource.class ),
+                                                            anyListOf( DependencySet.class ) );        
+    }
+    
     private MavenProject newMavenProject( final String groupId, final String artifactId, final String version )
     {
         final Model model = new Model();
@@ -109,38 +131,4 @@ public class DependencySetAssemblyPhaseTest
 
         return new MavenProject( model );
     }
-
-    @Test
-    public void testExecute_ShouldNotAddDependenciesWhenProjectHasNone()
-        throws AssemblyFormattingException, ArchiveCreationException, IOException,
-        InvalidAssemblerConfigurationException, DependencyResolutionException
-    {
-        final Assembly assembly = new Assembly();
-
-        assembly.setId( "test" );
-        assembly.setIncludeBaseDirectory( false );
-
-        final Logger logger = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
-
-        final MockAndControlForAddDependencySetsTask macTask = new MockAndControlForAddDependencySetsTask( mm, null );
-
-        macTask.expectResolveDependencySets();
-
-        mm.replayAll();
-
-        createPhase( macTask, logger, macTask.dependencyResolver ).execute( assembly, null, macTask.configSource );
-
-        mm.verifyAll();
-    }
-
-    private DependencySetAssemblyPhase createPhase( final MockAndControlForAddDependencySetsTask macTask,
-                                                    final Logger logger, DependencyResolver dr )
-    {
-        final DependencySetAssemblyPhase phase = new DependencySetAssemblyPhase( null, dr, null );
-
-        phase.enableLogging( logger );
-
-        return phase;
-    }
-
 }

@@ -1,5 +1,6 @@
 package org.apache.maven.plugins.assembly.archive.task;
 
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,54 +20,54 @@ package org.apache.maven.plugins.assembly.archive.task;
  * under the License.
  */
 
-import org.codehaus.plexus.archiver.Archiver;
-import org.codehaus.plexus.archiver.ArchiverException;
-import org.codehaus.plexus.archiver.FileSet;
-import org.easymock.classextension.EasyMockSupport;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.util.Collections;
 
-import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.fail;
+import org.codehaus.plexus.archiver.Archiver;
+import org.codehaus.plexus.archiver.FileSet;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 
+@RunWith( MockitoJUnitRunner.class )
 public class AddDirectoryTaskTest
 {
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
-
-    private EasyMockSupport mockManager;
 
     private Archiver archiver;
 
     @Before
     public void setUp()
     {
-        mockManager = new EasyMockSupport();
-
-        archiver = mockManager.createMock( Archiver.class );
+        this.archiver = mock( Archiver.class );
     }
 
     @Test
     public void testAddDirectory_ShouldNotAddDirectoryIfNonExistent()
         throws Exception
     {
-        File dir = new File( temporaryFolder.getRoot(), "non-existent." + System.currentTimeMillis() );
+        final int defaultDirMode = -1;
+        final int defaultFileMode = -1;
 
-        configureModeExpectations( -1, -1, -1, -1, false );
+        when( archiver.getOverrideDirectoryMode() ).thenReturn( defaultDirMode );
+        when( archiver.getOverrideFileMode() ).thenReturn( defaultFileMode );
 
-        mockManager.replayAll();
-
-        AddDirectoryTask task = new AddDirectoryTask( dir );
+        AddDirectoryTask task = new AddDirectoryTask( new File( temporaryFolder.getRoot(), "non-existent" ) );
 
         task.execute( archiver );
 
-        mockManager.verifyAll();
+        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
+        verify( archiver ).getOverrideDirectoryMode();
+        verify( archiver ).getOverrideFileMode();
     }
 
     @Test
@@ -74,121 +75,70 @@ public class AddDirectoryTaskTest
     public void testAddDirectory_ShouldAddDirectory()
         throws Exception
     {
-        File dir = temporaryFolder.getRoot();
+        final int defaultDirMode = -1;
+        final int defaultFileMode = -1;
 
-        try
-        {
-            archiver.addFileSet( (FileSet) anyObject() );
-        }
-        catch ( ArchiverException e )
-        {
-            fail( "Should never happen." );
-        }
+        when( archiver.getOverrideDirectoryMode() ).thenReturn( defaultDirMode );
+        when( archiver.getOverrideFileMode() ).thenReturn( defaultFileMode );
 
-        configureModeExpectations( -1, -1, -1, -1, false );
-
-        mockManager.replayAll();
-
-        AddDirectoryTask task = new AddDirectoryTask( dir );
-
+        AddDirectoryTask task = new AddDirectoryTask( temporaryFolder.getRoot() );
         task.setOutputDirectory( "dir" );
 
         task.execute( archiver );
 
-        mockManager.verifyAll();
+        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
+        verify( archiver ).addFileSet( any( FileSet.class ) );
+        verify( archiver ).getOverrideDirectoryMode();
+        verify( archiver ).getOverrideFileMode();
     }
 
     @Test
     public void testAddDirectory_ShouldAddDirectoryWithDirMode()
         throws Exception
     {
-        File dir = temporaryFolder.getRoot();
+        final int dirMode = Integer.parseInt( "777", 8 );
+        final int fileMode = Integer.parseInt( "777", 8 );
+        final int defaultDirMode = -1;
+        final int defaultFileMode = -1;
 
-        try
-        {
-            archiver.addFileSet( (FileSet) anyObject() );
-        }
-        catch ( ArchiverException e )
-        {
-            fail( "Should never happen." );
-        }
-
-        int dirMode = Integer.parseInt( "777", 8 );
-        int fileMode = Integer.parseInt( "777", 8 );
-
-        configureModeExpectations( -1, -1, dirMode, fileMode, true );
-
-        mockManager.replayAll();
-
-        AddDirectoryTask task = new AddDirectoryTask( dir );
-
+        when( archiver.getOverrideDirectoryMode() ).thenReturn( defaultDirMode );
+        when( archiver.getOverrideFileMode() ).thenReturn( defaultFileMode );
+        
+        AddDirectoryTask task = new AddDirectoryTask( temporaryFolder.getRoot() );
         task.setDirectoryMode( dirMode );
         task.setFileMode( fileMode );
         task.setOutputDirectory( "dir" );
 
         task.execute( archiver );
-
-        mockManager.verifyAll();
+        
+        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
+        verify( archiver ).addFileSet( any( FileSet.class ) );
+        verify( archiver ).getOverrideDirectoryMode();
+        verify( archiver ).getOverrideFileMode();
+        verify( archiver ).setDirectoryMode( dirMode );
+        verify( archiver ).setFileMode( fileMode );
+        verify( archiver ).setDirectoryMode( defaultDirMode );
+        verify( archiver ).setFileMode( defaultFileMode );
     }
 
     @Test
     public void testAddDirectory_ShouldAddDirectoryWithIncludesAndExcludes()
         throws Exception
     {
-        File dir = temporaryFolder.getRoot();
+        when( archiver.getOverrideDirectoryMode() ).thenReturn( -1 );
+        when( archiver.getOverrideFileMode() ).thenReturn( -1 );
 
-        try
-        {
-            archiver.addFileSet( (FileSet) anyObject() );
-        }
-        catch ( ArchiverException e )
-        {
-            fail( "Should never happen." );
-        }
-
-        configureModeExpectations( -1, -1, -1, -1, false );
-
-        mockManager.replayAll();
-
-        AddDirectoryTask task = new AddDirectoryTask( dir );
-
+        AddDirectoryTask task = new AddDirectoryTask( temporaryFolder.getRoot() );
         task.setIncludes( Collections.singletonList( "**/*.txt" ) );
         task.setExcludes( Collections.singletonList( "**/README.txt" ) );
         task.setOutputDirectory( "dir" );
 
         task.execute( archiver );
 
-        mockManager.verifyAll();
-    }
-
-    private void configureModeExpectations( int defaultDirMode, int defaultFileMode, int dirMode, int fileMode,
-                                            boolean expectTwoSets )
-    {
-        expect( archiver.getOverrideDirectoryMode() ).andReturn( defaultDirMode );
-        expect( archiver.getOverrideFileMode() ).andReturn( defaultFileMode );
-
-        if ( expectTwoSets )
-        {
-            if ( dirMode > -1 )
-            {
-                archiver.setDirectoryMode( dirMode );
-            }
-
-            if ( fileMode > -1 )
-            {
-                archiver.setFileMode( fileMode );
-            }
-        }
-
-        if ( dirMode > -1 )
-        {
-            archiver.setDirectoryMode( defaultDirMode );
-        }
-
-        if ( fileMode > -1 )
-        {
-            archiver.setFileMode( defaultFileMode );
-        }
+        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
+        verify( archiver ).addFileSet( any( FileSet.class ) );
+        verify( archiver ).getOverrideDirectoryMode();
+        verify( archiver ).getOverrideFileMode();
     }
 
 }

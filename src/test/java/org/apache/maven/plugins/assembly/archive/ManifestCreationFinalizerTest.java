@@ -37,14 +37,15 @@ import org.apache.maven.archiver.MavenArchiveConfiguration;
 import org.apache.maven.model.Model;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.archiver.ArchiveFinalizer;
-import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
 import org.codehaus.plexus.util.IOUtil;
-import org.easymock.classextension.EasyMockSupport;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 
+@RunWith( MockitoJUnitRunner.class )
 public class ManifestCreationFinalizerTest
 {
 
@@ -62,18 +63,10 @@ public class ManifestCreationFinalizerTest
     public void testShouldDoNothingWhenArchiverIsNotJarArchiver()
         throws Exception
     {
-        EasyMockSupport mm = new EasyMockSupport();
-
-        MockAndControlForArchiver macArchiver = new MockAndControlForArchiver( mm );
-
         MavenProject project = new MavenProject( new Model() );
         MavenArchiveConfiguration config = new MavenArchiveConfiguration();
 
-        mm.replayAll();
-
-        new ManifestCreationFinalizer( null, project, config ).finalizeArchiveCreation( macArchiver.archiver );
-
-        mm.verifyAll();
+        new ManifestCreationFinalizer( null, project, config ).finalizeArchiveCreation( null );
     }
 
     @Test
@@ -147,24 +140,9 @@ public class ManifestCreationFinalizerTest
 
         IOUtil.copy( reader, writer );
 
-        System.out.println( "Test Manifest:\n\n" + writer );
-
         assertTrue( writer.toString().contains( testKey + ": " + testValue ) );
 
         // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4823678
         ( (JarURLConnection) resource.openConnection() ).getJarFile().close();
     }
-
-    private final class MockAndControlForArchiver
-    {
-        final Archiver archiver;
-
-
-        MockAndControlForArchiver( EasyMockSupport mm )
-        {
-
-            archiver = mm.createMock( Archiver.class );
-        }
-    }
-
 }

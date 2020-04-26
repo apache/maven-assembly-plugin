@@ -19,9 +19,13 @@ package org.apache.maven.plugins.assembly.interpolation;
  * under the License.
  */
 
-import junit.framework.TestCase;
-import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.apache.maven.execution.MavenSession;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+
+import java.util.Properties;
+
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
@@ -30,19 +34,16 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluationException;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
 import org.codehaus.plexus.interpolation.fixed.PropertiesBasedValueSource;
-import org.easymock.classextension.EasyMockSupport;
-import org.easymock.classextension.IMocksControl;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Properties;
-
-import static org.easymock.EasyMock.expect;
-
+@RunWith( MockitoJUnitRunner.class )
 public class AssemblyExpressionEvaluatorTest
-    extends TestCase
 {
-
     private final PojoConfigSource configSourceStub = new PojoConfigSource();
 
+    @Test
     public void testShouldResolveModelGroupId()
         throws ExpressionEvaluationException
     {
@@ -65,9 +66,9 @@ public class AssemblyExpressionEvaluatorTest
         configSourceStub.setRootInterpolator( FixedStringSearchInterpolator.create() );
         configSourceStub.setEnvironmentInterpolator( FixedStringSearchInterpolator.create() );
         configSourceStub.setEnvInterpolator( FixedStringSearchInterpolator.create() );
-
     }
 
+    @Test
     public void testShouldResolveModelPropertyBeforeModelGroupId()
         throws ExpressionEvaluationException
     {
@@ -90,6 +91,7 @@ public class AssemblyExpressionEvaluatorTest
         assertEquals( "assembly.other.id", result );
     }
 
+    @Test
     public void testShouldResolveContextValueBeforeModelPropertyOrModelGroupIdInAssemblyId()
         throws ExpressionEvaluationException
     {
@@ -104,41 +106,29 @@ public class AssemblyExpressionEvaluatorTest
 
         model.setProperties( props );
 
-        final EasyMockSupport mm = new EasyMockSupport();
-
-        MavenSession session = mm.createControl().createMock( MavenSession.class );
-
         final Properties execProps = new Properties();
         execProps.setProperty( "groupId", "still.another.id" );
 
         PropertiesBasedValueSource cliProps = new PropertiesBasedValueSource( execProps );
-        expect( session.getExecutionProperties() ).andReturn( execProps ).anyTimes();
-        expect( session.getUserProperties() ).andReturn( new Properties() ).anyTimes();
 
-        AssemblerConfigurationSource cs = mm.createControl().createMock( AssemblerConfigurationSource.class );
-        expect( cs.getCommandLinePropsInterpolator() ).andReturn(
-            FixedStringSearchInterpolator.create( cliProps ) ).anyTimes();
-        expect( cs.getRepositoryInterpolator() ).andReturn( FixedStringSearchInterpolator.create() ).anyTimes();
-        expect( cs.getEnvInterpolator() ).andReturn( FixedStringSearchInterpolator.create() ).anyTimes();
-
-        expect( cs.getMavenSession() ).andReturn( session ).anyTimes();
-        expect( cs.getProject() ).andReturn( new MavenProject( model ) );
-
-        final IMocksControl lrCtl = mm.createControl();
-        final ArtifactRepository lr = lrCtl.createMock( ArtifactRepository.class );
-
-        expect( lr.getBasedir() ).andReturn( "/path/to/local/repo" ).anyTimes();
-        expect( cs.getLocalRepository() ).andReturn( lr ).anyTimes();
-
-        mm.replayAll();
+        AssemblerConfigurationSource cs = mock( AssemblerConfigurationSource.class );
+        when( cs.getCommandLinePropsInterpolator() ).thenReturn( FixedStringSearchInterpolator.create( cliProps ) );
+        when( cs.getRepositoryInterpolator() ).thenReturn( FixedStringSearchInterpolator.create() );
+        when( cs.getEnvInterpolator() ).thenReturn( FixedStringSearchInterpolator.create() );
+        when( cs.getProject() ).thenReturn( new MavenProject( model ) );
 
         final Object result = new AssemblyExpressionEvaluator( cs ).evaluate( "assembly.${groupId}" );
 
         assertEquals( "assembly.still.another.id", result );
 
-        mm.verifyAll();
+        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
+        verify( cs ).getCommandLinePropsInterpolator();
+        verify( cs ).getRepositoryInterpolator();
+        verify( cs ).getEnvInterpolator();
+        verify( cs ).getProject();
     }
 
+    @Test
     public void testShouldReturnUnchangedInputForUnresolvedExpression()
         throws ExpressionEvaluationException
     {
@@ -156,6 +146,7 @@ public class AssemblyExpressionEvaluatorTest
         assertEquals( "assembly.${unresolved}", result );
     }
 
+    @Test
     public void testShouldInterpolateMultiDotProjectExpression()
         throws ExpressionEvaluationException
     {

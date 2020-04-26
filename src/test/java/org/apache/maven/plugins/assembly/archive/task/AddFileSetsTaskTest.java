@@ -19,43 +19,38 @@ package org.apache.maven.plugins.assembly.archive.task;
  * under the License.
  */
 
-import org.apache.maven.model.Model;
-import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
-import org.apache.maven.plugins.assembly.archive.DefaultAssemblyArchiverTest;
-import org.apache.maven.plugins.assembly.archive.task.testutils.MockAndControlForAddFileSetsTask;
-import org.apache.maven.plugins.assembly.model.FileSet;
-import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
-import org.easymock.classextension.EasyMockSupport;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.util.ArrayList;
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import org.apache.maven.model.Model;
+import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
+import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
+import org.apache.maven.plugins.assembly.archive.DefaultAssemblyArchiverTest;
+import org.apache.maven.plugins.assembly.model.FileSet;
+import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.archiver.Archiver;
+import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.logging.console.ConsoleLogger;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 
+@RunWith( MockitoJUnitRunner.class )
 public class AddFileSetsTaskTest
 {
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
-
-    private EasyMockSupport mockManager;
-
-    private MockAndControlForAddFileSetsTask macTask;
-
-    @Before
-    public void setUp()
-    {
-        mockManager = new EasyMockSupport();
-
-        macTask = new MockAndControlForAddFileSetsTask( mockManager );
-    }
 
     @Test
     public void testGetFileSetDirectory_ShouldReturnAbsoluteSourceDir()
@@ -127,36 +122,38 @@ public class AddFileSetsTaskTest
     public void testAddFileSet_ShouldAddDirectory()
         throws Exception
     {
+        File basedir = temporaryFolder.getRoot();
+        
         final FileSet fs = new FileSet();
-
-        final String dirname = "dir";
-
-        fs.setDirectory( dirname );
+        fs.setDirectory( temporaryFolder.newFolder( "dir" ).getName() );
         fs.setOutputDirectory( "dir2" );
 
-        // ensure this exists, so the directory addition will proceed.
-        final File srcDir = new File( macTask.archiveBaseDir, dirname );
-        srcDir.mkdirs();
-
-        final int[] modes = { -1, -1, -1, -1 };
-
-        macTask.expectAdditionOfSingleFileSet( null, null, true, modes, 1, true, false );
-
-//        macTask.expectGetProject( null );
+        // the logger sends a debug message with this info inside the addFileSet(..) method..
+        final Archiver archiver = mock( Archiver.class );
+        when( archiver.getOverrideDirectoryMode() ).thenReturn( -1 );
+        when( archiver.getOverrideFileMode() ).thenReturn( -1 );
+        
+        final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
 
         final MavenProject project = new MavenProject( new Model() );
+        project.setFile( new File( basedir, "pom.xml" ) );
 
-        DefaultAssemblyArchiverTest.setupInterpolators( macTask.configSource );
-        mockManager.replayAll();
+        DefaultAssemblyArchiverTest.setupInterpolators( configSource, project );
 
         final AddFileSetsTask task = new AddFileSetsTask( new ArrayList<FileSet>() );
 
         task.setLogger( new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) );
         task.setProject( project );
 
-        task.addFileSet( fs, macTask.archiver, macTask.configSource, macTask.archiveBaseDir );
+        task.addFileSet( fs, archiver, configSource, null );
 
-        mockManager.verifyAll();
+        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
+        verify( configSource, atLeastOnce() ).getFinalName();
+        verify( configSource, atLeastOnce() ).getMavenSession();
+        
+        verify( archiver, times( 2 ) ).getOverrideDirectoryMode();
+        verify( archiver, times( 2 ) ).getOverrideFileMode();
+        verify( archiver, atLeastOnce() ) .addFileSet( any( org.codehaus.plexus.archiver.FileSet.class ) );
     }
 
     @Test
@@ -164,9 +161,7 @@ public class AddFileSetsTaskTest
         throws Exception
     {
         final FileSet fs = new FileSet();
-
         final String dirname = "dir";
-
         fs.setDirectory( dirname );
 
         final File archiveBaseDir = temporaryFolder.newFolder();
@@ -175,25 +170,29 @@ public class AddFileSetsTaskTest
         final File srcDir = new File( archiveBaseDir, dirname );
         srcDir.mkdirs();
 
-        final int[] modes = { -1, -1, -1, -1 };
-
-        macTask.expectAdditionOfSingleFileSet( null, null, true, modes, 1, true, false );
-
-        //macTask.expectGetProject( null );
+        // the logger sends a debug message with this info inside the addFileSet(..) method..
+        final Archiver archiver = mock( Archiver.class );
+        when( archiver.getOverrideDirectoryMode() ).thenReturn( -1 );
+        when( archiver.getOverrideFileMode() ).thenReturn( -1 );
+        
+        final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
 
         final MavenProject project = new MavenProject( new Model() );
-        DefaultAssemblyArchiverTest.setupInterpolators( macTask.configSource );
-
-        mockManager.replayAll();
+        DefaultAssemblyArchiverTest.setupInterpolators( configSource, project );
 
         final AddFileSetsTask task = new AddFileSetsTask( new ArrayList<FileSet>() );
-
         task.setLogger( new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) );
         task.setProject( project );
 
-        task.addFileSet( fs, macTask.archiver, macTask.configSource, archiveBaseDir );
+        task.addFileSet( fs, archiver, configSource, archiveBaseDir );
 
-        mockManager.verifyAll();
+        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
+        verify( configSource, atLeastOnce() ).getFinalName();
+        verify( configSource, atLeastOnce() ).getMavenSession();
+        
+        verify( archiver, times( 2 ) ).getOverrideDirectoryMode();
+        verify( archiver, times( 2 ) ).getOverrideFileMode();
+        verify( archiver ).addFileSet( any( org.codehaus.plexus.archiver.FileSet.class ) );
     }
 
     @Test
@@ -202,48 +201,47 @@ public class AddFileSetsTaskTest
     {
         final FileSet fs = new FileSet();
 
-        final String dirname = "dir";
-
-        fs.setDirectory( dirname );
-
+        fs.setDirectory( "dir" );
         final File archiveBaseDir = temporaryFolder.newFolder();
 
-        macTask.expectGetFinalName( "finalName" );
+        final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
+        when( configSource.getFinalName() ).thenReturn( "finalName" );
 
-        //macTask.expectGetProject( null );
-
-        expect( macTask.archiver.getOverrideDirectoryMode() ).andReturn( -1 );
-        expect( macTask.archiver.getOverrideFileMode() ).andReturn( -1 );
+        final Archiver archiver = mock( Archiver.class );
+        when( archiver.getOverrideDirectoryMode() ).thenReturn( -1 );
+        when( archiver.getOverrideFileMode() ).thenReturn( -1 );
 
         final MavenProject project = new MavenProject( new Model() );
-        DefaultAssemblyArchiverTest.setupInterpolators( macTask.configSource );
-
-        mockManager.replayAll();
+        DefaultAssemblyArchiverTest.setupInterpolators( configSource, project );
 
         final AddFileSetsTask task = new AddFileSetsTask( new ArrayList<FileSet>() );
 
         task.setLogger( new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) );
         task.setProject( project );
 
-        task.addFileSet( fs, macTask.archiver, macTask.configSource, archiveBaseDir );
+        task.addFileSet( fs, archiver, configSource, archiveBaseDir );
 
-        mockManager.verifyAll();
+        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
+        verify( configSource, atLeastOnce() ).getFinalName();
+        verify( configSource, atLeastOnce() ).getMavenSession();
+
+        verify( archiver ).getOverrideDirectoryMode();
+        verify( archiver ).getOverrideFileMode();
     }
 
     @Test
     public void testExecute_ShouldThrowExceptionIfArchiveBasedirProvidedIsNonExistent()
         throws Exception
     {
-        macTask.archiveBaseDir = new File( temporaryFolder.getRoot(), "archive");
-        macTask.expectGetArchiveBaseDirectory();
-
-        mockManager.replayAll();
+        File archiveBaseDir = new File( temporaryFolder.getRoot(), "archive");
+        final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
+        when( configSource.getArchiveBaseDirectory() ).thenReturn( archiveBaseDir );
 
         final AddFileSetsTask task = new AddFileSetsTask( new ArrayList<FileSet>() );
 
         try
         {
-            task.execute( macTask.archiver, macTask.configSource );
+            task.execute( null, configSource );
 
             fail( "Should throw exception due to non-existent archiveBasedir location that was provided." );
         }
@@ -252,23 +250,23 @@ public class AddFileSetsTaskTest
             // should do this, because it cannot use the provide archiveBasedir.
         }
 
-        mockManager.verifyAll();
+        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
+        verify( configSource ).getArchiveBaseDirectory();
     }
 
     @Test
     public void testExecute_ShouldThrowExceptionIfArchiveBasedirProvidedIsNotADirectory()
         throws Exception
     {
-        macTask.archiveBaseDir = temporaryFolder.newFile();
-        macTask.expectGetArchiveBaseDirectory();
-
-        mockManager.replayAll();
+        File archiveBaseDir = temporaryFolder.newFile();
+        final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
+        when( configSource.getArchiveBaseDirectory() ).thenReturn( archiveBaseDir );
 
         final AddFileSetsTask task = new AddFileSetsTask( new ArrayList<FileSet>() );
 
         try
         {
-            task.execute( macTask.archiver, macTask.configSource );
+            task.execute( null, configSource );
 
             fail( "Should throw exception due to non-directory archiveBasedir location that was provided." );
         }
@@ -276,8 +274,8 @@ public class AddFileSetsTaskTest
         {
             // should do this, because it cannot use the provide archiveBasedir.
         }
-
-        mockManager.verifyAll();
+        
+        verify( configSource ).getArchiveBaseDirectory();
     }
 
 }

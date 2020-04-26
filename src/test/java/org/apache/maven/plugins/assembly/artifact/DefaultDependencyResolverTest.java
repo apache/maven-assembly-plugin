@@ -19,7 +19,9 @@ package org.apache.maven.plugins.assembly.artifact;
  * under the License.
  */
 
-import static org.easymock.EasyMock.expect;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.util.Arrays;
@@ -46,7 +48,6 @@ import org.apache.maven.plugins.assembly.model.ModuleSet;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.repository.internal.MavenRepositorySystemSession;
 import org.codehaus.plexus.PlexusTestCase;
-import org.easymock.classextension.EasyMockSupport;
 
 public class DefaultDependencyResolverTest
     extends PlexusTestCase
@@ -124,10 +125,6 @@ public class DefaultDependencyResolverTest
     public void test_getModuleSetResolutionRequirements_withoutBinaries()
         throws DependencyResolutionException
     {
-        final EasyMockSupport mm = new EasyMockSupport();
-
-        final AssemblerConfigurationSource cs = mm.createMock( AssemblerConfigurationSource.class );
-
         final File rootDir = new File( "root" );
         final MavenProject project = createMavenProject( "main-group", "main-artifact", "1", rootDir );
         final MavenProject module1 =
@@ -138,30 +135,18 @@ public class DefaultDependencyResolverTest
         project.getModel().addModule( module1.getArtifactId() );
         project.getModel().addModule( module2.getArtifactId() );
 
-        expect( cs.getReactorProjects() ).andReturn( Arrays.asList( project, module1, module2 ) ).anyTimes();
-        expect( cs.getProject() ).andReturn( project ).anyTimes();
-        expect( cs.getMavenSession() ).andReturn( newMavenSession( project ) ).anyTimes();
-
         final ResolutionManagementInfo info = new ResolutionManagementInfo();
 
         final ModuleSet ms = new ModuleSet();
         ms.setBinaries( null );
 
-        mm.replayAll();
-
-        resolver.updateModuleSetResolutionRequirements( ms, new DependencySet(), info, cs );
+        resolver.updateModuleSetResolutionRequirements( ms, new DependencySet(), info, null );
         assertTrue( info.getArtifacts().isEmpty() );
-
-        mm.verifyAll();
     }
 
     public void test_getModuleSetResolutionRequirements_includeDeps()
         throws DependencyResolutionException
     {
-        final EasyMockSupport mm = new EasyMockSupport();
-
-        final AssemblerConfigurationSource cs = mm.createMock( AssemblerConfigurationSource.class );
-
         final File rootDir = new File( "root" );
         final MavenProject project = createMavenProject( "main-group", "main-artifact", "1", rootDir );
         final MavenProject module1 =
@@ -177,9 +162,9 @@ public class DefaultDependencyResolverTest
         project.getModel().addModule( module1.getArtifactId() );
         project.getModel().addModule( module2.getArtifactId() );
 
-        expect( cs.getReactorProjects() ).andReturn( Arrays.asList( project, module1, module2 ) ).anyTimes();
-        expect( cs.getProject() ).andReturn( project ).anyTimes();
-        expect( cs.getMavenSession() ).andReturn( newMavenSession( project ) ).anyTimes();
+        final AssemblerConfigurationSource cs = mock( AssemblerConfigurationSource.class );
+        when( cs.getReactorProjects() ).thenReturn( Arrays.asList( project, module1, module2 ) );
+        when( cs.getProject() ).thenReturn( project );
 
         final ResolutionManagementInfo info = new ResolutionManagementInfo();
 
@@ -189,12 +174,12 @@ public class DefaultDependencyResolverTest
         ms.setBinaries( mb );
         ms.addInclude( "*:module-1" );
 
-        mm.replayAll();
-
         resolver.updateModuleSetResolutionRequirements( ms, new DependencySet(), info, cs );
         assertEquals( module1Artifacts, info.getArtifacts() );
 
-        mm.verifyAll();
+        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
+        verify( cs ).getReactorProjects();
+        verify( cs ).getProject();
     }
 
     private MavenProject createMavenProject( final String groupId, final String artifactId, final String version,

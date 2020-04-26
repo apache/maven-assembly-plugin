@@ -19,9 +19,12 @@ package org.apache.maven.plugins.assembly.archive.phase;
  * under the License.
  */
 
-import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.fail;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 
@@ -30,240 +33,110 @@ import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.model.Repository;
 import org.apache.maven.plugins.assembly.repository.RepositoryAssembler;
-import org.apache.maven.plugins.assembly.repository.RepositoryAssemblyException;
 import org.apache.maven.plugins.assembly.repository.RepositoryBuilderConfigSource;
 import org.apache.maven.plugins.assembly.repository.model.RepositoryInfo;
 import org.apache.maven.plugins.assembly.utils.TypeConversionUtils;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.archiver.Archiver;
-import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.FileSet;
-import org.codehaus.plexus.archiver.util.DefaultFileSet;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
-import org.easymock.classextension.EasyMock;
-import org.easymock.classextension.EasyMockSupport;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 
+@RunWith( MockitoJUnitRunner.class )
 public class RepositoryAssemblyPhaseTest
 {
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
     
+    private RepositoryAssemblyPhase phase;
+    
+    private RepositoryAssembler repositoryAssembler;
+    
+    @Before
+    public void setUp()
+    {
+        this.repositoryAssembler = mock( RepositoryAssembler.class );
+        this.phase = new RepositoryAssemblyPhase( repositoryAssembler );
+        this.phase.enableLogging( mock( Logger.class ) );
+    }
+    
     @Test
     public void testExecute_ShouldNotIncludeRepositoryIfNonSpecifiedInAssembly()
         throws Exception
     {
-        final EasyMockSupport mm = new EasyMockSupport();
-
-        final MockAndControlForRepositoryAssembler macRepo = new MockAndControlForRepositoryAssembler( mm );
-        final MockAndControlForArchiver macArchiver = new MockAndControlForArchiver( mm );
-        final MockAndControlForConfigSource macCS = new MockAndControlForConfigSource( mm );
-
-        final File tempRoot = temporaryFolder.getRoot();
-
-        macCS.expectGetTemporaryRootDirectory( tempRoot );
+        final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
+        when( configSource.getTemporaryRootDirectory() ).thenReturn( temporaryFolder.getRoot() );
 
         final Assembly assembly = new Assembly();
-
         assembly.setId( "test" );
 
-        mm.replayAll();
-
-        createPhase( macRepo.repositoryAssembler, new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) ).execute( assembly,
-                                                                                                             macArchiver.archiver,
-                                                                                                             macCS
-                                                                                                                 .configSource );
-
-        mm.verifyAll();
+        this.phase.execute( assembly, null, configSource );
+        
+        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
+        verify( configSource, atLeastOnce() ).getTemporaryRootDirectory();
+        
+        verifyZeroInteractions( repositoryAssembler );
     }
 
     @Test
     public void testExecute_ShouldIncludeOneRepository()
         throws Exception
     {
-        final EasyMockSupport mm = new EasyMockSupport();
-
-        final MockAndControlForRepositoryAssembler macRepo = new MockAndControlForRepositoryAssembler( mm );
-        final MockAndControlForArchiver macArchiver = new MockAndControlForArchiver( mm );
-        final MockAndControlForConfigSource macCS = new MockAndControlForConfigSource( mm );
-
         final File tempRoot = temporaryFolder.getRoot();
 
-        macCS.expectGetTemporaryRootDirectory( tempRoot );
-        macCS.expectGetProject( new MavenProject( new Model() ) );
-        macCS.expectGetFinalName( "final-name" );
-        macCS.expectInterpolators();
+        final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
+        when( configSource.getCommandLinePropsInterpolator() ).thenReturn( FixedStringSearchInterpolator.empty() );
+        when( configSource.getEnvInterpolator() ).thenReturn( FixedStringSearchInterpolator.empty() );
+        when( configSource.getFinalName() ).thenReturn( "final-name" );
+        when( configSource.getMainProjectInterpolator() ).thenReturn( FixedStringSearchInterpolator.empty() );
+        when( configSource.getProject() ).thenReturn( new MavenProject( new Model() ) );
+        when( configSource.getTemporaryRootDirectory() ).thenReturn( tempRoot );
 
         final Assembly assembly = new Assembly();
-
         assembly.setId( "test" );
 
         final Repository repo = new Repository();
-
         repo.setOutputDirectory( "out" );
         repo.setDirectoryMode( "777" );
         repo.setFileMode( "777" );
+        assembly.addRepository( repo );
 
         final int mode = TypeConversionUtils.modeToInt( "777", new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) );
 
-        final File outDir = new File( tempRoot, "out" );
+        final int defaultDirMode = -1;
+        final int defaultFileMode = -1;
 
-        macArchiver.expectModeChange( -1, -1, mode, mode, true );
-        macArchiver.expectAddDirectory( outDir, "out/", null, null );
+        final Archiver archiver = mock( Archiver.class );
+        when( archiver.getOverrideDirectoryMode() ).thenReturn( defaultDirMode );
+        when( archiver.getOverrideFileMode() ).thenReturn( defaultFileMode );
 
-        macRepo.expectAssemble();
+        this.phase.execute( assembly, archiver, configSource );
 
-        assembly.addRepository( repo );
+        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
+        verify( configSource ).getCommandLinePropsInterpolator();
+        verify( configSource ).getEnvInterpolator();
+        verify( configSource, atLeastOnce() ).getFinalName();
+        verify( configSource ).getMainProjectInterpolator();
+        verify( configSource ).getMavenSession();
+        verify( configSource, atLeastOnce() ).getProject();
+        verify( configSource, atLeastOnce() ).getTemporaryRootDirectory();
+        
+        verify( archiver ).getOverrideDirectoryMode();
+        verify( archiver ).getOverrideFileMode();
+        verify( archiver ).setDirectoryMode( mode );
+        verify( archiver ).setFileMode( mode );
+        verify( archiver ).setDirectoryMode( defaultDirMode );
+        verify( archiver ).setFileMode( defaultFileMode );
+        verify( archiver ).addFileSet( any( FileSet.class ) );        
 
-        mm.replayAll();
-
-        createPhase( macRepo.repositoryAssembler, new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) ).execute( assembly,
-                                                                                                             macArchiver.archiver,
-                                                                                                             macCS
-                                                                                                                 .configSource );
-
-        mm.verifyAll();
+        verify( repositoryAssembler ).buildRemoteRepository( any( File.class ), any( RepositoryInfo.class ),
+                                                             any( RepositoryBuilderConfigSource.class ) );
     }
-
-    private RepositoryAssemblyPhase createPhase( final RepositoryAssembler repositoryAssembler, final Logger logger )
-    {
-        final RepositoryAssemblyPhase phase = new RepositoryAssemblyPhase( repositoryAssembler );
-        phase.enableLogging( logger );
-
-        return phase;
-    }
-
-    private final class MockAndControlForArchiver
-    {
-        final Archiver archiver;
-
-        public MockAndControlForArchiver( final EasyMockSupport mockManager )
-        {
-
-            archiver = mockManager.createMock( Archiver.class );
-        }
-
-        public void expectAddDirectory( final File outDir, final String location, final String[] includes,
-                                        final String[] excludes )
-        {
-            try
-            {
-                final DefaultFileSet fs = new DefaultFileSet();
-                fs.setDirectory( outDir );
-                fs.setPrefix( location );
-                fs.setIncludes( includes );
-                fs.setExcludes( excludes );
-
-                archiver.addFileSet( (FileSet) anyObject() );
-            }
-            catch ( final ArchiverException e )
-            {
-                fail( "Should never happen." );
-            }
-
-            EasyMock.expectLastCall().atLeastOnce();
-        }
-
-        void expectModeChange( final int defaultDirMode, final int defaultFileMode, final int dirMode,
-                               final int fileMode, final boolean expectTwoSets )
-        {
-            expect( archiver.getOverrideDirectoryMode() ).andReturn( defaultDirMode );
-
-            expect( archiver.getOverrideFileMode() ).andReturn( defaultFileMode );
-
-            if ( expectTwoSets )
-            {
-                archiver.setDirectoryMode( dirMode );
-                archiver.setFileMode( fileMode );
-            }
-
-            archiver.setDirectoryMode( defaultDirMode );
-            archiver.setFileMode( defaultFileMode );
-        }
-
-        // public void expectAddFile( File file, String outputLocation, int fileMode )
-        // {
-        // try
-        // {
-        // archiver.addFile( file, outputLocation, fileMode );
-        // }
-        // catch ( ArchiverException e )
-        // {
-        // Assert.fail( "Should never happen." );
-        // }
-        // }
-    }
-
-    private final class MockAndControlForConfigSource
-    {
-        final AssemblerConfigurationSource configSource;
-
-        public MockAndControlForConfigSource( final EasyMockSupport mockManager )
-        {
-            configSource = mockManager.createMock( AssemblerConfigurationSource.class );
-
-            expect( configSource.getMavenSession() ).andReturn( null ).anyTimes();
-        }
-
-        public void expectGetProject( final MavenProject project )
-        {
-            expect( configSource.getProject() ).andReturn( project ).atLeastOnce();
-        }
-
-        public void expectGetFinalName( final String finalName )
-        {
-            expect( configSource.getFinalName() ).andReturn( finalName ).atLeastOnce();
-        }
-
-        public void expectInterpolators()
-        {
-            expect( configSource.getCommandLinePropsInterpolator() ).andReturn(
-                FixedStringSearchInterpolator.empty() ).anyTimes();
-            expect( configSource.getEnvInterpolator() ).andReturn( FixedStringSearchInterpolator.empty() ).anyTimes();
-            expect( configSource.getMainProjectInterpolator() ).andReturn(
-                FixedStringSearchInterpolator.empty() ).anyTimes();
-        }
-
-        public void expectGetTemporaryRootDirectory( final File tempRoot )
-        {
-            expect( configSource.getTemporaryRootDirectory() ).andReturn( tempRoot ).atLeastOnce();
-        }
-
-        //
-        // public void expectGetBasedir( File basedir )
-        // {
-        // configSource.getBasedir();
-        // control.setReturnValue( basedir, MockControl.ONE_OR_MORE );
-        // }
-    }
-
-    private final class MockAndControlForRepositoryAssembler
-    {
-        final RepositoryAssembler repositoryAssembler;
-
-        MockAndControlForRepositoryAssembler( final EasyMockSupport mockManager )
-        {
-            repositoryAssembler = mockManager.createMock( RepositoryAssembler.class );
-        }
-
-        public void expectAssemble()
-        {
-            try
-            {
-                repositoryAssembler.buildRemoteRepository( (File) anyObject(), (RepositoryInfo) anyObject(),
-                                                           (RepositoryBuilderConfigSource) anyObject() );
-                EasyMock.expectLastCall().atLeastOnce();
-            }
-            catch ( final RepositoryAssemblyException e )
-            {
-                fail( "Should never happen" );
-            }
-
-        }
-    }
-
 }
