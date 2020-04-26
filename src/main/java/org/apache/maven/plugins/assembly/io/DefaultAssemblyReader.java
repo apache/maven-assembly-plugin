@@ -19,7 +19,6 @@ package org.apache.maven.plugins.assembly.io;
  * under the License.
  */
 
-import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
 import org.apache.maven.plugins.assembly.interpolation.AssemblyExpressionEvaluator;
@@ -210,23 +209,15 @@ public class DefaultAssemblyReader
             }
         }
 
-        Reader reader = null;
-        try
+        try ( Reader reader = ReaderFactory.newXmlReader( resourceAsStream ) )
         {
-            reader = ReaderFactory.newXmlReader( resourceAsStream );
             final Assembly assembly = readAssembly( reader, ref, null, configSource );
-            reader.close();
-            reader = null;
             assemblies.add( assembly );
             return assembly;
         }
         catch ( final IOException e )
         {
             throw new AssemblyReadException( "Problem with descriptor with ID '" + ref + "'", e );
-        }
-        finally
-        {
-            IOUtils.closeQuietly( reader );
         }
     }
 
@@ -249,16 +240,10 @@ public class DefaultAssemblyReader
             }
         }
 
-        Reader r = null;
-        try
+        try ( Reader r = ReaderFactory.newXmlReader( descriptor ) )
         {
-            r = ReaderFactory.newXmlReader( descriptor );
-
             final Assembly assembly =
                 readAssembly( r, descriptor.getAbsolutePath(), descriptor.getParentFile(), configSource );
-
-            r.close();
-            r = null;
 
             assemblies.add( assembly );
 
@@ -267,10 +252,6 @@ public class DefaultAssemblyReader
         catch ( final IOException e )
         {
             throw new AssemblyReadException( "Error reading assembly descriptor: " + descriptor, e );
-        }
-        finally
-        {
-            IOUtil.close( r );
         }
     }
 
@@ -296,11 +277,9 @@ public class DefaultAssemblyReader
             }
         }
 
-        Reader r = null;
-        try
+        
+        try ( Reader r = ReaderFactory.newXmlReader( location.getInputStream() ) )
         {
-            r = ReaderFactory.newXmlReader( location.getInputStream() );
-
             File dir = null;
             if ( location.getFile() != null )
             {
@@ -308,9 +287,6 @@ public class DefaultAssemblyReader
             }
 
             final Assembly assembly = readAssembly( r, spec, dir, configSource );
-
-            r.close();
-            r = null;
 
             assemblies.add( assembly );
 
@@ -320,11 +296,6 @@ public class DefaultAssemblyReader
         {
             throw new AssemblyReadException( "Error reading assembly descriptor: " + spec, e );
         }
-        finally
-        {
-            IOUtil.close( r );
-        }
-
     }
 
     public Assembly readAssembly( Reader reader, final String locationDescription, final File assemblyDir,
@@ -443,20 +414,14 @@ public class DefaultAssemblyReader
             }
 
             Component component = null;
-            Reader reader = null;
-            try
+            try ( Reader reader = new InputStreamReader( resolvedLocation.getInputStream() ) )
             {
-                reader = new InputStreamReader( resolvedLocation.getInputStream() );
                 component = new ComponentXpp3Reader( transformer ).read( reader );
             }
             catch ( final IOException | XmlPullParserException e )
             {
                 throw new AssemblyReadException( "Error reading component descriptor: " + location + " (resolved to: "
                     + resolvedLocation.getSpecification() + ")", e );
-            }
-            finally
-            {
-                IOUtil.close( reader );
             }
 
             mergeComponentWithAssembly( component, assembly );

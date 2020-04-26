@@ -30,7 +30,6 @@ import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
 import org.codehaus.plexus.archiver.jar.Manifest;
 import org.codehaus.plexus.archiver.jar.ManifestException;
-import org.codehaus.plexus.util.IOUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -82,14 +81,10 @@ public class ManifestCreationFinalizer
 
                 if ( manifestFile != null )
                 {
-                    Reader manifestFileReader = null;
-                    try
+                    try ( Reader manifestFileReader =
+                        new InputStreamReader( new FileInputStream( manifestFile ), StandardCharsets.UTF_8 ) )
                     {
-                        manifestFileReader = new InputStreamReader( new FileInputStream( manifestFile ),
-                            StandardCharsets.UTF_8 );
                         manifest = new Manifest( manifestFileReader );
-                        manifestFileReader.close();
-                        manifestFileReader = null;
                     }
                     catch ( final FileNotFoundException e )
                     {
@@ -98,10 +93,6 @@ public class ManifestCreationFinalizer
                     catch ( final IOException e )
                     {
                         throw new ArchiverException( "Error processing manifest: " + e.getMessage(), e );
-                    }
-                    finally
-                    {
-                        IOUtil.close( manifestFileReader );
                     }
                 }
                 else

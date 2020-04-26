@@ -25,7 +25,6 @@ import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.ResourceIterator;
 import org.codehaus.plexus.archiver.UnArchiver;
 import org.codehaus.plexus.components.io.fileselectors.FileInfo;
-import org.codehaus.plexus.util.IOUtil;
 
 import javax.annotation.Nonnull;
 import java.io.BufferedReader;
@@ -80,31 +79,26 @@ abstract class AbstractLineAggregatingHandler
             final String name = entry.getKey();
             final String fname = new File( name ).getName();
 
-            PrintWriter writer = null;
             File f;
             try
             {
                 f = File.createTempFile( "assembly-" + fname, ".tmp" );
                 f.deleteOnExit();
 
-                writer = new PrintWriter( new OutputStreamWriter( new FileOutputStream( f ), getEncoding() ) );
-                for ( final String line : entry.getValue() )
+                try ( PrintWriter writer =
+                    new PrintWriter( new OutputStreamWriter( new FileOutputStream( f ), getEncoding() ) ) )
                 {
-                    writer.println( line );
+                    for ( final String line : entry.getValue() )
+                    {
+                        writer.println( line );
+                    }
                 }
-
-                writer.close();
-                writer = null;
             }
             catch ( final IOException e )
             {
                 throw new ArchiverException(
                     "Error adding aggregated content for: " + fname + " to finalize archive creation. Reason: "
                         + e.getMessage(), e );
-            }
-            finally
-            {
-                IOUtil.close( writer );
             }
 
             excludeOverride = true;
@@ -157,11 +151,9 @@ abstract class AbstractLineAggregatingHandler
     void readLines( final FileInfo fileInfo, final List<String> lines )
         throws IOException
     {
-        BufferedReader reader = null;
-        try
+        try ( BufferedReader reader =
+            new BufferedReader( new InputStreamReader( fileInfo.getContents(), getEncoding() ) ) )
         {
-            reader = new BufferedReader( new InputStreamReader( fileInfo.getContents(), getEncoding() ) );
-
             for ( String line = reader.readLine(); line != null; line = reader.readLine() )
             {
                 if ( !lines.contains( line ) )
@@ -169,13 +161,6 @@ abstract class AbstractLineAggregatingHandler
                     lines.add( line );
                 }
             }
-
-            reader.close();
-            reader = null;
-        }
-        finally
-        {
-            IOUtil.close( reader );
         }
     }
 

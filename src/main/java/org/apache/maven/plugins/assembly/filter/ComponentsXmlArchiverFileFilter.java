@@ -27,7 +27,6 @@ import org.codehaus.plexus.archiver.ResourceIterator;
 import org.codehaus.plexus.archiver.UnArchiver;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.components.io.fileselectors.FileInfo;
-import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
 import org.codehaus.plexus.util.xml.Xpp3DomWriter;
@@ -107,10 +106,9 @@ public class ComponentsXmlArchiverFileFilter
             final File f = File.createTempFile( "maven-assembly-plugin", "tmp" );
             f.deleteOnExit();
 
-            Writer fileWriter = null;
-            try
+            
+            try ( Writer fileWriter = WriterFactory.newXmlWriter( new FileOutputStream( f ) ) )
             {
-                fileWriter = WriterFactory.newXmlWriter( new FileOutputStream( f ) );
                 final Xpp3Dom dom = new Xpp3Dom( "component-set" );
                 final Xpp3Dom componentDom = new Xpp3Dom( "components" );
                 dom.addChild( componentDom );
@@ -121,13 +119,6 @@ public class ComponentsXmlArchiverFileFilter
                 }
 
                 Xpp3DomWriter.write( fileWriter, dom );
-
-                fileWriter.close();
-                fileWriter = null;
-            }
-            finally
-            {
-                IOUtil.close( fileWriter );
             }
 
             excludeOverride = true;
@@ -192,13 +183,9 @@ public class ComponentsXmlArchiverFileFilter
 
             if ( ComponentsXmlArchiverFileFilter.COMPONENTS_XML_PATH.equals( entry ) )
             {
-                Reader reader = null;
-                try
+                try ( Reader reader = new BufferedReader( ReaderFactory.newXmlReader( fileInfo.getContents() ) ) )
                 {
-                    reader = new BufferedReader( ReaderFactory.newXmlReader( fileInfo.getContents() ) );
                     addComponentsXml( reader );
-                    reader.close();
-                    reader = null;
                 }
                 catch ( final XmlPullParserException e )
                 {
@@ -207,11 +194,6 @@ public class ComponentsXmlArchiverFileFilter
 
                     throw error;
                 }
-                finally
-                {
-                    IOUtil.close( reader );
-                }
-
                 return false;
             }
             else

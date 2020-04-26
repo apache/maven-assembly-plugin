@@ -32,6 +32,7 @@ import org.codehaus.plexus.util.IOUtil;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -103,42 +104,41 @@ public class SimpleAggregatingDescriptorHandler
     private File writePropertiesFile()
     {
         File f;
-
-        Writer writer = null;
         try
         {
             f = File.createTempFile( "maven-assembly-plugin", "tmp" );
             f.deleteOnExit();
 
-            writer = AssemblyFileUtils.isPropertyFile( f )
-                         ? new OutputStreamWriter( new FileOutputStream( f ), StandardCharsets.ISO_8859_1 )
-                         : new OutputStreamWriter( new FileOutputStream( f ) ); // Still platform encoding
-
-            writer.write( commentChars + " Aggregated on " + new Date() + " from: " );
-
-            for ( final String filename : filenames )
+            try ( Writer writer = getWriter( f ) )
             {
-                writer.write( "\n" + commentChars + " " + filename );
+                writer.write( commentChars + " Aggregated on " + new Date() + " from: " );
+
+                for ( final String filename : filenames )
+                {
+                    writer.write( "\n" + commentChars + " " + filename );
+                }
+
+                writer.write( "\n\n" );
+                writer.write( aggregateWriter.toString() );
             }
-
-            writer.write( "\n\n" );
-
-            writer.write( aggregateWriter.toString() );
-
-            writer.close();
-            writer = null;
         }
         catch ( final IOException e )
         {
             throw new ArchiverException(
                 "Error adding aggregated properties to finalize archive creation. Reason: " + e.getMessage(), e );
         }
-        finally
-        {
-            IOUtil.close( writer );
-        }
 
         return f;
+    }
+
+    private Writer getWriter( File f )
+        throws FileNotFoundException
+    {
+        Writer writer;
+        writer = AssemblyFileUtils.isPropertyFile( f )
+                     ? new OutputStreamWriter( new FileOutputStream( f ), StandardCharsets.ISO_8859_1 )
+                     : new OutputStreamWriter( new FileOutputStream( f ) ); // Still platform encoding
+        return writer;
     }
 
     @Override
