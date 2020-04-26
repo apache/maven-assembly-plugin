@@ -66,6 +66,8 @@ public class AddArtifactTask
 
     private List<String> excludes;
 
+    private boolean usingDefaultExcludes = true;
+
     private MavenProject project;
 
     private MavenProject moduleProject;
@@ -217,6 +219,7 @@ public class AddArtifactTask
                 fs.setExcludes( excludesArray );
                 fs.setPrefix( outputLocation );
                 fs.setStreamTransformer( transformer );
+                fs.setUsingDefaultExcludes( usingDefaultExcludes );
                 archiver.addFileSet( fs );
             }
             else
@@ -231,6 +234,7 @@ public class AddArtifactTask
                 afs.setExcludes( excludesArray );
                 afs.setPrefix( outputLocation );
                 afs.setStreamTransformer( transformer );
+                afs.setUsingDefaultExcludes( usingDefaultExcludes );
                 archiver.addArchivedFileSet( afs, encoding );
             }
         }
@@ -281,6 +285,11 @@ public class AddArtifactTask
     public void setExcludes( final List<String> excludes )
     {
         this.excludes = excludes;
+    }
+
+    public void setUsingDefaultExcludes( boolean usingDefaultExcludes )
+    {
+        this.usingDefaultExcludes = usingDefaultExcludes;
     }
 
     public void setIncludes( final List<String> includes )

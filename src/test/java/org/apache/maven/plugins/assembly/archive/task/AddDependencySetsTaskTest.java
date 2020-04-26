@@ -19,16 +19,28 @@ package org.apache.maven.plugins.assembly.archive.task;
  * under the License.
  */
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
-import static org.mockito.Mockito.any;
+import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Properties;
+import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.handler.ArtifactHandler;
@@ -40,6 +52,7 @@ import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
 import org.apache.maven.plugins.assembly.archive.DefaultAssemblyArchiverTest;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.model.DependencySet;
+import org.apache.maven.plugins.assembly.model.UnpackOptions;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
 import org.apache.maven.project.ProjectBuildingException;
@@ -48,21 +61,15 @@ import org.apache.maven.project.ProjectBuildingResult;
 import org.codehaus.plexus.archiver.ArchivedFileSet;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
+import org.codehaus.plexus.archiver.FileSet;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Properties;
-import java.util.Set;
 
 @RunWith( MockitoJUnitRunner.class )
 public class AddDependencySetsTaskTest
@@ -454,6 +461,65 @@ public class AddDependencySetsTaskTest
         assertNotNull( result );
         assertEquals( 1, result.size() );
         assertSame( am1, result.iterator().next() );
+    }
+
+    // MASSEMBLY-879
+    @Test
+    public void useDefaultExcludes() throws Exception 
+    {
+        Artifact zipArtifact = mock( Artifact.class );
+        when( zipArtifact.getGroupId() ).thenReturn( "some-artifact" );
+        when( zipArtifact.getArtifactId() ).thenReturn( "of-type-zip" );
+        when( zipArtifact.getId() ).thenReturn( "some-artifact:of-type-zip:1.0:zip" );
+        when( zipArtifact.getFile() ).thenReturn( temporaryFolder.newFile( "of-type-zip.zip" ) );
+
+        Artifact dirArtifact = mock( Artifact.class );
+        when( dirArtifact.getGroupId() ).thenReturn( "some-artifact" );
+        when( dirArtifact.getArtifactId() ).thenReturn( "of-type-zip" );
+        when( dirArtifact.getId() ).thenReturn( "some-artifact:of-type-zip:1.0:dir" );
+        when( dirArtifact.getFile() ).thenReturn( temporaryFolder.newFolder( "of-type-zip" ) );
+
+        final Set<Artifact> artifacts = new HashSet<>( Arrays.asList( zipArtifact, dirArtifact ) );
+
+        final DependencySet dependencySet = new DependencySet();
+        dependencySet.setUseProjectArtifact( false );
+        dependencySet.setIncludes( Collections.singletonList( "some-artifact:of-type-zip" ) );
+        dependencySet.setOutputDirectory( "MyOutputDir" );
+        dependencySet.setUnpack( true );
+        UnpackOptions unpackOptions = new UnpackOptions();
+        unpackOptions.setUseDefaultExcludes( false );
+        dependencySet.setUnpackOptions( unpackOptions );
+
+        final MavenProject project = new MavenProject( new Model() );
+
+        ProjectBuildingRequest pbReq  = mock( ProjectBuildingRequest.class );
+        ProjectBuildingResult pbRes = mock( ProjectBuildingResult.class );
+        when( pbRes.getProject() ).thenReturn( project );
+
+        final ProjectBuilder projectBuilder = mock( ProjectBuilder.class );
+        when( projectBuilder.build( any( Artifact.class ), eq( pbReq ) ) ).thenReturn( pbRes );
+
+        final AddDependencySetsTask task = new AddDependencySetsTask( Collections.singletonList( dependencySet ),
+                                                                      artifacts, project, projectBuilder, mock( Logger.class ) );
+
+        final MavenSession session = mock( MavenSession.class );
+        when( session.getProjectBuildingRequest() ).thenReturn( pbReq );
+
+        final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
+        when( configSource.getMavenSession() ).thenReturn( session );
+        DefaultAssemblyArchiverTest.setupInterpolators( configSource, project );
+
+        final Archiver archiver = mock( Archiver.class );
+
+        task.addDependencySet( dependencySet, archiver, configSource );
+
+        ArgumentCaptor<ArchivedFileSet> archivedFileSet = ArgumentCaptor.forClass( ArchivedFileSet.class );
+        verify( archiver ).addArchivedFileSet( archivedFileSet.capture(), isNull( Charset.class ) );
+        assertThat( archivedFileSet.getValue().isUsingDefaultExcludes(), is( false ) );
+
+        ArgumentCaptor<FileSet> fileSet = ArgumentCaptor.forClass( FileSet.class );
+        verify( archiver ).addFileSet( fileSet.capture() );
+        assertThat( fileSet.getValue().isUsingDefaultExcludes(), is( false ) );
     }
 
 }

@@ -261,6 +261,7 @@ public class AddDependencySetsTask
         {
             task.setIncludes( opts.getIncludes() );
             task.setExcludes( opts.getExcludes() );
+            task.setUsingDefaultExcludes( opts.isUseDefaultExcludes() );
         }
 
         task.execute( archiver, configSource );
