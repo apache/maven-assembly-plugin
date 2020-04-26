@@ -260,6 +260,14 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
      */
     @Parameter
     private List<String> filters;
+    
+    /**
+     * A set of additional properties to use for filtering
+     * 
+     * @since 3.3.0
+     */
+    @Parameter
+    private Properties additionalProperties;
 
     /**
      * If True (default) then the ${project.build.filters} are also used in addition to any further filters defined for
@@ -782,6 +790,11 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     public void setFilters( final List<String> filters )
     {
         this.filters = filters;
+    }
+    
+    public Properties getAdditionalProperties()
+    {
+        return additionalProperties;
     }
 
     @Override

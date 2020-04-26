@@ -25,6 +25,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -33,6 +34,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
@@ -40,11 +42,14 @@ import org.apache.maven.model.Model;
 import org.apache.maven.plugins.assembly.testutils.PojoConfigSource;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.filtering.DefaultMavenReaderFilter;
+import org.apache.maven.shared.filtering.MavenReaderFilter;
+import org.apache.maven.shared.filtering.MavenReaderFilterRequest;
 import org.codehaus.plexus.archiver.resources.PlexusIoVirtualFileResource;
 import org.codehaus.plexus.components.io.functions.InputStreamTransformer;
 import org.codehaus.plexus.components.io.resources.PlexusIoResource;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 
 
 public class ReaderFormatterTest
@@ -97,6 +102,30 @@ public class ReaderFormatterTest
         assertThat( transformer.transform( resource, is ), not( sameInstance( is ) ) );
         assertThat( transformer.transform( resource, is ), not( sameInstance( is ) ) );
         assertThat( transformer.transform( resource, is ), not( sameInstance( is ) ) );
+    }
+
+    @Test
+    public void additionalProperties() throws Exception
+    {
+        final MavenReaderFilter mavenReaderFilter = mock( MavenReaderFilter.class );
+
+        final PojoConfigSource cfg = getPojoConfigSource();
+        cfg.setMavenReaderFilter( mavenReaderFilter );
+        Properties additionalProperties = new Properties();
+        cfg.setAdditionalProperties( additionalProperties );
+        
+        InputStreamTransformer transformer =  ReaderFormatter.getFileSetTransformers( cfg, true, Collections.<String>emptySet(), "unix" );
+        
+        final InputStream inputStream = new ByteArrayInputStream( new byte[0] );
+        PlexusIoResource resource = mock( PlexusIoResource.class );
+        when( resource.getName() ).thenReturn( "file.txt" );
+
+        transformer.transform( resource, inputStream );
+
+        ArgumentCaptor<MavenReaderFilterRequest> filteringRequest = 
+                        ArgumentCaptor.forClass(MavenReaderFilterRequest.class);
+        verify( mavenReaderFilter ).filter( filteringRequest.capture() );
+        assertThat( filteringRequest.getValue().getAdditionalProperties(), sameInstance( additionalProperties ) );
     }
 
     private MavenProject createBasicMavenProject()

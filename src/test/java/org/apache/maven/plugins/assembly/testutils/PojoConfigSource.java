@@ -18,6 +18,12 @@
  */
 package org.apache.maven.plugins.assembly.testutils;
 
+import java.io.File;
+import java.util.List;
+import java.util.Properties;
+
+import javax.annotation.Nonnull;
+
 import org.apache.maven.archiver.MavenArchiveConfiguration;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.execution.MavenSession;
@@ -25,10 +31,6 @@ import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.filtering.MavenReaderFilter;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
-
-import javax.annotation.Nonnull;
-import java.io.File;
-import java.util.List;
 
 public class PojoConfigSource
     implements AssemblerConfigurationSource
@@ -88,6 +90,8 @@ public class PojoConfigSource
     private File archiveBaseDirectory;
 
     private List<String> filters;
+    
+    private Properties additionalProperties;
 
     private boolean isIncludeProjectBuildFilter;
 
@@ -289,6 +293,17 @@ public class PojoConfigSource
     public void setFilters( List<String> filters )
     {
         this.filters = filters;
+    }
+
+    @Override
+    public Properties getAdditionalProperties()
+    {
+        return additionalProperties;
+    }
+
+    public void setAdditionalProperties( Properties additionalProperties )
+    {
+        this.additionalProperties = additionalProperties;
     }
 
     public boolean isIncludeProjectBuildFilters()

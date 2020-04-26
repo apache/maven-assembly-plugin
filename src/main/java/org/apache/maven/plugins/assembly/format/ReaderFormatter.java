@@ -37,6 +37,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
 /**
@@ -45,7 +46,8 @@ import java.util.Set;
 public class ReaderFormatter
 {
     private static Reader createReaderFilter( @Nonnull Reader source, String escapeString, List<String> delimiters,
-                                              AssemblerConfigurationSource configSource, boolean isPropertiesFile )
+                                              AssemblerConfigurationSource configSource, boolean isPropertiesFile,
+                                              Properties additionalProperties )
         throws IOException
     {
         try
@@ -53,7 +55,7 @@ public class ReaderFormatter
 
             MavenReaderFilterRequest filterRequest =
                 new MavenReaderFilterRequest( source, true, configSource.getProject(), configSource.getFilters(),
-                                              isPropertiesFile, configSource.getMavenSession(), null );
+                                              isPropertiesFile, configSource.getMavenSession(), additionalProperties );
             
             filterRequest.setEscapeString( escapeString );
 
@@ -154,7 +156,7 @@ public class ReaderFormatter
                             : new InputStreamReader( inputStream ); // wtf platform encoding ? TODO: Fix this
                         Reader filtered =
                             createReaderFilter( source, configSource.getEscapeString(), configSource.getDelimiters(),
-                                                configSource, isPropertyFile );
+                                                configSource, isPropertyFile, configSource.getAdditionalProperties() );
                         result = encoding != null
                             ? new ReaderInputStream( filtered, encoding )
                             : new ReaderInputStream( filtered );
