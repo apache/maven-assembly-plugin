@@ -32,8 +32,6 @@ import org.codehaus.plexus.components.io.filemappers.FileMapper;
 class PrefixedFileSet
     implements FileSet
 {
-    private final static FileMapper[] EMPTY_FILE_MAPPERS_ARRAY = new FileMapper[0];
-
     private final String rootPrefix;
 
     private final FileSet fileSet;
@@ -183,6 +181,6 @@ class PrefixedFileSet
     @Override
     public FileMapper[] getFileMappers()
     {
-        return EMPTY_FILE_MAPPERS_ARRAY;
+        return fileSet.getFileMappers();
     }
 }
