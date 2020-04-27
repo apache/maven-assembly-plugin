@@ -65,7 +65,7 @@ import java.util.zip.ZipFile;
 
 public class ComponentsXmlArchiverFileFilterTest
 {
-//    private final TestFileManager fileManager = new TestFileManager( "componentsXmlArchiverFileFilter.test", ".zip" );
+
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
