@@ -29,7 +29,7 @@ under the License.
   </parent>
 
   <artifactId>maven-assembly-plugin</artifactId>
-  <version>3.2.1-SNAPSHOT</version>
+  <version>3.3.0</version>
   <packaging>maven-plugin</packaging>
 
   <name>Apache Maven Assembly Plugin</name>
@@ -43,7 +43,7 @@ under the License.
     <connection>scm:git:https://gitbox.apache.org/repos/asf/maven-assembly-plugin.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/maven-assembly-plugin.git</developerConnection>
     <url>https://github.com/apache/maven-assembly-plugin/tree/${project.scm.tag}</url>
-    <tag>HEAD</tag>
+    <tag>maven-assembly-plugin-3.3.0</tag>
   </scm>
   <issueManagement>
     <system>jira</system>
@@ -68,7 +68,7 @@ under the License.
     <mavenVersion>3.0</mavenVersion>
     <testOutputToFile>true</testOutputToFile>
     <checkstyle.violation.ignore>RedundantThrows,NewlineAtEndOfFile,ParameterNumber,MethodLength,FileLength,ModifierOrder,JavadocMethod</checkstyle.violation.ignore>
-    <project.build.outputTimestamp>2020-04-07T21:04:00Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2020-04-27T17:26:19Z</project.build.outputTimestamp>
   </properties>
 
   <contributors>
