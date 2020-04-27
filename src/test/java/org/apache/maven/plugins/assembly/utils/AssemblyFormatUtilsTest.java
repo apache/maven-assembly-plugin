@@ -339,6 +339,7 @@ public class AssemblyFormatUtilsTest
         final MavenProject artifactProject = createProject( "group", "artifact", artifactVersion, null );
 
         Artifact artifact = mock( Artifact.class );
+        when( artifact.getGroupId() ).thenReturn( "group" );
         when( artifact.getBaseVersion() ).thenReturn( artifactBaseVersion );
 
         artifactProject.setArtifact( artifact );
@@ -668,12 +669,14 @@ public class AssemblyFormatUtilsTest
     {
 
         Artifact artifactMock = mock( Artifact.class );
+        when( artifactMock.getGroupId() ).thenReturn( artifactProject.getGroupId() );
         when( artifactMock.getClassifier() ).thenReturn( classifier );
         ArtifactHandler artifactHandler = mock( ArtifactHandler.class );
         when( artifactHandler.getExtension() ).thenReturn( extension );
         when( artifactMock.getArtifactHandler() ).thenReturn( artifactHandler );
 
         Artifact moduleArtifactMock = mock( Artifact.class );
+        when( moduleArtifactMock.getGroupId() ).thenReturn( moduleProject.getGroupId() );
 
         final MavenSession session = mock( MavenSession.class );
         when( session.getExecutionProperties() ).thenReturn( System.getProperties() );
@@ -824,7 +827,7 @@ public class AssemblyFormatUtilsTest
     }
 
     @Test
-    public void groupIdPath()
+    public void groupIdPath_artifactProjectInterpolator()
     {
         Artifact artifact = mock( Artifact.class );
         when( artifact.getFile() ).thenReturn( new File( "dir", "artifactId.jar" ) );
@@ -837,4 +840,17 @@ public class AssemblyFormatUtilsTest
         assertEquals( "a/b/c", interpolator.interpolate( "${artifact.groupIdPath}" ) );
         assertEquals( "a/b/c/artifactId.jar", interpolator.interpolate( "${artifact.groupIdPath}/${artifact.file.name}" ) );
     }
+
+    @Test
+    public void groupIdPath_artifactInterpolator()
+    {
+        Artifact artifact = mock( Artifact.class );
+        when( artifact.getGroupId() ).thenReturn( "a.b.c" );
+        when( artifact.getFile() ).thenReturn( new File( "dir", "artifactId.jar" ) );
+                        
+        FixedStringSearchInterpolator interpolator = AssemblyFormatUtils.artifactInterpolator( artifact );
+        assertEquals( "a/b/c", interpolator.interpolate( "${artifact.groupIdPath}" ) );
+        assertEquals( "a/b/c/artifactId.jar", interpolator.interpolate( "${artifact.groupIdPath}/${artifact.file.name}" ) );
+    }
+
 }

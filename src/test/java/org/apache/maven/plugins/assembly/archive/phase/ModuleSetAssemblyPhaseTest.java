@@ -160,6 +160,7 @@ public class ModuleSetAssemblyPhaseTest
         artifactProject.setFile( new File( basedir, "pom.xml" ) );
 
         Artifact artifact = mock( Artifact.class );
+        when( artifact.getGroupId() ).thenReturn( "GROUPID" );
         when( artifact.getArtifactId() ).thenReturn( "artifact" );
 
         artifactProject.setArtifact( artifact );
@@ -202,6 +203,7 @@ public class ModuleSetAssemblyPhaseTest
         artifactProject.setFile( new File( basedir, "pom.xml" ) );
 
         Artifact artifact = mock( Artifact.class );
+        when( artifact.getGroupId() ).thenReturn( "GROUPID" );
         when( artifact.getArtifactId() ).thenReturn( "artifact" );
 
         artifactProject.setArtifact( artifact );
@@ -240,6 +242,7 @@ public class ModuleSetAssemblyPhaseTest
         project.setFile( new File( basedir, "pom.xml" ) );
 
         Artifact artifact = mock( Artifact.class );
+        when( artifact.getGroupId() ).thenReturn( "GROUPID" );
 
         project.setArtifact( artifact );
         DefaultAssemblyArchiverTest.setupInterpolators( configSource, project );
@@ -275,6 +278,7 @@ public class ModuleSetAssemblyPhaseTest
 
         Artifact artifact = mock( Artifact.class );
         final File moduleArtifactFile = temporaryFolder.newFile();
+        when( artifact.getGroupId() ).thenReturn( "GROUPID" );
         when( artifact.getFile() ).thenReturn( moduleArtifactFile );
         module.setArtifact( artifact );
 
@@ -368,6 +372,7 @@ public class ModuleSetAssemblyPhaseTest
         when( configSource.getFinalName() ).thenReturn( "final-name" );
 
         Artifact artifact = mock( Artifact.class );
+        when( artifact.getGroupId() ).thenReturn( "GROUPID" );
         when( artifact.getClassifier() ).thenReturn( "test" );
         final File artifactFile = temporaryFolder.newFile();
         when( artifact.getFile() ).thenReturn( artifactFile );
@@ -457,6 +462,7 @@ public class ModuleSetAssemblyPhaseTest
     {
         Artifact artifact = mock( Artifact.class );
         final File artifactFile = temporaryFolder.newFile();
+        when( artifact.getGroupId() ).thenReturn( "GROUPID" );
         when( artifact.getFile() ).thenReturn( artifactFile );
 
         final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
@@ -528,6 +534,7 @@ public class ModuleSetAssemblyPhaseTest
         throws Exception
     {
         Artifact artifact = mock( Artifact.class );
+        when( artifact.getGroupId() ).thenReturn( "GROUPID" );
         final File artifactFile = temporaryFolder.newFile();
         when( artifact.getFile() ).thenReturn( artifactFile );
 
@@ -580,7 +587,9 @@ public class ModuleSetAssemblyPhaseTest
         final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
         when( configSource.getFinalName() ).thenReturn( "final-name" );
         when( configSource.getProject() ).thenReturn( project );
-        project.setArtifact( mock( Artifact.class ) );
+        Artifact artifact = mock( Artifact.class );
+        when( artifact.getGroupId() ).thenReturn( "GROUPID" );
+        project.setArtifact( artifact );
 
         final Set<MavenProject> projects = singleton( project );
 

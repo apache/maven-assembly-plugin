@@ -35,9 +35,7 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.handler.ArtifactHandler;
 import org.apache.maven.model.Model;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
-import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
 import org.apache.maven.plugins.assembly.archive.DefaultAssemblyArchiverTest;
-import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.model.DependencySet;
 import org.apache.maven.plugins.assembly.utils.TypeConversionUtils;
 import org.apache.maven.project.MavenProject;
@@ -88,11 +86,12 @@ public class AddArtifactTaskTest
 
     @Test
     public void testShouldAddArchiveFileWithoutUnpacking()
-        throws ArchiveCreationException, AssemblyFormattingException, IOException
+        throws Exception
     {
         String outputLocation = "artifact";
 
         Artifact artifact = mock( Artifact.class );
+        when( artifact.getGroupId() ).thenReturn( "GROUPID" );
         File artifactFile = temporaryFolder.newFile();
         when( artifact.getFile() ).thenReturn( artifactFile );
 
@@ -119,7 +118,7 @@ public class AddArtifactTaskTest
 
     @Test
     public void testShouldAddArchiveFileWithDefaultOutputLocation()
-        throws ArchiveCreationException, AssemblyFormattingException, IOException
+        throws Exception
     {
         String artifactId = "myArtifact";
         String version = "1";
@@ -128,6 +127,7 @@ public class AddArtifactTaskTest
 
         Artifact artifact = mock( Artifact.class );
         ArtifactHandler artifactHandler = mock( ArtifactHandler.class );
+        when( artifact.getGroupId() ).thenReturn( "GROUPID" );
         when( artifactHandler.getExtension() ).thenReturn( ext );
         when( artifact.getArtifactHandler() ).thenReturn( artifactHandler );
         File artifactFile = temporaryFolder.newFile();
@@ -176,7 +176,7 @@ public class AddArtifactTaskTest
 
     @Test
     public void testShouldAddArchiveFileWithUnpack()
-        throws ArchiveCreationException, AssemblyFormattingException, IOException
+        throws Exception
     {
         final int originalDirMode = -1;
         final int originalFileMode = -1;
@@ -205,7 +205,7 @@ public class AddArtifactTaskTest
 
     @Test
     public void testShouldAddArchiveFileWithUnpackAndModes()
-        throws ArchiveCreationException, AssemblyFormattingException, IOException
+        throws Exception
     {
         final int directoryMode = TypeConversionUtils.modeToInt( "777", new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) );
         final int fileMode = TypeConversionUtils.modeToInt( "777", new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) );
@@ -242,7 +242,7 @@ public class AddArtifactTaskTest
 
     @Test
     public void testShouldAddArchiveFileWithUnpackIncludesAndExcludes()
-        throws ArchiveCreationException, AssemblyFormattingException, IOException
+        throws Exception
     {
         final int originalDirMode = -1;
         final int originalFileMode = -1;

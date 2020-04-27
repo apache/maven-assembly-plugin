@@ -116,15 +116,13 @@ public final class AssemblyFormatUtils
     {
         if ( moduleArtifact != null )
         {
-            // CHECKSTYLE_OFF: LineLength
-            return FixedStringSearchInterpolator.create( new PrefixedObjectValueSource( "module.", moduleArtifact ),
-                                                         new PrefixedObjectValueSource( "module.",
-                                                                                        moduleArtifact
-                                                                                            .getArtifactHandler() ),
-                                                         new PrefixedObjectValueSource( "module.handler.",
-                                                                                        moduleArtifact
-                                                                                            .getArtifactHandler() ) );
-            // CHECKSTYLE_ON: LineLength
+            final String groupIdPath = moduleArtifact.getGroupId().replace( '.', '/' );
+
+            return FixedStringSearchInterpolator.create(
+                     new MapBasedValueSource( Collections.singletonMap( "module.groupIdPath", groupIdPath ) ),
+                     new PrefixedObjectValueSource( "module.", moduleArtifact ),
+                     new PrefixedObjectValueSource( "module.", moduleArtifact.getArtifactHandler() ),
+                     new PrefixedObjectValueSource( "module.handler.", moduleArtifact.getArtifactHandler() ) );
         }
         else
         {
@@ -160,11 +158,13 @@ public final class AssemblyFormatUtils
     @Nonnull
     public static FixedStringSearchInterpolator artifactInterpolator( @Nonnull final Artifact artifact )
     {
-        return FixedStringSearchInterpolator.create( new PrefixedObjectValueSource( "artifact.", artifact ),
-                                                     new PrefixedObjectValueSource( "artifact.",
-                                                                                    artifact.getArtifactHandler() ),
-                                                     new PrefixedObjectValueSource( "artifact.handler.",
-                                                                                    artifact.getArtifactHandler() ) );
+        final String groupIdPath = artifact.getGroupId().replace( '.', '/' );
+
+        return FixedStringSearchInterpolator.create( 
+                         new MapBasedValueSource( Collections.singletonMap( "artifact.groupIdPath", groupIdPath ) ),
+                         new PrefixedObjectValueSource( "artifact.", artifact ),
+                         new PrefixedObjectValueSource( "artifact.", artifact.getArtifactHandler() ),
+                         new PrefixedObjectValueSource( "artifact.handler.", artifact.getArtifactHandler() ) );
     }
 
 

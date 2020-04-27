@@ -119,6 +119,7 @@ public class AddDependencySetsTaskTest
         when( depArtifact.getArtifactHandler() ).thenReturn( artifactHandler );
         final File newFile = temporaryFolder.newFile();
         when( depArtifact.getFile() ).thenReturn( newFile );
+        when( depArtifact.getGroupId() ).thenReturn( "GROUPID" );
 
         depProject.setArtifact( depArtifact );
 
@@ -301,6 +302,7 @@ public class AddDependencySetsTaskTest
         Artifact artifact = mock( Artifact.class );
         final File artifactFile = temporaryFolder.newFile();
         when( artifact.getFile() ).thenReturn( artifactFile );
+        when( artifact.getGroupId() ).thenReturn( "GROUPID" );
 
         final Archiver archiver = mock( Archiver.class );
         when( archiver.getDestFile() ).thenReturn( new File( "junk" ) );
