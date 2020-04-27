@@ -63,6 +63,6 @@ public interface AssemblyArchiver
      * @throws org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException when the configuration is bad
      */
     File createArchive( Assembly assembly, String fullName, String format, AssemblerConfigurationSource configSource,
-                        boolean recompressZippedFiles, String mergeManifestMode, Date outputTimestamp )
+                        boolean recompressZippedFiles, String mergeManifestMode, Date sourceDateEpoch )
         throws ArchiveCreationException, AssemblyFormattingException, InvalidAssemblerConfigurationException;
 }
