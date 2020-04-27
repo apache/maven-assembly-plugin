@@ -205,6 +205,7 @@ public class AddDependencySetsTaskTest
         final File file = new File( "dep-artifact.jar" );
 
         Artifact depArtifact = mock( Artifact.class );
+        when( depArtifact.getGroupId() ).thenReturn( "GROUPID" );
         when( depArtifact.getArtifactId() ).thenReturn( aid );
         when( depArtifact.getBaseVersion() ).thenReturn( version );
         when( depArtifact.getFile() ).thenReturn( file );
@@ -306,17 +307,14 @@ public class AddDependencySetsTaskTest
         when( archiver.getOverrideDirectoryMode() ).thenReturn( 0222 );
         when( archiver.getOverrideFileMode() ).thenReturn( 0222 );
 
-        if ( unpack )
-        {
-            
-        }
-        else
+        if ( !unpack )
         {
             when( configSource.getProject() ).thenReturn( project );
         }
 
 
         final MavenProject depProject = new MavenProject( new Model() );
+        depProject.setGroupId( "GROUPID" );
 
         ProjectBuildingResult pbr = mock( ProjectBuildingResult.class );
         when( pbr.getProject() ).thenReturn( depProject );
@@ -491,6 +489,7 @@ public class AddDependencySetsTaskTest
         dependencySet.setUnpackOptions( unpackOptions );
 
         final MavenProject project = new MavenProject( new Model() );
+        project.setGroupId( "GROUPID" );
 
         ProjectBuildingRequest pbReq  = mock( ProjectBuildingRequest.class );
         ProjectBuildingResult pbRes = mock( ProjectBuildingResult.class );

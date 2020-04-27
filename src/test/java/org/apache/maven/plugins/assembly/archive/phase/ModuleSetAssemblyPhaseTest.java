@@ -156,6 +156,7 @@ public class ModuleSetAssemblyPhaseTest
         final File basedir = temporaryFolder.getRoot();
 
         final MavenProject artifactProject = new MavenProject( new Model() );
+        artifactProject.setGroupId( "GROUPID" );
         artifactProject.setFile( new File( basedir, "pom.xml" ) );
 
         Artifact artifact = mock( Artifact.class );
@@ -194,6 +195,7 @@ public class ModuleSetAssemblyPhaseTest
         sources.setIncludeModuleDirectory( true );
 
         final MavenProject artifactProject = new MavenProject( new Model() );
+        artifactProject.setGroupId( "GROUPID" );
 
         final File basedir = temporaryFolder.getRoot();
 
@@ -234,7 +236,7 @@ public class ModuleSetAssemblyPhaseTest
         final MavenProject project = new MavenProject( model );
 
         final File basedir = temporaryFolder.getRoot();
-
+        project.setGroupId( "GROUPID" );
         project.setFile( new File( basedir, "pom.xml" ) );
 
         Artifact artifact = mock( Artifact.class );

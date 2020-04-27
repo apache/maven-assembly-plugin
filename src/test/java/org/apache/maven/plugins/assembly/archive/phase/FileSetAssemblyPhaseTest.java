@@ -80,6 +80,7 @@ public class FileSetAssemblyPhaseTest
         assembly.addFileSet( fs );
 
         final MavenProject project = new MavenProject( new Model() );
+        project.setGroupId( "GROUPID" );
 
         final int dirMode = Integer.parseInt( "777", 8 );
         final int fileMode = Integer.parseInt( "777", 8 );

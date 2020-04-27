@@ -151,6 +151,7 @@ public class AddArtifactTaskTest
         model.setVersion( version );
 
         MavenProject project = new MavenProject( model );
+        project.setGroupId( "GROUPID" );
         task.setProject( project );
 
         task.execute( archiver, configSource );

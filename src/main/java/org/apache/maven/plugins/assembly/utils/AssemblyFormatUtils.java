@@ -19,6 +19,16 @@ package org.apache.maven.plugins.assembly.utils;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Properties;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
@@ -27,19 +37,12 @@ import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.utils.Os;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
+import org.codehaus.plexus.interpolation.fixed.MapBasedValueSource;
 import org.codehaus.plexus.interpolation.fixed.PrefixedObjectValueSource;
 import org.codehaus.plexus.interpolation.fixed.PrefixedPropertiesValueSource;
 import org.codehaus.plexus.interpolation.fixed.PropertiesBasedValueSource;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.StringUtils;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Properties;
 
 /**
  *
@@ -141,18 +144,17 @@ public final class AssemblyFormatUtils
                 vs = new PrefixedObjectValueSource( "artifact.", artifactProject.getArtifact() );
             }
 
+            final String groupIdPath = artifactProject.getGroupId().replace( '.', '/' );
+
             return FixedStringSearchInterpolator.createWithPermittedNulls(
+                new MapBasedValueSource( Collections.singletonMap( "artifact.groupIdPath", groupIdPath ) ),
                 new PrefixedObjectValueSource( "artifact.", artifactProject ),
                 new PrefixedPropertiesValueSource( "artifact.properties.", artifactProject.getProperties() ), vs );
-
-
         }
         else
         {
             return FixedStringSearchInterpolator.empty();
         }
-
-
     }
 
     @Nonnull

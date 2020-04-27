@@ -26,6 +26,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.File;
 import java.util.Properties;
 
 import org.apache.maven.artifact.Artifact;
@@ -38,6 +39,7 @@ import org.apache.maven.plugins.assembly.archive.DefaultAssemblyArchiverTest;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -821,4 +823,18 @@ public class AssemblyFormatUtilsTest
         assertTrue( AssemblyFormatUtils.isUnixRootReference( "/etc/home" ) );
     }
 
+    @Test
+    public void groupIdPath()
+    {
+        Artifact artifact = mock( Artifact.class );
+        when( artifact.getFile() ).thenReturn( new File( "dir", "artifactId.jar" ) );
+                        
+        MavenProject project = mock( MavenProject.class );
+        when( project.getGroupId() ).thenReturn( "a.b.c" );
+        when( project.getArtifact() ).thenReturn( artifact );
+        
+        FixedStringSearchInterpolator interpolator = AssemblyFormatUtils.artifactProjectInterpolator( project );
+        assertEquals( "a/b/c", interpolator.interpolate( "${artifact.groupIdPath}" ) );
+        assertEquals( "a/b/c/artifactId.jar", interpolator.interpolate( "${artifact.groupIdPath}/${artifact.file.name}" ) );
+    }
 }

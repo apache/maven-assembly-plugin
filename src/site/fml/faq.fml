@@ -176,6 +176,8 @@ under the License.
               <li><code>${artifact.baseVersion}</code> :  The artifact base version (For a SNAPSHOT it will be always -SNAPSHOT and not its timestamp even if you didn't built it yourself).</li>
               <li><code>${artifact.classifier}</code> :  The artifact classifier.</li>
               <li><code>${artifact.scope}</code> :  The artifact scope.</li>
+              <li><code>${artifact.groupIdPath}</code> :  The groupId of the artifact as path</li>
+              <li><code>${artifact.file.name}</code> :  The name of the file attached to this artifact</li>
               <li>...</li>
             </ul>
             You can use <code>${module.XXXXX}</code> when using it for your project modules artifacts.

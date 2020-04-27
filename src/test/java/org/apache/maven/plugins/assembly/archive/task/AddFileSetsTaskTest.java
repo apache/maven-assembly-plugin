@@ -136,6 +136,7 @@ public class AddFileSetsTaskTest
         final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
 
         final MavenProject project = new MavenProject( new Model() );
+        project.setGroupId( "GROUPID" );
         project.setFile( new File( basedir, "pom.xml" ) );
 
         DefaultAssemblyArchiverTest.setupInterpolators( configSource, project );
@@ -178,6 +179,7 @@ public class AddFileSetsTaskTest
         final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
 
         final MavenProject project = new MavenProject( new Model() );
+        project.setGroupId( "GROUPID" );
         DefaultAssemblyArchiverTest.setupInterpolators( configSource, project );
 
         final AddFileSetsTask task = new AddFileSetsTask( new ArrayList<FileSet>() );
@@ -212,6 +214,8 @@ public class AddFileSetsTaskTest
         when( archiver.getOverrideFileMode() ).thenReturn( -1 );
 
         final MavenProject project = new MavenProject( new Model() );
+        project.setGroupId( "GROUPID" );
+
         DefaultAssemblyArchiverTest.setupInterpolators( configSource, project );
 
         final AddFileSetsTask task = new AddFileSetsTask( new ArrayList<FileSet>() );
