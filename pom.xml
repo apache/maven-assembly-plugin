@@ -214,9 +214,9 @@ under the License.
     </dependency>
     <!-- need this because JDOM incorrectly declares its own dependencies -->
     <dependency>
-			<groupId>jaxen</groupId>
-			<artifactId>jaxen</artifactId>
-			<version>1.2.0</version>
+      <groupId>jaxen</groupId>
+      <artifactId>jaxen</artifactId>
+      <version>1.2.0</version>
 		</dependency>    
     
     <dependency>
