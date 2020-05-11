@@ -190,8 +190,8 @@ public class DefaultAssemblyArchiver
         catch ( final ArchiverException | IOException e )
         {
             throw new ArchiveCreationException(
-                    "Error creating assembly archive " + assembly.getId() + ": " + e.getMessage() +
-                            "Error caused by: " + finalName + " destination file: " + filename , e );
+                    "Error creating assembly archive " + assembly.getId() + ": " + e.getMessage()
+                            + "Error caused by: " + finalName + " destination file: " + filename , e );
         }
         catch ( final NoSuchArchiverException e )
         {

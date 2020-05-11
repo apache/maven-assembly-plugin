@@ -43,6 +43,7 @@ import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
 import org.apache.maven.plugins.assembly.archive.phase.AssemblyArchiverPhase;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.mojos.AbstractAssemblyMojo;
+import org.apache.maven.plugins.assembly.testutils.PojoConfigSource;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.DefaultPlexusContainer;
 import org.codehaus.plexus.PlexusContainer;
@@ -51,6 +52,7 @@ import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.diags.NoOpArchiver;
 import org.codehaus.plexus.archiver.manager.ArchiverManager;
+import org.codehaus.plexus.archiver.manager.NoSuchArchiverException;
 import org.codehaus.plexus.archiver.tar.TarArchiver;
 import org.codehaus.plexus.archiver.tar.TarLongFileMode;
 import org.codehaus.plexus.archiver.war.WarArchiver;
@@ -64,6 +66,8 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import javax.print.attribute.standard.DateTimeAtCreation;
 
 @RunWith( MockitoJUnitRunner.class )
 public class DefaultAssemblyArchiverTest
@@ -316,6 +320,52 @@ public class DefaultAssemblyArchiverTest
         verify( configSource, times( 2 ) ).isUpdateOnly();
         
         verify( archiverManager ).getArchiver( "zip" );
+    }
+
+    @Test
+    public void testCreateArchiver_ShouldFailOnCorruptZip() throws NoSuchArchiverException
+    {
+        final ZipArchiver archiver = new ZipArchiver();
+
+        // make assembly that contains this file
+
+
+        final ArchiverManager archiverManager = mock( ArchiverManager.class );
+        when( archiverManager.getArchiver( "zip" ) ).thenReturn( archiver );
+
+        final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
+        when( configSource.getOverrideGid() ).thenReturn( 0 );
+        when( configSource.getOverrideGroupName() ).thenReturn( "root" );
+        when( configSource.getOverrideUid() ).thenReturn( 0 );
+        when( configSource.getOverrideUserName() ).thenReturn( "root" );
+        when( configSource.getWorkingDirectory() ).thenReturn( new File( "." ) );
+        when( configSource.isIgnorePermissions() ).thenReturn( true );
+
+        when( configSource.isIgnoreDirFormatExtensions()).thenReturn( false );
+        when( configSource.getTemporaryRootDirectory()).thenReturn(  );
+
+        String errorMessage = "";
+        DefaultAssemblyArchiver subject = new DefaultAssemblyArchiver();
+        final Assembly assembly = new Assembly();
+        assembly.setId( "id" );
+
+        try
+        {
+            subject.createArchive(assembly, "corruptZIP", "zip", configSource, false, null, null );
+        }
+        catch(ArchiveCreationException e)
+        {
+            errorMessage = e.getMessage();
+        }
+        catch ( Exception e )
+        {
+
+        }
+
+        assertEquals("Failed to create assembly: Error creating assembly archive base:"
+                + "archive is not a ZIP archive -> [Help 1] Error caused by: corruptZIP.zip "
+                + "destination file: corruptZIP.zip", errorMessage);
+
     }
 
     @Test
