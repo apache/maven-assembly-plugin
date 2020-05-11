@@ -153,9 +153,11 @@ public class DefaultAssemblyArchiver
 
         final File destFile = new File( outputDirectory, filename );
 
+        String finalName = "";
+
         try
         {
-            final String finalName = configSource.getFinalName();
+            finalName = configSource.getFinalName();
             final String specifiedBasedir = assembly.getBaseDirectory();
 
             String basedir = finalName;
@@ -188,7 +190,8 @@ public class DefaultAssemblyArchiver
         catch ( final ArchiverException | IOException e )
         {
             throw new ArchiveCreationException(
-                "Error creating assembly archive " + assembly.getId() + ": " + e.getMessage(), e );
+                    "Error creating assembly archive " + assembly.getId() + ": " + e.getMessage() +
+                            "Error caused by: " + finalName + " destination file: " + filename , e );
         }
         catch ( final NoSuchArchiverException e )
         {
