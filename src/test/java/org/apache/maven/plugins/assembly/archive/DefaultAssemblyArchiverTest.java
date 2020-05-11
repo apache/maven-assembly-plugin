@@ -342,7 +342,10 @@ public class DefaultAssemblyArchiverTest
         when( configSource.isIgnorePermissions() ).thenReturn( true );
 
         when( configSource.isIgnoreDirFormatExtensions()).thenReturn( false );
-        when( configSource.getTemporaryRootDirectory()).thenReturn(  );
+        when( configSource.getOutputDirectory()).thenReturn( new File(".") );
+
+        File tempdir = new File("abc");
+        when( configSource.getTemporaryRootDirectory()).thenReturn( tempdir );
 
         String errorMessage = "";
         DefaultAssemblyArchiver subject = new DefaultAssemblyArchiver();
