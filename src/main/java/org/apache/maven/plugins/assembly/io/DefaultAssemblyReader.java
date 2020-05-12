@@ -68,9 +68,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- *
- */
 @org.codehaus.plexus.component.annotations.Component( role = AssemblyReader.class )
 public class DefaultAssemblyReader
     extends AbstractLogEnabled
@@ -79,12 +76,11 @@ public class DefaultAssemblyReader
 
     public static FixedStringSearchInterpolator createProjectInterpolator( MavenProject project )
     {
-        // CHECKSTYLE_OFF: LineLength
-        return FixedStringSearchInterpolator.create( new PrefixedPropertiesValueSource( InterpolationConstants.PROJECT_PROPERTIES_PREFIXES,
-                                                                                        project.getProperties(), true ),
-                                                     new PrefixedObjectValueSource( InterpolationConstants.PROJECT_PREFIXES,
-                                                                                    project, true ) );
-        // CHECKSTYLE_ON: LineLength
+        PrefixedPropertiesValueSource source1 = new PrefixedPropertiesValueSource(
+                InterpolationConstants.PROJECT_PROPERTIES_PREFIXES, project.getProperties(), true );
+        PrefixedObjectValueSource source2 = new PrefixedObjectValueSource(
+                InterpolationConstants.PROJECT_PREFIXES, project, true );
+        return FixedStringSearchInterpolator.create( source1, source2 );
     }
 
     @Override
@@ -127,9 +123,8 @@ public class DefaultAssemblyReader
 
         if ( ( descriptorSourceDirectory != null ) && descriptorSourceDirectory.isDirectory() )
         {
-            // CHECKSTYLE_OFF: LineLength
-            locator.setStrategies( Collections.<LocatorStrategy>singletonList( new RelativeFileLocatorStrategy( descriptorSourceDirectory ) ) );
-            // CHECKSTYLE_ON: LineLength
+            RelativeFileLocatorStrategy strategy = new RelativeFileLocatorStrategy( descriptorSourceDirectory );
+            locator.setStrategies( Collections.<LocatorStrategy>singletonList( strategy ) );
 
             final DirectoryScanner scanner = new DirectoryScanner();
             scanner.setBasedir( descriptorSourceDirectory );
@@ -327,9 +322,6 @@ public class DefaultAssemblyReader
             debugPrintAssembly( "After assembly is interpolated:", assembly );
 
             AssemblyInterpolator.checkErrors( AssemblyId.createAssemblyId( assembly ), is, getLogger() );
-
-            reader.close();
-            reader = null;
         }
         catch ( final IOException | XmlPullParserException e )
         {
