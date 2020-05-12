@@ -60,6 +60,7 @@ import org.codehaus.plexus.archiver.zip.ZipArchiver;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -163,6 +164,58 @@ public class DefaultAssemblyArchiverTest
         verify( archiver ).setOverrideGroupName( "root" );
         
         verify( archiverManager ).getArchiver( "zip" );
+    }
+
+    @Test
+    public void testCreateArchiveCorruptZip()
+            throws Exception
+    {
+        Archiver archiver = mock( Archiver.class );
+
+        final ArchiverManager archiverManager = mock( ArchiverManager.class );
+        when( archiverManager.getArchiver( "zip" ) ).thenReturn( archiver );
+
+        final AssemblyArchiverPhase phase = mock( AssemblyArchiverPhase.class );
+
+        final File outDir = temporaryFolder.newFolder( "out" );
+
+        final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
+        when( configSource.getTemporaryRootDirectory() ).thenReturn( new File ( temporaryFolder.getRoot(), "temp" ) );
+        when( configSource.getOverrideUid() ).thenReturn( 0 );
+        when( configSource.getOverrideUserName() ).thenReturn( "root" );
+        when( configSource.getOverrideGid() ).thenReturn( 0 );
+        when( configSource.getOverrideGroupName() ).thenReturn( "root" );
+        when( configSource.getOutputDirectory() ).thenReturn( outDir );
+        when( configSource.getFinalName() ).thenReturn( "corruptZipFinalName" );
+        when( configSource.getWorkingDirectory() ).thenReturn(  new File( "src/test/resources/corruptZIP.zip" ) );
+
+        final Assembly assembly = new Assembly();
+        assembly.setId( "id" );
+
+        final DefaultAssemblyArchiver subject = createSubject( archiverManager, Collections.singletonList( phase ), null );
+
+       // subject.createArchive( assembly, "full-name", "zip", configSource, false, null, null );
+
+        String errorMessage = "";
+        try
+        {
+            subject.createArchive(assembly, "corruptZIP", "zip", configSource, false, null, null );
+        }
+        catch(ArchiveCreationException e)
+        {
+            errorMessage = e.getMessage();
+        }
+        catch ( Exception e )
+        {
+            errorMessage = "Some other error";
+        }
+        Assert.fail();
+
+        assertEquals("Failed to create assembly: Error creating assembly archive base:"
+                + "archive is not a ZIP archive -> [Help 1] Error caused by: corruptZIP.zip "
+                + "destination file: corruptZIP.zip", errorMessage);
+
+
     }
 
     @Test
@@ -321,56 +374,7 @@ public class DefaultAssemblyArchiverTest
         
         verify( archiverManager ).getArchiver( "zip" );
     }
-/*
-    @Test
-    public void testCreateArchiver_ShouldFailOnCorruptZip() throws NoSuchArchiverException
-    {
-        final ZipArchiver archiver = new ZipArchiver();
 
-        // make assembly that contains this file
-
-
-        final ArchiverManager archiverManager = mock( ArchiverManager.class );
-        when( archiverManager.getArchiver( "zip" ) ).thenReturn( archiver );
-
-        final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
-        when( configSource.getOverrideGid() ).thenReturn( 0 );
-        when( configSource.getOverrideGroupName() ).thenReturn( "root" );
-        when( configSource.getOverrideUid() ).thenReturn( 0 );
-        when( configSource.getOverrideUserName() ).thenReturn( "root" );
-        when( configSource.getWorkingDirectory() ).thenReturn( new File( "." ) );
-        when( configSource.isIgnorePermissions() ).thenReturn( true );
-
-        when( configSource.isIgnoreDirFormatExtensions()).thenReturn( false );
-        when( configSource.getOutputDirectory()).thenReturn( new File(".") );
-
-        File tempdir = new File("abc");
-        when( configSource.getTemporaryRootDirectory()).thenReturn( tempdir );
-
-        String errorMessage = "";
-        DefaultAssemblyArchiver subject = new DefaultAssemblyArchiver();
-        final Assembly assembly = new Assembly();
-        assembly.setId( "id" );
-
-        try
-        {
-            subject.createArchive(assembly, "corruptZIP", "zip", configSource, false, null, null );
-        }
-        catch(ArchiveCreationException e)
-        {
-            errorMessage = e.getMessage();
-        }
-        catch ( Exception e )
-        {
-
-        }
-
-        assertEquals("Failed to create assembly: Error creating assembly archive base:"
-                + "archive is not a ZIP archive -> [Help 1] Error caused by: corruptZIP.zip "
-                + "destination file: corruptZIP.zip", errorMessage);
-
-    }
-*/
     @Test
     public void testCreateWarArchiver_ShouldDisableIgnoreWebxmlOption()
         throws Exception
