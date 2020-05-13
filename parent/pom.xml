@@ -29,7 +29,7 @@
       <groupId>com.mycompany.app</groupId>
       <artifactId>my-app</artifactId>
       <version>1.0</version>
-      <systemPath>D:/GoogleCode/TestMvnProjects/my-app/target/my-app-1.0-SNAPSHOT.jar</systemPath>
+      <systemPath>D:/GoogleCode/TestMvnProjects/maven-assembly-plugin/my-app/target/my-app-1.0-SNAPSHOT/my-app-1.0-SNAPSHOT.jar</systemPath>
       <scope>system</scope>
     </dependency>
   </dependencies>
@@ -82,7 +82,7 @@
           <version>3.3.0</version>
           <configuration>
             <descriptorRefs>
-              <descriptorRef>jar-with-dependencies</descriptorRef>
+              <descriptorRef>bin</descriptorRef>
             </descriptorRefs>
           </configuration>
           <executions>
