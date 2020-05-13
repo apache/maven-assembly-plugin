@@ -73,9 +73,9 @@
           <artifactId>maven-assembly-plugin</artifactId>
           <version>3.3.0</version>
           <configuration>
-            <descriptorRes>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-            </descriptorRes>
+            <descriptorRefs>
+            <descriptorRef>src</descriptorRef>
+            </descriptorRefs>
           </configuration>
           <executions>
             <execution>
