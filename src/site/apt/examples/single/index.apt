@@ -28,7 +28,7 @@
 
 Single Project Examples
 
-  A Single Project is a project whose assemblies does not use \<moduleSets\>.
+  A Single Project is a project whose assemblies do not use \<moduleSets\>.
 
   The examples below may help you in creating assemblies for your single
   projects.
