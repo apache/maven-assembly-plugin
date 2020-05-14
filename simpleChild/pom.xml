@@ -6,36 +6,35 @@
   <packaging>jar</packaging>
   <version>1.0-SNAPSHOT</version>
   <name>simpleChild</name>
-  <url>http://maven.apache.org</url>
+  
   <dependencies>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
+      <groupId>jdom</groupId>
+      <artifactId>jdom</artifactId>
+      <version>1.0</version>
     </dependency>
     <dependency>
-      <groupId>com.mycompany.app</groupId>
-      <artifactId>simpleChild</artifactId>
+      <groupId>com.example</groupId>
+      <artifactId>foo</artifactId>
       <version>1.0</version>
-      <systemPath>C:\Users\ianla\Maven\maven-assembly-plugin\simpleChild\ex.zip</systemPath>
-      <scope>system</scope>
       <type>zip</type>
-      <classifier>bundle</classifier>
+      <scope>runtime</scope>
     </dependency>
   </dependencies>
+  
   <build>
     <plugins>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <version>3.3.0</version>
         <configuration>
-          <!--<descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>-->
+  <descriptorRefs>
+    <descriptorRef>jar-with-dependencies</descriptorRef>
+  </descriptorRefs>
+          <!--
           <descriptors>
             <descriptor>src/dep.xml</descriptor>
-          </descriptors>
+          </descriptors> -->
         </configuration>
         <executions>
           <execution>
