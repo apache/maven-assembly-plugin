@@ -2,10 +2,10 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.mycompany.app</groupId>
-  <artifactId>simpleChild</artifactId>
+  <artifactId>simpleParent</artifactId>
   <packaging>jar</packaging>
   <version>1.0-SNAPSHOT</version>
-  <name>simpleChild</name>
+  <name>simpleParent</name>
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
@@ -17,9 +17,17 @@
     <dependency>
       <groupId>com.mycompany.app</groupId>
       <artifactId>simpleChild</artifactId>
-      <version>1.0</version>
-      <systemPath>C:\Users\ianla\Maven\maven-assembly-plugin\simpleChild\ex.zip</systemPath>
-      <scope>system</scope>
+      <version>1.0-SNAPSHOT</version>
+      <systemPath>${project.basedir}\src\simpleChild-1.0-SNAPSHOT-jar-with-dependencies.jar</systemPath>
+      <scope>compile</scope>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>com.mycompany.app</groupId>
+      <artifactId>simpleChild</artifactId>
+      <version>1.0-SNAPSHOT</version>
+      <systemPath>${project.basedir}\src\ex.zip</systemPath>
+      <scope>compile</scope>
       <type>zip</type>
       <classifier>bundle</classifier>
     </dependency>
@@ -30,12 +38,12 @@
         <artifactId>maven-assembly-plugin</artifactId>
         <version>3.3.0</version>
         <configuration>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-         <!-- <descriptors>
+          <!-- <descriptorRefs>
+            <descriptorRef>src</descriptorRef>
+          </descriptorRefs> -->
+          <descriptors>
             <descriptor>src/dep.xml</descriptor>
-          </descriptors> -->
+          </descriptors>
         </configuration>
         <executions>
           <execution>

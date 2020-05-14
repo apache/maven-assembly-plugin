@@ -3,8 +3,6 @@
           xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
     <id>src</id>
     <formats>
-        <format>tar.gz</format>
-        <format>tar.bz2</format>
         <format>zip</format>
     </formats>
     <fileSets>
@@ -15,7 +13,7 @@
                 <include>LICENSE*</include>
                 <include>NOTICE*</include>
                 <include>pom.xml</include>
-                <include>ex.txt</include>
+                <include>ex.zip</include>
             </includes>
             <useDefaultExcludes>true</useDefaultExcludes>
         </fileSet>
@@ -24,4 +22,17 @@
             <useDefaultExcludes>true</useDefaultExcludes>
         </fileSet>
     </fileSets>
+
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>simpleChild/target</outputDirectory>
+            <includes>
+                <include>README*</include>
+                <include>LICENSE*</include>
+                <include>NOTICE*</include>
+                <include>pom.xml</include>
+                <include>../../ex.zip</include>
+            </includes>
+        </dependencySet>
+    </dependencySets>
 </assembly>
