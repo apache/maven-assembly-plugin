@@ -501,9 +501,10 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
         boolean warnedAboutMainProjectArtifact = false;
         for ( final Assembly assembly : assemblies )
         {
+            String fullName = "";
             try
             {
-                final String fullName = AssemblyFormatUtils.getDistributionName( assembly, this );
+                fullName = AssemblyFormatUtils.getDistributionName( assembly, this );
 
                 List<String> effectiveFormats = formats;
                 if ( effectiveFormats == null || effectiveFormats.size() == 0 )
@@ -515,12 +516,12 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
                     throw new MojoFailureException(
                             "No formats specified in the execution parameters or the assembly descriptor." );
                 }
-
+                System.out.println( "519" );
                 for ( final String format : effectiveFormats )
                 {
                     final File destFile = assemblyArchiver.createArchive( assembly, fullName, format, this,
                             isRecompressZippedFiles(), getMergeManifestMode(), outputDate );
-
+                    System.out.println( "524" );
                     final MavenProject project = getProject();
                     final String type = project.getArtifact().getType();
 
@@ -574,7 +575,8 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
             }
             catch ( final ArchiveCreationException | AssemblyFormattingException e )
             {
-                throw new MojoExecutionException( "Failed to create assembly: " + e.getMessage(), e );
+                throw new MojoExecutionException( "Failed to create assembly: " + e.getMessage()
+                        + " Full name is: " +  fullName, e );
             }
             catch ( final InvalidAssemblerConfigurationException e )
             {

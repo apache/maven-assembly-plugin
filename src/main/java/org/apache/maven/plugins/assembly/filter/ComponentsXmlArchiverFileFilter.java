@@ -137,9 +137,16 @@ public class ComponentsXmlArchiverFileFilter
         // runArchiveFinalizers() is called before regular resources are added...
         // which is done because the manifest needs to be added first, and the
         // manifest-creation component is a finalizer in the assembly plugin...
-        for ( final ResourceIterator it = archiver.getResources(); it.hasNext(); )
+        try
         {
-            it.next();
+            for ( final ResourceIterator it = archiver.getResources(); it.hasNext(); )
+            {
+                it.next();
+            }
+        }
+        catch ( ArchiverException e )
+        {
+            throw new ArchiverException( "Failed on finalizing archive creation " + e.getMessage() );
         }
 
         try
