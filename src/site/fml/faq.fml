@@ -158,7 +158,7 @@ under the License.
     </faq>
     <faq id="outputFileNameMapping">
       <question>
-        Which properties can be used in the outputFileNameMapping parameter.
+        Which properties can be used in the outputFileNameMapping parameter?
       </question>
       <answer>
         <p>
