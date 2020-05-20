@@ -101,7 +101,7 @@ Advanced Assembly-Descriptor Topics
   In this example, we'll configure a <<<dependencySet>>> so it only includes
   those <<<war>>> dependencies.
 
----
++---
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
@@ -115,7 +115,7 @@ Advanced Assembly-Descriptor Topics
   </dependencySets>
   [...]
 </assembly>
----
++---
 
 *** GOTCHA!
 
@@ -136,7 +136,7 @@ Advanced Assembly-Descriptor Topics
   filter out any source-jar files (they'll be marked with a <<<sources>>>
   classifier) from the binary jars.
 
----
++---
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
@@ -153,7 +153,7 @@ Advanced Assembly-Descriptor Topics
   </dependencySets>
   [...]
 </assembly>
----
++---
 
 * Including Subversion Metadata Directories in a FileSet
 
@@ -181,7 +181,7 @@ Advanced Assembly-Descriptor Topics
   directories, developers should be able to download the assembly artifact and
   expand it, then simply type <<<svn up>>>.
 
----
++---
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
@@ -196,7 +196,7 @@ Advanced Assembly-Descriptor Topics
   </fileSets>
   [...]
 </assembly>
----
++---
 
   <NOTE: You'll notice that we're excluding all target directories; these are a
   form of "calculated" and otherwise transient data, and generally shouldn't be
@@ -224,7 +224,7 @@ Advanced Assembly-Descriptor Topics
   a Java package name - we want to make sure the files in this directory are
   included in the assembly.
 
----
++---
 <assembly>
   [...]
   <fileSets>
@@ -239,7 +239,7 @@ Advanced Assembly-Descriptor Topics
   </fileSets>
   [...]
 </assembly>
----
++---
 
   The above <<<fileSet>>> uses a somewhat obscure feature of regular
   expressions called <negative lookahead>, which means our exclude pattern
@@ -269,7 +269,7 @@ Advanced Assembly-Descriptor Topics
   project's open source license language, in order to be compliant with our
   software foundation's policies.
 
----
++---
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
@@ -286,7 +286,7 @@ Advanced Assembly-Descriptor Topics
   </fileSets>
   [...]
 </assembly>
----
++---
 
   If a developer inadvertently removes the LICENSE.txt from the project
   directory, the assembly plugin should refuse to build this assembly.
@@ -317,7 +317,7 @@ Advanced Assembly-Descriptor Topics
   <<<maven-core>>> project, which means we shouldn't use the <<<artifactId>>> as
   part of the assembly root directory.
 
----
++---
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
@@ -325,13 +325,13 @@ Advanced Assembly-Descriptor Topics
   <baseDirectory>maven</baseDirectory>
   [...]
 </assembly>
----
++---
 
   Now, imagine that the distribution assembly were created in the top-level
   <<<maven>>> project. Now, we <can> use the <<<artifactId>>>, and probably
   should, just to minimize the maintenance of these files.
 
----
++---
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
@@ -339,7 +339,7 @@ Advanced Assembly-Descriptor Topics
   <baseDirectory>${artifactId}</baseDirectory>
   [...]
 </assembly>
----
++---
 
 * Advanced ModuleSet Topics
 

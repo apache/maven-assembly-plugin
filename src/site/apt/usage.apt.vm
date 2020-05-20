@@ -29,10 +29,10 @@
 Usage
 
   To handle filtering this version of Maven Assembly Plugin uses
-  {{{http://maven.apache.org/shared/maven-filtering/index.html}Maven Filtering}} ${mavenFilteringVersion}.
+  {{{/shared/maven-filtering/index.html}Maven Filtering}} ${mavenFilteringVersion}.
 
   To handle archiving this version of Maven Assembly Plugin uses
-  {{{http://maven.apache.org/shared/maven-archiver/index.html}Maven Archiver}} ${mavenArchiverVersion}.
+  {{{/shared/maven-archiver/index.html}Maven Archiver}} ${mavenArchiverVersion}.
 
   This document is intended to provide instructions for using the
   maven-assembly-plugin. In order for this discussion to be useful, it's

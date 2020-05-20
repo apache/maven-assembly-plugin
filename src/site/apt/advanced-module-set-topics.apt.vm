@@ -75,7 +75,7 @@ Advanced Module-Set Topics
 
   We can select <<just>> the child1 module using the following <<<moduleSet>>>:
 
----
++---
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
@@ -90,7 +90,7 @@ Advanced Module-Set Topics
   </moduleSets>
   [...]
 </assembly>
----
++---
 
   <NOTE: It's important to remember that, if the child1 project itself had
   children, those children would not be included just because the child1 project
@@ -159,7 +159,7 @@ ${module.groupId}-${module.artifactId}-${module.version}.${module.extension}
   for each module selected by the moduleSet. This is useful to provide a source
   reference for your project to users.
 
----
++---
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
@@ -178,7 +178,7 @@ ${module.groupId}-${module.artifactId}-${module.version}.${module.extension}
     </moduleSet>
   </moduleSets>
 </assembly>
----
++---
 
 ** Example: Including a buildable project directory for each selected module
 
@@ -187,7 +187,7 @@ ${module.groupId}-${module.artifactId}-${module.version}.${module.extension}
   give your users the chance to tinker with your project, then build it on their
   own.
 
----
++---
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
@@ -208,7 +208,7 @@ ${module.groupId}-${module.artifactId}-${module.version}.${module.extension}
     </moduleSet>
   </moduleSets>
 </assembly>
----
++---
 
   <NOTE: We exclude the target directory, since this is assumed to be temporary
   storage for files produced during the course of a Maven build. Permanent
@@ -231,7 +231,7 @@ ${module.groupId}-${module.artifactId}-${module.version}.${module.extension}
   consolidated source directory containing all of the source files from your
   multimodule hierarchy.
 
----
++---
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
@@ -254,7 +254,7 @@ ${module.groupId}-${module.artifactId}-${module.version}.${module.extension}
     </moduleSet>
   </moduleSets>
 </assembly>
----
++---
 
 ** Excluding Modules of Modules from Direct Assembly Processing
 
@@ -336,7 +336,7 @@ ${module.groupId}-${module.artifactId}-${module.version}.${module.extension}
   To accomplish this restructuring, simply use the
   <<<excludeSubModuleDirectories>>> flag, as follows:
 
----
++---
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
@@ -358,7 +358,7 @@ ${module.groupId}-${module.artifactId}-${module.version}.${module.extension}
     </moduleSet>
   </moduleSets>
 </assembly>
----
++---
 
 * {Including Module Binaries}
 
@@ -418,7 +418,7 @@ ${module.groupId}-${module.artifactId}-${module.version}.${module.extension}
   attached artifact in that module, we'll need to extract that artifact instead
   of the main project artifact.
 
----
++---
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
@@ -437,7 +437,7 @@ ${module.groupId}-${module.artifactId}-${module.version}.${module.extension}
     [...]
   </moduleSets>
 </assembly>
----
++---
 
 ** Excluding Module Dependencies
 
@@ -473,7 +473,7 @@ ${module.groupId}-${module.artifactId}-${module.version}.${module.extension}
   contains all of the module dependencies, so it's not necessary to include this
   module's dependencies in the current assembly.
 
----
++---
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
@@ -492,7 +492,7 @@ ${module.groupId}-${module.artifactId}-${module.version}.${module.extension}
     [...]
   </moduleSets>
 </assembly>
----
++---
 
   <NOTE: The> <<<binaries>>> <section still accommodates direct> <<<\<includes/\>>>>
   <and> <<<\<excludes/\>>>> <subsections, for specifying which module-dependencies

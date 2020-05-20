@@ -45,7 +45,7 @@ Including and Excluding Artifacts
 
   Your pom might include something like:
 
------
++-----
     <dependencies>
         <dependency>
             <groupId>YOUR GROUP</groupId>
@@ -54,13 +54,13 @@ Including and Excluding Artifacts
             <classifier>bin</classifier>
             <type>zip</type>
         </dependency>
------
++-----
 
   And then in your assembly you exclude all the jar dependencies pulled in
   from the binary assembly. In this example the commons-lang and log4j jars
   are included unnecessarily (as they are in the bin.zip file already)
 
------
++-----
   <dependencySets>
     <dependencySet>
       ....
@@ -71,7 +71,7 @@ Including and Excluding Artifacts
     </dependencySet>
     ....
   </dependencySets>
------
++-----
 
 * What about your Project's Artifacts?
 

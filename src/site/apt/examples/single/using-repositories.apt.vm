@@ -105,7 +105,7 @@ mvn clean assembly:single
 
   When the Maven execution completes, the archive contents should be similar to:
 
-+-----
+------
 target/artifactId-version-repository.jar
 `-- maven2
     |-- groupId
@@ -128,4 +128,4 @@ target/artifactId-version-repository.jar
     |           `-- maven-metadata.xml.sha1
     `-- groupId2
         `-- [...]
-+-----
+------

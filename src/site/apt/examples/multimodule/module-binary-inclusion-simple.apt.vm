@@ -214,9 +214,9 @@ Including Module Binaries
 
   To build the assembly, we issue the following command:
 
-+---+
+-----
 mvn clean package
-+---+
+-----
 
   This will ensure that the output directory (normally, <<<target>>>), is
   removed before building the assembly directory.
@@ -234,11 +234,11 @@ mvn clean package
   
   Here are the directory contents:
 
-+---+
+-----
 target/distribution/distribution-1.0-bin
 `-- modules
     `-- child1
         |-- child1-1.0.jar
         `-- junit-3.8.1.jar
-+---+
+-----
 
