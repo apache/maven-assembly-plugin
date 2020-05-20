@@ -64,7 +64,7 @@ Including Module Sources
           <fileSet>
             <outputDirectory>sources/${module.artifactId}</outputDirectory>
             <excludes>
-              <exclude>${project.build.directory}/**</exclude>
+              <exclude>\${project.build.directory}/**</exclude>
             </excludes>
           </fileSet>
         </fileSets>
