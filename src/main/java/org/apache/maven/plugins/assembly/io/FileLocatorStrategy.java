@@ -22,24 +22,17 @@ package org.apache.maven.plugins.assembly.io;
 import java.io.File;
 
 /**
+ * file locator strategy.
  *
  */
-class RelativeFileLocatorStrategy
+class FileLocatorStrategy
     implements LocatorStrategy
 {
 
-    private final File basedir;
-
-    RelativeFileLocatorStrategy( File basedir )
-    {
-        this.basedir = basedir;
-    }
-
-    @Override
+    /** {@inheritDoc} */
     public Location resolve( String locationSpecification, MessageHolder messageHolder )
     {
-        File file = new File( basedir, locationSpecification );
-        messageHolder.addInfoMessage( "Searching for file location: " + file.getAbsolutePath() );
+        File file = new File( locationSpecification );
 
         Location location = null;
 

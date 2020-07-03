@@ -19,40 +19,37 @@ package org.apache.maven.plugins.assembly.io;
  * under the License.
  */
 
-import java.io.File;
 
 /**
+ * Message Sink interface.
  *
  */
-class RelativeFileLocatorStrategy
-    implements LocatorStrategy
+interface MessageSink
 {
 
-    private final File basedir;
+    /**
+     * @param message the message
+     */
+    void debug( String message );
 
-    RelativeFileLocatorStrategy( File basedir )
-    {
-        this.basedir = basedir;
-    }
+    /**
+     * @param message the message
+     */
+    void info( String message );
 
-    @Override
-    public Location resolve( String locationSpecification, MessageHolder messageHolder )
-    {
-        File file = new File( basedir, locationSpecification );
-        messageHolder.addInfoMessage( "Searching for file location: " + file.getAbsolutePath() );
+    /**
+     * @param message the message
+     */
+    void warning( String message );
 
-        Location location = null;
+    /**
+     * @param message the message
+     */
+    void error( String message );
 
-        if ( file.exists() )
-        {
-            location = new FileLocation( file, locationSpecification );
-        }
-        else
-        {
-            messageHolder.addMessage( "File: " + file.getAbsolutePath() + " does not exist." );
-        }
-
-        return location;
-    }
+    /**
+     * @param message the message
+     */
+    void severe( String message );
 
 }

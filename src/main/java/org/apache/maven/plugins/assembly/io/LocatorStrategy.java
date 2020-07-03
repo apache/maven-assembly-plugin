@@ -19,40 +19,17 @@ package org.apache.maven.plugins.assembly.io;
  * under the License.
  */
 
-import java.io.File;
-
 /**
- *
+ * Locator Strategy interface.
  */
-class RelativeFileLocatorStrategy
-    implements LocatorStrategy
+interface LocatorStrategy
 {
 
-    private final File basedir;
-
-    RelativeFileLocatorStrategy( File basedir )
-    {
-        this.basedir = basedir;
-    }
-
-    @Override
-    public Location resolve( String locationSpecification, MessageHolder messageHolder )
-    {
-        File file = new File( basedir, locationSpecification );
-        messageHolder.addInfoMessage( "Searching for file location: " + file.getAbsolutePath() );
-
-        Location location = null;
-
-        if ( file.exists() )
-        {
-            location = new FileLocation( file, locationSpecification );
-        }
-        else
-        {
-            messageHolder.addMessage( "File: " + file.getAbsolutePath() + " does not exist." );
-        }
-
-        return location;
-    }
+    /**
+     * @param locationSpecification the specification
+     * @param messageHolder {@link MessageHolder}
+     * @return {@link Location}
+     */
+    Location resolve( String locationSpecification, MessageHolder messageHolder );
 
 }

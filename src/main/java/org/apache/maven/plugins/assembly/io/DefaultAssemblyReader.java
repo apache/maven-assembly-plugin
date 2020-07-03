@@ -37,11 +37,6 @@ import org.apache.maven.plugins.assembly.model.io.xpp3.ComponentXpp3Reader;
 import org.apache.maven.plugins.assembly.resolved.AssemblyId;
 import org.apache.maven.plugins.assembly.utils.InterpolationConstants;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.shared.io.location.ClasspathResourceLocatorStrategy;
-import org.apache.maven.shared.io.location.FileLocatorStrategy;
-import org.apache.maven.shared.io.location.Location;
-import org.apache.maven.shared.io.location.Locator;
-import org.apache.maven.shared.io.location.LocatorStrategy;
 import org.apache.maven.shared.utils.ReaderFactory;
 import org.codehaus.plexus.interpolation.PrefixAwareRecursionInterceptor;
 import org.codehaus.plexus.interpolation.RecursionInterceptor;
@@ -368,10 +363,10 @@ public class DefaultAssemblyReader
     /**
      * Add the contents of all included components to main assembly
      *
-     * @param assembly The assembly
-     * @param assemblyDir The assembly directory
-     * @param transformer The component interpolator
-     * @throws AssemblyReadException .
+     * @param assembly the assembly
+     * @param assemblyDir the assembly directory
+     * @param transformer the component interpolator
+     * @throws AssemblyReadException
      */
     protected void mergeComponentsWithMainAssembly( final Assembly assembly, final File assemblyDir,
                                                     final AssemblerConfigurationSource configSource,
