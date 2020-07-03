@@ -98,7 +98,7 @@ class FileLocation
     /**
      * @return {@link File}
      */
-    protected File unsafeGetFile()
+    File unsafeGetFile()
     {
         return file;
     }

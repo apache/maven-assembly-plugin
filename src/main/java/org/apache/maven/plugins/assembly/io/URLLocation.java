@@ -60,7 +60,7 @@ class URLLocation
     }
 
     /** {@inheritDoc} */
-    protected void initFile()
+    void initFile()
         throws IOException
     {
         if ( unsafeGetFile() == null )
