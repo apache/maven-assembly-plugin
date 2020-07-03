@@ -37,21 +37,8 @@ class ClasspathResourceLocatorStrategy
     /**
      * Create instance.
      */
-    public ClasspathResourceLocatorStrategy()
+    ClasspathResourceLocatorStrategy()
     {
-    }
-
-    /**
-     * @param tempFilePrefix Prefix.
-     * @param tempFileSuffix Suffix.
-     * @param tempFileDeleteOnExit delete on exit.
-     */
-    public ClasspathResourceLocatorStrategy( String tempFilePrefix, String tempFileSuffix,
-                                             boolean tempFileDeleteOnExit )
-    {
-        this.tempFilePrefix = tempFilePrefix;
-        this.tempFileSuffix = tempFileSuffix;
-        this.tempFileDeleteOnExit = tempFileDeleteOnExit;
     }
 
     /** {@inheritDoc} */
