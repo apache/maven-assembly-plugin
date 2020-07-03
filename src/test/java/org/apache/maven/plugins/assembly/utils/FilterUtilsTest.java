@@ -19,6 +19,7 @@ package org.apache.maven.plugins.assembly.utils;
  * under the License.
  */
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -183,21 +184,18 @@ public class FilterUtilsTest
     @Test
     public void testTransitiveScopes()
     {
-        Assert.assertThat( FilterUtils.newScopeFilter( "compile" ).getIncluded(),
-                           Matchers.containsInAnyOrder( "compile", "provided", "system" ) );
+        assertThat( FilterUtils.newScopeFilter( "compile" ).getIncluded(),
+                    Matchers.containsInAnyOrder( "compile", "provided", "system" ) );
 
-        Assert.assertThat( FilterUtils.newScopeFilter( "provided" ).getIncluded(),
-                           Matchers.containsInAnyOrder( "provided" ) );
+        assertThat( FilterUtils.newScopeFilter( "provided" ).getIncluded(), Matchers.containsInAnyOrder( "provided" ) );
 
-        Assert.assertThat( FilterUtils.newScopeFilter( "system" ).getIncluded(),
-                           Matchers.containsInAnyOrder( "system" ) );
+        assertThat( FilterUtils.newScopeFilter( "system" ).getIncluded(), Matchers.containsInAnyOrder( "system" ) );
 
-        Assert.assertThat( FilterUtils.newScopeFilter( "runtime" ).getIncluded(),
-                           Matchers.containsInAnyOrder( "compile", "runtime" ) );
+        assertThat( FilterUtils.newScopeFilter( "runtime" ).getIncluded(),
+                    Matchers.containsInAnyOrder( "compile", "runtime" ) );
 
-        Assert.assertThat( FilterUtils.newScopeFilter( "test" ).getIncluded(),
-                           Matchers.containsInAnyOrder( "compile", "provided", "runtime", "system", "test" ) );
-
+        assertThat( FilterUtils.newScopeFilter( "test" ).getIncluded(),
+                    Matchers.containsInAnyOrder( "compile", "provided", "runtime", "system", "test" ) );
     }
     
     private void verifyArtifactInclusion( final String groupId, final String artifactId, final String inclusionPattern,
