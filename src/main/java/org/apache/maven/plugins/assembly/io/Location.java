@@ -28,17 +28,18 @@ import java.nio.ByteBuffer;
  * The location interface.
  *
  */
-public interface Location
+interface Location
 {
 
     /**
-     * @return {@link File}.
+     * @return {@link File}
      * @throws IOException in case of an error
      */
     File getFile() throws IOException;
 
     /**
-     * open the location.
+     * Open the location.
+     * 
      * @throws IOException in case of an error
      */
     void open() throws IOException;
@@ -49,9 +50,9 @@ public interface Location
     void close();
 
     /**
-     * @param buffer The buffer.
-     * @return number of read bytes.
-     * @throws IOException in case of an error.
+     * @param buffer The buffer
+     * @return number of read bytes
+     * @throws IOException in case of an error
      */
     int read( ByteBuffer buffer ) throws IOException;
 
@@ -69,7 +70,7 @@ public interface Location
     InputStream getInputStream() throws IOException;
 
     /**
-     * @return spec.
+     * @return spec
      */
     String getSpecification();
 

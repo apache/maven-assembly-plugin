@@ -53,7 +53,7 @@ class FileLocation
     /**
      * @param specification spec
      */
-    protected FileLocation( String specification )
+    FileLocation( String specification )
     {
         this.specification = specification;
     }
@@ -105,12 +105,11 @@ class FileLocation
 
     /**
      * initialize file.
-     * @throws IOException in case error.
+     * @throws IOException in case of error
      */
-    protected void initFile()
+    private void initFile()
         throws IOException
     {
-        // TODO: Log this in the debug log-level...
         if ( file == null )
         {
             file = new File( specification );
