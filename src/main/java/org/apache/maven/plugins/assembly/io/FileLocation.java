@@ -31,7 +31,7 @@ import java.nio.channels.FileChannel;
  * file location implementation.
  *
  */
-public class FileLocation
+class FileLocation
     implements Location
 {
 
@@ -42,16 +42,16 @@ public class FileLocation
 
     /**
      * @param file {@link File}
-     * @param specification spec.
+     * @param specification spec
      */
-    public FileLocation( File file, String specification )
+    FileLocation( File file, String specification )
     {
         this.file = file;
         this.specification = specification;
     }
 
     /**
-     * @param specification spec.
+     * @param specification spec
      */
     protected FileLocation( String specification )
     {

@@ -42,10 +42,10 @@ class URLLocation
     private final boolean tempFileDeleteOnExit;
 
     /**
-     * @param url The URL
-     * @param specification The spec
+     * @param url the URL
+     * @param specification the spec
      * @param tempFilePrefix the prefix
-     * @param tempFileSuffix The suffix
+     * @param tempFileSuffix the suffix
      * @param tempFileDeleteOnExit delete on exit
      */
     URLLocation( URL url, String specification, String tempFilePrefix, String tempFileSuffix,
@@ -63,7 +63,6 @@ class URLLocation
     protected void initFile()
         throws IOException
     {
-        // TODO: Log this in the debug log-level...
         if ( unsafeGetFile() == null )
         {
             File tempFile = File.createTempFile( tempFilePrefix, tempFileSuffix );
