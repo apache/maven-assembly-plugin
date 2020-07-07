@@ -19,37 +19,46 @@ package org.apache.maven.plugins.assembly.io;
  * under the License.
  */
 
-import java.io.File;
+import java.net.URL;
 
 /**
- *
+ * classpath resource locator strategy.
  */
-class RelativeFileLocatorStrategy
+class ClasspathResourceLocatorStrategy
     implements LocatorStrategy
 {
 
-    private final File basedir;
+    private String tempFilePrefix = "location.";
 
-    RelativeFileLocatorStrategy( File basedir )
+    private String tempFileSuffix = ".cpurl";
+
+    private boolean tempFileDeleteOnExit = true;
+
+    /**
+     * Create instance.
+     */
+    ClasspathResourceLocatorStrategy()
     {
-        this.basedir = basedir;
     }
 
-    @Override
+    /** {@inheritDoc} */
     public Location resolve( String locationSpecification, MessageHolder messageHolder )
     {
-        File file = new File( basedir, locationSpecification );
-        messageHolder.addInfoMessage( "Searching for file location: " + file.getAbsolutePath() );
+        ClassLoader cloader = Thread.currentThread().getContextClassLoader();
+
+        URL resource = cloader.getResource( locationSpecification );
 
         Location location = null;
 
-        if ( file.exists() )
+        if ( resource != null )
         {
-            location = new FileLocation( file, locationSpecification );
+            location = new URLLocation( resource, locationSpecification, tempFilePrefix, tempFileSuffix,
+                                        tempFileDeleteOnExit );
         }
         else
         {
-            messageHolder.addMessage( "File: " + file.getAbsolutePath() + " does not exist." );
+            messageHolder.addMessage( "Failed to resolve classpath resource: " + locationSpecification
+                + " from classloader: " + cloader );
         }
 
         return location;

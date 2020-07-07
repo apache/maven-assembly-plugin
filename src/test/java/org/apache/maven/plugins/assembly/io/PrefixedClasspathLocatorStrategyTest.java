@@ -20,10 +20,6 @@ package org.apache.maven.plugins.assembly.io;
  */
 
 import junit.framework.TestCase;
-import org.apache.maven.shared.io.location.Location;
-import org.apache.maven.shared.io.location.LocatorStrategy;
-import org.apache.maven.shared.io.logging.DefaultMessageHolder;
-import org.apache.maven.shared.io.logging.MessageHolder;
 
 /**
  * @author Benjamin Bentmann
@@ -31,11 +27,11 @@ import org.apache.maven.shared.io.logging.MessageHolder;
 public class PrefixedClasspathLocatorStrategyTest
     extends TestCase
 {
+    
+    private MessageHolder mh = new DefaultMessageHolder();
 
     public void testResolvePrefixWithLeadingSlashAndWithTrailingSlash()
     {
-        MessageHolder mh = new DefaultMessageHolder();
-
         LocatorStrategy ls = new PrefixedClasspathLocatorStrategy( "/assemblies/" );
         Location location = ls.resolve( "empty.xml", mh );
 
@@ -45,8 +41,6 @@ public class PrefixedClasspathLocatorStrategyTest
 
     public void testResolvePrefixWithLeadingSlashAndWithoutTrailingSlash()
     {
-        MessageHolder mh = new DefaultMessageHolder();
-
         LocatorStrategy ls = new PrefixedClasspathLocatorStrategy( "/assemblies" );
         Location location = ls.resolve( "empty.xml", mh );
 
@@ -56,8 +50,6 @@ public class PrefixedClasspathLocatorStrategyTest
 
     public void testResolvePrefixWithoutLeadingSlashAndWithTrailingSlash()
     {
-        MessageHolder mh = new DefaultMessageHolder();
-
         LocatorStrategy ls = new PrefixedClasspathLocatorStrategy( "assemblies/" );
         Location location = ls.resolve( "empty.xml", mh );
 
@@ -67,8 +59,6 @@ public class PrefixedClasspathLocatorStrategyTest
 
     public void testResolvePrefixWithoutLeadingSlashAndWithoutTrailingSlash()
     {
-        MessageHolder mh = new DefaultMessageHolder();
-
         LocatorStrategy ls = new PrefixedClasspathLocatorStrategy( "assemblies" );
         Location location = ls.resolve( "empty.xml", mh );
 

@@ -19,10 +19,6 @@ package org.apache.maven.plugins.assembly.io;
  * under the License.
  */
 
-import org.apache.maven.shared.io.location.ClasspathResourceLocatorStrategy;
-import org.apache.maven.shared.io.location.Location;
-import org.apache.maven.shared.io.logging.MessageHolder;
-
 /**
  *
  */
