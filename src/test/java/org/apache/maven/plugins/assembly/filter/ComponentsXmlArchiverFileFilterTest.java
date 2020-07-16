@@ -27,9 +27,12 @@ import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.FileSet;
 import org.codehaus.plexus.archiver.ResourceIterator;
 import org.codehaus.plexus.archiver.diags.NoOpArchiver;
+import org.codehaus.plexus.archiver.dir.DirectoryArchiver;
 import org.codehaus.plexus.archiver.zip.ZipArchiver;
+import org.codehaus.plexus.components.io.fileselectors.FileInfo;
 import org.codehaus.plexus.components.io.resources.PlexusIoResource;
 import org.codehaus.plexus.components.io.resources.PlexusIoResourceCollection;
+import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.xml.PrettyPrintXMLWriter;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.jdom.Document;
@@ -42,14 +45,10 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import javax.annotation.Nonnull;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -62,6 +61,16 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
+import static org.apache.maven.plugins.assembly.filter.AbstractLineAggregatingHandlerTest.MODIFIED_TODAY;
+import static org.apache.maven.plugins.assembly.filter.AbstractLineAggregatingHandlerTest.MODIFIED_YESTERDAY;
+import static org.apache.maven.plugins.assembly.filter.ComponentsXmlArchiverFileFilter.COMPONENTS_XML_PATH;
+import static org.codehaus.plexus.components.io.resources.ResourceFactory.createResource;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class ComponentsXmlArchiverFileFilterTest
 {
@@ -154,7 +163,7 @@ public class ComponentsXmlArchiverFileFilterTest
 
         filter.finalizeArchiveCreation( fca );
 
-        assertEquals( ComponentsXmlArchiverFileFilter.COMPONENTS_XML_PATH, fca.getDestFileName() );
+        assertEquals( COMPONENTS_XML_PATH, fca.getDestFileName() );
 
         final SAXBuilder builder = new SAXBuilder( false );
 
@@ -182,7 +191,7 @@ public class ComponentsXmlArchiverFileFilterTest
 
         filter.finalizeArchiveCreation( fca );
 
-        assertEquals( ComponentsXmlArchiverFileFilter.COMPONENTS_XML_PATH, fca.getDestFileName() );
+        assertEquals( COMPONENTS_XML_PATH, fca.getDestFileName() );
 
         final SAXBuilder builder = new SAXBuilder( false );
 
@@ -215,7 +224,7 @@ public class ComponentsXmlArchiverFileFilterTest
 
         filter.finalizeArchiveCreation( fca );
 
-        assertEquals( ComponentsXmlArchiverFileFilter.COMPONENTS_XML_PATH, fca.getDestFileName() );
+        assertEquals( COMPONENTS_XML_PATH, fca.getDestFileName() );
 
         final SAXBuilder builder = new SAXBuilder( false );
 
@@ -267,7 +276,7 @@ public class ComponentsXmlArchiverFileFilterTest
         
         try ( ZipFile zf = new ZipFile( archiveFile ) )
         {
-            final ZipEntry ze = zf.getEntry( ComponentsXmlArchiverFileFilter.COMPONENTS_XML_PATH );
+            final ZipEntry ze = zf.getEntry( COMPONENTS_XML_PATH );
 
             assertNotNull( ze );
 
@@ -293,7 +302,53 @@ public class ComponentsXmlArchiverFileFilterTest
         assertEquals( "role", ( (Text) role2.selectSingleNode( doc ) ).getText() );
         assertEquals( "hint2", ( (Text) hint2.selectSingleNode( doc ) ).getText() );
         assertEquals( "impl", ( (Text) implementation2.selectSingleNode( doc ) ).getText() );
+    }
 
+    @Test
+    public void testHandlerMergesMatchingFiles()
+            throws Exception
+    {
+        // Arrange
+
+        final String minimalValidXml = "" +
+            "<component-set>\n" +
+            "  <components>\n" +
+            "    <component><role>a-role</role></component>\n" +
+            "  </components>\n" +
+            "</component-set>";
+
+        final Archiver archiver = new DirectoryArchiver();
+        final FileInfo file = resource( COMPONENTS_XML_PATH, minimalValidXml, MODIFIED_YESTERDAY );
+
+        // Act
+        filter.isSelected( file );
+        filter.finalizeArchiveCreation( archiver );
+
+        // Assert
+
+        final ResourceIterator resources = archiver.getResources();
+        assertTrue( "Expected at least one resource", resources.hasNext() );
+
+        final ArchiveEntry resource = resources.next();
+        assertFalse( "Expected at most one resource", resources.hasNext() );
+
+        try(final BufferedReader in =
+            new BufferedReader( new InputStreamReader( resource.getInputStream() ) ) )
+        {
+            assertEquals( "<component-set>", in.readLine());
+        }
+
+        assertTrue(
+            "Merging old resources should result in old merge",
+            resource.getResource().getLastModified() < MODIFIED_TODAY
+        );
+    }
+
+    private PlexusIoResource resource( final String name, final String text, final long modified ) throws IOException {
+        final File file = temporaryFolder.newFile();
+        FileUtils.fileWrite( file, text );
+        file.setLastModified( modified );
+        return createResource( file, name );
     }
 
     private Xpp3Dom createComponentDom( final ComponentDef def )

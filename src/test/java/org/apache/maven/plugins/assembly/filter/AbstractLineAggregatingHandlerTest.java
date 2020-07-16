@@ -45,13 +45,13 @@ import static org.junit.Assert.assertTrue;
 public class AbstractLineAggregatingHandlerTest
 {
     /** A time today, rounded down to the previous minute */
-    private static long MODIFIED_TODAY = (System.currentTimeMillis() / TimeUnit.MINUTES.toMillis( 1 )) * TimeUnit.MINUTES.toMillis( 1 );
+    static long MODIFIED_TODAY = (System.currentTimeMillis() / TimeUnit.MINUTES.toMillis( 1 )) * TimeUnit.MINUTES.toMillis( 1 );
 
     /** A time yesterday, rounded down to the previous minute */
-    private static long MODIFIED_YESTERDAY = MODIFIED_TODAY - TimeUnit.DAYS.toMillis( 1 );
+    static long MODIFIED_YESTERDAY = MODIFIED_TODAY - TimeUnit.DAYS.toMillis( 1 );
 
     /** A time last week, rounded down to the previous minute */
-    private static long MODIFIED_LAST_WEEK = MODIFIED_TODAY - TimeUnit.DAYS.toMillis( 7 );
+    static long MODIFIED_LAST_WEEK = MODIFIED_TODAY - TimeUnit.DAYS.toMillis( 7 );
 
     private final AbstractLineAggregatingHandler handler = new AbstractLineAggregatingHandler()
     {
@@ -81,7 +81,7 @@ public class AbstractLineAggregatingHandlerTest
         // Act
         handler.isSelected( resource1 );
         handler.isSelected( resource2 );
-        handler.addToArchive( archiver );
+        handler.finalizeArchiveCreation( archiver );
 
         // Assert
 
