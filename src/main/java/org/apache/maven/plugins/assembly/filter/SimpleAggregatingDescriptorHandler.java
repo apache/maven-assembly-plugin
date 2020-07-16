@@ -25,6 +25,7 @@ import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.UnArchiver;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.components.io.fileselectors.FileInfo;
+import org.codehaus.plexus.components.io.resources.PlexusIoResource;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
@@ -46,6 +47,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import static java.lang.Math.max;
+
 /**
  *
  */
@@ -64,6 +67,8 @@ public class SimpleAggregatingDescriptorHandler
     private final List<String> filenames = new ArrayList<>();
 
     // calculated, temporary values.
+
+    private long lastModified = 0L;
 
     private String filePattern;
 
@@ -93,6 +98,11 @@ public class SimpleAggregatingDescriptorHandler
         }
 
         final File temp = writePropertiesFile();
+
+        if ( lastModified > 0 )
+        {
+            temp.setLastModified( lastModified );
+        }
 
         overrideFilterAction = true;
 
@@ -171,6 +181,12 @@ public class SimpleAggregatingDescriptorHandler
         {
             readProperties( fileInfo );
             filenames.add( name );
+
+            if ( fileInfo instanceof PlexusIoResource )
+            {
+                final PlexusIoResource resource = (PlexusIoResource) fileInfo;
+                lastModified = max( lastModified, resource.getLastModified() );
+            }
 
             return false;
         }
