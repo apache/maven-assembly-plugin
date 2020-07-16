@@ -25,6 +25,7 @@ import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.ResourceIterator;
 import org.codehaus.plexus.archiver.UnArchiver;
 import org.codehaus.plexus.components.io.fileselectors.FileInfo;
+import org.codehaus.plexus.components.io.resources.PlexusIoResource;
 
 import javax.annotation.Nonnull;
 import java.io.BufferedReader;
@@ -38,10 +39,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
+
+import static java.lang.Math.max;
 
 abstract class AbstractLineAggregatingHandler
     implements ContainerDescriptorHandler
 {
+
+    private Map<String, AtomicLong> catalogLastModified = new HashMap<>();
 
     private Map<String, List<String>> catalog = new HashMap<>();
 
@@ -93,6 +99,12 @@ abstract class AbstractLineAggregatingHandler
                         writer.println( line );
                     }
                 }
+
+                final AtomicLong lastModified = catalogLastModified.get( name );
+                if ( lastModified != null && lastModified.get() > 0 )
+                {
+                    f.setLastModified( lastModified.get() );
+                }
             }
             catch ( final IOException e )
             {
@@ -132,6 +144,22 @@ abstract class AbstractLineAggregatingHandler
         if ( fileInfo.isFile() && fileMatches( fileInfo ) )
         {
             name = getOutputPathPrefix( fileInfo ) + new File( name ).getName();
+
+            if ( fileInfo instanceof PlexusIoResource )
+            {
+                final PlexusIoResource resource = (PlexusIoResource) fileInfo;
+                final long lastModified = resource.getLastModified();
+
+                if ( catalogLastModified.containsKey( name ) )
+                {
+                    final AtomicLong latestLastModified = catalogLastModified.get( name );
+                    latestLastModified.set( max( latestLastModified.get(), lastModified ) );
+                }
+                else
+                {
+                    catalogLastModified.put( name, new AtomicLong( lastModified ) );
+                }
+            }
 
             List<String> lines = catalog.get( name );
             if ( lines == null )

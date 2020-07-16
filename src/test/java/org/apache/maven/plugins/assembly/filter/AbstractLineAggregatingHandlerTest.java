@@ -34,6 +34,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.concurrent.TimeUnit;
 
 import static org.codehaus.plexus.components.io.resources.ResourceFactory.createResource;
 import static org.junit.Assert.assertEquals;
@@ -43,6 +44,15 @@ import static org.junit.Assert.assertTrue;
 
 public class AbstractLineAggregatingHandlerTest
 {
+    /** A time today, rounded down to the previous minute */
+    private static long MODIFIED_TODAY = (System.currentTimeMillis() / TimeUnit.MINUTES.toMillis( 1 )) * TimeUnit.MINUTES.toMillis( 1 );
+
+    /** A time yesterday, rounded down to the previous minute */
+    private static long MODIFIED_YESTERDAY = MODIFIED_TODAY - TimeUnit.DAYS.toMillis( 1 );
+
+    /** A time last week, rounded down to the previous minute */
+    private static long MODIFIED_LAST_WEEK = MODIFIED_TODAY - TimeUnit.DAYS.toMillis( 7 );
+
     private final AbstractLineAggregatingHandler handler = new AbstractLineAggregatingHandler()
     {
         @Override
@@ -65,8 +75,8 @@ public class AbstractLineAggregatingHandlerTest
     {
         // Arrange
         final Archiver archiver = new DirectoryArchiver();
-        final FileInfo resource1 = resource( "merged.txt", "text1" );
-        final FileInfo resource2 = resource( "merged.txt", "text2" );
+        final FileInfo resource1 = resource( "merged.txt", "text1", MODIFIED_YESTERDAY );
+        final FileInfo resource2 = resource( "merged.txt", "text2", MODIFIED_LAST_WEEK );
 
         // Act
         handler.isSelected( resource1 );
@@ -88,11 +98,17 @@ public class AbstractLineAggregatingHandlerTest
             assertEquals( "text2", in.readLine());
             assertNull( in.readLine() );
         }
+
+        assertTrue(
+            "Merging old resources should result in old merge",
+            resource.getResource().getLastModified() < MODIFIED_TODAY
+        );
     }
 
-    private PlexusIoResource resource( final String name, final String text ) throws IOException {
+    private PlexusIoResource resource( final String name, final String text, final long modified ) throws IOException {
         final File file = temporaryFolder.newFile();
         FileUtils.fileWrite( file, text );
+        file.setLastModified( modified );
         return createResource( file, name );
     }
 }
