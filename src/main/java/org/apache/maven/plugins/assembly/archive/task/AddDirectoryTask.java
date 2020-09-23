@@ -79,6 +79,7 @@ public class AddDirectoryTask
         }
 
         final int oldDirMode = archiver.getOverrideDirectoryMode();
+        final int oldDefaultDirMode = archiver.getDefaultDirectoryMode();
         final int oldFileMode = archiver.getOverrideFileMode();
 
         boolean fileModeSet = false;
@@ -89,6 +90,7 @@ public class AddDirectoryTask
             if ( directoryMode != -1 )
             {
                 archiver.setDirectoryMode( directoryMode );
+                archiver.setDefaultDirectoryMode( directoryMode );
                 dirModeSet = true;
             }
 
@@ -157,6 +159,7 @@ public class AddDirectoryTask
             if ( dirModeSet )
             {
                 archiver.setDirectoryMode( oldDirMode );
+                archiver.setDefaultDirectoryMode( oldDefaultDirMode );
             }
 
             if ( fileModeSet )

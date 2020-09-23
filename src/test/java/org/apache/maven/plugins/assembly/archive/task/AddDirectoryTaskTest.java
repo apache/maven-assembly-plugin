@@ -98,10 +98,12 @@ public class AddDirectoryTaskTest
     {
         final int dirMode = Integer.parseInt( "777", 8 );
         final int fileMode = Integer.parseInt( "777", 8 );
-        final int defaultDirMode = -1;
-        final int defaultFileMode = -1;
+        final int overrideDirMode = 755;
+        final int defaultDirMode = 722;
+        final int defaultFileMode = 711;
 
-        when( archiver.getOverrideDirectoryMode() ).thenReturn( defaultDirMode );
+        when( archiver.getDefaultDirectoryMode() ).thenReturn( defaultDirMode );
+        when( archiver.getOverrideDirectoryMode() ).thenReturn( overrideDirMode );
         when( archiver.getOverrideFileMode() ).thenReturn( defaultFileMode );
         
         AddDirectoryTask task = new AddDirectoryTask( temporaryFolder.getRoot() );
@@ -113,11 +115,14 @@ public class AddDirectoryTaskTest
         
         // result of easymock migration, should be assert of expected result instead of verifying methodcalls
         verify( archiver ).addFileSet( any( FileSet.class ) );
+        verify( archiver ).getDefaultDirectoryMode();
         verify( archiver ).getOverrideDirectoryMode();
         verify( archiver ).getOverrideFileMode();
+        verify( archiver ).setDefaultDirectoryMode( dirMode );
         verify( archiver ).setDirectoryMode( dirMode );
         verify( archiver ).setFileMode( fileMode );
-        verify( archiver ).setDirectoryMode( defaultDirMode );
+        verify( archiver ).setDefaultDirectoryMode( defaultDirMode );
+        verify( archiver ).setDirectoryMode( overrideDirMode );
         verify( archiver ).setFileMode( defaultFileMode );
     }
 
