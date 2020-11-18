@@ -129,7 +129,7 @@ public class DefaultDependencyResolver
             if ( binaries.isIncludeDependencies() )
             {
                 updateDependencySetResolutionRequirements( dependencySet, requirements,
-                                                           projects.toArray( new MavenProject[projects.size()] ) );
+                                                           projects.toArray( new MavenProject[0] ) );
             }
         }
     }
