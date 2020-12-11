@@ -132,7 +132,7 @@ public class AssemblyProxyArchiver
 
         if ( !selectors.isEmpty() )
         {
-            this.selectors = selectors.toArray( new FileSelector[selectors.size()] );
+            this.selectors = selectors.toArray( new FileSelector[0] );
         }
     }
 
@@ -763,9 +763,9 @@ public class AssemblyProxyArchiver
 
             dfs.setCaseSensitive( fs.isCaseSensitive() );
             dfs.setDirectory( fs.getDirectory() );
-            dfs.setExcludes( newEx.toArray( new String[newEx.size()] ) );
+            dfs.setExcludes( newEx.toArray( new String[0] ) );
             dfs.setFileSelectors( fs.getFileSelectors() );
-            dfs.setIncludes( newIn.toArray( new String[newIn.size()] ) );
+            dfs.setIncludes( newIn.toArray( new String[0] ) );
             dfs.setIncludingEmptyDirectories( fs.isIncludingEmptyDirectories() );
             dfs.setPrefix( fs.getPrefix() );
             dfs.setStreamTransformer( fs.getStreamTransformer() );

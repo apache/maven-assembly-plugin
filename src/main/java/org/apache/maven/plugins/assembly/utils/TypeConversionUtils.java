@@ -58,7 +58,7 @@ public final class TypeConversionUtils
 
         if ( ( list != null ) && !list.isEmpty() )
         {
-            result = list.toArray( new String[list.size()] );
+            result = list.toArray( new String[0] );
         }
 
         return result;

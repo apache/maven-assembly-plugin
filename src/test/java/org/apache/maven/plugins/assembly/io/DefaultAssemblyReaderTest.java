@@ -692,7 +692,7 @@ public class DefaultAssemblyReaderTest
         final List<String> files = writeAssembliesToFile( assemblies, basedir );
 
         final List<Assembly> results =
-            performReadAssemblies( basedir, files.toArray( new String[files.size()] ), null, null );
+            performReadAssemblies( basedir, files.toArray( new String[0] ), null, null );
 
         assertNotNull( results );
         assertEquals( 2, results.size() );
