@@ -28,6 +28,7 @@ under the License.
     <artifactId>maven-plugins</artifactId>
     <groupId>org.apache.maven.plugins</groupId>
     <version>34</version>
+    <relativePath/>
   </parent>
 
   <artifactId>maven-assembly-plugin</artifactId>
@@ -65,7 +66,7 @@ under the License.
   <properties>
     <javaVersion>7</javaVersion>
     <mdoVersion>2.1.0</mdoVersion>
-    <mavenArchiverVersion>3.5.0</mavenArchiverVersion>
+    <mavenArchiverVersion>3.5.1</mavenArchiverVersion>
     <mavenFilteringVersion>3.1.1</mavenFilteringVersion>
     <mavenVersion>3.0</mavenVersion>
     <testOutputToFile>true</testOutputToFile>
