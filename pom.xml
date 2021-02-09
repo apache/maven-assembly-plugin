@@ -67,7 +67,7 @@ under the License.
     <javaVersion>7</javaVersion>
     <mdoVersion>2.1.0</mdoVersion>
     <mavenArchiverVersion>3.5.1</mavenArchiverVersion>
-    <mavenFilteringVersion>3.1.1</mavenFilteringVersion>
+    <mavenFilteringVersion>3.2.0</mavenFilteringVersion>
     <mavenVersion>3.0</mavenVersion>
     <testOutputToFile>true</testOutputToFile>
     <checkstyle.violation.ignore>RedundantThrows,NewlineAtEndOfFile,ParameterNumber,MethodLength,FileLength,ModifierOrder,JavadocMethod</checkstyle.violation.ignore>
