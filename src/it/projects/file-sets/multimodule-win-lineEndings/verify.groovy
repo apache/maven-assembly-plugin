@@ -17,8 +17,6 @@
  * under the License.
  */
 
-import java.io.*;
-
 File f = new File( basedir, "child/target/child-1-src/test.txt" );
 
 if ( !f.exists() )
@@ -39,14 +37,14 @@ while( ( read = reader.read( cbuf ) ) > -1 )
 
 reader.close();
 
-System.out.println( "Contents of test.txt: '" + sb.toString() + "' should contain the unix newline: '\\n'." );
+System.out.println( "Contents of test.txt: '" + sb.toString() + "' should contain the windows newline: '\\r\\n'." );
 
-if ( sb.toString().indexOf( "1\nchild" ) == -1 )
+if ( sb.toString().indexOf( "1\r\nchild" ) == -1 )
 {
     System.out.println( "test.txt has wrong line ending" );
     return false;
 }
-if ( sb.toString().indexOf( "child\n" ) > -1 )
+if ( sb.toString().indexOf( "child\r\n" ) > -1 )
 {
     System.out.println( "test.txt has an extra line ending at the end of the file" );
     return false;

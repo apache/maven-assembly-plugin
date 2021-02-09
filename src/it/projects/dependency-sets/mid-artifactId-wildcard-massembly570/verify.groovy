@@ -17,14 +17,12 @@
  * under the License.
  */
 
-import java.io.*;
-
 File dir = new File( basedir, "target/mid-artifactId-wildcard-massembly570-1-bin/maven-libs" );
 
-File[] files = {
+File[] files = [
   new File( dir, "maven-clean-plugin-2.4.1.jar" ),
   new File( dir, "maven-jar-plugin-2.3.2.jar")
-};
+];
 
 boolean missing = false;
 for( int i = 0; i<files.length; i++ )
