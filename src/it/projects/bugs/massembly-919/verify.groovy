@@ -17,43 +17,22 @@
  * under the License.
  */
 
-import java.io.*;
 import java.net.*;
 import java.util.zip.*;
 
+File zipFile = new File( basedir, "bundle/target/project-bundle-0.0.1-SNAPSHOT-bin.zip" )
 
+assert zipFile.isFile() : "zip-file is missing or a directory."
 
-boolean result = true;
-
-try
-{
-    File zipFile = new File( basedir, "bundle/target/project-bundle-0.0.1-SNAPSHOT-bin.zip" );
-    
-    if ( !zipFile.exists() || zipFile.isDirectory() )
-    {
-        System.err.println( "zip-file is missing or a directory." );
-        result = false;
-    }
-    
-    ZipFile zf = new ZipFile( zipFile );
-
-    zes = zf.entries();
+ZipFile zf = new ZipFile( zipFile )
+try {
+    zes = zf.entries()
     while(zes.hasMoreElements())
     {
-        ZipEntry ze = zes.nextElement();
-        if (ze.getName().contains("maven-assembly-plugin"))
-        {
-        System.err.println( "filename is incorrect" );
-        result = false;
-        }
+        ZipEntry ze = zes.nextElement()
+        assert !ze.getName().contains("maven-assembly-plugin") : "filename '${ze.name}' is incorrect"
     }
-
-    zf.close();
 }
-catch( IOException e )
-{
-    e.printStackTrace();
-    result = false;
+finally {
+  zf.close()
 }
-
-return result;

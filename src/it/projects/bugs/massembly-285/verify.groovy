@@ -17,51 +17,41 @@
  * under the License.
  */
 
-import java.io.*;
-import java.util.*;
 import java.util.jar.*;
 import java.util.zip.*;
 
-File f = new File( basedir, "massembly-285-assembly/target/massembly-285-assembly-1-bin.jar" );
+File f = new File( basedir, "massembly-285-assembly/target/massembly-285-assembly-1-bin.jar" )
 JarFile jf = new JarFile( f );
 
-String testPath = "tests/App.class";
+String testPath = "tests/App.class"
 
-int jarCount = 0;
+int jarCount = 0
 
-Enumeration e = jf.entries();
+Enumeration e = jf.entries()
 while( e.hasMoreElements() )
 {
     if ( testPath.equals( String.valueOf( e.nextElement() ) ) )
     {
-        jarCount++;
+        jarCount++
     }
 }
+jf.close()
 
-if ( jarCount != 1 )
-{
-    System.out.println( "ERROR! Test path: " + testPath + " was found " + jarCount + " times (should have been 1).\nArchive: " + f );
-}
+assert jarCount == 1 : "Test path: ${testPath} was found ${jarCount} times (should have been 1).\nArchive: ${f}"
 
-f = new File( basedir, "massembly-285-assembly/target/massembly-285-assembly-1-bin.zip" );
-ZipFile zf = new ZipFile( f );
+f = new File( basedir, "massembly-285-assembly/target/massembly-285-assembly-1-bin.zip" )
+ZipFile zf = new ZipFile( f )
 
-String testPath = "tests/App.class";
+int zipCount = 0
 
-int zipCount = 0;
-
-e = zf.entries();
+e = zf.entries()
 while( e.hasMoreElements() )
 {
     if ( testPath.equals( String.valueOf( e.nextElement() ) ) )
     {
-        zipCount++;
+        zipCount++
     }
 }
+zf.close()
 
-if ( zipCount != 1 )
-{
-    System.out.println( "ERROR! Test path: " + testPath + " was found " + zipCount + " times (should have been 1).\nArchive: " + f );
-}
-
-return jarCount == 1;
+assert zipCount == 1 : "Test path: ${testPath} was found ${zipCount} times (should have been 1).\nArchive: ${f}"
