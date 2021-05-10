@@ -113,6 +113,9 @@ ${project.name}
 
 * Assembly and Component Descriptor Schemas (XSD)
 
+  * {{{/xsd/assembly-2.1.0.xsd}http://maven.apache.org/xsd/assembly-2.1.0.xsd}},
+    {{{/xsd/assembly-component-2.1.0.xsd}https://maven.apache.org/xsd/assembly-component-2.1.0.xsd}} (for version 3.2 and higher)
+
   * {{{/xsd/assembly-2.0.0.xsd}https://maven.apache.org/xsd/assembly-2.0.0.xsd}},
     {{{/xsd/assembly-component-2.0.0.xsd}https://maven.apache.org/xsd/assembly-component-2.0.0.xsd}} (for version 3.0 and higher)
 
