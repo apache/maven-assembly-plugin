@@ -22,5 +22,5 @@ File dir = new File( basedir, "target/mid-artifactId-wildcard-massembly570-1-bin
 def cleanPluginJar = new File( dir, "maven-clean-plugin-2.4.1.jar" )
 assert cleanPluginJar.exists() : 'Missing maven-clean-plugin (should be included via wildcard pattern).'
 
-def jarPluginJar = new File( dir, "maven-jar-plugin-2.3.2.jar")
+def jarPluginJar = new File( dir, "maven-jar-plugin-3.0.0.jar")
 assert jarPluginJar.exists() : 'Missing maven-jar-plugin (should be included via wildcard pattern).'
