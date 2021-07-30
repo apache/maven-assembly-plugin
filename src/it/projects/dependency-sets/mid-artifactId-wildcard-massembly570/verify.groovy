@@ -19,19 +19,8 @@
 
 File dir = new File( basedir, "target/mid-artifactId-wildcard-massembly570-1-bin/maven-libs" );
 
-File[] files = [
-  new File( dir, "maven-clean-plugin-2.4.1.jar" ),
-  new File( dir, "maven-jar-plugin-2.3.2.jar")
-];
+def cleanPluginJar = new File( dir, "maven-clean-plugin-2.4.1.jar" )
+assert cleanPluginJar.exists() : 'Missing maven-clean-plugin (should be included via wildcard pattern).'
 
-boolean missing = false;
-for( int i = 0; i<files.length; i++ )
-{
-    if ( !files[i].exists() )
-    {
-        System.out.println( "Missing jar: " + files[i] + " (should be included via wildcard pattern)." );
-        missing = true;
-    }
-}
-
-return !missing;
+def jarPluginJar = new File( dir, "maven-jar-plugin-2.3.2.jar")
+assert jarPluginJar.exists() : 'Missing maven-jar-plugin (should be included via wildcard pattern).'

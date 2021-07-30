@@ -17,19 +17,8 @@
  * under the License.
  */
 
-import java.io.*;
+def wagonProviderJar = new File( basedir, 'target/massembly-241-1-bin/maven-libs/wagon-provider-api-1.0-beta-4.jar' )
+assert wagonProviderJar.exists() : 'Wagon provider jar is missing (should be included via include wildcard pattern).' 
 
-File wagonProviderJar = new File( basedir, "target/massembly-241-1-bin/maven-libs/wagon-provider-api-1.0-beta-4.jar" );
-File reportingImplJar = new File( basedir, "target/massembly-241-1-bin/maven-libs/maven-reporting-impl-2.0.4.1.jar" );
-
-if ( !wagonProviderJar.exists() )
-{
-    System.out.println( "Wagon provider jar is missing (should be included via include wildcard pattern)." );
-}
-
-if ( !reportingImplJar.exists() )
-{
-    System.out.println( "Reporting implementation jar is missing (should be included via include wildcard pattern)." );
-}
-
-return wagonProviderJar.exists() && reportingImplJar.exists();
+def reportingImplJar = new File( basedir, 'target/massembly-241-1-bin/maven-libs/maven-reporting-impl-2.0.4.1.jar' )
+assert reportingImplJar.exists() : 'Reporting implementation jar is missing (should be included via include wildcard pattern).'
