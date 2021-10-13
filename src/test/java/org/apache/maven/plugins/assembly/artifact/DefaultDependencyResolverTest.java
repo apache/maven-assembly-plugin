@@ -59,8 +59,11 @@ public class DefaultDependencyResolverTest
     }
 
     @Override
-    protected void customizeContainerConfiguration( @SuppressWarnings( "unused" ) final ContainerConfiguration configuration )
+    protected void customizeContainerConfiguration( final ContainerConfiguration configuration )
     {
+        // Needed to pick up JSR330 components.
+        // We are using maven 3.2.5 that uses aether 1.0.0.v20140518 that uses sisu index
+        // and not Plexus XML anymore.
         configuration.setAutoWiring( true ).setClassPathScanning( PlexusConstants.SCANNING_INDEX );
     }
 
