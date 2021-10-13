@@ -32,21 +32,15 @@ import java.util.Set;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.artifact.handler.DefaultArtifactHandler;
-import org.apache.maven.artifact.repository.LegacyLocalRepositoryManager;
 import org.apache.maven.artifact.versioning.VersionRange;
-import org.apache.maven.execution.DefaultMavenExecutionRequest;
-import org.apache.maven.execution.DefaultMavenExecutionResult;
-import org.apache.maven.execution.MavenExecutionRequest;
-import org.apache.maven.execution.MavenExecutionResult;
-import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Model;
-import org.apache.maven.plugin.testing.stubs.StubArtifactRepository;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.model.DependencySet;
 import org.apache.maven.plugins.assembly.model.ModuleBinaries;
 import org.apache.maven.plugins.assembly.model.ModuleSet;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.repository.internal.MavenRepositorySystemSession;
+import org.codehaus.plexus.ContainerConfiguration;
+import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusTestCase;
 
 public class DefaultDependencyResolverTest
@@ -63,22 +57,12 @@ public class DefaultDependencyResolverTest
 
         resolver = (DefaultDependencyResolver) lookup( DependencyResolver.class );
     }
-    
-    protected MavenSession newMavenSession( MavenProject project )
+
+    @Override
+    protected void customizeContainerConfiguration( @SuppressWarnings( "unused" ) final ContainerConfiguration configuration )
     {
-        MavenExecutionRequest request = new DefaultMavenExecutionRequest();
-        MavenExecutionResult result = new DefaultMavenExecutionResult();
-
-        MavenRepositorySystemSession repoSession = new MavenRepositorySystemSession();
-        
-        repoSession.setLocalRepositoryManager( LegacyLocalRepositoryManager.wrap( new StubArtifactRepository( "target/local-repo" ),
-                                                                                  null ) );
-        MavenSession session = new MavenSession( getContainer(), repoSession, request, result );
-        session.setCurrentProject( project );
-        session.setProjects( Arrays.asList( project ) );
-        return session;
+        configuration.setAutoWiring( true ).setClassPathScanning( PlexusConstants.SCANNING_INDEX );
     }
-
 
     public void test_getDependencySetResolutionRequirements_transitive()
         throws DependencyResolutionException
