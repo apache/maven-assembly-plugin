@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableSet;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.handler.ArtifactHandler;
 import org.apache.maven.execution.MavenSession;
@@ -385,6 +386,54 @@ public class AddDependencySetsTaskTest {
         assertNotNull(result);
         assertEquals(1, result.size());
         assertSame(am1, result.iterator().next());
+    }
+
+    @Test
+    public void testGetDependencyArtifacts_ShouldNotFilterOptionalArtifactsByDefault() throws Exception {
+        Artifact am1 = mockArtifact(1);
+        when(am1.isOptional()).thenReturn(true);
+        Artifact am2 = mockArtifact(2);
+        Set<Artifact> resolvedArtifacts = resolveDependencyArtifacts(new DependencySet(), ImmutableSet.of(am1, am2));
+        assertEquals(2, resolvedArtifacts.size());
+    }
+
+    @Test
+    public void testGetDependencyArtifacts_ShouldFilterOptionalArtifactsExplicitly() throws Exception {
+        Artifact am1 = mockArtifact(1);
+        when(am1.isOptional()).thenReturn(true);
+        Artifact am2 = mockArtifact(2);
+        DependencySet dependencySet = new DependencySet();
+        dependencySet.setUseOptionalDependencies(false);
+
+        Set<Artifact> resolvedArtifacts = resolveDependencyArtifacts(dependencySet, ImmutableSet.of(am1, am2));
+        assertEquals(1, resolvedArtifacts.size());
+        assertSame(am2, resolvedArtifacts.iterator().next());
+    }
+
+    @Test
+    public void testGetDependencyArtifacts_ShouldNotFilterOptionalArtifactsExplicitly() throws Exception {
+        Artifact am1 = mockArtifact(1);
+        when(am1.isOptional()).thenReturn(true);
+        Artifact am2 = mockArtifact(2);
+        DependencySet dependencySet = new DependencySet();
+        dependencySet.setUseOptionalDependencies(true);
+
+        Set<Artifact> resolvedArtifacts = resolveDependencyArtifacts(dependencySet, ImmutableSet.of(am1, am2));
+        assertEquals(2, resolvedArtifacts.size());
+    }
+
+    private static Artifact mockArtifact(int id) {
+        Artifact a = mock(Artifact.class);
+        when(a.getId()).thenReturn("group:artifact" + id + ":1.0:jar");
+        return a;
+    }
+
+    private Set<Artifact> resolveDependencyArtifacts(DependencySet dependencySet, Set<Artifact> artifacts)
+            throws Exception {
+        MavenProject project = new MavenProject(new Model());
+        AddDependencySetsTask task =
+                new AddDependencySetsTask(Collections.singletonList(dependencySet), artifacts, project, null);
+        return task.resolveDependencyArtifacts(dependencySet);
     }
 
     @Test
