@@ -22,7 +22,7 @@ package org.apache.maven.plugins.assembly.functions;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.ArtifactUtils;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.logging.Logger;
+import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.List;

@@ -34,7 +34,7 @@ import org.codehaus.plexus.components.io.fileselectors.FileInfo;
 import org.codehaus.plexus.components.io.fileselectors.FileSelector;
 import org.codehaus.plexus.components.io.resources.PlexusIoResource;
 import org.codehaus.plexus.components.io.resources.PlexusIoResourceCollection;
-import org.codehaus.plexus.logging.Logger;
+import org.slf4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.io.File;

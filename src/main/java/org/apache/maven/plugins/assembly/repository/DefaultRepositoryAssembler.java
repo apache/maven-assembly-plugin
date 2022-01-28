@@ -34,6 +34,7 @@ import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugins.assembly.repository.model.GroupVersionAlignment;
 import org.apache.maven.plugins.assembly.repository.model.RepositoryInfo;
+import org.apache.maven.plugins.assembly.utils.AbstractLogEnabled;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.artifact.filter.PatternExcludesArtifactFilter;
@@ -49,8 +50,6 @@ import org.apache.maven.shared.transfer.repository.RepositoryManager;
 import org.apache.maven.shared.utils.io.FileUtils;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
-import org.codehaus.plexus.logging.Logger;
 
 /**
  * @author Jason van Zyl

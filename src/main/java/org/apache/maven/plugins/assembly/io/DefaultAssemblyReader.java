@@ -35,6 +35,7 @@ import org.apache.maven.plugins.assembly.model.io.xpp3.AssemblyXpp3Reader;
 import org.apache.maven.plugins.assembly.model.io.xpp3.AssemblyXpp3Writer;
 import org.apache.maven.plugins.assembly.model.io.xpp3.ComponentXpp3Reader;
 import org.apache.maven.plugins.assembly.resolved.AssemblyId;
+import org.apache.maven.plugins.assembly.utils.AbstractLogEnabled;
 import org.apache.maven.plugins.assembly.utils.InterpolationConstants;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.utils.ReaderFactory;
@@ -44,12 +45,10 @@ import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
 import org.codehaus.plexus.interpolation.fixed.InterpolationState;
 import org.codehaus.plexus.interpolation.fixed.PrefixedObjectValueSource;
 import org.codehaus.plexus.interpolation.fixed.PrefixedPropertiesValueSource;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -495,20 +494,6 @@ public class DefaultAssemblyReader
         siteFileSet.setOutputDirectory( "/site" );
 
         assembly.addFileSet( siteFileSet );
-    }
-
-    @Override
-    protected Logger getLogger()
-    {
-        Logger logger = super.getLogger();
-
-        if ( logger == null )
-        {
-            logger = new ConsoleLogger( Logger.LEVEL_INFO, "assemblyReader-internal" );
-            enableLogging( logger );
-        }
-
-        return logger;
     }
 
 }

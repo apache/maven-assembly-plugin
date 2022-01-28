@@ -25,9 +25,9 @@ import org.apache.maven.plugins.assembly.archive.task.AddFileSetsTask;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.model.FileSet;
+import org.apache.maven.plugins.assembly.utils.AbstractLogEnabled;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 
 import javax.annotation.Nonnull;
 import java.util.List;

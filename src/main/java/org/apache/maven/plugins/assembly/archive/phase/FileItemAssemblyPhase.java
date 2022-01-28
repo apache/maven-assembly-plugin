@@ -38,6 +38,7 @@ import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.format.ReaderFormatter;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.model.FileItem;
+import org.apache.maven.plugins.assembly.utils.AbstractLogEnabled;
 import org.apache.maven.plugins.assembly.utils.AssemblyFileUtils;
 import org.apache.maven.plugins.assembly.utils.AssemblyFormatUtils;
 import org.apache.maven.plugins.assembly.utils.TypeConversionUtils;
@@ -48,7 +49,6 @@ import org.codehaus.plexus.components.io.functions.ContentSupplier;
 import org.codehaus.plexus.components.io.functions.InputStreamTransformer;
 import org.codehaus.plexus.components.io.resources.PlexusIoFileResource;
 import org.codehaus.plexus.components.io.resources.PlexusIoResource;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 
 /**
  * Handles the top-level &lt;files/&gt; section of the assembly descriptor.

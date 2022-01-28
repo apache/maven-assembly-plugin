@@ -59,13 +59,13 @@ import org.apache.maven.plugins.assembly.model.ModuleSources;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
 import org.codehaus.plexus.archiver.Archiver;
-import org.codehaus.plexus.logging.Logger;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.Logger;
 
 @RunWith( MockitoJUnitRunner.class )
 public class ModuleSetAssemblyPhaseTest

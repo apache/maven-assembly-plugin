@@ -41,8 +41,8 @@ import org.codehaus.plexus.interpolation.fixed.MapBasedValueSource;
 import org.codehaus.plexus.interpolation.fixed.PrefixedObjectValueSource;
 import org.codehaus.plexus.interpolation.fixed.PrefixedPropertiesValueSource;
 import org.codehaus.plexus.interpolation.fixed.PropertiesBasedValueSource;
-import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
 
 /**
  *

@@ -32,12 +32,12 @@ import org.apache.maven.plugins.assembly.repository.RepositoryAssembler;
 import org.apache.maven.plugins.assembly.repository.RepositoryAssemblyException;
 import org.apache.maven.plugins.assembly.repository.RepositoryBuilderConfigSource;
 import org.apache.maven.plugins.assembly.repository.model.RepositoryInfo;
+import org.apache.maven.plugins.assembly.utils.AbstractLogEnabled;
 import org.apache.maven.plugins.assembly.utils.AssemblyFormatUtils;
 import org.apache.maven.plugins.assembly.utils.TypeConversionUtils;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 
 import java.io.File;
 import java.util.List;

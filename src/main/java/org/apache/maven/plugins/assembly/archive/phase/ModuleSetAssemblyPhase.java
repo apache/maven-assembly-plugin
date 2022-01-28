@@ -38,6 +38,7 @@ import org.apache.maven.plugins.assembly.model.FileSet;
 import org.apache.maven.plugins.assembly.model.ModuleBinaries;
 import org.apache.maven.plugins.assembly.model.ModuleSet;
 import org.apache.maven.plugins.assembly.model.ModuleSources;
+import org.apache.maven.plugins.assembly.utils.AbstractLogEnabled;
 import org.apache.maven.plugins.assembly.utils.AssemblyFileUtils;
 import org.apache.maven.plugins.assembly.utils.AssemblyFormatUtils;
 import org.apache.maven.plugins.assembly.utils.FilterUtils;
@@ -50,8 +51,7 @@ import org.codehaus.plexus.archiver.manager.ArchiverManager;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
-import org.codehaus.plexus.logging.Logger;
+import org.slf4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.io.File;

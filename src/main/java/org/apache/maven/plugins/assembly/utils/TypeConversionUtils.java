@@ -20,7 +20,7 @@ package org.apache.maven.plugins.assembly.utils;
  */
 
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
-import org.codehaus.plexus.logging.Logger;
+import org.slf4j.Logger;
 
 import java.util.List;
 

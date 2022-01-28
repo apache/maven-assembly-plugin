@@ -38,7 +38,7 @@ import org.apache.maven.shared.artifact.filter.PatternExcludesArtifactFilter;
 import org.apache.maven.shared.artifact.filter.PatternIncludesArtifactFilter;
 import org.apache.maven.shared.artifact.filter.StatisticsReportingArtifactFilter;
 import org.apache.maven.shared.artifact.filter.resolve.ScopeFilter;
-import org.codehaus.plexus.logging.Logger;
+import org.slf4j.Logger;
 
 /**
  *

@@ -22,8 +22,8 @@ package org.apache.maven.plugins.assembly.utils;
 import junit.framework.TestCase;
 import org.apache.maven.model.Model;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,6 +36,8 @@ import java.util.Set;
 public class ProjectUtilsTest
     extends TestCase
 {
+
+    private final Logger logger = LoggerFactory.getLogger( getClass() );
 
     private MavenProject createTestProject( final String artifactId, final String groupId, final String version )
     {
@@ -66,7 +68,7 @@ public class ProjectUtilsTest
         projects.add( module );
 
         final Set<MavenProject> result =
-            ProjectUtils.getProjectModules( master, projects, true, new ConsoleLogger( Logger.LEVEL_INFO, "test" ) );
+            ProjectUtils.getProjectModules( master, projects, true, logger );
 
         assertNotNull( result );
         assertEquals( 1, result.size() );
@@ -80,7 +82,7 @@ public class ProjectUtilsTest
 
         final Set<MavenProject> result =
             ProjectUtils.getProjectModules( master, Collections.singletonList( master ), true,
-                                            new ConsoleLogger( Logger.LEVEL_INFO, "test" ) );
+                                            logger );
 
         assertNotNull( result );
         assertTrue( result.isEmpty() );
@@ -112,7 +114,7 @@ public class ProjectUtilsTest
         projects.add( subModule );
 
         final Set<MavenProject> result =
-            ProjectUtils.getProjectModules( master, projects, true, new ConsoleLogger( Logger.LEVEL_INFO, "test" ) );
+            ProjectUtils.getProjectModules( master, projects, true, logger );
 
         assertNotNull( result );
         assertEquals( 2, result.size() );
@@ -149,7 +151,7 @@ public class ProjectUtilsTest
         projects.add( subModule );
 
         final Set<MavenProject> result =
-            ProjectUtils.getProjectModules( master, projects, false, new ConsoleLogger( Logger.LEVEL_INFO, "test" ) );
+            ProjectUtils.getProjectModules( master, projects, false, logger );
 
         assertNotNull( result );
         assertEquals( 1, result.size() );
@@ -178,7 +180,7 @@ public class ProjectUtilsTest
         projects.add( other );
 
         final Set<MavenProject> result =
-            ProjectUtils.getProjectModules( master, projects, true, new ConsoleLogger( Logger.LEVEL_INFO, "test" ) );
+            ProjectUtils.getProjectModules( master, projects, true, logger );
 
         assertNotNull( result );
         assertTrue( result.isEmpty() );

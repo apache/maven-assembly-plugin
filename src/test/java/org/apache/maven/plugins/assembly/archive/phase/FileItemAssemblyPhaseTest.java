@@ -39,17 +39,18 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.components.io.resources.PlexusIoResource;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RunWith( MockitoJUnitRunner.class )
 public class FileItemAssemblyPhaseTest
 {
+    
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
     
@@ -109,8 +110,7 @@ public class FileItemAssemblyPhaseTest
         verify( macArchiver ).addResource( any( PlexusIoResource.class ),
                                            eq( "file.txt" ),
                                            eq( TypeConversionUtils.modeToInt( "777",
-                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
-                                                                                                 "test" ) ) ) );
+                                                                              macLogger ) ) );
     }
 
     @Test
@@ -149,8 +149,7 @@ public class FileItemAssemblyPhaseTest
         verify( macArchiver ).addResource( any( PlexusIoResource.class ),
                                            eq( "file.txt" ),
                                            eq( TypeConversionUtils.modeToInt( "777",
-                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
-                                                                                                 "test" ) ) ) );
+                                                                              macLogger ) ) );
     }
 
     @Test
@@ -213,18 +212,15 @@ public class FileItemAssemblyPhaseTest
         verify( macArchiver ).addResource( any( PlexusIoResource.class ),
                                            eq( "README.txt" ),
                                            eq( TypeConversionUtils.modeToInt( "777",
-                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
-                                                                                                 "test" ) ) ) );
+                                                                              macLogger ) ) );
         verify( macArchiver ).addResource( any( PlexusIoResource.class ),
                                            eq( "LICENSE.txt" ),
                                            eq( TypeConversionUtils.modeToInt( "777",
-                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
-                                                                                                 "test" ) ) ) );
+                                                                              macLogger ) ) );
         verify( macArchiver ).addResource( any( PlexusIoResource.class ),
                                            eq( "config/config.txt" ),
                                            eq( TypeConversionUtils.modeToInt( "777",
-                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
-                                                                                                 "test" ) ) ) );
+                                                                              macLogger ) ) );
     
     }
 
@@ -291,18 +287,15 @@ public class FileItemAssemblyPhaseTest
         verify( macArchiver ).addResource( any( PlexusIoResource.class ), 
                                            eq( "README_renamed.txt" ),
                                            eq( TypeConversionUtils.modeToInt( "777",
-                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
-                                                                                                 "test" ) ) ) );
+                                                                              macLogger ) ) );
         verify( macArchiver ).addResource( any( PlexusIoResource.class ), 
                                            eq( "LICENSE_renamed.txt" ),
                                            eq( TypeConversionUtils.modeToInt( "777",
-                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
-                                                                                                 "test" ) ) ) );
+                                                                              macLogger ) ) );
         verify( macArchiver ).addResource( any( PlexusIoResource.class ), 
                                            eq( "config/config_renamed.txt" ),
                                            eq( TypeConversionUtils.modeToInt( "777",
-                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
-                                                                                                 "test" ) ) ) );
+                                                                              macLogger ) ) );
     }
 
     @Test
@@ -366,18 +359,15 @@ public class FileItemAssemblyPhaseTest
         verify( macArchiver ).addResource( any( PlexusIoResource.class ), 
                                            eq( "README_renamed.txt" ),
                                            eq( TypeConversionUtils.modeToInt( "777",
-                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
-                                                                                                 "test" ) ) ) );
+                                                                              macLogger ) ) );
         verify( macArchiver ).addResource( any( PlexusIoResource.class ),
                                            eq( "LICENSE_renamed.txt" ),
                                            eq( TypeConversionUtils.modeToInt( "777",
-                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
-                                                                                                 "test" ) ) ) );
+                                                                              macLogger ) ) );
         verify( macArchiver ).addResource( any( PlexusIoResource.class ), 
                                            eq( "config/config_renamed.txt" ),
                                            eq( TypeConversionUtils.modeToInt( "777",
-                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
-                                                                                                 "test" ) ) ) );
+                                                                              macLogger ) ) );
     }
 
     private FileItemAssemblyPhase createPhase( final Logger logger )

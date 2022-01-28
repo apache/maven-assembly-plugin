@@ -47,14 +47,14 @@ import org.codehaus.plexus.archiver.util.DefaultFileSet;
 import org.codehaus.plexus.components.io.fileselectors.FileInfo;
 import org.codehaus.plexus.components.io.fileselectors.FileSelector;
 import org.codehaus.plexus.components.io.functions.InputStreamTransformer;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RunWith( MockitoJUnitRunner.class )
 public class AssemblyProxyArchiverTest
@@ -62,7 +62,7 @@ public class AssemblyProxyArchiverTest
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
     
-    private static final Logger logger = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
+    private static final Logger logger = LoggerFactory.getLogger( AssemblyProxyArchiverTest.class );
 
     @Test( timeout = 5000 )
     public void addFileSet_SkipWhenSourceIsAssemblyWorkDir()
@@ -131,7 +131,7 @@ public class AssemblyProxyArchiverTest
 
         final AssemblyProxyArchiver archiver =
             new AssemblyProxyArchiver( "", delegate, null, selectors, null, new File( "." ),
-                                       new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) );
+                                       logger );
         archiver.setForced( true );
 
         final File inputFile = temporaryFolder.newFile();
@@ -158,7 +158,7 @@ public class AssemblyProxyArchiverTest
 
         final AssemblyProxyArchiver archiver =
             new AssemblyProxyArchiver( "", delegate, null, selectors, null, new File( "." ),
-                                       new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) );
+                                       logger );
 
         archiver.setForced( true );
 
@@ -181,7 +181,7 @@ public class AssemblyProxyArchiverTest
         final AssemblyProxyArchiver archiver =
             new AssemblyProxyArchiver( "prefix", delegate, null, selectors, null,
                                        new File( temporaryFolder.getRoot(), "module1" ),
-                                       new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) );
+                                       logger );
         
         FileSet fileSet = mock( FileSet.class );
         when( fileSet.getDirectory() ).thenReturn( temporaryFolder.getRoot() ); 
