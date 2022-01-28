@@ -37,6 +37,7 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.components.io.functions.InputStreamTransformer;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -213,7 +214,7 @@ public class AddFileSetsTask
     {
         if ( logger == null )
         {
-            logger = new ConsoleLogger( Logger.LEVEL_INFO, "AddFileSetsTask-internal" );
+            logger = LoggerFactory.getLogger( getClass() );
         }
     }
 

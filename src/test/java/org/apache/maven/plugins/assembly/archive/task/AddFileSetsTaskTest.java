@@ -38,13 +38,12 @@ import org.apache.maven.plugins.assembly.archive.DefaultAssemblyArchiverTest;
 import org.apache.maven.plugins.assembly.model.FileSet;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.archiver.Archiver;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.LoggerFactory;
 
 @RunWith( MockitoJUnitRunner.class )
 public class AddFileSetsTaskTest
@@ -143,7 +142,7 @@ public class AddFileSetsTaskTest
 
         final AddFileSetsTask task = new AddFileSetsTask( new ArrayList<FileSet>() );
 
-        task.setLogger( new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) );
+        task.setLogger( LoggerFactory.getLogger( getClass() ) );
         task.setProject( project );
 
         task.addFileSet( fs, archiver, configSource, null );
@@ -183,7 +182,7 @@ public class AddFileSetsTaskTest
         DefaultAssemblyArchiverTest.setupInterpolators( configSource, project );
 
         final AddFileSetsTask task = new AddFileSetsTask( new ArrayList<FileSet>() );
-        task.setLogger( new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) );
+        task.setLogger( LoggerFactory.getLogger( getClass() ) );
         task.setProject( project );
 
         task.addFileSet( fs, archiver, configSource, archiveBaseDir );
@@ -220,7 +219,7 @@ public class AddFileSetsTaskTest
 
         final AddFileSetsTask task = new AddFileSetsTask( new ArrayList<FileSet>() );
 
-        task.setLogger( new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) );
+        task.setLogger( LoggerFactory.getLogger( getClass() ) );
         task.setProject( project );
 
         task.addFileSet( fs, archiver, configSource, archiveBaseDir );

@@ -21,23 +21,28 @@ package org.apache.maven.plugins.assembly.utils;
 
 import junit.framework.TestCase;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.mockito.Mockito.mock;
 
 public class TypeConversionUtilsTest
     extends TestCase
 {
 
+    protected Logger logger = LoggerFactory.getLogger( getClass() );
+
     public void testModeToInt_InterpretAsOctalWithoutLeadingZero()
         throws AssemblyFormattingException
     {
         final int check = Integer.decode( "0777" );
-        final int test = TypeConversionUtils.modeToInt( "777", new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) );
+        final int test = TypeConversionUtils.modeToInt( "777", logger );
 
         assertEquals( check, test );
     }
@@ -46,7 +51,7 @@ public class TypeConversionUtilsTest
         throws AssemblyFormattingException
     {
         final int check = Integer.decode( "0777" );
-        final int test = TypeConversionUtils.modeToInt( "0777", new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) );
+        final int test = TypeConversionUtils.modeToInt( "0777", logger );
 
         assertEquals( check, test );
     }
@@ -55,7 +60,7 @@ public class TypeConversionUtilsTest
     {
         try
         {
-            TypeConversionUtils.modeToInt( "493", new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) );
+            TypeConversionUtils.modeToInt( "493", logger );
 
             fail( "'493' is an invalid mode and should trigger an exception." );
         }
@@ -93,31 +98,26 @@ public class TypeConversionUtilsTest
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         final PrintStream ps = new PrintStream( baos );
 
-        final PrintStream oldOut = System.out;
-        final PrintStream oldErr = System.err;
+        final Logger macLogger = ( Logger ) Proxy.newProxyInstance(
+                getClass().getClassLoader(),
+                new Class<?>[] { Logger.class },
+                ( proxy, method, args ) ->
+                {
+                    ps.println( args[0] );
+                    return null;
+                } );
 
-        try
-        {
-            System.setOut( ps );
-            System.setErr( ps );
-
-            assertEquals( "Mode sanity should be: " + isSane, isSane,
-                          TypeConversionUtils.verifyModeSanity( Integer.parseInt( mode, 8 ),
-                                                                new ConsoleLogger( Logger.LEVEL_WARN, "test" ) ) );
-        }
-        finally
-        {
-            System.setOut( oldOut );
-            System.setErr( oldErr );
-        }
+        assertEquals( "Mode sanity should be: " + isSane, isSane,
+                      TypeConversionUtils.verifyModeSanity( Integer.parseInt( mode, 8 ),
+                                                            macLogger ) );
 
         if ( !isSane && messagesToCheckIfInsane != null && !messagesToCheckIfInsane.isEmpty() )
         {
-            final String message = new String( baos.toByteArray() );
+            final String message = baos.toString();
 
             for ( final String checkMessage : messagesToCheckIfInsane )
             {
-                assertTrue( "\'" + checkMessage + "\' is not present in output.", message.contains( checkMessage ) );
+                assertTrue( "'" + checkMessage + "' is not present in output.", message.contains( checkMessage ) );
             }
         }
     }

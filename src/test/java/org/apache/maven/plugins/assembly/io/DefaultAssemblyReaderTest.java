@@ -59,20 +59,22 @@ import org.apache.maven.plugins.assembly.model.io.xpp3.ComponentXpp3Writer;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
 import org.codehaus.plexus.interpolation.fixed.InterpolationState;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RunWith( MockitoJUnitRunner.class )
 public class DefaultAssemblyReaderTest
 {
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
+
+    private Logger logger = LoggerFactory.getLogger( getClass() );
 
     private AssemblerConfigurationSource configSource;
 
@@ -355,7 +357,7 @@ public class DefaultAssemblyReaderTest
         InterpolationState is = new InterpolationState();
         ComponentXpp3Reader.ContentTransformer componentIp =
             AssemblyInterpolator.componentInterpolator( FixedStringSearchInterpolator.create(), is,
-                                                        new ConsoleLogger( Logger.LEVEL_DEBUG, "console" ) );
+                                                        logger );
 
         new DefaultAssemblyReader().mergeComponentsWithMainAssembly( assembly, null, configSource, componentIp );
 

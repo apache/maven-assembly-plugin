@@ -35,6 +35,7 @@ import org.apache.maven.plugins.assembly.model.ContainerDescriptorHandlerConfig;
 import org.apache.maven.plugins.assembly.utils.AbstractLogEnabled;
 import org.apache.maven.plugins.assembly.utils.AssemblyFileUtils;
 import org.apache.maven.plugins.assembly.utils.AssemblyFormatUtils;
+import org.apache.maven.plugins.assembly.utils.Slf4jLogger;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.archiver.ArchiveFinalizer;
@@ -341,7 +342,7 @@ public class DefaultAssemblyArchiver
                                               configSource.getWorkingDirectory(), getLogger() );
         if ( configSource.isDryRun() )
         {
-            archiver = new DryRunArchiver( archiver, getLogger() );
+            archiver = new DryRunArchiver( archiver, new Slf4jLogger( getLogger() ) );
         }
 
         archiver.setUseJvmChmod( configSource.isUpdateOnly() );

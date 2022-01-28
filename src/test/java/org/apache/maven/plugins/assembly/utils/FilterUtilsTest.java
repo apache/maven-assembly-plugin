@@ -37,24 +37,17 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
+import org.slf4j.Logger;
 import org.hamcrest.Matchers;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.LoggerFactory;
 
 @RunWith( MockitoJUnitRunner.class )
 public class FilterUtilsTest
 {
-    private Logger logger;
-
-    @Before
-    public void setUp()
-    {
-        logger = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
-    }
+    private Logger logger = LoggerFactory.getLogger( getClass() );
 
     @Test
     public void testFilterArtifacts_ShouldThrowExceptionUsingStrictModeWithUnmatchedInclude()
@@ -328,8 +321,6 @@ public class FilterUtilsTest
         {
             exclusions = Collections.emptyList();
         }
-
-        final Logger logger = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
 
         Set<MavenProject> result =
             FilterUtils.filterProjects( projects, inclusions, exclusions, depTrail != null, logger );

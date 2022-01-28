@@ -56,20 +56,22 @@ import org.codehaus.plexus.archiver.tar.TarLongFileMode;
 import org.codehaus.plexus.archiver.war.WarArchiver;
 import org.codehaus.plexus.archiver.zip.ZipArchiver;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RunWith( MockitoJUnitRunner.class )
 public class DefaultAssemblyArchiverTest
 {
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
+
+    private Logger logger = LoggerFactory.getLogger( getClass() );
 
     private PlexusContainer container;
 
@@ -513,7 +515,7 @@ public class DefaultAssemblyArchiverTest
 
         if ( logger == null )
         {
-            logger = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
+            logger = this.logger;
         }
 
         subject.enableLogging( logger );

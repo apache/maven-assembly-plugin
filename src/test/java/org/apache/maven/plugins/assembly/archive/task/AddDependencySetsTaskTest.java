@@ -70,10 +70,13 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.LoggerFactory;
 
 @RunWith( MockitoJUnitRunner.class )
 public class AddDependencySetsTaskTest
 {
+    org.slf4j.Logger logger = LoggerFactory.getLogger( getClass() );
+
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
@@ -145,8 +148,6 @@ public class AddDependencySetsTaskTest
 
         DefaultAssemblyArchiverTest.setupInterpolators( configSource, mainProject );
 
-        final Logger logger = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
-
         final AddDependencySetsTask task =
             new AddDependencySetsTask( Collections.singletonList( ds ), Collections.singleton( depArtifact ),
                                        depProject, projectBuilder, logger );
@@ -181,8 +182,6 @@ public class AddDependencySetsTaskTest
 
         final DependencySet ds = new DependencySet();
         ds.setOutputDirectory( "/out" );
-
-        final Logger logger = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
 
         final AddDependencySetsTask task =
             new AddDependencySetsTask( Collections.singletonList( ds ), null, project, null, logger );
@@ -237,8 +236,6 @@ public class AddDependencySetsTaskTest
         final DependencySet ds = new DependencySet();
         ds.setOutputDirectory( "/out" );
         DefaultAssemblyArchiverTest.setupInterpolators( configSource, project );
-
-        final Logger logger = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
 
         final AddDependencySetsTask task =
             new AddDependencySetsTask( Collections.singletonList( ds ), Collections.singleton( depArtifact ),
@@ -324,8 +321,6 @@ public class AddDependencySetsTaskTest
         final ProjectBuilder projectBuilder = mock( ProjectBuilder.class );
         when( projectBuilder.build( any( Artifact.class ), any( ProjectBuildingRequest.class ) ) ).thenReturn( pbr );
 
-        final Logger logger = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
-
         final AddDependencySetsTask task = new AddDependencySetsTask( Collections.singletonList( ds ),
                                                                       Collections.singleton(
                                                                           artifact ), project,
@@ -373,8 +368,6 @@ public class AddDependencySetsTaskTest
 
         final DependencySet dependencySet = new DependencySet();
 
-        final Logger logger = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
-
         final AddDependencySetsTask task = new AddDependencySetsTask( Collections.singletonList( dependencySet ),
                                                                       Collections.singleton(
                                                                       artifact ), project,
@@ -413,8 +406,6 @@ public class AddDependencySetsTaskTest
         dependencySet.addInclude( "group:artifact" );
         dependencySet.setUseTransitiveFiltering( true );
 
-        final Logger logger = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
-
         final AddDependencySetsTask task =
             new AddDependencySetsTask( Collections.singletonList( dependencySet ), artifacts, project, null, logger );
 
@@ -450,8 +441,6 @@ public class AddDependencySetsTaskTest
 
         dependencySet.addInclude( "group:artifact" );
         dependencySet.setUseTransitiveFiltering( false );
-
-        final Logger logger = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
 
         final AddDependencySetsTask task =
             new AddDependencySetsTask( Collections.singletonList( dependencySet ), artifacts, project, null, logger );
@@ -501,7 +490,7 @@ public class AddDependencySetsTaskTest
         when( projectBuilder.build( any( Artifact.class ), eq( pbReq ) ) ).thenReturn( pbRes );
 
         final AddDependencySetsTask task = new AddDependencySetsTask( Collections.singletonList( dependencySet ),
-                                                                      artifacts, project, projectBuilder, mock( Logger.class ) );
+                                                                      artifacts, project, projectBuilder, logger );
 
         final MavenSession session = mock( MavenSession.class );
         when( session.getProjectBuildingRequest() ).thenReturn( pbReq );

@@ -1,4 +1,5 @@
 package org.apache.maven.plugins.assembly.utils;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,7 +22,11 @@ package org.apache.maven.plugins.assembly.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AbstractLogEnabled {
+/**
+ * Base class to mimic the plexus one
+ */
+public class AbstractLogEnabled
+{
 
     private Logger logger = LoggerFactory.getLogger( getClass() );
 

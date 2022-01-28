@@ -32,7 +32,6 @@ import java.util.Set;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.artifact.handler.DefaultArtifactHandler;
-import org.apache.maven.artifact.repository.LegacyLocalRepositoryManager;
 import org.apache.maven.artifact.versioning.VersionRange;
 import org.apache.maven.execution.DefaultMavenExecutionRequest;
 import org.apache.maven.execution.DefaultMavenExecutionResult;
@@ -40,14 +39,17 @@ import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.execution.MavenExecutionResult;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Model;
-import org.apache.maven.plugin.testing.stubs.StubArtifactRepository;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.model.DependencySet;
 import org.apache.maven.plugins.assembly.model.ModuleBinaries;
 import org.apache.maven.plugins.assembly.model.ModuleSet;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.repository.internal.MavenRepositorySystemSession;
+import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
 import org.codehaus.plexus.PlexusTestCase;
+import org.eclipse.aether.DefaultRepositorySystemSession;
+import org.eclipse.aether.internal.impl.SimpleLocalRepositoryManagerFactory;
+import org.eclipse.aether.repository.LocalRepository;
+import org.eclipse.aether.repository.NoLocalRepositoryManagerException;
 
 public class DefaultDependencyResolverTest
     extends PlexusTestCase
@@ -65,14 +67,16 @@ public class DefaultDependencyResolverTest
     }
     
     protected MavenSession newMavenSession( MavenProject project )
+            throws NoLocalRepositoryManagerException
     {
         MavenExecutionRequest request = new DefaultMavenExecutionRequest();
         MavenExecutionResult result = new DefaultMavenExecutionResult();
 
-        MavenRepositorySystemSession repoSession = new MavenRepositorySystemSession();
-        
-        repoSession.setLocalRepositoryManager( LegacyLocalRepositoryManager.wrap( new StubArtifactRepository( "target/local-repo" ),
-                                                                                  null ) );
+        DefaultRepositorySystemSession repoSession = MavenRepositorySystemUtils.newSession();
+
+        LocalRepository localRepo = new LocalRepository( "target/local-repo" );
+        repoSession.setLocalRepositoryManager(
+                new SimpleLocalRepositoryManagerFactory().newInstance( repoSession, localRepo ) );
         MavenSession session = new MavenSession( getContainer(), repoSession, request, result );
         session.setCurrentProject( project );
         session.setProjects( Arrays.asList( project ) );

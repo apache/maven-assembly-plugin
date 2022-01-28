@@ -47,13 +47,16 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RunWith( MockitoJUnitRunner.class )
 public class RepositoryAssemblyPhaseTest
 {
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
-    
+
+    private Logger logger = LoggerFactory.getLogger( getClass() );
+
     private RepositoryAssemblyPhase phase;
     
     private RepositoryAssembler repositoryAssembler;
@@ -107,7 +110,7 @@ public class RepositoryAssemblyPhaseTest
         repo.setFileMode( "777" );
         assembly.addRepository( repo );
 
-        final int mode = TypeConversionUtils.modeToInt( "777", new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) );
+        final int mode = TypeConversionUtils.modeToInt( "777", logger );
 
         final int defaultDirMode = -1;
         final int defaultFileMode = -1;
