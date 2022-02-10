@@ -34,6 +34,7 @@ import org.codehaus.plexus.components.io.fileselectors.FileInfo;
 import org.codehaus.plexus.components.io.fileselectors.FileSelector;
 import org.codehaus.plexus.components.io.resources.PlexusIoResource;
 import org.codehaus.plexus.components.io.resources.PlexusIoResourceCollection;
+import org.codehaus.plexus.components.io.resources.ResourceFactory;
 import org.codehaus.plexus.logging.Logger;
 
 import javax.annotation.Nonnull;
@@ -784,7 +785,15 @@ public class AssemblyProxyArchiver
         {
             if ( selectors != null )
             {
-                final FileInfo fileInfo = new DefaultFileInfo( inputFile );
+                final FileInfo fileInfo;
+                try
+                {
+                    fileInfo = ResourceFactory.createResource( inputFile );
+                }
+                catch ( final IOException e )
+                {
+                    throw new ArchiverException( "Error processing file: " + inputFile, e );
+                }
 
                 for ( final FileSelector selector : selectors )
                 {

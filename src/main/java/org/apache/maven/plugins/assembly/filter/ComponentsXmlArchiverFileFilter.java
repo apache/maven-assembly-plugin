@@ -27,13 +27,13 @@ import org.codehaus.plexus.archiver.ResourceIterator;
 import org.codehaus.plexus.archiver.UnArchiver;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.components.io.fileselectors.FileInfo;
+import org.codehaus.plexus.components.io.resources.PlexusIoResource;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
 import org.codehaus.plexus.util.xml.Xpp3DomWriter;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import javax.annotation.Nonnull;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -44,6 +44,8 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.lang.Math.max;
 
 /**
  * Components XML file filter.
@@ -63,6 +65,8 @@ public class ComponentsXmlArchiverFileFilter
     Map<String, Xpp3Dom> components;
 
     private boolean excludeOverride = false;
+
+    private long lastModified = 0L;
 
     void addComponentsXml( final Reader componentsReader )
         throws XmlPullParserException, IOException
@@ -119,6 +123,11 @@ public class ComponentsXmlArchiverFileFilter
                 }
 
                 Xpp3DomWriter.write( fileWriter, dom );
+            }
+
+            if ( lastModified > 0 )
+            {
+                f.setLastModified( lastModified );
             }
 
             excludeOverride = true;
@@ -183,6 +192,12 @@ public class ComponentsXmlArchiverFileFilter
 
             if ( ComponentsXmlArchiverFileFilter.COMPONENTS_XML_PATH.equals( entry ) )
             {
+                if ( fileInfo instanceof PlexusIoResource )
+                {
+                    final PlexusIoResource resource = (PlexusIoResource) fileInfo;
+                    lastModified = max( lastModified, resource.getLastModified() );
+                }
+
                 try ( Reader reader = new BufferedReader( ReaderFactory.newXmlReader( fileInfo.getContents() ) ) )
                 {
                     addComponentsXml( reader );
