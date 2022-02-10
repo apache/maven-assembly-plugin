@@ -19,29 +19,7 @@ package org.apache.maven.plugins.assembly.archive.task;
  * under the License.
  */
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Properties;
-import java.util.Set;
-
+import com.google.common.collect.ImmutableSet;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.handler.ArtifactHandler;
 import org.apache.maven.execution.MavenSession;
@@ -70,6 +48,29 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Properties;
+import java.util.Set;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith( MockitoJUnitRunner.class )
 public class AddDependencySetsTaskTest
@@ -423,6 +424,60 @@ public class AddDependencySetsTaskTest
         assertNotNull( result );
         assertEquals( 1, result.size() );
         assertSame( am1, result.iterator().next() );
+    }
+
+    @Test
+    public void testGetDependencyArtifacts_ShouldFilterOptionalArtifactsByDefault() throws Exception
+    {
+        Artifact am1 = mockArtifact(1);
+        when(am1.isOptional()).thenReturn(true);
+        Artifact am2 = mockArtifact(2);
+        Set<Artifact> resolvedArtifacts = resolveDependencyArtifacts(new DependencySet(), ImmutableSet.of(am1, am2));
+        assertEquals(1, resolvedArtifacts.size());
+        assertSame(am2, resolvedArtifacts.iterator().next());
+    }
+
+    @Test
+    public void testGetDependencyArtifacts_ShouldFilterOptionalArtifactsExplicitly() throws Exception
+    {
+        Artifact am1 = mockArtifact(1);
+        when(am1.isOptional()).thenReturn(true);
+        Artifact am2 = mockArtifact(2);
+        DependencySet dependencySet = new DependencySet();
+        dependencySet.setUseOptionalDependencies(false);
+
+        Set<Artifact> resolvedArtifacts = resolveDependencyArtifacts(dependencySet, ImmutableSet.of(am1, am2));
+        assertEquals(1, resolvedArtifacts.size());
+        assertSame(am2, resolvedArtifacts.iterator().next());
+    }
+
+    @Test
+    public void testGetDependencyArtifacts_ShouldNotFilterOptionalArtifactsExplicitly() throws Exception
+    {
+        Artifact am1 = mockArtifact(1);
+        when(am1.isOptional()).thenReturn(true);
+        Artifact am2 = mockArtifact(2);
+        DependencySet dependencySet = new DependencySet();
+        dependencySet.setUseOptionalDependencies(true);
+        
+        Set<Artifact> resolvedArtifacts = resolveDependencyArtifacts(dependencySet, ImmutableSet.of(am1, am2));
+        assertEquals(2, resolvedArtifacts.size());
+    }
+
+    private static Artifact mockArtifact( int id )
+    {
+        Artifact a = mock(Artifact.class);
+        when(a.getId()).thenReturn("group:artifact" + id + ":1.0:jar");
+        return a;
+    }
+
+    private Set<Artifact> resolveDependencyArtifacts( DependencySet dependencySet, Set<Artifact> artifacts ) throws Exception
+    {
+        MavenProject project = new MavenProject(new Model());
+        Logger logger = new ConsoleLogger(Logger.LEVEL_DEBUG, "test");
+        AddDependencySetsTask task =
+            new AddDependencySetsTask(Collections.singletonList(dependencySet), artifacts, project, null, logger);
+        return task.resolveDependencyArtifacts(dependencySet);
     }
 
     @Test
