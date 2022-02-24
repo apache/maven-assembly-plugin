@@ -66,8 +66,8 @@ under the License.
   <properties>
     <javaVersion>8</javaVersion>
     <mdoVersion>2.1.0</mdoVersion>
-    <mavenArchiverVersion>3.5.3-SNAPSHOT</mavenArchiverVersion>
-    <mavenFilteringVersion>3.3.0-SNAPSHOT</mavenFilteringVersion>
+    <mavenArchiverVersion>3.5.2</mavenArchiverVersion>
+    <mavenFilteringVersion>3.2.0</mavenFilteringVersion>
     <mavenVersion>4.0.0-alpha-1-SNAPSHOT</mavenVersion>
     <testOutputToFile>true</testOutputToFile>
     <checkstyle.violation.ignore>RedundantThrows,NewlineAtEndOfFile,ParameterNumber,MethodLength,FileLength,ModifierOrder,JavadocMethod</checkstyle.violation.ignore>
