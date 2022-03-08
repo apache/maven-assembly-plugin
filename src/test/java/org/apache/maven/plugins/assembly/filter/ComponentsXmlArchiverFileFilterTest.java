@@ -145,7 +145,7 @@ public class ComponentsXmlArchiverFileFilterTest
     public void testAddToArchive_ShouldWriteComponentWithoutHintToFile()
         throws Exception
     {
-        final Xpp3Dom dom = createComponentDom( new ComponentDef( "role", null, "impl" ) );
+        final Xpp3Dom dom = createComponentDom( new ComponentDef( "role", null, "org/apache/maven/internal/impl" ) );
 
         filter.components = new LinkedHashMap<>();
         filter.components.put( "role", dom );
@@ -166,14 +166,14 @@ public class ComponentsXmlArchiverFileFilterTest
 
         assertEquals( "role", ( (Text) role.selectSingleNode( doc ) ).getText() );
         assertNull( hint.selectSingleNode( doc ) );
-        assertEquals( "impl", ( (Text) implementation.selectSingleNode( doc ) ).getText() );
+        assertEquals( "org/apache/maven/internal/impl", ( (Text) implementation.selectSingleNode( doc ) ).getText() );
     }
 
     @Test
     public void testAddToArchive_ShouldWriteComponentWithHintToFile()
         throws Exception
     {
-        final Xpp3Dom dom = createComponentDom( new ComponentDef( "role", "hint", "impl" ) );
+        final Xpp3Dom dom = createComponentDom( new ComponentDef( "role", "hint", "org/apache/maven/internal/impl" ) );
 
         filter.components = new LinkedHashMap<>();
         filter.components.put( "rolehint", dom );
@@ -194,7 +194,7 @@ public class ComponentsXmlArchiverFileFilterTest
 
         assertEquals( "role", ( (Text) role.selectSingleNode( doc ) ).getText() );
         assertEquals( "hint", ( (Text) hint.selectSingleNode( doc ) ).getText() );
-        assertEquals( "impl", ( (Text) implementation.selectSingleNode( doc ) ).getText() );
+        assertEquals( "org/apache/maven/internal/impl", ( (Text) implementation.selectSingleNode( doc ) ).getText() );
     }
 
     @Test
@@ -203,11 +203,11 @@ public class ComponentsXmlArchiverFileFilterTest
     {
         filter.components = new LinkedHashMap<>();
 
-        final Xpp3Dom dom = createComponentDom( new ComponentDef( "role", "hint", "impl" ) );
+        final Xpp3Dom dom = createComponentDom( new ComponentDef( "role", "hint", "org/apache/maven/internal/impl" ) );
 
         filter.components.put( "rolehint", dom );
 
-        final Xpp3Dom dom2 = createComponentDom( new ComponentDef( "role", "hint2", "impl" ) );
+        final Xpp3Dom dom2 = createComponentDom( new ComponentDef( "role", "hint2", "org/apache/maven/internal/impl" ) );
 
         filter.components.put( "rolehint2", dom2 );
 
@@ -227,7 +227,7 @@ public class ComponentsXmlArchiverFileFilterTest
 
         assertEquals( "role", ( (Text) role.selectSingleNode( doc ) ).getText() );
         assertEquals( "hint", ( (Text) hint.selectSingleNode( doc ) ).getText() );
-        assertEquals( "impl", ( (Text) implementation.selectSingleNode( doc ) ).getText() );
+        assertEquals( "org/apache/maven/internal/impl", ( (Text) implementation.selectSingleNode( doc ) ).getText() );
 
         final XPath role2 = XPath.newInstance( "//component[position()=2]/role/text()" );
         final XPath hint2 = XPath.newInstance( "//component[position()=2]/role-hint/text()" );
@@ -235,7 +235,7 @@ public class ComponentsXmlArchiverFileFilterTest
 
         assertEquals( "role", ( (Text) role2.selectSingleNode( doc ) ).getText() );
         assertEquals( "hint2", ( (Text) hint2.selectSingleNode( doc ) ).getText() );
-        assertEquals( "impl", ( (Text) implementation2.selectSingleNode( doc ) ).getText() );
+        assertEquals( "org/apache/maven/internal/impl", ( (Text) implementation2.selectSingleNode( doc ) ).getText() );
 
     }
 
@@ -245,11 +245,11 @@ public class ComponentsXmlArchiverFileFilterTest
     {
         filter.components = new LinkedHashMap<>();
 
-        final Xpp3Dom dom = createComponentDom( new ComponentDef( "role", "hint", "impl" ) );
+        final Xpp3Dom dom = createComponentDom( new ComponentDef( "role", "hint", "org/apache/maven/internal/impl" ) );
 
         filter.components.put( "rolehint", dom );
 
-        final Xpp3Dom dom2 = createComponentDom( new ComponentDef( "role", "hint2", "impl" ) );
+        final Xpp3Dom dom2 = createComponentDom( new ComponentDef( "role", "hint2", "org/apache/maven/internal/impl" ) );
 
         filter.components.put( "rolehint2", dom2 );
 
@@ -284,7 +284,7 @@ public class ComponentsXmlArchiverFileFilterTest
 
         assertEquals( "role", ( (Text) role.selectSingleNode( doc ) ).getText() );
         assertEquals( "hint", ( (Text) hint.selectSingleNode( doc ) ).getText() );
-        assertEquals( "impl", ( (Text) implementation.selectSingleNode( doc ) ).getText() );
+        assertEquals( "org/apache/maven/internal/impl", ( (Text) implementation.selectSingleNode( doc ) ).getText() );
 
         final XPath role2 = XPath.newInstance( "//component[position()=2]/role/text()" );
         final XPath hint2 = XPath.newInstance( "//component[position()=2]/role-hint/text()" );
@@ -292,7 +292,7 @@ public class ComponentsXmlArchiverFileFilterTest
 
         assertEquals( "role", ( (Text) role2.selectSingleNode( doc ) ).getText() );
         assertEquals( "hint2", ( (Text) hint2.selectSingleNode( doc ) ).getText() );
-        assertEquals( "impl", ( (Text) implementation2.selectSingleNode( doc ) ).getText() );
+        assertEquals( "org/apache/maven/internal/impl", ( (Text) implementation2.selectSingleNode( doc ) ).getText() );
 
     }
 
