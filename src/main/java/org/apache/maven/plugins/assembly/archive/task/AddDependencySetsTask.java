@@ -30,6 +30,7 @@ import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
@@ -43,6 +44,7 @@ import org.apache.maven.plugins.assembly.model.UnpackOptions;
 import org.apache.maven.plugins.assembly.utils.AssemblyFormatUtils;
 import org.apache.maven.plugins.assembly.utils.FilterUtils;
 import org.apache.maven.plugins.assembly.utils.TypeConversionUtils;
+import org.apache.maven.project.DefaultProjectBuildingRequest;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
 import org.apache.maven.project.ProjectBuildingException;
@@ -181,7 +183,12 @@ public class AddDependencySetsTask extends ComponentSupport
 
     private ProjectBuildingRequest getProjectBuildingRequest( AssemblerConfigurationSource configSource )
     {
-        return configSource.getMavenSession().getProjectBuildingRequest();
+        MavenSession mavenSession = configSource.getMavenSession();
+        return new DefaultProjectBuildingRequest()
+                .setRepositorySession( mavenSession.getRepositorySession() )
+                .setSystemProperties( mavenSession.getSystemProperties() )
+                .setUserProperties( mavenSession.getUserProperties() )
+                .setProcessPlugins( false );
     }
 
     private boolean isUnpackWithOptions( DependencySet dependencySet )

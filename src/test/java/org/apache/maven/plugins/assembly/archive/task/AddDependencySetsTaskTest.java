@@ -62,6 +62,7 @@ import org.codehaus.plexus.archiver.ArchivedFileSet;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.FileSet;
+import org.eclipse.aether.RepositorySystemSession;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -128,7 +129,6 @@ public class AddDependencySetsTaskTest
         when( projectBuilder.build( any( Artifact.class ), any( ProjectBuildingRequest.class ) ) ).thenReturn( pbr );
 
         final MavenSession session = mock( MavenSession.class );
-        when( session.getProjectBuildingRequest() ).thenReturn( mock( ProjectBuildingRequest.class ) );
         when( session.getExecutionProperties() ).thenReturn( new Properties() );
 
         final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
@@ -163,7 +163,7 @@ public class AddDependencySetsTaskTest
         verify( archiver ).setFileMode( 10 );
         verify( archiver ).setFileMode( 146 );
 
-        verify( session ).getProjectBuildingRequest();
+        verify( session ).getRepositorySession();
         verify( session, times( 2 ) ).getExecutionProperties();
         
         verify( projectBuilder ).build( any( Artifact.class ), any( ProjectBuildingRequest.class ) );
@@ -219,7 +219,6 @@ public class AddDependencySetsTaskTest
         when( projectBuilder.build( any(Artifact.class), any(ProjectBuildingRequest.class) ) ).thenThrow( pbe );
         
         final MavenSession session = mock( MavenSession.class );
-        when( session.getProjectBuildingRequest() ).thenReturn( mock( ProjectBuildingRequest.class ) );
         when( session.getExecutionProperties() ).thenReturn( new Properties() );
 
         final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
@@ -248,7 +247,7 @@ public class AddDependencySetsTaskTest
         verify( archiver ).getOverrideDirectoryMode();
         verify( archiver ).getOverrideFileMode();
 
-        verify( session ).getProjectBuildingRequest();
+        verify( session ).getRepositorySession();
         verify( session, times( 2 ) ).getExecutionProperties();
 
         verify( projectBuilder ).build( any(Artifact.class), any(ProjectBuildingRequest.class) );
@@ -283,9 +282,12 @@ public class AddDependencySetsTaskTest
         ds.setDirectoryMode( Integer.toString( 10, 8 ) );
         ds.setFileMode( Integer.toString( 10, 8 ) );
 
+        final RepositorySystemSession repoSession = mock( RepositorySystemSession.class );
         final MavenSession session = mock( MavenSession.class );
-        when( session.getProjectBuildingRequest() ).thenReturn( mock( ProjectBuildingRequest.class ) );
+        when( session.getRepositorySession() ).thenReturn( repoSession );
         when( session.getExecutionProperties() ).thenReturn( new Properties() );
+        when( session.getSystemProperties() ).thenReturn( new Properties() );
+        when( session.getUserProperties() ).thenReturn( new Properties() );
 
         final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
         when( configSource.getMavenSession() ).thenReturn( session );
@@ -336,7 +338,7 @@ public class AddDependencySetsTaskTest
         verify( archiver ).setDirectoryMode( 10 );
         verify( archiver ).setDirectoryMode( 146 );
         
-        verify( session ).getProjectBuildingRequest();
+        verify( session ).getRepositorySession();
         verify( session, atLeastOnce() ).getExecutionProperties();
         
         verify( projectBuilder ).build( any( Artifact.class ), any( ProjectBuildingRequest.class ) );
@@ -386,14 +388,13 @@ public class AddDependencySetsTaskTest
         Artifact am1 = mock( Artifact.class );
         when( am1.getGroupId() ).thenReturn( "group" );
         when( am1.getArtifactId() ).thenReturn( "artifact" );
-        when( am1.getId() ).thenReturn( "group:artifact:1.0:jar" );
+        when( am1.getBaseVersion() ).thenReturn( "version" );
         artifacts.add( am1 );
 
         Artifact am2 = mock( Artifact.class );
         when( am2.getGroupId() ).thenReturn( "group2" );
         when( am2.getArtifactId() ).thenReturn( "artifact2" );
-        when( am2.getId() ).thenReturn( "group2:artifact2:1.0:jar" );
-        when( am2.getDependencyConflictId() ).thenReturn( "group2:artifact2:jar" );
+        when( am2.getBaseVersion() ).thenReturn( "version" );
         artifacts.add( am2 );
 
         final DependencySet dependencySet = new DependencySet();
@@ -422,14 +423,13 @@ public class AddDependencySetsTaskTest
         Artifact am1 = mock( Artifact.class );
         when( am1.getGroupId() ).thenReturn( "group" );
         when( am1.getArtifactId() ).thenReturn( "artifact" );
-        when( am1.getId() ).thenReturn( "group:artifact:1.0:jar" );
+        when( am1.getBaseVersion() ).thenReturn( "version" );
         artifacts.add( am1 );
 
         Artifact am2 = mock( Artifact.class );
         when( am2.getGroupId() ).thenReturn( "group2" );
         when( am2.getArtifactId() ).thenReturn( "artifact2" );
-        when( am2.getId() ).thenReturn( "group2:artifact2:1.0:jar" );
-        when( am2.getDependencyConflictId() ).thenReturn( "group2:artifact2:jar" );
+        when( am2.getBaseVersion() ).thenReturn( "version" );
         artifacts.add( am2 );
 
         final DependencySet dependencySet = new DependencySet();
@@ -477,18 +477,16 @@ public class AddDependencySetsTaskTest
         final MavenProject project = new MavenProject( new Model() );
         project.setGroupId( "GROUPID" );
 
-        ProjectBuildingRequest pbReq  = mock( ProjectBuildingRequest.class );
         ProjectBuildingResult pbRes = mock( ProjectBuildingResult.class );
         when( pbRes.getProject() ).thenReturn( project );
 
         final ProjectBuilder projectBuilder = mock( ProjectBuilder.class );
-        when( projectBuilder.build( any( Artifact.class ), eq( pbReq ) ) ).thenReturn( pbRes );
+        when( projectBuilder.build( any( Artifact.class ), any( ProjectBuildingRequest.class ) ) ).thenReturn( pbRes );
 
         final AddDependencySetsTask task = new AddDependencySetsTask( Collections.singletonList( dependencySet ),
                                                                       artifacts, project, projectBuilder );
 
         final MavenSession session = mock( MavenSession.class );
-        when( session.getProjectBuildingRequest() ).thenReturn( pbReq );
 
         final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
         when( configSource.getMavenSession() ).thenReturn( session );
