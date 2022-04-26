@@ -37,7 +37,6 @@ import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
 import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.format.ReaderFormatter;
-import org.apache.maven.plugins.assembly.internal.ComponentSupport;
 import org.apache.maven.plugins.assembly.model.DependencySet;
 import org.apache.maven.plugins.assembly.model.UnpackOptions;
 import org.apache.maven.plugins.assembly.utils.AssemblyFormatUtils;
@@ -54,12 +53,15 @@ import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.components.io.functions.InputStreamTransformer;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  */
-public class AddDependencySetsTask extends ComponentSupport
+public class AddDependencySetsTask
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger( AddDependencySetsTask.class );
 
     private static final List<String> NON_ARCHIVE_DEPENDENCY_TYPES;
 
@@ -103,14 +105,14 @@ public class AddDependencySetsTask extends ComponentSupport
     {
         if ( ( dependencySets == null ) || dependencySets.isEmpty() )
         {
-            getLogger().debug( "No dependency sets specified." );
+            LOGGER.debug( "No dependency sets specified." );
             return;
         }
 
         final List<Dependency> deps = project.getDependencies();
         if ( ( deps == null ) || deps.isEmpty() )
         {
-            getLogger().debug(
+            LOGGER.debug(
                     "Project " + project.getId() + " has no dependencies. Skipping dependency set addition." );
         }
 
@@ -124,11 +126,11 @@ public class AddDependencySetsTask extends ComponentSupport
                            final AssemblerConfigurationSource configSource )
         throws AssemblyFormattingException, ArchiveCreationException, InvalidAssemblerConfigurationException
     {
-        getLogger().debug( "Processing DependencySet (output=" + dependencySet.getOutputDirectory() + ")" );
+        LOGGER.debug( "Processing DependencySet (output=" + dependencySet.getOutputDirectory() + ")" );
 
         if ( !dependencySet.isUseTransitiveDependencies() && dependencySet.isUseTransitiveFiltering() )
         {
-            getLogger().warn( "DependencySet has nonsensical configuration: useTransitiveDependencies == false "
+            LOGGER.warn( "DependencySet has nonsensical configuration: useTransitiveDependencies == false "
                              + "AND useTransitiveFiltering == true. Transitive filtering flag will be ignored." );
         }
 
@@ -139,7 +141,7 @@ public class AddDependencySetsTask extends ComponentSupport
             checkMultiArtifactOutputConfig( dependencySet );
         }
 
-        getLogger().debug( "Adding " + dependencyArtifacts.size() + " dependency artifacts." );
+        LOGGER.debug( "Adding " + dependencyArtifacts.size() + " dependency artifacts." );
 
         UnpackOptions unpackOptions = dependencySet.getUnpackOptions();
         InputStreamTransformer fileSetTransformers = isUnpackWithOptions( dependencySet )
@@ -160,7 +162,7 @@ public class AddDependencySetsTask extends ComponentSupport
             }
             catch ( final ProjectBuildingException e )
             {
-                getLogger().debug(
+                LOGGER.debug(
                     "Error retrieving POM of module-dependency: " + depArtifact.getId() + "; Reason: " + e.getMessage()
                         + "\n\nBuilding stub project instance." );
 
@@ -215,7 +217,7 @@ public class AddDependencySetsTask extends ComponentSupport
 
         if ( ( dir == null || !dir.contains( "${" ) ) && ( mapping == null || !mapping.contains( "${" ) ) )
         {
-            getLogger().warn( "NOTE: Your assembly specifies a dependencySet that matches multiple artifacts, but "
+            LOGGER.warn( "NOTE: Your assembly specifies a dependencySet that matches multiple artifacts, but "
                              + "specifies a concrete output format. THIS MAY RESULT IN ONE OR MORE ARTIFACTS BEING "
                              + "OBSCURED!\n\n" + "Output directory: '" + dir + "'\nOutput filename mapping: '" + mapping
                              + "'" );
@@ -228,7 +230,7 @@ public class AddDependencySetsTask extends ComponentSupport
                                     InputStreamTransformer fileSetTransformers )
         throws AssemblyFormattingException, ArchiveCreationException
     {
-        getLogger().debug( "Adding dependency artifact " + depArtifact.getId() + "." );
+        LOGGER.debug( "Adding dependency artifact " + depArtifact.getId() + "." );
 
         String encoding = isUnpackWithOptions( dependencySet ) ? dependencySet.getUnpackOptions().getEncoding() : null;
         Charset charset = encoding != null ? Charset.forName( encoding ) : null;
@@ -240,13 +242,13 @@ public class AddDependencySetsTask extends ComponentSupport
         task.setOutputDirectory( dependencySet.getOutputDirectory(), defaultOutputDirectory );
         task.setFileNameMapping( dependencySet.getOutputFileNameMapping(), defaultOutputFileNameMapping );
 
-        final int dirMode = TypeConversionUtils.modeToInt( dependencySet.getDirectoryMode(), getLogger() );
+        final int dirMode = TypeConversionUtils.modeToInt( dependencySet.getDirectoryMode(), LOGGER );
         if ( dirMode != -1 )
         {
             task.setDirectoryMode( dirMode );
         }
 
-        final int fileMode = TypeConversionUtils.modeToInt( dependencySet.getFileMode(), getLogger() );
+        final int fileMode = TypeConversionUtils.modeToInt( dependencySet.getFileMode(), LOGGER );
         if ( fileMode != -1 )
         {
             task.setFileMode( fileMode );
@@ -300,7 +302,7 @@ public class AddDependencySetsTask extends ComponentSupport
             }
             else
             {
-                getLogger().warn( "Cannot include project artifact: " + projectArtifact
+                LOGGER.warn( "Cannot include project artifact: " + projectArtifact
                                  + "; it doesn't have an associated file or directory." );
             }
         }
@@ -318,7 +320,7 @@ public class AddDependencySetsTask extends ComponentSupport
                     }
                     else
                     {
-                        getLogger().warn(
+                        LOGGER.warn(
                             "Cannot include attached artifact: " + project.getId() + " for project: " + project.getId()
                                 + "; it doesn't have an associated file or directory." );
                     }
@@ -328,11 +330,11 @@ public class AddDependencySetsTask extends ComponentSupport
 
         if ( dependencySet.isUseTransitiveFiltering() )
         {
-            getLogger().debug( "Filtering dependency artifacts USING transitive dependency path information." );
+            LOGGER.debug( "Filtering dependency artifacts USING transitive dependency path information." );
         }
         else
         {
-            getLogger().debug( "Filtering dependency artifacts WITHOUT transitive dependency path information." );
+            LOGGER.debug( "Filtering dependency artifacts WITHOUT transitive dependency path information." );
         }
 
         final ScopeFilter scopeFilter = FilterUtils.newScopeFilter( dependencySet.getScope() );
@@ -341,7 +343,7 @@ public class AddDependencySetsTask extends ComponentSupport
         
         FilterUtils.filterArtifacts( dependencyArtifacts, dependencySet.getIncludes(), dependencySet.getExcludes(),
                                      dependencySet.isUseStrictFiltering(), dependencySet.isUseTransitiveFiltering(),
-                                     getLogger(), filter );
+                                     LOGGER, filter );
 
         return dependencyArtifacts;
     }
@@ -382,7 +384,7 @@ public class AddDependencySetsTask extends ComponentSupport
 
         try
         {
-            final int mode = TypeConversionUtils.modeToInt( dependencySet.getFileMode(), getLogger() );
+            final int mode = TypeConversionUtils.modeToInt( dependencySet.getFileMode(), LOGGER );
             if ( mode > -1 )
             {
                 archiver.addFile( source, target, mode );

@@ -32,7 +32,6 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
 import org.apache.maven.plugins.assembly.archive.phase.ModuleSetAssemblyPhase;
-import org.apache.maven.plugins.assembly.internal.ComponentSupport;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.model.DependencySet;
 import org.apache.maven.plugins.assembly.model.ModuleBinaries;
@@ -40,6 +39,8 @@ import org.apache.maven.plugins.assembly.model.ModuleSet;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.repository.RepositorySystem;
 import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static java.util.Objects.requireNonNull;
 
@@ -49,10 +50,10 @@ import static java.util.Objects.requireNonNull;
  */
 @Singleton
 @Named
-public class DefaultDependencyResolver
-        extends ComponentSupport
-        implements DependencyResolver
+public class DefaultDependencyResolver implements DependencyResolver
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger( DefaultDependencyResolver.class );
+
     private final RepositorySystem resolver;
 
     @Inject
@@ -117,7 +118,7 @@ public class DefaultDependencyResolver
             Set<MavenProject> projects;
             try
             {
-                projects = ModuleSetAssemblyPhase.getModuleProjects( set, configSource, getLogger() );
+                projects = ModuleSetAssemblyPhase.getModuleProjects( set, configSource, LOGGER );
             }
             catch ( final ArchiveCreationException e )
             {
@@ -167,7 +168,7 @@ public class DefaultDependencyResolver
             }
 
             requirements.addArtifacts( dependencyArtifacts );
-            getLogger().debug( "Dependencies for project: " + project.getId() + " are:\n" + StringUtils.join(
+            LOGGER.debug( "Dependencies for project: " + project.getId() + " are:\n" + StringUtils.join(
                 dependencyArtifacts.iterator(), "\n" ) );
         }
     }

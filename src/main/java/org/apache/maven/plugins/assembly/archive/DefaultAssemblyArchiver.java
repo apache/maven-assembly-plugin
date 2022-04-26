@@ -32,7 +32,6 @@ import org.apache.maven.plugins.assembly.artifact.DependencyResolutionException;
 import org.apache.maven.plugins.assembly.filter.ComponentsXmlArchiverFileFilter;
 import org.apache.maven.plugins.assembly.filter.ContainerDescriptorHandler;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
-import org.apache.maven.plugins.assembly.internal.ComponentSupport;
 import org.apache.maven.plugins.assembly.internal.PlexusLoggingHelper;
 import org.apache.maven.plugins.assembly.interpolation.AssemblyExpressionEvaluator;
 import org.apache.maven.plugins.assembly.model.Assembly;
@@ -64,6 +63,8 @@ import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -88,10 +89,9 @@ import static java.util.Objects.requireNonNull;
  *
  */
 @Named
-public class DefaultAssemblyArchiver
-        extends ComponentSupport
-        implements AssemblyArchiver
+public class DefaultAssemblyArchiver implements AssemblyArchiver
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger( DefaultAssemblyArchiver.class );
 
     private final ArchiverManager archiverManager;
 
@@ -212,7 +212,7 @@ public class DefaultAssemblyArchiver
         throws InvalidAssemblerConfigurationException
     // CHECKSTYLE_ON: LineLength
     {
-        getLogger().debug( "All known ContainerDescriptorHandler components: " + ( containerDescriptorHandlers == null
+        LOGGER.debug( "All known ContainerDescriptorHandler components: " + ( containerDescriptorHandlers == null
             ? "none; map is null."
             : "" + containerDescriptorHandlers.keySet() ) );
 
@@ -237,12 +237,12 @@ public class DefaultAssemblyArchiver
                         "Cannot find ContainerDescriptorHandler with hint: " + hint );
                 }
 
-                getLogger().debug(
+                LOGGER.debug(
                     "Found container descriptor handler with hint: " + hint + " (component: " + handler + ")" );
 
                 if ( config.getConfiguration() != null )
                 {
-                    getLogger().debug( "Configuring handler with:\n\n" + config.getConfiguration() + "\n\n" );
+                    LOGGER.debug( "Configuring handler with:\n\n" + config.getConfiguration() + "\n\n" );
 
                     configureContainerDescriptorHandler( handler, (Xpp3Dom) config.getConfiguration(), configSource );
                 }
@@ -332,7 +332,7 @@ public class DefaultAssemblyArchiver
                                               configSource.getWorkingDirectory() );
         if ( configSource.isDryRun() )
         {
-            archiver = new DryRunArchiver( archiver, PlexusLoggingHelper.wrap( getLogger() ) );
+            archiver = new DryRunArchiver( archiver, PlexusLoggingHelper.wrap( LOGGER ) );
         }
 
         archiver.setUseJvmChmod( configSource.isUpdateOnly() );
@@ -369,7 +369,7 @@ public class DefaultAssemblyArchiver
                                                       final AssemblerConfigurationSource configSource )
         throws InvalidAssemblerConfigurationException
     {
-        getLogger().debug( "Configuring handler: '" + handler.getClass().getName() + "' -->" );
+        LOGGER.debug( "Configuring handler: '" + handler.getClass().getName() + "' -->" );
 
         try
         {
@@ -386,7 +386,7 @@ public class DefaultAssemblyArchiver
                 "Failed to lookup configurator for setup of handler: " + handler.getClass().getName(), e );
         }
 
-        getLogger().debug( "-- end configuration --" );
+        LOGGER.debug( "-- end configuration --" );
     }
 
     private void configureArchiver( final Archiver archiver, final AssemblerConfigurationSource configSource )
@@ -402,7 +402,7 @@ public class DefaultAssemblyArchiver
                                          e );
         }
 
-        getLogger().debug( "Configuring archiver: '" + archiver.getClass().getName() + "' -->" );
+        LOGGER.debug( "Configuring archiver: '" + archiver.getClass().getName() + "' -->" );
 
         try
         {
@@ -418,7 +418,7 @@ public class DefaultAssemblyArchiver
                 "Failed to lookup configurator for setup of archiver: " + archiver.getClass().getName(), e );
         }
 
-        getLogger().debug( "-- end configuration --" );
+        LOGGER.debug( "-- end configuration --" );
     }
 
     private void configureComponent( final Object component, final Xpp3Dom config,
@@ -428,7 +428,7 @@ public class DefaultAssemblyArchiver
         final ComponentConfigurator configurator = container.lookup( ComponentConfigurator.class, "basic" );
 
         final ConfigurationListener listener = new DebugConfigurationListener(
-                PlexusLoggingHelper.wrap( getLogger() ) );
+                PlexusLoggingHelper.wrap( LOGGER ) );
 
         final ExpressionEvaluator expressionEvaluator = new AssemblyExpressionEvaluator( configSource );
 

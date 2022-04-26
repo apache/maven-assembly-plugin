@@ -19,7 +19,6 @@ package org.apache.maven.plugins.assembly.filter;
  * under the License.
  */
 
-import org.apache.maven.plugins.assembly.internal.ComponentSupport;
 import org.apache.maven.plugins.assembly.utils.AssemblyFileUtils;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
@@ -48,11 +47,8 @@ import java.util.List;
  *
  */
 @Named( "file-aggregator" )
-public class SimpleAggregatingDescriptorHandler
-        extends ComponentSupport
-        implements ContainerDescriptorHandler
+public class SimpleAggregatingDescriptorHandler implements ContainerDescriptorHandler
 {
-
     // component configuration.
 
     @SuppressWarnings( "FieldCanBeLocal" )

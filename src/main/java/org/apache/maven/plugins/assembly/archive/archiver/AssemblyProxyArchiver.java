@@ -20,7 +20,6 @@ package org.apache.maven.plugins.assembly.archive.archiver;
  */
 
 import org.apache.maven.plugins.assembly.filter.ContainerDescriptorHandler;
-import org.apache.maven.plugins.assembly.internal.ComponentSupport;
 import org.codehaus.plexus.archiver.ArchiveEntry;
 import org.codehaus.plexus.archiver.ArchiveFinalizer;
 import org.codehaus.plexus.archiver.ArchivedFileSet;
@@ -35,6 +34,8 @@ import org.codehaus.plexus.components.io.fileselectors.FileInfo;
 import org.codehaus.plexus.components.io.fileselectors.FileSelector;
 import org.codehaus.plexus.components.io.resources.PlexusIoResource;
 import org.codehaus.plexus.components.io.resources.PlexusIoResourceCollection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -59,10 +60,9 @@ import java.util.Map;
  * @author jdcasey
  *
  */
-public class AssemblyProxyArchiver
-        extends ComponentSupport
-        implements Archiver
+public class AssemblyProxyArchiver implements Archiver
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger( AssemblyProxyArchiver.class );
 
     private final Archiver delegate;
 
@@ -161,9 +161,9 @@ public class AssemblyProxyArchiver
 
     private void debug( final String message )
     {
-        if ( getLogger().isDebugEnabled() )
+        if ( LOGGER.isDebugEnabled() )
         {
-            getLogger().debug( message );
+            LOGGER.debug( message );
         }
     }
 
@@ -725,7 +725,7 @@ public class AssemblyProxyArchiver
 
         if ( fsPath.equals( assemblyWorkPath ) )
         {
-            getLogger().debug(
+            LOGGER.debug(
                     "SKIPPING fileset with source directory matching assembly working-directory: " + fsPath );
         }
         else if ( assemblyWorkPath.startsWith( fsPath ) )
@@ -738,7 +738,7 @@ public class AssemblyProxyArchiver
 
             final String workDirExclude = assemblyWorkPath.substring( fsPath.length() + 1 );
 
-            getLogger().debug(
+            LOGGER.debug(
                 "Adding exclude for assembly working-directory: " + workDirExclude + "\nFile-Set source directory: "
                     + fsPath );
 
