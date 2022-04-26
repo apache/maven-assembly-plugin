@@ -19,6 +19,10 @@ package org.apache.maven.plugins.assembly.artifact;
  * under the License.
  */
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,29 +32,35 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
 import org.apache.maven.plugins.assembly.archive.phase.ModuleSetAssemblyPhase;
+import org.apache.maven.plugins.assembly.internal.ComponentSupport;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.model.DependencySet;
 import org.apache.maven.plugins.assembly.model.ModuleBinaries;
 import org.apache.maven.plugins.assembly.model.ModuleSet;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.repository.RepositorySystem;
-import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.component.annotations.Requirement;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.util.StringUtils;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author jdcasey
  *
  */
-@Component( role = DependencyResolver.class )
+@Singleton
+@Named
 public class DefaultDependencyResolver
-    extends AbstractLogEnabled
-    implements DependencyResolver
+        extends ComponentSupport
+        implements DependencyResolver
 {
-    @Requirement
-    private RepositorySystem resolver;
-    
+    private final RepositorySystem resolver;
+
+    @Inject
+    public DefaultDependencyResolver( RepositorySystem resolver )
+    {
+        this.resolver = requireNonNull( resolver );
+    }
+
     @Override
     public Map<DependencySet, Set<Artifact>> resolveDependencySets( final Assembly assembly, ModuleSet moduleSet,
                                                                     final AssemblerConfigurationSource configSource,

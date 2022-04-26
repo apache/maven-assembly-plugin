@@ -32,16 +32,14 @@ import org.codehaus.plexus.components.io.resources.PlexusIoResource;
 import org.codehaus.plexus.components.io.resources.PlexusIoResourceCollection;
 import org.codehaus.plexus.util.xml.PrettyPrintXMLWriter;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
-import org.jdom.Document;
-import org.jdom.Text;
-import org.jdom.input.SAXBuilder;
-import org.jdom.xpath.XPath;
+import org.jdom2.Document;
+import org.jdom2.Text;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.xpath.XPath;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-
-import javax.annotation.Nonnull;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -383,32 +381,32 @@ public class ComponentsXmlArchiverFileFilterTest
 
         private String destFileName;
 
-        public void addDirectory( final @Nonnull File directory )
+        public void addDirectory( final File directory )
             throws ArchiverException
         {
             throw new UnsupportedOperationException( "not supported" );
         }
 
-        public void addDirectory( final @Nonnull File directory, final String prefix )
+        public void addDirectory( final File directory, final String prefix )
             throws ArchiverException
         {
             throw new UnsupportedOperationException( "not supported" );
         }
 
-        public void addDirectory( final @Nonnull File directory, final String[] includes, final String[] excludes )
+        public void addDirectory( final File directory, final String[] includes, final String[] excludes )
             throws ArchiverException
         {
             throw new UnsupportedOperationException( "not supported" );
         }
 
-        public void addDirectory( final @Nonnull File directory, final String prefix, final String[] includes,
+        public void addDirectory( final File directory, final String prefix, final String[] includes,
                                   final String[] excludes )
             throws ArchiverException
         {
             throw new UnsupportedOperationException( "not supported" );
         }
 
-        public void addFile( final @Nonnull File inputFile, final @Nonnull String destFileName )
+        public void addFile( final File inputFile, final String destFileName )
             throws ArchiverException
         {
             this.inputFile = inputFile;
@@ -425,7 +423,7 @@ public class ComponentsXmlArchiverFileFilterTest
             return destFileName;
         }
 
-        public void addFile( final @Nonnull File inputFile, final @Nonnull String destFileName, final int permissions )
+        public void addFile( final File inputFile, final String destFileName, final int permissions )
             throws ArchiverException
         {
             throw new UnsupportedOperationException( "not supported" );
@@ -494,13 +492,13 @@ public class ComponentsXmlArchiverFileFilterTest
             throw new UnsupportedOperationException( "not supported" );
         }
 
-        public void addArchivedFileSet( final @Nonnull File archiveFile )
+        public void addArchivedFileSet( final File archiveFile )
             throws ArchiverException
         {
             throw new UnsupportedOperationException( "not supported" );
         }
 
-        public void addArchivedFileSet( final @Nonnull File archiveFile, final String prefix )
+        public void addArchivedFileSet( final File archiveFile, final String prefix )
             throws ArchiverException
         {
             throw new UnsupportedOperationException( "not supported" );
@@ -512,7 +510,7 @@ public class ComponentsXmlArchiverFileFilterTest
             throw new UnsupportedOperationException( "not supported" );
         }
 
-        public void addArchivedFileSet( final @Nonnull File archiveFile, final String prefix, final String[] includes,
+        public void addArchivedFileSet( final File archiveFile, final String prefix, final String[] includes,
                                         final String[] excludes )
             throws ArchiverException
         {
@@ -544,7 +542,7 @@ public class ComponentsXmlArchiverFileFilterTest
             throw new UnsupportedOperationException( "not supported" );
         }
 
-        public void addFileSet( final @Nonnull FileSet fileSet )
+        public void addFileSet( final FileSet fileSet )
             throws ArchiverException
         {
             throw new UnsupportedOperationException( "not supported" );
@@ -562,9 +560,7 @@ public class ComponentsXmlArchiverFileFilterTest
             throw new UnsupportedOperationException( "not supported" );
         }
 
-        public
-        @Nonnull
-        ResourceIterator getResources()
+        public ResourceIterator getResources()
             throws ArchiverException
         {
             return new ResourceIterator()

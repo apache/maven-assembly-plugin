@@ -29,9 +29,8 @@ import org.codehaus.plexus.interpolation.InterpolationPostProcessor;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
 import org.codehaus.plexus.interpolation.fixed.InterpolationState;
 import org.codehaus.plexus.interpolation.object.FieldBasedObjectInterpolator;
-import org.codehaus.plexus.logging.Logger;
+import org.slf4j.Logger;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
@@ -140,7 +139,7 @@ public class AssemblyInterpolator
     }
 
     public static FixedStringSearchInterpolator fullInterpolator( final MavenProject project,
-                                                                  @Nonnull FixedStringSearchInterpolator projectIp,
+                                                                  final FixedStringSearchInterpolator projectIp,
                                                                   final AssemblerConfigurationSource configSource )
     {
         FixedStringSearchInterpolator fixedStringSearchInterpolator =

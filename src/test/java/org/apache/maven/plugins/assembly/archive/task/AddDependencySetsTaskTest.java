@@ -62,8 +62,6 @@ import org.codehaus.plexus.archiver.ArchivedFileSet;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.FileSet;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -145,11 +143,9 @@ public class AddDependencySetsTaskTest
 
         DefaultAssemblyArchiverTest.setupInterpolators( configSource, mainProject );
 
-        final Logger logger = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
-
         final AddDependencySetsTask task =
             new AddDependencySetsTask( Collections.singletonList( ds ), Collections.singleton( depArtifact ),
-                                       depProject, projectBuilder, logger );
+                                       depProject, projectBuilder );
 
         task.addDependencySet( ds, archiver, configSource );
         
@@ -182,10 +178,8 @@ public class AddDependencySetsTaskTest
         final DependencySet ds = new DependencySet();
         ds.setOutputDirectory( "/out" );
 
-        final Logger logger = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
-
         final AddDependencySetsTask task =
-            new AddDependencySetsTask( Collections.singletonList( ds ), null, project, null, logger );
+            new AddDependencySetsTask( Collections.singletonList( ds ), null, project, null );
 
         task.addDependencySet( ds, null, null );
     }
@@ -238,11 +232,9 @@ public class AddDependencySetsTaskTest
         ds.setOutputDirectory( "/out" );
         DefaultAssemblyArchiverTest.setupInterpolators( configSource, project );
 
-        final Logger logger = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
-
         final AddDependencySetsTask task =
             new AddDependencySetsTask( Collections.singletonList( ds ), Collections.singleton( depArtifact ),
-                                       project, projectBuilder, logger );
+                                       project, projectBuilder );
 
         task.addDependencySet( ds, archiver, configSource );
 
@@ -324,12 +316,10 @@ public class AddDependencySetsTaskTest
         final ProjectBuilder projectBuilder = mock( ProjectBuilder.class );
         when( projectBuilder.build( any( Artifact.class ), any( ProjectBuildingRequest.class ) ) ).thenReturn( pbr );
 
-        final Logger logger = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
-
         final AddDependencySetsTask task = new AddDependencySetsTask( Collections.singletonList( ds ),
                                                                       Collections.singleton(
                                                                           artifact ), project,
-                                                                      projectBuilder, logger );
+                                                                      projectBuilder );
         DefaultAssemblyArchiverTest.setupInterpolators( configSource, project );
 
         task.addDependencySet( ds, archiver, configSource );
@@ -373,12 +363,10 @@ public class AddDependencySetsTaskTest
 
         final DependencySet dependencySet = new DependencySet();
 
-        final Logger logger = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
-
         final AddDependencySetsTask task = new AddDependencySetsTask( Collections.singletonList( dependencySet ),
                                                                       Collections.singleton(
                                                                       artifact ), project,
-                                                                      null, logger );
+                                                                      null );
 
         final Set<Artifact> result = task.resolveDependencyArtifacts( dependencySet );
 
@@ -413,10 +401,8 @@ public class AddDependencySetsTaskTest
         dependencySet.addInclude( "group:artifact" );
         dependencySet.setUseTransitiveFiltering( true );
 
-        final Logger logger = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
-
         final AddDependencySetsTask task =
-            new AddDependencySetsTask( Collections.singletonList( dependencySet ), artifacts, project, null, logger );
+            new AddDependencySetsTask( Collections.singletonList( dependencySet ), artifacts, project, null );
 
         final Set<Artifact> result = task.resolveDependencyArtifacts( dependencySet );
 
@@ -451,10 +437,8 @@ public class AddDependencySetsTaskTest
         dependencySet.addInclude( "group:artifact" );
         dependencySet.setUseTransitiveFiltering( false );
 
-        final Logger logger = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
-
         final AddDependencySetsTask task =
-            new AddDependencySetsTask( Collections.singletonList( dependencySet ), artifacts, project, null, logger );
+            new AddDependencySetsTask( Collections.singletonList( dependencySet ), artifacts, project, null );
 
         final Set<Artifact> result = task.resolveDependencyArtifacts( dependencySet );
 
@@ -501,7 +485,7 @@ public class AddDependencySetsTaskTest
         when( projectBuilder.build( any( Artifact.class ), eq( pbReq ) ) ).thenReturn( pbRes );
 
         final AddDependencySetsTask task = new AddDependencySetsTask( Collections.singletonList( dependencySet ),
-                                                                      artifacts, project, projectBuilder, mock( Logger.class ) );
+                                                                      artifacts, project, projectBuilder );
 
         final MavenSession session = mock( MavenSession.class );
         when( session.getProjectBuildingRequest() ).thenReturn( pbReq );

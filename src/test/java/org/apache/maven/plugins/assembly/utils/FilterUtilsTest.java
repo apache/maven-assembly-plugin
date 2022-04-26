@@ -37,24 +37,15 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.hamcrest.Matchers;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.LoggerFactory;
 
 @RunWith( MockitoJUnitRunner.class )
 public class FilterUtilsTest
 {
-    private Logger logger;
-
-    @Before
-    public void setUp()
-    {
-        logger = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
-    }
 
     @Test
     public void testFilterArtifacts_ShouldThrowExceptionUsingStrictModeWithUnmatchedInclude()
@@ -62,8 +53,8 @@ public class FilterUtilsTest
         final Artifact artifact = mock( Artifact.class );
         when( artifact.getGroupId() ).thenReturn( "group" );
         when( artifact.getArtifactId() ).thenReturn( "artifact" );
-        when( artifact.getId() ).thenReturn( "group:artifact:type:version" );
-        when( artifact.getDependencyConflictId() ).thenReturn( "group:artifact:type" );
+        when( artifact.getBaseVersion() ).thenReturn( "version" );
+        when( artifact.getType() ).thenReturn( "jar" );
 
         final List<String> includes = new ArrayList<>();
 
@@ -76,7 +67,7 @@ public class FilterUtilsTest
 
         try
         {
-            FilterUtils.filterArtifacts( artifacts, includes, excludes, true, false, logger );
+            FilterUtils.filterArtifacts( artifacts, includes, excludes, true, false, LoggerFactory.getLogger( getClass() ) );
 
             fail( "Should fail because of unmatched include." );
         }
@@ -226,7 +217,8 @@ public class FilterUtilsTest
         when( artifact.getDependencyConflictId() ).thenReturn( groupId + ":" + artifactId + ":jar" );
         when( artifact.getGroupId() ).thenReturn( groupId );
         when( artifact.getArtifactId() ).thenReturn( artifactId );
-        when( artifact.getId() ).thenReturn( groupId + ":" + artifactId + ":version:null:jar" );
+        when( artifact.getBaseVersion() ).thenReturn( "version" );
+        when( artifact.getType() ).thenReturn( "jar" );
 
         if ( depTrail != null )
         {
@@ -255,7 +247,7 @@ public class FilterUtilsTest
 
         final Set<Artifact> artifacts = new HashSet<>( Collections.singleton( artifact ) );
 
-        FilterUtils.filterArtifacts( artifacts, inclusions, exclusions, false, depTrail != null, logger,
+        FilterUtils.filterArtifacts( artifacts, inclusions, exclusions, false, depTrail != null, LoggerFactory.getLogger( getClass() ),
                                      additionalFilter );
 
         if ( verifyInclusion )
@@ -292,10 +284,10 @@ public class FilterUtilsTest
         final Artifact artifact = mock( Artifact.class );
 
         // this is always enabled, for verification purposes.
-        when( artifact.getDependencyConflictId() ).thenReturn( groupId + ":" + artifactId + ":jar" );
         when( artifact.getGroupId() ).thenReturn( groupId );
         when( artifact.getArtifactId() ).thenReturn( artifactId );
-        when( artifact.getId() ).thenReturn( groupId + ":" + artifactId + ":version:null:jar" );
+        when( artifact.getBaseVersion() ).thenReturn( "version" );
+        when( artifact.getType() ).thenReturn( "jar" );
 
         if ( depTrail != null )
         {
@@ -329,10 +321,8 @@ public class FilterUtilsTest
             exclusions = Collections.emptyList();
         }
 
-        final Logger logger = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
-
         Set<MavenProject> result =
-            FilterUtils.filterProjects( projects, inclusions, exclusions, depTrail != null, logger );
+            FilterUtils.filterProjects( projects, inclusions, exclusions, depTrail != null, LoggerFactory.getLogger( getClass() ) );
         
         if ( verifyInclusion )
         {

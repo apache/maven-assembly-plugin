@@ -19,18 +19,16 @@ package org.apache.maven.plugins.assembly.filter;
  * under the License.
  */
 
+import org.apache.maven.plugins.assembly.internal.ComponentSupport;
 import org.apache.maven.plugins.assembly.utils.AssemblyFileUtils;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.UnArchiver;
-import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.components.io.fileselectors.FileInfo;
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.codehaus.plexus.util.IOUtil;
 
-import javax.annotation.Nonnull;
+import javax.inject.Named;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -49,9 +47,10 @@ import java.util.List;
 /**
  *
  */
-@Component( role = ContainerDescriptorHandler.class, hint = "file-aggregator", instantiationStrategy = "per-lookup" )
+@Named( "file-aggregator" )
 public class SimpleAggregatingDescriptorHandler
-    implements ContainerDescriptorHandler, LogEnabled
+        extends ComponentSupport
+        implements ContainerDescriptorHandler
 {
 
     // component configuration.
@@ -70,10 +69,6 @@ public class SimpleAggregatingDescriptorHandler
     private String outputPath;
 
     private boolean overrideFilterAction;
-
-    // injected by the container.
-
-    private Logger logger;
 
     @Override
     public void finalizeArchiveCreation( final Archiver archiver )
@@ -155,7 +150,7 @@ public class SimpleAggregatingDescriptorHandler
     }
 
     @Override
-    public boolean isSelected( @Nonnull final FileInfo fileInfo )
+    public boolean isSelected( final FileInfo fileInfo )
         throws IOException
     {
         checkConfig();
@@ -200,22 +195,6 @@ public class SimpleAggregatingDescriptorHandler
             aggregateWriter.write( "\n" );
             aggregateWriter.write( content );
         }
-    }
-
-    protected final Logger getLogger()
-    {
-        if ( logger == null )
-        {
-            logger = new ConsoleLogger( Logger.LEVEL_INFO, "" );
-        }
-
-        return logger;
-    }
-
-    @Override
-    public void enableLogging( final Logger logger )
-    {
-        this.logger = logger;
     }
 
     @SuppressWarnings( "UnusedDeclaration" )

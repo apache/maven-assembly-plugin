@@ -29,6 +29,7 @@ import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.format.ReaderFormatter;
+import org.apache.maven.plugins.assembly.internal.ComponentSupport;
 import org.apache.maven.plugins.assembly.model.FileSet;
 import org.apache.maven.plugins.assembly.utils.AssemblyFileUtils;
 import org.apache.maven.plugins.assembly.utils.AssemblyFormatUtils;
@@ -36,18 +37,14 @@ import org.apache.maven.plugins.assembly.utils.TypeConversionUtils;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.components.io.functions.InputStreamTransformer;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
 
 /**
  *
  */
-public class AddFileSetsTask
+public class AddFileSetsTask extends ComponentSupport
 {
 
     private final List<FileSet> fileSets;
-
-    private Logger logger;
 
     private MavenProject project;
 
@@ -97,9 +94,6 @@ public class AddFileSetsTask
                      final File archiveBaseDir )
         throws AssemblyFormattingException, ArchiveCreationException
     {
-        // throw this check in just in case someone extends this class...
-        checkLogger();
-
         if ( project == null )
         {
             project = configSource.getProject();
@@ -113,7 +107,7 @@ public class AddFileSetsTask
         {
             destDirectory = fileSet.getDirectory();
 
-            AssemblyFormatUtils.warnForPlatformSpecifics( logger, destDirectory );
+            AssemblyFormatUtils.warnForPlatformSpecifics( getLogger(), destDirectory );
         }
 
 
@@ -122,16 +116,16 @@ public class AddFileSetsTask
                                                     AssemblyFormatUtils.moduleProjectInterpolator( moduleProject ),
                                                     AssemblyFormatUtils.artifactProjectInterpolator( project ) );
 
-        if ( logger.isDebugEnabled() )
+        if ( getLogger().isDebugEnabled() )
         {
-            logger.debug( "FileSet[" + destDirectory + "]" + " dir perms: " + Integer.toString(
+            getLogger().debug( "FileSet[" + destDirectory + "]" + " dir perms: " + Integer.toString(
                 archiver.getOverrideDirectoryMode(), 8 ) + " file perms: " + Integer.toString(
                 archiver.getOverrideFileMode(), 8 ) + ( fileSet.getLineEnding() == null
                 ? ""
                 : " lineEndings: " + fileSet.getLineEnding() ) );
         }
 
-        logger.debug( "The archive base directory is '" + archiveBaseDir + "'" );
+        getLogger().debug( "The archive base directory is '" + archiveBaseDir + "'" );
 
         File fileSetDir = getFileSetDirectory( fileSet, basedir, archiveBaseDir );
 
@@ -144,7 +138,7 @@ public class AddFileSetsTask
                                                         fileSet.getLineEnding() );
             if ( fileSetTransformers == null )
             {
-                logger.debug( "NOT reformatting any files in " + fileSetDir );
+                getLogger().debug( "NOT reformatting any files in " + fileSetDir );
             }
 
             if ( fileSetDir.getPath().equals( File.separator ) )
@@ -155,13 +149,13 @@ public class AddFileSetsTask
             }
             final AddDirectoryTask task = new AddDirectoryTask( fileSetDir, fileSetTransformers );
 
-            final int dirMode = TypeConversionUtils.modeToInt( fileSet.getDirectoryMode(), logger );
+            final int dirMode = TypeConversionUtils.modeToInt( fileSet.getDirectoryMode(), getLogger() );
             if ( dirMode != -1 )
             {
                 task.setDirectoryMode( dirMode );
             }
 
-            final int fileMode = TypeConversionUtils.modeToInt( fileSet.getFileMode(), logger );
+            final int fileMode = TypeConversionUtils.modeToInt( fileSet.getFileMode(), getLogger() );
             if ( fileMode != -1 )
             {
                 task.setFileMode( fileMode );
@@ -208,19 +202,6 @@ public class AddFileSetsTask
         }
 
         return fileSetDir;
-    }
-
-    private void checkLogger()
-    {
-        if ( logger == null )
-        {
-            logger = new ConsoleLogger( Logger.LEVEL_INFO, "AddFileSetsTask-internal" );
-        }
-    }
-
-    public void setLogger( final Logger logger )
-    {
-        this.logger = logger;
     }
 
     public void setProject( final MavenProject project )

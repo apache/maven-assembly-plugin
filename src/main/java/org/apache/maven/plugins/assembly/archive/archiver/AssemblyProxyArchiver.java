@@ -20,6 +20,7 @@ package org.apache.maven.plugins.assembly.archive.archiver;
  */
 
 import org.apache.maven.plugins.assembly.filter.ContainerDescriptorHandler;
+import org.apache.maven.plugins.assembly.internal.ComponentSupport;
 import org.codehaus.plexus.archiver.ArchiveEntry;
 import org.codehaus.plexus.archiver.ArchiveFinalizer;
 import org.codehaus.plexus.archiver.ArchivedFileSet;
@@ -34,9 +35,7 @@ import org.codehaus.plexus.components.io.fileselectors.FileInfo;
 import org.codehaus.plexus.components.io.fileselectors.FileSelector;
 import org.codehaus.plexus.components.io.resources.PlexusIoResource;
 import org.codehaus.plexus.components.io.resources.PlexusIoResourceCollection;
-import org.codehaus.plexus.logging.Logger;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -61,14 +60,13 @@ import java.util.Map;
  *
  */
 public class AssemblyProxyArchiver
-    implements Archiver
+        extends ComponentSupport
+        implements Archiver
 {
 
     private final Archiver delegate;
 
     private final ThreadLocal<Boolean> inPublicApi = new ThreadLocal<>();
-
-    private final Logger logger;
 
     private final String assemblyWorkPath;
 
@@ -86,14 +84,12 @@ public class AssemblyProxyArchiver
     public AssemblyProxyArchiver( final String rootPrefix, final Archiver delegate,
                                   final List<ContainerDescriptorHandler> containerDescriptorHandlers,
                                   final List<FileSelector> extraSelectors, final List<ArchiveFinalizer> extraFinalizers,
-                                  final File assemblyWorkDir, final Logger logger )
+                                  final File assemblyWorkDir )
     {
         this.rootPrefix = rootPrefix;
         this.delegate = delegate;
 
         assemblyWorkPath = assemblyWorkDir.getAbsolutePath().replace( '\\', '/' );
-
-        this.logger = logger;
 
         if ( !"".equals( rootPrefix ) && !rootPrefix.endsWith( "/" ) )
         {
@@ -140,7 +136,7 @@ public class AssemblyProxyArchiver
      * {@inheritDoc}
      */
     @Override
-    public void addArchivedFileSet( @Nonnull final File archiveFile, final String prefix, final String[] includes,
+    public void addArchivedFileSet( final File archiveFile, final String prefix, final String[] includes,
                                     final String[] excludes )
     {
         inPublicApi.set( Boolean.TRUE );
@@ -165,9 +161,9 @@ public class AssemblyProxyArchiver
 
     private void debug( final String message )
     {
-        if ( ( logger != null ) && logger.isDebugEnabled() )
+        if ( getLogger().isDebugEnabled() )
         {
-            logger.debug( message );
+            getLogger().debug( message );
         }
     }
 
@@ -175,7 +171,7 @@ public class AssemblyProxyArchiver
      * {@inheritDoc}
      */
     @Override
-    public void addArchivedFileSet( @Nonnull final File archiveFile, final String prefix )
+    public void addArchivedFileSet( final File archiveFile, final String prefix )
     {
         inPublicApi.set( Boolean.TRUE );
         try
@@ -225,7 +221,7 @@ public class AssemblyProxyArchiver
      * {@inheritDoc}
      */
     @Override
-    public void addArchivedFileSet( @Nonnull final File archiveFile )
+    public void addArchivedFileSet( final File archiveFile )
     {
         inPublicApi.set( Boolean.TRUE );
         try
@@ -249,7 +245,7 @@ public class AssemblyProxyArchiver
      * {@inheritDoc}
      */
     @Override
-    public void addDirectory( @Nonnull final File directory, final String prefix, final String[] includes,
+    public void addDirectory( final File directory, final String prefix, final String[] includes,
                               final String[] excludes )
     {
         inPublicApi.set( Boolean.TRUE );
@@ -313,7 +309,7 @@ public class AssemblyProxyArchiver
      * {@inheritDoc}
      */
     @Override
-    public void addDirectory( @Nonnull final File directory, final String prefix )
+    public void addDirectory( final File directory, final String prefix )
     {
         inPublicApi.set( Boolean.TRUE );
         try
@@ -338,7 +334,7 @@ public class AssemblyProxyArchiver
      * {@inheritDoc}
      */
     @Override
-    public void addDirectory( @Nonnull final File directory, final String[] includes, final String[] excludes )
+    public void addDirectory( final File directory, final String[] includes, final String[] excludes )
     {
         inPublicApi.set( Boolean.TRUE );
         try
@@ -365,7 +361,7 @@ public class AssemblyProxyArchiver
      * {@inheritDoc}
      */
     @Override
-    public void addDirectory( @Nonnull final File directory )
+    public void addDirectory( final File directory )
     {
         inPublicApi.set( Boolean.TRUE );
         try
@@ -390,7 +386,7 @@ public class AssemblyProxyArchiver
      * {@inheritDoc}
      */
     @Override
-    public void addFile( @Nonnull final File inputFile, @Nonnull final String destFileName, final int permissions )
+    public void addFile( final File inputFile, final String destFileName, final int permissions )
     {
         if ( acceptFile( inputFile ) )
         {
@@ -412,7 +408,7 @@ public class AssemblyProxyArchiver
      * {@inheritDoc}
      */
     @Override
-    public void addFile( @Nonnull final File inputFile, @Nonnull final String destFileName )
+    public void addFile( final File inputFile, final String destFileName )
     {
         if ( acceptFile( inputFile ) )
         {
@@ -706,7 +702,7 @@ public class AssemblyProxyArchiver
      * {@inheritDoc}
      */
     @Override
-    public void addFileSet( @Nonnull final FileSet fileSet )
+    public void addFileSet( final FileSet fileSet )
     {
         inPublicApi.set( Boolean.TRUE );
         try
@@ -729,7 +725,8 @@ public class AssemblyProxyArchiver
 
         if ( fsPath.equals( assemblyWorkPath ) )
         {
-            logger.debug( "SKIPPING fileset with source directory matching assembly working-directory: " + fsPath );
+            getLogger().debug(
+                    "SKIPPING fileset with source directory matching assembly working-directory: " + fsPath );
         }
         else if ( assemblyWorkPath.startsWith( fsPath ) )
         {
@@ -741,7 +738,7 @@ public class AssemblyProxyArchiver
 
             final String workDirExclude = assemblyWorkPath.substring( fsPath.length() + 1 );
 
-            logger.debug(
+            getLogger().debug(
                 "Adding exclude for assembly working-directory: " + workDirExclude + "\nFile-Set source directory: "
                     + fsPath );
 
@@ -850,7 +847,6 @@ public class AssemblyProxyArchiver
      * {@inheritDoc}
      */
     @Override
-    @Nonnull
     public ResourceIterator getResources()
     {
         return delegate.getResources();

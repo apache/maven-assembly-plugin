@@ -40,18 +40,20 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.FileSet;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RunWith( MockitoJUnitRunner.class )
 public class RepositoryAssemblyPhaseTest
 {
+    private final Logger logger = LoggerFactory.getLogger( getClass() );
+
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
     
@@ -64,7 +66,6 @@ public class RepositoryAssemblyPhaseTest
     {
         this.repositoryAssembler = mock( RepositoryAssembler.class );
         this.phase = new RepositoryAssemblyPhase( repositoryAssembler );
-        this.phase.enableLogging( mock( Logger.class ) );
     }
     
     @Test
@@ -108,7 +109,7 @@ public class RepositoryAssemblyPhaseTest
         repo.setFileMode( "777" );
         assembly.addRepository( repo );
 
-        final int mode = TypeConversionUtils.modeToInt( "777", new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) );
+        final int mode = TypeConversionUtils.modeToInt( "777", logger );
 
         final int defaultDirMode = -1;
         final int defaultFileMode = -1;

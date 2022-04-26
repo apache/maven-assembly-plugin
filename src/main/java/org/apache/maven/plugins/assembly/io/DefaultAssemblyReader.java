@@ -19,8 +19,12 @@ package org.apache.maven.plugins.assembly.io;
  * under the License.
  */
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
+import org.apache.maven.plugins.assembly.internal.ComponentSupport;
 import org.apache.maven.plugins.assembly.interpolation.AssemblyExpressionEvaluator;
 import org.apache.maven.plugins.assembly.interpolation.AssemblyInterpolator;
 import org.apache.maven.plugins.assembly.model.Assembly;
@@ -44,9 +48,6 @@ import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
 import org.codehaus.plexus.interpolation.fixed.InterpolationState;
 import org.codehaus.plexus.interpolation.fixed.PrefixedObjectValueSource;
 import org.codehaus.plexus.interpolation.fixed.PrefixedPropertiesValueSource;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
@@ -66,10 +67,11 @@ import java.util.Set;
 /**
  *
  */
-@org.codehaus.plexus.component.annotations.Component( role = AssemblyReader.class )
+@Singleton
+@Named
 public class DefaultAssemblyReader
-    extends AbstractLogEnabled
-    implements AssemblyReader
+        extends ComponentSupport
+        implements AssemblyReader
 {
 
     public static FixedStringSearchInterpolator createProjectInterpolator( MavenProject project )
@@ -496,19 +498,4 @@ public class DefaultAssemblyReader
 
         assembly.addFileSet( siteFileSet );
     }
-
-    @Override
-    protected Logger getLogger()
-    {
-        Logger logger = super.getLogger();
-
-        if ( logger == null )
-        {
-            logger = new ConsoleLogger( Logger.LEVEL_INFO, "assemblyReader-internal" );
-            enableLogging( logger );
-        }
-
-        return logger;
-    }
-
 }

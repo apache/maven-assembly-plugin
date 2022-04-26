@@ -19,6 +19,8 @@ package org.apache.maven.plugins.assembly.artifact;
  * under the License.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -32,28 +34,27 @@ import java.util.Set;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.artifact.handler.DefaultArtifactHandler;
-import org.apache.maven.artifact.repository.LegacyLocalRepositoryManager;
 import org.apache.maven.artifact.versioning.VersionRange;
-import org.apache.maven.execution.DefaultMavenExecutionRequest;
-import org.apache.maven.execution.DefaultMavenExecutionResult;
-import org.apache.maven.execution.MavenExecutionRequest;
-import org.apache.maven.execution.MavenExecutionResult;
-import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Model;
-import org.apache.maven.plugin.testing.stubs.StubArtifactRepository;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.model.DependencySet;
 import org.apache.maven.plugins.assembly.model.ModuleBinaries;
 import org.apache.maven.plugins.assembly.model.ModuleSet;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.repository.internal.MavenRepositorySystemSession;
+import org.codehaus.plexus.ContainerConfiguration;
+import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusTestCase;
+import org.junit.Test;
 
 public class DefaultDependencyResolverTest
-    extends PlexusTestCase
+        extends PlexusTestCase
 {
 
     private DefaultDependencyResolver resolver;
+
+    protected void customizeContainerConfiguration( ContainerConfiguration configuration) {
+        configuration.setClassPathScanning( PlexusConstants.SCANNING_CACHE ).setAutoWiring( true );
+    }
 
     @Override
     public void setUp()
@@ -63,23 +64,8 @@ public class DefaultDependencyResolverTest
 
         resolver = (DefaultDependencyResolver) lookup( DependencyResolver.class );
     }
-    
-    protected MavenSession newMavenSession( MavenProject project )
-    {
-        MavenExecutionRequest request = new DefaultMavenExecutionRequest();
-        MavenExecutionResult result = new DefaultMavenExecutionResult();
 
-        MavenRepositorySystemSession repoSession = new MavenRepositorySystemSession();
-        
-        repoSession.setLocalRepositoryManager( LegacyLocalRepositoryManager.wrap( new StubArtifactRepository( "target/local-repo" ),
-                                                                                  null ) );
-        MavenSession session = new MavenSession( getContainer(), repoSession, request, result );
-        session.setCurrentProject( project );
-        session.setProjects( Arrays.asList( project ) );
-        return session;
-    }
-
-
+    @Test
     public void test_getDependencySetResolutionRequirements_transitive()
         throws DependencyResolutionException
     {
@@ -101,6 +87,7 @@ public class DefaultDependencyResolverTest
         assertEquals( artifacts, info.getArtifacts() );
     }
 
+    @Test
     public void test_getDependencySetResolutionRequirements_nonTransitive()
         throws DependencyResolutionException
     {
@@ -122,6 +109,7 @@ public class DefaultDependencyResolverTest
         assertEquals( dependencyArtifacts, info.getArtifacts() );
     }
 
+    @Test
     public void test_getModuleSetResolutionRequirements_withoutBinaries()
         throws DependencyResolutionException
     {
@@ -144,6 +132,7 @@ public class DefaultDependencyResolverTest
         assertTrue( info.getArtifacts().isEmpty() );
     }
 
+    @Test
     public void test_getModuleSetResolutionRequirements_includeDeps()
         throws DependencyResolutionException
     {

@@ -19,6 +19,10 @@ package org.apache.maven.plugins.assembly.archive.phase;
  * under the License.
  */
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
 import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
@@ -26,6 +30,7 @@ import org.apache.maven.plugins.assembly.archive.phase.wrappers.RepoBuilderConfi
 import org.apache.maven.plugins.assembly.archive.phase.wrappers.RepoInfoWrapper;
 import org.apache.maven.plugins.assembly.archive.task.AddDirectoryTask;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
+import org.apache.maven.plugins.assembly.internal.ComponentSupport;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.model.Repository;
 import org.apache.maven.plugins.assembly.repository.RepositoryAssembler;
@@ -35,34 +40,29 @@ import org.apache.maven.plugins.assembly.repository.model.RepositoryInfo;
 import org.apache.maven.plugins.assembly.utils.AssemblyFormatUtils;
 import org.apache.maven.plugins.assembly.utils.TypeConversionUtils;
 import org.codehaus.plexus.archiver.Archiver;
-import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.component.annotations.Requirement;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 
 import java.io.File;
 import java.util.List;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  *
  */
-@Component( role = AssemblyArchiverPhase.class, hint = "repositories" )
+@Singleton
+@Named( "repositories" )
 public class RepositoryAssemblyPhase
-    extends AbstractLogEnabled
-    implements AssemblyArchiverPhase, PhaseOrder
+        extends ComponentSupport
+        implements AssemblyArchiverPhase, PhaseOrder
 {
 
-    @Requirement
-    private RepositoryAssembler repositoryAssembler;
+    private final RepositoryAssembler repositoryAssembler;
 
-    public RepositoryAssemblyPhase()
-    {
-        // used for plexus.
-    }
 
-    // introduced for testing.
+    @Inject
     public RepositoryAssemblyPhase( final RepositoryAssembler repositoryAssembler )
     {
-        this.repositoryAssembler = repositoryAssembler;
+        this.repositoryAssembler = requireNonNull( repositoryAssembler );
     }
 
     /**

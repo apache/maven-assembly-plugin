@@ -19,6 +19,9 @@ package org.apache.maven.plugins.assembly.archive.phase;
  * under the License.
  */
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import static org.codehaus.plexus.components.io.resources.ResourceFactory.createResource;
 
 import java.io.File;
@@ -36,6 +39,7 @@ import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
 import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.format.ReaderFormatter;
+import org.apache.maven.plugins.assembly.internal.ComponentSupport;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.model.FileItem;
 import org.apache.maven.plugins.assembly.utils.AssemblyFileUtils;
@@ -43,24 +47,22 @@ import org.apache.maven.plugins.assembly.utils.AssemblyFormatUtils;
 import org.apache.maven.plugins.assembly.utils.TypeConversionUtils;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
-import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.components.io.functions.ContentSupplier;
 import org.codehaus.plexus.components.io.functions.InputStreamTransformer;
 import org.codehaus.plexus.components.io.resources.PlexusIoFileResource;
 import org.codehaus.plexus.components.io.resources.PlexusIoResource;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 
 /**
  * Handles the top-level &lt;files/&gt; section of the assembly descriptor.
  *
  *
  */
-@Component( role = AssemblyArchiverPhase.class, hint = "file-items" )
+@Singleton
+@Named( "file-items" )
 public class FileItemAssemblyPhase
-    extends AbstractLogEnabled
-    implements AssemblyArchiverPhase, PhaseOrder
+        extends ComponentSupport
+        implements AssemblyArchiverPhase, PhaseOrder
 {
-
     /**
      * {@inheritDoc}
      */

@@ -31,6 +31,7 @@ import org.apache.maven.plugins.assembly.artifact.DependencyResolver;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.functions.MavenProjects;
 import org.apache.maven.plugins.assembly.functions.ModuleSetConsumer;
+import org.apache.maven.plugins.assembly.internal.ComponentSupport;
 import org.apache.maven.plugins.assembly.model.Assemblies;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.model.DependencySet;
@@ -46,14 +47,13 @@ import org.apache.maven.plugins.assembly.utils.TypeConversionUtils;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
 import org.codehaus.plexus.archiver.Archiver;
-import org.codehaus.plexus.archiver.manager.ArchiverManager;
-import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
-import org.codehaus.plexus.logging.Logger;
+import org.slf4j.Logger;
 
-import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -64,6 +64,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static java.util.Objects.requireNonNull;
 import static org.apache.maven.plugins.assembly.functions.MavenProjects.addTo;
 import static org.apache.maven.plugins.assembly.functions.MavenProjects.log;
 
@@ -72,10 +73,11 @@ import static org.apache.maven.plugins.assembly.functions.MavenProjects.log;
  *
  *
  */
-@Component( role = AssemblyArchiverPhase.class, hint = "module-sets" )
+@Singleton
+@Named( "module-sets" )
 public class ModuleSetAssemblyPhase
-    extends AbstractLogEnabled
-    implements AssemblyArchiverPhase, PhaseOrder
+        extends ComponentSupport
+        implements AssemblyArchiverPhase, PhaseOrder
 {
 
     // TODO: Remove if using something like commons-lang instead.
@@ -85,33 +87,19 @@ public class ModuleSetAssemblyPhase
      */
     private static final String LINE_SEPARATOR = System.getProperty( "line.separator" );
 
-    @Requirement
-    private ProjectBuilder projectBuilder;
+    private final ProjectBuilder projectBuilder;
 
-    @Requirement
-    private ArchiverManager archiverManager;
-
-    @Requirement
-    private DependencyResolver dependencyResolver;
+    private final DependencyResolver dependencyResolver;
 
     /**
-     * Create an instance.
+     * Injected ctor.
      */
-    public ModuleSetAssemblyPhase()
+    @Inject
+    public ModuleSetAssemblyPhase( final ProjectBuilder projectBuilder,
+                                   DependencyResolver dependencyResolver )
     {
-        // needed for plexus
-    }
-
-    /**
-     * @param projectBuilder The project builder.
-     * @param logger         The logger.
-     */
-    public ModuleSetAssemblyPhase( final ProjectBuilder projectBuilder, DependencyResolver dependencyResolver,
-                                   final Logger logger )
-    {
-        this.projectBuilder = projectBuilder;
-        this.dependencyResolver = dependencyResolver;
-        enableLogging( logger );
+        this.projectBuilder = requireNonNull( projectBuilder );
+        this.dependencyResolver = requireNonNull( dependencyResolver );
     }
 
     public static List<DependencySet> getDependencySets( final ModuleBinaries binaries )
@@ -137,7 +125,6 @@ public class ModuleSetAssemblyPhase
         return depSets;
     }
 
-    @Nonnull
     public static Set<MavenProject> getModuleProjects( final ModuleSet moduleSet,
                                                        final AssemblerConfigurationSource configSource,
                                                        final Logger logger )
@@ -331,8 +318,7 @@ public class ModuleSetAssemblyPhase
                 {
                     final AddDependencySetsTask task =
                         new AddDependencySetsTask( Collections.singletonList( dependencySetSetEntry.getKey() ),
-                                                   dependencySetSetEntry.getValue(), moduleProject, projectBuilder,
-                                                   getLogger() );
+                                                   dependencySetSetEntry.getValue(), moduleProject, projectBuilder );
 
                     task.setModuleProject( moduleProject );
                     task.setModuleArtifact( chosenModuleArtifacts.get( moduleProject ) );
@@ -377,7 +363,7 @@ public class ModuleSetAssemblyPhase
                     + "Please ensure the package phase is run before the assembly is generated." );
         }
 
-        final AddArtifactTask task = new AddArtifactTask( artifact, getLogger(), null );
+        final AddArtifactTask task = new AddArtifactTask( artifact, null );
 
         task.setFileNameMapping( binaries.getOutputFileNameMapping() );
         task.setOutputDirectory( binaries.getOutputDirectory() );
@@ -457,7 +443,6 @@ public class ModuleSetAssemblyPhase
 
             task.setProject( moduleProject );
             task.setModuleProject( moduleProject );
-            task.setLogger( getLogger() );
 
             task.execute( archiver, configSource );
         }
@@ -466,7 +451,7 @@ public class ModuleSetAssemblyPhase
     /**
      * Determine whether the deprecated file-set configuration directly within the ModuleSources object is present.
      */
-    boolean isDeprecatedModuleSourcesConfigPresent( @Nonnull final ModuleSources sources )
+    boolean isDeprecatedModuleSourcesConfigPresent( final ModuleSources sources )
     {
         boolean result = false;
 
@@ -486,10 +471,9 @@ public class ModuleSetAssemblyPhase
         return result;
     }
 
-    @Nonnull
-    FileSet createFileSet( @Nonnull final FileSet fileSet, @Nonnull final ModuleSources sources,
-                           @Nonnull final MavenProject moduleProject,
-                           @Nonnull final AssemblerConfigurationSource configSource )
+    FileSet createFileSet( final FileSet fileSet, final ModuleSources sources,
+                           final MavenProject moduleProject,
+                           final AssemblerConfigurationSource configSource )
         throws AssemblyFormattingException
     {
         final FileSet fs = new FileSet();

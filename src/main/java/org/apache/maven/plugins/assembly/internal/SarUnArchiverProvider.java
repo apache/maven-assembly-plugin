@@ -1,4 +1,4 @@
-package org.apache.maven.plugins.assembly.archive.archiver;
+package org.apache.maven.plugins.assembly.internal;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,16 +19,23 @@ package org.apache.maven.plugins.assembly.archive.archiver;
  * under the License.
  */
 
+import javax.inject.Named;
+import javax.inject.Provider;
+import javax.inject.Singleton;
+
+import org.codehaus.plexus.archiver.UnArchiver;
 import org.codehaus.plexus.archiver.zip.ZipUnArchiver;
 
 /**
- * @author jdcasey
- *
- *          //todo delete this class once the plexus maven plugin can merge a generated components.xml with an
- *          existing one.
+ * Provider for "sar" {@link UnArchiver}.
  */
-class SarUnArchiver
-    extends ZipUnArchiver
+@Singleton
+@Named( "sar" )
+public class SarUnArchiverProvider implements Provider<UnArchiver>
 {
-
+    @Override
+    public UnArchiver get()
+    {
+        return new ZipUnArchiver();
+    }
 }

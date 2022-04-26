@@ -26,9 +26,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Properties;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
@@ -41,8 +38,8 @@ import org.codehaus.plexus.interpolation.fixed.MapBasedValueSource;
 import org.codehaus.plexus.interpolation.fixed.PrefixedObjectValueSource;
 import org.codehaus.plexus.interpolation.fixed.PrefixedPropertiesValueSource;
 import org.codehaus.plexus.interpolation.fixed.PropertiesBasedValueSource;
-import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
 
 /**
  *
@@ -75,7 +72,6 @@ public final class AssemblyFormatUtils
     }
 
 
-    @Nonnull
     public static FixedStringSearchInterpolator finalNameInterpolator( String finalName )
     {
         final Properties specialExpressionOverrides = new Properties();
@@ -93,7 +89,6 @@ public final class AssemblyFormatUtils
         return FixedStringSearchInterpolator.create( new PropertiesBasedValueSource( specialExpressionOverrides ) );
     }
 
-    @Nonnull
     public static FixedStringSearchInterpolator moduleProjectInterpolator( final MavenProject moduleProject )
     {
         if ( moduleProject != null )
@@ -131,7 +126,6 @@ public final class AssemblyFormatUtils
 
     }
 
-    @Nonnull
     public static FixedStringSearchInterpolator artifactProjectInterpolator( final MavenProject artifactProject )
     {
         if ( artifactProject != null )
@@ -155,8 +149,7 @@ public final class AssemblyFormatUtils
         }
     }
 
-    @Nonnull
-    public static FixedStringSearchInterpolator artifactInterpolator( @Nonnull final Artifact artifact )
+    public static FixedStringSearchInterpolator artifactInterpolator( final Artifact artifact )
     {
         final String groupIdPath = artifact.getGroupId().replace( '.', '/' );
 
@@ -168,7 +161,6 @@ public final class AssemblyFormatUtils
     }
 
 
-    @Nonnull
     public static FixedStringSearchInterpolator classifierRules( final Artifact artifact )
     {
         final Properties specialRules = new Properties();
@@ -298,8 +290,7 @@ public final class AssemblyFormatUtils
      */
 
 
-    @Nonnull
-    public static String fixRelativeRefs( @Nonnull String src )
+    public static String fixRelativeRefs( String src )
     {
         String value = src;
 
@@ -383,13 +374,12 @@ public final class AssemblyFormatUtils
      * <li>environment variables.</li>
      * </ol>
      */
-    public static String evaluateFileNameMapping( final String expression, @Nonnull final Artifact artifact,
-                                                  @Nullable final MavenProject mainProject,
-                                                  @Nullable final Artifact moduleArtifact,
-                                                  @Nonnull final AssemblerConfigurationSource configSource,
+    public static String evaluateFileNameMapping( final String expression, final Artifact artifact,
+                                                  /* nullable */ final MavenProject mainProject,
+                                                  /* nullable */  final Artifact moduleArtifact,
+                                                  final AssemblerConfigurationSource configSource,
                                                   FixedStringSearchInterpolator moduleProjectInterpolator,
                                                   FixedStringSearchInterpolator artifactProjectInterpolator )
-        throws AssemblyFormattingException
     {
         String value = expression;
 

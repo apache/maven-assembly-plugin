@@ -41,6 +41,7 @@ import org.apache.maven.model.Model;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
 import org.apache.maven.plugins.assembly.archive.phase.AssemblyArchiverPhase;
+import org.apache.maven.plugins.assembly.filter.ContainerDescriptorHandler;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.mojos.AbstractAssemblyMojo;
 import org.apache.maven.project.MavenProject;
@@ -56,8 +57,6 @@ import org.codehaus.plexus.archiver.tar.TarLongFileMode;
 import org.codehaus.plexus.archiver.war.WarArchiver;
 import org.codehaus.plexus.archiver.zip.ZipArchiver;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -70,6 +69,8 @@ public class DefaultAssemblyArchiverTest
 {
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
+
+    private ArchiverManager archiverManager;
 
     private PlexusContainer container;
 
@@ -91,6 +92,7 @@ public class DefaultAssemblyArchiverTest
     public void setup()
         throws PlexusContainerException
     {
+        this.archiverManager = mock( ArchiverManager.class );
         this.container = new DefaultPlexusContainer();
     }
 
@@ -98,7 +100,7 @@ public class DefaultAssemblyArchiverTest
     public void failWhenAssemblyIdIsNull()
         throws Exception
     {
-        final DefaultAssemblyArchiver archiver = createSubject( null, null, null );
+        final DefaultAssemblyArchiver archiver = createSubject( Collections.<AssemblyArchiverPhase>emptyList() );
         archiver.createArchive( new Assembly(), "full-name", "zip", null, false, null, null );
     }
 
@@ -108,7 +110,6 @@ public class DefaultAssemblyArchiverTest
     {
         Archiver archiver = mock( Archiver.class );
         
-        final ArchiverManager archiverManager = mock( ArchiverManager.class );
         when( archiverManager.getArchiver( "zip" ) ).thenReturn( archiver );
 
         final AssemblyArchiverPhase phase = mock( AssemblyArchiverPhase.class );
@@ -128,7 +129,7 @@ public class DefaultAssemblyArchiverTest
         final Assembly assembly = new Assembly();
         assembly.setId( "id" );
 
-        final DefaultAssemblyArchiver subject = createSubject( archiverManager, Collections.singletonList( phase ), null );
+        final DefaultAssemblyArchiver subject = createSubject( Collections.singletonList( phase ) );
 
         subject.createArchive( assembly, "full-name", "zip", configSource, false, null, null );
         
@@ -167,7 +168,6 @@ public class DefaultAssemblyArchiverTest
     {
         final TestArchiverWithConfig archiver = new TestArchiverWithConfig();
 
-        final ArchiverManager archiverManager = mock( ArchiverManager.class );
         when( archiverManager.getArchiver( "dummy" ) ).thenReturn( archiver );
 
         final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
@@ -191,7 +191,7 @@ public class DefaultAssemblyArchiverTest
         when( configSource.getOverrideGroupName() ).thenReturn( "root" );
 
         final DefaultAssemblyArchiver subject =
-            createSubject( archiverManager, new ArrayList<AssemblyArchiverPhase>(), null );
+            createSubject( new ArrayList<AssemblyArchiverPhase>() );
 
         subject.createArchiver( "dummy", false, "finalName", configSource, null, false, null, null );
 
@@ -207,7 +207,6 @@ public class DefaultAssemblyArchiverTest
     {
         final TestTarArchiver ttArchiver = new TestTarArchiver();
 
-        final ArchiverManager archiverManager = mock( ArchiverManager.class );
         when( archiverManager.getArchiver( "tar" ) ).thenReturn( ttArchiver );
 
         final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
@@ -219,7 +218,7 @@ public class DefaultAssemblyArchiverTest
         when( configSource.getOverrideGid() ).thenReturn( 0 );
         when( configSource.getOverrideGroupName() ).thenReturn( "root" );
 
-        final DefaultAssemblyArchiver subject = createSubject( archiverManager, new ArrayList<AssemblyArchiverPhase>(), null );
+        final DefaultAssemblyArchiver subject = createSubject( new ArrayList<AssemblyArchiverPhase>() );
 
         subject.createArchiver( "tar", false, "finalName", configSource, null, false, null, null );
 
@@ -247,7 +246,6 @@ public class DefaultAssemblyArchiverTest
     {
         final TestWarArchiver twArchiver = new TestWarArchiver();
 
-        final ArchiverManager archiverManager = mock( ArchiverManager.class );
         when( archiverManager.getArchiver( "war" ) ).thenReturn( twArchiver );
 
         final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
@@ -259,7 +257,7 @@ public class DefaultAssemblyArchiverTest
         when( configSource.getWorkingDirectory() ).thenReturn( new File( "." ) );
         when( configSource.isIgnorePermissions() ).thenReturn( true );
         
-        final DefaultAssemblyArchiver subject = createSubject( archiverManager, new ArrayList<AssemblyArchiverPhase>(), null );
+        final DefaultAssemblyArchiver subject = createSubject( new ArrayList<AssemblyArchiverPhase>() );
 
         subject.createArchiver( "war", false, null, configSource, null, false, null, null );
 
@@ -288,7 +286,6 @@ public class DefaultAssemblyArchiverTest
     {
         final ZipArchiver archiver = new ZipArchiver();
 
-        final ArchiverManager archiverManager = mock( ArchiverManager.class );
         when( archiverManager.getArchiver( "zip" ) ).thenReturn( archiver );
 
         final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
@@ -300,7 +297,7 @@ public class DefaultAssemblyArchiverTest
         when( configSource.isIgnorePermissions() ).thenReturn( true );
 
         final DefaultAssemblyArchiver subject =
-            createSubject( archiverManager, new ArrayList<AssemblyArchiverPhase>(), null );
+            createSubject( new ArrayList<AssemblyArchiverPhase>() );
 
         subject.createArchiver( "zip", false, null, configSource, null, false, null, null );
 
@@ -324,11 +321,10 @@ public class DefaultAssemblyArchiverTest
     {
         final TestWarArchiver twArchiver = new TestWarArchiver();
 
-        final ArchiverManager archiverManager = mock( ArchiverManager.class );
         when( archiverManager.getArchiver( "war" ) ).thenReturn( twArchiver );
 
         final DefaultAssemblyArchiver subject =
-            createSubject( archiverManager, new ArrayList<AssemblyArchiverPhase>(), null );
+            createSubject( new ArrayList<AssemblyArchiverPhase>() );
 
         subject.createWarArchiver();
 
@@ -344,10 +340,9 @@ public class DefaultAssemblyArchiverTest
     {
         final TestTarArchiver archiver = new TestTarArchiver();
         
-        final ArchiverManager archiverManager = mock( ArchiverManager.class );
         when( archiverManager.getArchiver( "tar" ) ).thenReturn( archiver );
 
-        final DefaultAssemblyArchiver subject = createSubject( archiverManager, new ArrayList<AssemblyArchiverPhase>(), null );
+        final DefaultAssemblyArchiver subject = createSubject( new ArrayList<AssemblyArchiverPhase>() );
 
         subject.createTarArchiver( "tar", TarLongFileMode.fail );
 
@@ -364,10 +359,9 @@ public class DefaultAssemblyArchiverTest
     {
         final TestTarArchiver archiver = new TestTarArchiver();
         
-        final ArchiverManager archiverManager = mock( ArchiverManager.class );
         when( archiverManager.getArchiver( "tar" ) ).thenReturn( archiver );
         
-        final DefaultAssemblyArchiver subject = createSubject( archiverManager, new ArrayList<AssemblyArchiverPhase>(), null );
+        final DefaultAssemblyArchiver subject = createSubject( new ArrayList<AssemblyArchiverPhase>() );
 
         subject.createTarArchiver( "tar.gz", TarLongFileMode.fail );
 
@@ -384,10 +378,9 @@ public class DefaultAssemblyArchiverTest
     {
         final TestTarArchiver archiver = new TestTarArchiver();
         
-        final ArchiverManager archiverManager = mock( ArchiverManager.class );
         when( archiverManager.getArchiver( "tar" ) ).thenReturn( archiver );
         
-        final DefaultAssemblyArchiver subject = createSubject( archiverManager, new ArrayList<AssemblyArchiverPhase>(), null );
+        final DefaultAssemblyArchiver subject = createSubject( new ArrayList<AssemblyArchiverPhase>() );
 
         subject.createTarArchiver( "tgz", TarLongFileMode.fail );
 
@@ -404,10 +397,9 @@ public class DefaultAssemblyArchiverTest
     {
         final TestTarArchiver archiver = new TestTarArchiver();
         
-        final ArchiverManager archiverManager = mock( ArchiverManager.class );
         when( archiverManager.getArchiver( "tar" ) ).thenReturn( archiver );
 
-        final DefaultAssemblyArchiver subject = createSubject( archiverManager, new ArrayList<AssemblyArchiverPhase>(), null );
+        final DefaultAssemblyArchiver subject = createSubject( new ArrayList<AssemblyArchiverPhase>() );
 
         subject.createTarArchiver( "tar.bz2", TarLongFileMode.fail );
 
@@ -424,10 +416,9 @@ public class DefaultAssemblyArchiverTest
     {
         final TestTarArchiver archiver = new TestTarArchiver();
         
-        final ArchiverManager archiverManager = mock( ArchiverManager.class );
         when( archiverManager.getArchiver( "tar" ) ).thenReturn( archiver );
 
-        final DefaultAssemblyArchiver subject = createSubject( archiverManager, new ArrayList<AssemblyArchiverPhase>(), null );
+        final DefaultAssemblyArchiver subject = createSubject( new ArrayList<AssemblyArchiverPhase>() );
 
         subject.createTarArchiver( "tbz2", TarLongFileMode.fail );
 
@@ -444,10 +435,9 @@ public class DefaultAssemblyArchiverTest
     {
         final TestTarArchiver archiver = new TestTarArchiver();
 
-        final ArchiverManager archiverManager = mock( ArchiverManager.class );
         when( archiverManager.getArchiver( "tar" ) ).thenReturn( archiver );
         
-        final DefaultAssemblyArchiver subject = createSubject( archiverManager, new ArrayList<AssemblyArchiverPhase>(), null );
+        final DefaultAssemblyArchiver subject = createSubject( new ArrayList<AssemblyArchiverPhase>() );
 
         subject.createTarArchiver( "tar.xz", TarLongFileMode.fail );
 
@@ -464,10 +454,9 @@ public class DefaultAssemblyArchiverTest
     {
         final TestTarArchiver archiver = new TestTarArchiver();
         
-        final ArchiverManager archiverManager = mock( ArchiverManager.class );
         when( archiverManager.getArchiver( "tar" ) ).thenReturn( archiver );
 
-        final DefaultAssemblyArchiver subject = createSubject( archiverManager, new ArrayList<AssemblyArchiverPhase>(), null );
+        final DefaultAssemblyArchiver subject = createSubject( new ArrayList<AssemblyArchiverPhase>() );
 
         subject.createTarArchiver( "txz", TarLongFileMode.fail );
 
@@ -484,10 +473,9 @@ public class DefaultAssemblyArchiverTest
     {
         final TestTarArchiver ttArchiver = new TestTarArchiver();
         
-        final ArchiverManager archiverManager = mock( ArchiverManager.class );
         when( archiverManager.getArchiver( "tar" ) ).thenReturn( ttArchiver );
 
-        final DefaultAssemblyArchiver subject = createSubject( archiverManager, new ArrayList<AssemblyArchiverPhase>(), null );
+        final DefaultAssemblyArchiver subject = createSubject( new ArrayList<AssemblyArchiverPhase>() );
 
         try
         {
@@ -504,21 +492,9 @@ public class DefaultAssemblyArchiverTest
         verify( archiverManager ).getArchiver( "tar" );
     }
 
-    private DefaultAssemblyArchiver createSubject( final ArchiverManager archiverManager,
-                                                   final List<AssemblyArchiverPhase> phases, Logger logger )
+    private DefaultAssemblyArchiver createSubject( final List<AssemblyArchiverPhase> phases )
     {
-        final DefaultAssemblyArchiver subject = new DefaultAssemblyArchiver( archiverManager, phases );
-
-        subject.setContainer( container );
-
-        if ( logger == null )
-        {
-            logger = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
-        }
-
-        subject.enableLogging( logger );
-
-        return subject;
+        return new DefaultAssemblyArchiver( archiverManager, phases, Collections.<String,ContainerDescriptorHandler>emptyMap(), container );
     }
 
     private static final class TestTarArchiver

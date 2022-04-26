@@ -25,14 +25,13 @@ import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.ResourceIterator;
 import org.codehaus.plexus.archiver.UnArchiver;
-import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.components.io.fileselectors.FileInfo;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
 import org.codehaus.plexus.util.xml.Xpp3DomWriter;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
-import javax.annotation.Nonnull;
+import javax.inject.Named;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -51,7 +50,7 @@ import java.util.Map;
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
  *
  */
-@Component( role = ContainerDescriptorHandler.class, hint = "plexus", instantiationStrategy = "per-lookup" )
+@Named( "plexus" )
 public class ComponentsXmlArchiverFileFilter
     implements ContainerDescriptorHandler
 {
@@ -164,7 +163,7 @@ public class ComponentsXmlArchiverFileFilter
     }
 
     @Override
-    public boolean isSelected( @Nonnull final FileInfo fileInfo )
+    public boolean isSelected( final FileInfo fileInfo )
         throws IOException
     {
         if ( fileInfo.isFile() )

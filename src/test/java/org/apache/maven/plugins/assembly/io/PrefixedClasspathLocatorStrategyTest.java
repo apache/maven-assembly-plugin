@@ -19,17 +19,20 @@ package org.apache.maven.plugins.assembly.io;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Benjamin Bentmann
  */
 public class PrefixedClasspathLocatorStrategyTest
-    extends TestCase
 {
     
     private MessageHolder mh = new DefaultMessageHolder();
 
+    @Test
     public void testResolvePrefixWithLeadingSlashAndWithTrailingSlash()
     {
         LocatorStrategy ls = new PrefixedClasspathLocatorStrategy( "/assemblies/" );
@@ -39,6 +42,7 @@ public class PrefixedClasspathLocatorStrategyTest
         assertEquals( 0, mh.size() );
     }
 
+    @Test
     public void testResolvePrefixWithLeadingSlashAndWithoutTrailingSlash()
     {
         LocatorStrategy ls = new PrefixedClasspathLocatorStrategy( "/assemblies" );
@@ -48,6 +52,7 @@ public class PrefixedClasspathLocatorStrategyTest
         assertEquals( 0, mh.size() );
     }
 
+    @Test
     public void testResolvePrefixWithoutLeadingSlashAndWithTrailingSlash()
     {
         LocatorStrategy ls = new PrefixedClasspathLocatorStrategy( "assemblies/" );
@@ -57,6 +62,7 @@ public class PrefixedClasspathLocatorStrategyTest
         assertEquals( 0, mh.size() );
     }
 
+    @Test
     public void testResolvePrefixWithoutLeadingSlashAndWithoutTrailingSlash()
     {
         LocatorStrategy ls = new PrefixedClasspathLocatorStrategy( "assemblies" );

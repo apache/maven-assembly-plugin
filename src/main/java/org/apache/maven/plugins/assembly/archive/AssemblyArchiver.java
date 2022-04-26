@@ -34,8 +34,6 @@ import java.util.Date;
  */
 public interface AssemblyArchiver
 {
-    String ROLE = AssemblyArchiver.class.getName();
-
     /**
      * Create the assembly archive. Generally:
      * <ol>

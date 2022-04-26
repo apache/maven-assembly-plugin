@@ -22,8 +22,6 @@ import java.io.File;
 import java.util.List;
 import java.util.Properties;
 
-import javax.annotation.Nonnull;
-
 import org.apache.maven.archiver.MavenArchiveConfiguration;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.execution.MavenSession;
@@ -476,24 +474,21 @@ public class PojoConfigSource
         this.remoteRepository = remoteRepository;
     }
 
-    @Nonnull
     public FixedStringSearchInterpolator getRepositoryInterpolator()
     {
         return rootInterpolator;
     }
 
-    @Nonnull
     public FixedStringSearchInterpolator getCommandLinePropsInterpolator()
     {
         return environmentInterpolator;
     }
 
-    public void setRootInterpolator( @Nonnull FixedStringSearchInterpolator rootInterpolator )
+    public void setRootInterpolator( FixedStringSearchInterpolator rootInterpolator )
     {
         this.rootInterpolator = rootInterpolator;
     }
 
-    @Nonnull
     public FixedStringSearchInterpolator getEnvInterpolator()
     {
         return envInterpolator;
@@ -504,7 +499,6 @@ public class PojoConfigSource
         this.envInterpolator = envInterpolator;
     }
 
-    @Nonnull
     public FixedStringSearchInterpolator getMainProjectInterpolator()
     {
         return mainProjectInterpolator;
@@ -516,7 +510,7 @@ public class PojoConfigSource
         this.mainProjectInterpolator = mainProjectInterpolator;
     }
 
-    public void setEnvironmentInterpolator( @Nonnull FixedStringSearchInterpolator environmentInterpolator )
+    public void setEnvironmentInterpolator( FixedStringSearchInterpolator environmentInterpolator )
     {
         this.environmentInterpolator = environmentInterpolator;
     }

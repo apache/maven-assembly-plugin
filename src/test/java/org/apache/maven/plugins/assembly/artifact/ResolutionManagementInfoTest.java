@@ -19,26 +19,22 @@ package org.apache.maven.plugins.assembly.artifact;
  * under the License.
  */
 
-import junit.framework.TestCase;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.artifact.handler.DefaultArtifactHandler;
 import org.apache.maven.artifact.versioning.VersionRange;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 
+import static org.junit.Assert.assertEquals;
+
 public class ResolutionManagementInfoTest
-    extends TestCase
 {
 
-    public void testName()
-        throws Exception
-    {
-
-    }
-
+    @Test
     public void testAddSingleArtifactWithReplacemen()
         throws Exception
     {
@@ -55,6 +51,7 @@ public class ResolutionManagementInfoTest
         assertEquals( "compile", next.getScope() );
     }
 
+    @Test
     public void testAddMultiArtifactWithReplacemen()
         throws Exception
     {

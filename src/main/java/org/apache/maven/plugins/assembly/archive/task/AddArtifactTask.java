@@ -23,6 +23,7 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
+import org.apache.maven.plugins.assembly.internal.ComponentSupport;
 import org.apache.maven.plugins.assembly.utils.AssemblyFormatUtils;
 import org.apache.maven.plugins.assembly.utils.TypeConversionUtils;
 import org.apache.maven.project.MavenProject;
@@ -31,7 +32,6 @@ import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.util.DefaultArchivedFileSet;
 import org.codehaus.plexus.archiver.util.DefaultFileSet;
 import org.codehaus.plexus.components.io.functions.InputStreamTransformer;
-import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -43,14 +43,12 @@ import java.util.List;
 /**
  *
  */
-public class AddArtifactTask
+public class AddArtifactTask extends ComponentSupport
 {
 
     public static final String[] DEFAULT_INCLUDES_ARRAY = { "**/*" };
 
     private final Artifact artifact;
-
-    private final Logger logger;
 
     private final InputStreamTransformer transformer;
 
@@ -78,18 +76,17 @@ public class AddArtifactTask
 
     private String outputFileNameMapping;
 
-    public AddArtifactTask( final Artifact artifact, final Logger logger, InputStreamTransformer transformer,
+    public AddArtifactTask( final Artifact artifact, InputStreamTransformer transformer,
                             Charset encoding )
     {
         this.artifact = artifact;
-        this.logger = logger;
         this.transformer = transformer;
         this.encoding = encoding;
     }
 
-    public AddArtifactTask( final Artifact artifact, final Logger logger, Charset encoding )
+    public AddArtifactTask( final Artifact artifact, Charset encoding )
     {
-        this( artifact, logger, null, encoding );
+        this( artifact, null, encoding );
     }
 
     public void execute( final Archiver archiver, final AssemblerConfigurationSource configSource )
@@ -164,7 +161,7 @@ public class AddArtifactTask
         {
             final File artifactFile = artifact.getFile();
 
-            logger.debug(
+            getLogger().debug(
                 "Adding artifact: " + artifact.getId() + " with file: " + artifactFile + " to assembly location: "
                     + outputLocation + "." );
 
@@ -207,12 +204,12 @@ public class AddArtifactTask
             final File artifactFile = artifact.getFile();
             if ( artifactFile == null )
             {
-                logger.warn(
+                getLogger().warn(
                     "Skipping artifact: " + artifact.getId() + "; it does not have an associated file or directory." );
             }
             else if ( artifactFile.isDirectory() )
             {
-                logger.debug( "Adding artifact directory contents for: " + artifact + " to: " + outputLocation );
+                getLogger().debug( "Adding artifact directory contents for: " + artifact + " to: " + outputLocation );
 
                 DefaultFileSet fs = DefaultFileSet.fileSet( artifactFile );
                 fs.setIncludes( includesArray );
@@ -224,9 +221,9 @@ public class AddArtifactTask
             }
             else
             {
-                logger.debug( "Unpacking artifact contents for: " + artifact + " to: " + outputLocation );
-                logger.debug( "includes:\n" + StringUtils.join( includesArray, "\n" ) + "\n" );
-                logger.debug(
+                getLogger().debug( "Unpacking artifact contents for: " + artifact + " to: " + outputLocation );
+                getLogger().debug( "includes:\n" + StringUtils.join( includesArray, "\n" ) + "\n" );
+                getLogger().debug(
                     "excludes:\n" + ( excludesArray == null ? "none" : StringUtils.join( excludesArray, "\n" ) )
                         + "\n" );
                 DefaultArchivedFileSet afs = DefaultArchivedFileSet.archivedFileSet( artifactFile );
@@ -251,7 +248,8 @@ public class AddArtifactTask
         final File tempRoot = configSource.getTemporaryRootDirectory();
         final File tempArtifactFile = new File( tempRoot, artifact.getFile().getName() );
 
-        logger.warn( "Artifact: " + artifact.getId() + " references the same file as the assembly destination file. "
+        getLogger().warn(
+                "Artifact: " + artifact.getId() + " references the same file as the assembly destination file. "
                          + "Moving it to a temporary location for inclusion." );
         try
         {
