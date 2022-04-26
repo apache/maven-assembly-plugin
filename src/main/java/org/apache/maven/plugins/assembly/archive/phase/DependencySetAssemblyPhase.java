@@ -31,7 +31,6 @@ import org.apache.maven.plugins.assembly.archive.task.AddDependencySetsTask;
 import org.apache.maven.plugins.assembly.artifact.DependencyResolutionException;
 import org.apache.maven.plugins.assembly.artifact.DependencyResolver;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
-import org.apache.maven.plugins.assembly.internal.ComponentSupport;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.model.DependencySet;
 import org.apache.maven.project.ProjectBuilder;
@@ -50,9 +49,7 @@ import static java.util.Objects.requireNonNull;
  */
 @Singleton
 @Named( "dependency-sets" )
-public class DependencySetAssemblyPhase
-        extends ComponentSupport
-        implements AssemblyArchiverPhase, PhaseOrder
+public class DependencySetAssemblyPhase implements AssemblyArchiverPhase, PhaseOrder
 {
     private final ProjectBuilder projectBuilder;
 

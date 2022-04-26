@@ -30,7 +30,6 @@ import org.apache.maven.plugins.assembly.archive.phase.wrappers.RepoBuilderConfi
 import org.apache.maven.plugins.assembly.archive.phase.wrappers.RepoInfoWrapper;
 import org.apache.maven.plugins.assembly.archive.task.AddDirectoryTask;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
-import org.apache.maven.plugins.assembly.internal.ComponentSupport;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.model.Repository;
 import org.apache.maven.plugins.assembly.repository.RepositoryAssembler;
@@ -40,6 +39,8 @@ import org.apache.maven.plugins.assembly.repository.model.RepositoryInfo;
 import org.apache.maven.plugins.assembly.utils.AssemblyFormatUtils;
 import org.apache.maven.plugins.assembly.utils.TypeConversionUtils;
 import org.codehaus.plexus.archiver.Archiver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.List;
@@ -51,10 +52,9 @@ import static java.util.Objects.requireNonNull;
  */
 @Singleton
 @Named( "repositories" )
-public class RepositoryAssemblyPhase
-        extends ComponentSupport
-        implements AssemblyArchiverPhase, PhaseOrder
+public class RepositoryAssemblyPhase implements AssemblyArchiverPhase, PhaseOrder
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger( RepositoryAssemblyPhase.class );
 
     private final RepositoryAssembler repositoryAssembler;
 
@@ -94,10 +94,10 @@ public class RepositoryAssemblyPhase
 
             try
             {
-                getLogger().debug( "Assembling repository to: " + repositoryDirectory );
+                LOGGER.debug( "Assembling repository to: " + repositoryDirectory );
                 repositoryAssembler.buildRemoteRepository( repositoryDirectory, wrap( repository ),
                                                            wrap( configSource ) );
-                getLogger().debug( "Finished assembling repository to: " + repositoryDirectory );
+                LOGGER.debug( "Finished assembling repository to: " + repositoryDirectory );
             }
             catch ( final RepositoryAssemblyException e )
             {
@@ -106,13 +106,13 @@ public class RepositoryAssemblyPhase
 
             final AddDirectoryTask task = new AddDirectoryTask( repositoryDirectory );
 
-            final int dirMode = TypeConversionUtils.modeToInt( repository.getDirectoryMode(), getLogger() );
+            final int dirMode = TypeConversionUtils.modeToInt( repository.getDirectoryMode(), LOGGER );
             if ( dirMode != -1 )
             {
                 task.setDirectoryMode( dirMode );
             }
 
-            final int fileMode = TypeConversionUtils.modeToInt( repository.getFileMode(), getLogger() );
+            final int fileMode = TypeConversionUtils.modeToInt( repository.getFileMode(), LOGGER );
             if ( fileMode != -1 )
             {
                 task.setFileMode( fileMode );

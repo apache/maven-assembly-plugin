@@ -39,7 +39,6 @@ import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
 import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.format.ReaderFormatter;
-import org.apache.maven.plugins.assembly.internal.ComponentSupport;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.model.FileItem;
 import org.apache.maven.plugins.assembly.utils.AssemblyFileUtils;
@@ -51,6 +50,8 @@ import org.codehaus.plexus.components.io.functions.ContentSupplier;
 import org.codehaus.plexus.components.io.functions.InputStreamTransformer;
 import org.codehaus.plexus.components.io.resources.PlexusIoFileResource;
 import org.codehaus.plexus.components.io.resources.PlexusIoResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Handles the top-level &lt;files/&gt; section of the assembly descriptor.
@@ -59,10 +60,10 @@ import org.codehaus.plexus.components.io.resources.PlexusIoResource;
  */
 @Singleton
 @Named( "file-items" )
-public class FileItemAssemblyPhase
-        extends ComponentSupport
-        implements AssemblyArchiverPhase, PhaseOrder
+public class FileItemAssemblyPhase implements AssemblyArchiverPhase, PhaseOrder
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger( FileItemAssemblyPhase.class );
+
     /**
      * {@inheritDoc}
      */
@@ -169,7 +170,7 @@ public class FileItemAssemblyPhase
                     restoUse = createResource( source, fileSetTransformers );
                 }
 
-                int mode = TypeConversionUtils.modeToInt( fileItem.getFileMode(), getLogger() );
+                int mode = TypeConversionUtils.modeToInt( fileItem.getFileMode(), LOGGER );
                 archiver.addResource( restoUse, target, mode );
             }
             catch ( final ArchiverException | IOException e )

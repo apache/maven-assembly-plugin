@@ -36,7 +36,6 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.filter.AndArtifactFilter;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.model.Dependency;
-import org.apache.maven.plugins.assembly.internal.ComponentSupport;
 import org.apache.maven.plugins.assembly.repository.model.GroupVersionAlignment;
 import org.apache.maven.plugins.assembly.repository.model.RepositoryInfo;
 import org.apache.maven.project.MavenProject;
@@ -53,6 +52,7 @@ import org.apache.maven.shared.transfer.dependencies.resolve.DependencyResolverE
 import org.apache.maven.shared.transfer.repository.RepositoryManager;
 import org.apache.maven.shared.utils.io.FileUtils;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static java.util.Objects.requireNonNull;
 
@@ -63,10 +63,9 @@ import static java.util.Objects.requireNonNull;
 // todo will need to pop the processed project cache using reflection
 @Singleton
 @Named
-public class DefaultRepositoryAssembler
-        extends ComponentSupport
-        implements RepositoryAssembler
+public class DefaultRepositoryAssembler implements RepositoryAssembler
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger( DefaultRepositoryAssembler.class );
 
     private final ArtifactResolver artifactResolver;
 
@@ -97,11 +96,9 @@ public class DefaultRepositoryAssembler
 
         if ( dependencies == null )
         {
-            Logger logger = getLogger();
-
-            if ( logger.isDebugEnabled() )
+            if ( LOGGER.isDebugEnabled() )
             {
-                logger.debug( "dependency-artifact set for project: " + project.getId()
+                LOGGER.debug( "dependency-artifact set for project: " + project.getId()
                     + " is null. Skipping repository processing." );
             }
 
@@ -226,7 +223,7 @@ public class DefaultRepositoryAssembler
 
                 if ( filter.include( a ) )
                 {
-                    getLogger().debug( "Re-resolving: " + a + " for repository assembly." );
+                    LOGGER.debug( "Re-resolving: " + a + " for repository assembly." );
 
                     setAlignment( a, groupVersionAlignments );
 

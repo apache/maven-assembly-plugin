@@ -31,7 +31,6 @@ import org.apache.maven.plugins.assembly.artifact.DependencyResolver;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.functions.MavenProjects;
 import org.apache.maven.plugins.assembly.functions.ModuleSetConsumer;
-import org.apache.maven.plugins.assembly.internal.ComponentSupport;
 import org.apache.maven.plugins.assembly.model.Assemblies;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.model.DependencySet;
@@ -49,6 +48,7 @@ import org.apache.maven.project.ProjectBuilder;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -75,10 +75,9 @@ import static org.apache.maven.plugins.assembly.functions.MavenProjects.log;
  */
 @Singleton
 @Named( "module-sets" )
-public class ModuleSetAssemblyPhase
-        extends ComponentSupport
-        implements AssemblyArchiverPhase, PhaseOrder
+public class ModuleSetAssemblyPhase implements AssemblyArchiverPhase, PhaseOrder
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger( ModuleSetAssemblyPhase.class );
 
     // TODO: Remove if using something like commons-lang instead.
 
@@ -96,7 +95,7 @@ public class ModuleSetAssemblyPhase
      */
     @Inject
     public ModuleSetAssemblyPhase( final ProjectBuilder projectBuilder,
-                                   DependencyResolver dependencyResolver )
+                                   final DependencyResolver dependencyResolver )
     {
         this.projectBuilder = requireNonNull( projectBuilder );
         this.dependencyResolver = requireNonNull( dependencyResolver );
@@ -179,7 +178,7 @@ public class ModuleSetAssemblyPhase
             {
                 validate( resolvedModule, configSource );
 
-                final Set<MavenProject> moduleProjects = getModuleProjects( resolvedModule, configSource, getLogger() );
+                final Set<MavenProject> moduleProjects = getModuleProjects( resolvedModule, configSource, LOGGER );
 
                 final ModuleSources sources = resolvedModule.getSources();
                 addModuleSourceFileSets( sources, moduleProjects, archiver, configSource );
@@ -194,12 +193,12 @@ public class ModuleSetAssemblyPhase
     {
         if ( ( moduleSet.getSources() == null ) && ( moduleSet.getBinaries() == null ) )
         {
-            getLogger().warn( "Encountered ModuleSet with no sources or binaries specified. Skipping." );
+            LOGGER.warn( "Encountered ModuleSet with no sources or binaries specified. Skipping." );
         }
 
         if ( moduleSet.isUseAllReactorProjects() && !moduleSet.isIncludeSubModules() )
         {
-            getLogger().warn( "includeSubModules == false is incompatible with useAllReactorProjects. Ignoring."
+            LOGGER.warn( "includeSubModules == false is incompatible with useAllReactorProjects. Ignoring."
                                   + "\n\nTo refactor, remove the <includeSubModules/> flag, and use the <includes/> "
                                   + "and <excludes/> sections to fine-tune the modules included." );
         }
@@ -208,7 +207,7 @@ public class ModuleSetAssemblyPhase
         if ( projects != null && projects.size() > 1 && projects.indexOf( configSource.getProject() ) == 0
             && moduleSet.getBinaries() != null )
         {
-            getLogger().warn( "[DEPRECATION] moduleSet/binaries section detected in root-project assembly."
+            LOGGER.warn( "[DEPRECATION] moduleSet/binaries section detected in root-project assembly."
                                   + "\n\nMODULE BINARIES MAY NOT BE AVAILABLE FOR THIS ASSEMBLY!"
                                   + "\n\n To refactor, move this assembly into a child project and use the flag "
                                   + "<useAllReactorProjects>true</useAllReactorProjects> in each moduleSet." );
@@ -219,12 +218,12 @@ public class ModuleSetAssemblyPhase
             final ModuleSources sources = moduleSet.getSources();
             if ( isDeprecatedModuleSourcesConfigPresent( sources ) )
             {
-                getLogger().warn( "[DEPRECATION] Use of <moduleSources/> as a file-set is deprecated. "
+                LOGGER.warn( "[DEPRECATION] Use of <moduleSources/> as a file-set is deprecated. "
                                       + "Please use the <fileSets/> sub-element of <moduleSources/> instead." );
             }
             else if ( !sources.isUseDefaultExcludes() )
             {
-                getLogger().warn( "[DEPRECATION] Use of directoryMode, fileMode, or useDefaultExcludes "
+                LOGGER.warn( "[DEPRECATION] Use of directoryMode, fileMode, or useDefaultExcludes "
                                       + "elements directly within <moduleSources/> are all deprecated. "
                                       + "Please use the <fileSets/> sub-element of <moduleSources/> instead." );
             }
@@ -244,7 +243,7 @@ public class ModuleSetAssemblyPhase
 
         final Set<MavenProject> moduleProjects = new LinkedHashSet<>();
 
-        MavenProjects.select( projects, "pom", log( getLogger() ), addTo( moduleProjects ) );
+        MavenProjects.select( projects, "pom", log( LOGGER ), addTo( moduleProjects ) );
 
         final String classifier = binaries.getAttachmentClassifier();
 
@@ -256,13 +255,13 @@ public class ModuleSetAssemblyPhase
 
             if ( classifier == null )
             {
-                getLogger().debug( "Processing binary artifact for module project: " + project.getId() );
+                LOGGER.debug( "Processing binary artifact for module project: " + project.getId() );
 
                 artifact = project.getArtifact();
             }
             else
             {
-                getLogger().debug(
+                LOGGER.debug(
                     "Processing binary attachment: " + classifier + " for module project: " + project.getId() );
 
                 artifact = MavenProjects.findArtifactByClassifier( project, classifier );
@@ -307,12 +306,12 @@ public class ModuleSetAssemblyPhase
                     sb.append( mavenProject.getId() );
                     sb.append( LINE_SEPARATOR );
                 }
-                getLogger().warn( sb.toString() );
+                LOGGER.warn( sb.toString() );
             }
 
             for ( final MavenProject moduleProject : moduleProjects )
             {
-                getLogger().debug( "Processing binary dependencies for module project: " + moduleProject.getId() );
+                LOGGER.debug( "Processing binary dependencies for module project: " + moduleProject.getId() );
 
                 for ( Map.Entry<DependencySet, Set<Artifact>> dependencySetSetEntry : dependencySetSetMap.entrySet() )
                 {
@@ -339,10 +338,10 @@ public class ModuleSetAssemblyPhase
         if ( moduleProjects != null && !moduleProjects.isEmpty() )
         {
             String version = moduleProjects.iterator().next().getVersion();
-            getLogger().debug( "First version:" + version );
+            LOGGER.debug( "First version:" + version );
             for ( MavenProject mavenProject : moduleProjects )
             {
-                getLogger().debug( " -> checking " + mavenProject.getId() );
+                LOGGER.debug( " -> checking " + mavenProject.getId() );
                 if ( !version.equals( mavenProject.getVersion() ) )
                 {
                     result.add( mavenProject );
@@ -371,13 +370,13 @@ public class ModuleSetAssemblyPhase
         task.setModuleProject( project );
         task.setModuleArtifact( artifact );
 
-        final int dirMode = TypeConversionUtils.modeToInt( binaries.getDirectoryMode(), getLogger() );
+        final int dirMode = TypeConversionUtils.modeToInt( binaries.getDirectoryMode(), LOGGER );
         if ( dirMode != -1 )
         {
             task.setDirectoryMode( dirMode );
         }
 
-        final int fileMode = TypeConversionUtils.modeToInt( binaries.getFileMode(), getLogger() );
+        final int fileMode = TypeConversionUtils.modeToInt( binaries.getFileMode(), LOGGER );
         if ( fileMode != -1 )
         {
             task.setFileMode( fileMode );
@@ -430,7 +429,7 @@ public class ModuleSetAssemblyPhase
 
         for ( final MavenProject moduleProject : moduleProjects )
         {
-            getLogger().info( "Processing sources for module project: " + moduleProject.getId() );
+            LOGGER.info( "Processing sources for module project: " + moduleProject.getId() );
 
             final List<FileSet> moduleFileSets = new ArrayList<>();
 
@@ -558,8 +557,8 @@ public class ModuleSetAssemblyPhase
 
         fs.setOutputDirectory( destPath );
 
-        getLogger().debug( "module source directory is: " + sourcePath );
-        getLogger().debug( "module dest directory is: " + destPath + " (assembly basedir may be prepended)" );
+        LOGGER.debug( "module source directory is: " + sourcePath );
+        LOGGER.debug( "module dest directory is: " + destPath + " (assembly basedir may be prepended)" );
 
         return fs;
     }

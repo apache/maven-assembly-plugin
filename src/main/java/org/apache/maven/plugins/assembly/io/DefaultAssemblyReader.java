@@ -24,7 +24,6 @@ import javax.inject.Singleton;
 
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
-import org.apache.maven.plugins.assembly.internal.ComponentSupport;
 import org.apache.maven.plugins.assembly.interpolation.AssemblyExpressionEvaluator;
 import org.apache.maven.plugins.assembly.interpolation.AssemblyInterpolator;
 import org.apache.maven.plugins.assembly.model.Assembly;
@@ -51,6 +50,8 @@ import org.codehaus.plexus.interpolation.fixed.PrefixedPropertiesValueSource;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -69,10 +70,9 @@ import java.util.Set;
  */
 @Singleton
 @Named
-public class DefaultAssemblyReader
-        extends ComponentSupport
-        implements AssemblyReader
+public class DefaultAssemblyReader implements AssemblyReader
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger( DefaultAssemblyReader.class );
 
     public static FixedStringSearchInterpolator createProjectInterpolator( MavenProject project )
     {
@@ -108,7 +108,7 @@ public class DefaultAssemblyReader
             locator.setStrategies( strategies );
             for ( String descriptor1 : descriptors )
             {
-                getLogger().info( "Reading assembly descriptor: " + descriptor1 );
+                LOGGER.info( "Reading assembly descriptor: " + descriptor1 );
                 addAssemblyFromDescriptor( descriptor1, locator, configSource, assemblies );
             }
         }
@@ -147,7 +147,7 @@ public class DefaultAssemblyReader
         {
             if ( configSource.isIgnoreMissingDescriptor() )
             {
-                getLogger().debug( "Ignoring missing assembly descriptors per configuration. "
+                LOGGER.debug( "Ignoring missing assembly descriptors per configuration. "
                     + "See messages above for specifics." );
             }
             else
@@ -162,7 +162,7 @@ public class DefaultAssemblyReader
         {
             if ( !ids.add( assembly.getId() ) )
             {
-                getLogger().warn( "The assembly id " + assembly.getId() + " is used more than once." );
+                LOGGER.warn( "The assembly id " + assembly.getId() + " is used more than once." );
             }
 
         }
@@ -197,7 +197,7 @@ public class DefaultAssemblyReader
         {
             if ( configSource.isIgnoreMissingDescriptor() )
             {
-                getLogger().debug( "Ignoring missing assembly descriptor with ID '" + ref + "' per configuration." );
+                LOGGER.debug( "Ignoring missing assembly descriptor with ID '" + ref + "' per configuration." );
                 return null;
             }
             else
@@ -228,7 +228,7 @@ public class DefaultAssemblyReader
         {
             if ( configSource.isIgnoreMissingDescriptor() )
             {
-                getLogger().debug( "Ignoring missing assembly descriptor: '" + descriptor + "' per configuration." );
+                LOGGER.debug( "Ignoring missing assembly descriptor: '" + descriptor + "' per configuration." );
                 return null;
             }
             else
@@ -263,7 +263,7 @@ public class DefaultAssemblyReader
         {
             if ( configSource.isIgnoreMissingDescriptor() )
             {
-                getLogger().debug( "Ignoring missing assembly descriptor with ID '" + spec
+                LOGGER.debug( "Ignoring missing assembly descriptor with ID '" + spec
                     + "' per configuration.\nLocator output was:\n\n" + locator.getMessageHolder().render() );
                 return null;
             }
@@ -313,17 +313,17 @@ public class DefaultAssemblyReader
             FixedStringSearchInterpolator interpolator =
                 AssemblyInterpolator.fullInterpolator( project, createProjectInterpolator( project ), configSource );
             AssemblyXpp3Reader.ContentTransformer transformer =
-                AssemblyInterpolator.assemblyInterpolator( interpolator, is, getLogger() );
+                AssemblyInterpolator.assemblyInterpolator( interpolator, is, LOGGER );
 
             final AssemblyXpp3Reader r = new AssemblyXpp3Reader( transformer );
             assembly = r.read( reader );
 
             ComponentXpp3Reader.ContentTransformer ctrans =
-                AssemblyInterpolator.componentInterpolator( interpolator, is, getLogger() );
+                AssemblyInterpolator.componentInterpolator( interpolator, is, LOGGER );
             mergeComponentsWithMainAssembly( assembly, assemblyDir, configSource, ctrans );
             debugPrintAssembly( "After assembly is interpolated:", assembly );
 
-            AssemblyInterpolator.checkErrors( AssemblyId.createAssemblyId( assembly ), is, getLogger() );
+            AssemblyInterpolator.checkErrors( AssemblyId.createAssemblyId( assembly ), is, LOGGER );
 
             reader.close();
             reader = null;
@@ -355,11 +355,11 @@ public class DefaultAssemblyReader
         }
         catch ( final IOException e )
         {
-            getLogger().debug( "Failed to print debug message with assembly descriptor listing, and message: "
+            LOGGER.debug( "Failed to print debug message with assembly descriptor listing, and message: "
                 + message, e );
         }
 
-        getLogger().debug( message + "\n\n" + sWriter.toString() + "\n\n" );
+        LOGGER.debug( message + "\n\n" + sWriter.toString() + "\n\n" );
     }
 
     /**
@@ -400,7 +400,7 @@ public class DefaultAssemblyReader
             }
             catch ( final Exception eee )
             {
-                getLogger().error( "Error interpolating componentDescriptor: " + location, eee );
+                LOGGER.error( "Error interpolating componentDescriptor: " + location, eee );
             }
 
             final Location resolvedLocation = locator.resolve( location );
@@ -488,7 +488,7 @@ public class DefaultAssemblyReader
                 + "please run site:site before creating the assembly" );
         }
 
-        getLogger().info( "Adding site directory to assembly : " + siteDirectory );
+        LOGGER.info( "Adding site directory to assembly : " + siteDirectory );
 
         final FileSet siteFileSet = new FileSet();
 

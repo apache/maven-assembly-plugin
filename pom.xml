@@ -67,7 +67,6 @@ under the License.
     <javaVersion>7</javaVersion>
     <mdoVersion>2.1.0</mdoVersion>
     <mavenVersion>3.2.5</mavenVersion>
-    <sisuVersion>0.3.5</sisuVersion>
     <slf4jVersion>1.7.5</slf4jVersion>
 
     <surefire.version>3.0.0-M6</surefire.version>
@@ -279,24 +278,6 @@ under the License.
 
     <pluginManagement>
       <plugins>
-        <plugin>
-          <groupId>org.eclipse.sisu</groupId>
-          <artifactId>sisu-maven-plugin</artifactId>
-          <version>${sisuVersion}</version>
-          <executions>
-            <execution>
-              <id>index-project</id>
-              <goals>
-                <goal>main-index</goal>
-                <goal>test-index</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-jxr-plugin</artifactId>
-        </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>

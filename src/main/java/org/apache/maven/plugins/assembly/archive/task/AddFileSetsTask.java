@@ -29,7 +29,6 @@ import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.format.ReaderFormatter;
-import org.apache.maven.plugins.assembly.internal.ComponentSupport;
 import org.apache.maven.plugins.assembly.model.FileSet;
 import org.apache.maven.plugins.assembly.utils.AssemblyFileUtils;
 import org.apache.maven.plugins.assembly.utils.AssemblyFormatUtils;
@@ -37,12 +36,15 @@ import org.apache.maven.plugins.assembly.utils.TypeConversionUtils;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.components.io.functions.InputStreamTransformer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  */
-public class AddFileSetsTask extends ComponentSupport
+public class AddFileSetsTask
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger( AddFileSetsTask.class );
 
     private final List<FileSet> fileSets;
 
@@ -107,7 +109,7 @@ public class AddFileSetsTask extends ComponentSupport
         {
             destDirectory = fileSet.getDirectory();
 
-            AssemblyFormatUtils.warnForPlatformSpecifics( getLogger(), destDirectory );
+            AssemblyFormatUtils.warnForPlatformSpecifics( LOGGER, destDirectory );
         }
 
 
@@ -116,16 +118,16 @@ public class AddFileSetsTask extends ComponentSupport
                                                     AssemblyFormatUtils.moduleProjectInterpolator( moduleProject ),
                                                     AssemblyFormatUtils.artifactProjectInterpolator( project ) );
 
-        if ( getLogger().isDebugEnabled() )
+        if ( LOGGER.isDebugEnabled() )
         {
-            getLogger().debug( "FileSet[" + destDirectory + "]" + " dir perms: " + Integer.toString(
+            LOGGER.debug( "FileSet[" + destDirectory + "]" + " dir perms: " + Integer.toString(
                 archiver.getOverrideDirectoryMode(), 8 ) + " file perms: " + Integer.toString(
                 archiver.getOverrideFileMode(), 8 ) + ( fileSet.getLineEnding() == null
                 ? ""
                 : " lineEndings: " + fileSet.getLineEnding() ) );
         }
 
-        getLogger().debug( "The archive base directory is '" + archiveBaseDir + "'" );
+        LOGGER.debug( "The archive base directory is '" + archiveBaseDir + "'" );
 
         File fileSetDir = getFileSetDirectory( fileSet, basedir, archiveBaseDir );
 
@@ -138,7 +140,7 @@ public class AddFileSetsTask extends ComponentSupport
                                                         fileSet.getLineEnding() );
             if ( fileSetTransformers == null )
             {
-                getLogger().debug( "NOT reformatting any files in " + fileSetDir );
+                LOGGER.debug( "NOT reformatting any files in " + fileSetDir );
             }
 
             if ( fileSetDir.getPath().equals( File.separator ) )
@@ -149,13 +151,13 @@ public class AddFileSetsTask extends ComponentSupport
             }
             final AddDirectoryTask task = new AddDirectoryTask( fileSetDir, fileSetTransformers );
 
-            final int dirMode = TypeConversionUtils.modeToInt( fileSet.getDirectoryMode(), getLogger() );
+            final int dirMode = TypeConversionUtils.modeToInt( fileSet.getDirectoryMode(), LOGGER );
             if ( dirMode != -1 )
             {
                 task.setDirectoryMode( dirMode );
             }
 
-            final int fileMode = TypeConversionUtils.modeToInt( fileSet.getFileMode(), getLogger() );
+            final int fileMode = TypeConversionUtils.modeToInt( fileSet.getFileMode(), LOGGER );
             if ( fileMode != -1 )
             {
                 task.setFileMode( fileMode );
