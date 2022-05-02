@@ -41,8 +41,7 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
  *
  */
-@Mojo( name = "single", inheritByDefault = false, requiresDependencyResolution = ResolutionScope.TEST,
-    threadSafe = true )
+@Mojo( name = "single", requiresDependencyResolution = ResolutionScope.TEST, threadSafe = true )
 public class SingleAssemblyMojo
     extends AbstractAssemblyMojo
 {

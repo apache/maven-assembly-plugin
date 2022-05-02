@@ -39,17 +39,19 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.components.io.resources.PlexusIoResource;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RunWith( MockitoJUnitRunner.class )
 public class FileItemAssemblyPhaseTest
 {
+    private final Logger logger = LoggerFactory.getLogger( getClass() );
+
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
     
@@ -63,12 +65,10 @@ public class FileItemAssemblyPhaseTest
 
         when( macCS.getBasedir()).thenReturn( basedir );
 
-        final Logger macLogger = mock( Logger.class );
-
         final Assembly assembly = new Assembly();
         assembly.setId( "test" );
 
-        createPhase( macLogger ).execute( assembly, null, macCS );
+        new FileItemAssemblyPhase().execute( assembly, null, macCS );
 
         verify( macCS ).getBasedir();
     }
@@ -89,8 +89,6 @@ public class FileItemAssemblyPhaseTest
         when( macCS.getFinalName() ) .thenReturn( "final-name" );
         prepareInterpolators( macCS );
 
-        final Logger macLogger = mock( Logger.class );
-
         final Archiver macArchiver = mock( Archiver.class );
 
         final Assembly assembly = new Assembly();
@@ -104,13 +102,12 @@ public class FileItemAssemblyPhaseTest
 
         assembly.addFile( fi );
 
-        createPhase( macLogger ).execute( assembly, macArchiver, macCS );
+        new FileItemAssemblyPhase().execute( assembly, macArchiver, macCS );
 
         verify( macArchiver ).addResource( any( PlexusIoResource.class ),
                                            eq( "file.txt" ),
                                            eq( TypeConversionUtils.modeToInt( "777",
-                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
-                                                                                                 "test" ) ) ) );
+                                                                              logger ) ) );
     }
 
     @Test
@@ -129,8 +126,6 @@ public class FileItemAssemblyPhaseTest
         when( macCS.getFinalName() ) .thenReturn( "final-name" );
         prepareInterpolators( macCS );
 
-        final Logger macLogger = mock( Logger.class );
-
         final Archiver macArchiver = mock( Archiver.class );
 
         final Assembly assembly = new Assembly();
@@ -144,13 +139,12 @@ public class FileItemAssemblyPhaseTest
 
         assembly.addFile( fi );
 
-        createPhase( macLogger ).execute( assembly, macArchiver, macCS );
+        new FileItemAssemblyPhase().execute( assembly, macArchiver, macCS );
 
         verify( macArchiver ).addResource( any( PlexusIoResource.class ),
                                            eq( "file.txt" ),
                                            eq( TypeConversionUtils.modeToInt( "777",
-                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
-                                                                                                 "test" ) ) ) );
+                                                                              logger ) ) );
     }
 
     @Test
@@ -174,8 +168,6 @@ public class FileItemAssemblyPhaseTest
         when( macCS.getProject() ).thenReturn( new MavenProject( new Model() ) );
         when( macCS.getFinalName() ) .thenReturn( "final-name" );
         prepareInterpolators( macCS );
-
-        final Logger macLogger = mock( Logger.class );
 
         final Archiver macArchiver = mock( Archiver.class );
 
@@ -208,23 +200,20 @@ public class FileItemAssemblyPhaseTest
         assembly.addFile( licenseFileItem );
         assembly.addFile( configFileItem );
 
-        createPhase( macLogger ).execute( assembly, macArchiver, macCS );
+        new FileItemAssemblyPhase().execute( assembly, macArchiver, macCS );
 
         verify( macArchiver ).addResource( any( PlexusIoResource.class ),
                                            eq( "README.txt" ),
                                            eq( TypeConversionUtils.modeToInt( "777",
-                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
-                                                                                                 "test" ) ) ) );
+                                                                              logger ) ) );
         verify( macArchiver ).addResource( any( PlexusIoResource.class ),
                                            eq( "LICENSE.txt" ),
                                            eq( TypeConversionUtils.modeToInt( "777",
-                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
-                                                                                                 "test" ) ) ) );
+                                                                              logger ) ) );
         verify( macArchiver ).addResource( any( PlexusIoResource.class ),
                                            eq( "config/config.txt" ),
                                            eq( TypeConversionUtils.modeToInt( "777",
-                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
-                                                                                                 "test" ) ) ) );
+                                                                              logger ) ) );
     
     }
 
@@ -249,8 +238,6 @@ public class FileItemAssemblyPhaseTest
         when( macCS.getProject() ).thenReturn( new MavenProject( new Model() ) );
         when( macCS.getFinalName() ) .thenReturn( "final-name" );
         prepareInterpolators( macCS );
-
-        final Logger macLogger = mock( Logger.class );
 
         final Archiver macArchiver = mock( Archiver.class );
 
@@ -286,23 +273,20 @@ public class FileItemAssemblyPhaseTest
         assembly.addFile( licenseFileItem );
         assembly.addFile( configFileItem );
 
-        createPhase( macLogger ).execute( assembly, macArchiver, macCS );
+        new FileItemAssemblyPhase().execute( assembly, macArchiver, macCS );
 
         verify( macArchiver ).addResource( any( PlexusIoResource.class ), 
                                            eq( "README_renamed.txt" ),
                                            eq( TypeConversionUtils.modeToInt( "777",
-                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
-                                                                                                 "test" ) ) ) );
+                                                                              logger ) ) );
         verify( macArchiver ).addResource( any( PlexusIoResource.class ), 
                                            eq( "LICENSE_renamed.txt" ),
                                            eq( TypeConversionUtils.modeToInt( "777",
-                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
-                                                                                                 "test" ) ) ) );
+                                                                              logger ) ) );
         verify( macArchiver ).addResource( any( PlexusIoResource.class ), 
                                            eq( "config/config_renamed.txt" ),
                                            eq( TypeConversionUtils.modeToInt( "777",
-                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
-                                                                                                 "test" ) ) ) );
+                                                                              logger ) ) );
     }
 
     @Test
@@ -326,8 +310,6 @@ public class FileItemAssemblyPhaseTest
         when( macCS.getProject() ).thenReturn( new MavenProject( new Model() ) );
         when( macCS.getFinalName() ) .thenReturn( "final-name" );
         prepareInterpolators( macCS );
-
-        final Logger macLogger = mock( Logger.class );
 
         final Archiver macArchiver = mock( Archiver.class );
 
@@ -361,31 +343,20 @@ public class FileItemAssemblyPhaseTest
         assembly.addFile( licenseFileItem );
         assembly.addFile( configFileItem );
 
-        createPhase( macLogger ).execute( assembly, macArchiver, macCS );
+        new FileItemAssemblyPhase().execute( assembly, macArchiver, macCS );
 
         verify( macArchiver ).addResource( any( PlexusIoResource.class ), 
                                            eq( "README_renamed.txt" ),
                                            eq( TypeConversionUtils.modeToInt( "777",
-                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
-                                                                                                 "test" ) ) ) );
+                                                                              logger ) ) );
         verify( macArchiver ).addResource( any( PlexusIoResource.class ),
                                            eq( "LICENSE_renamed.txt" ),
                                            eq( TypeConversionUtils.modeToInt( "777",
-                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
-                                                                                                 "test" ) ) ) );
+                                                                              logger ) ) );
         verify( macArchiver ).addResource( any( PlexusIoResource.class ), 
                                            eq( "config/config_renamed.txt" ),
                                            eq( TypeConversionUtils.modeToInt( "777",
-                                                                              new ConsoleLogger( Logger.LEVEL_DEBUG,
-                                                                                                 "test" ) ) ) );
-    }
-
-    private FileItemAssemblyPhase createPhase( final Logger logger )
-    {
-        final FileItemAssemblyPhase phase = new FileItemAssemblyPhase();
-        phase.enableLogging( logger );
-
-        return phase;
+                                                                              logger ) ) );
     }
 
     private void prepareInterpolators( AssemblerConfigurationSource configSource )

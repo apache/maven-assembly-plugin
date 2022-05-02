@@ -59,17 +59,20 @@ import org.apache.maven.plugins.assembly.model.ModuleSources;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
 import org.codehaus.plexus.archiver.Archiver;
-import org.codehaus.plexus.logging.Logger;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RunWith( MockitoJUnitRunner.class )
 public class ModuleSetAssemblyPhaseTest
 {
+    private final Logger logger = LoggerFactory.getLogger( getClass() );
+
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
     
@@ -79,16 +82,13 @@ public class ModuleSetAssemblyPhaseTest
     
     private ProjectBuilder projectBuilder;
 
-    private Logger logger;
-    
     @Before
     public void setUp()
     {
+        this.projectBuilder = mock( ProjectBuilder.class );
         this.dependencyResolver = mock( DependencyResolver.class );
         
-        this.logger = mock( Logger.class );
-        
-        this.phase = new ModuleSetAssemblyPhase( projectBuilder, dependencyResolver, logger );
+        this.phase = new ModuleSetAssemblyPhase( projectBuilder, dependencyResolver );
     }
 
     @Test
@@ -607,8 +607,6 @@ public class ModuleSetAssemblyPhaseTest
         when( archiver.getOverrideFileMode() ).thenReturn( -1 );
         
         DefaultAssemblyArchiverTest.setupInterpolators( configSource, project );
-
-        when( logger.isDebugEnabled() ).thenReturn( true );
 
         this.phase.addModuleSourceFileSets( sources, projects, archiver,
                                                              configSource );

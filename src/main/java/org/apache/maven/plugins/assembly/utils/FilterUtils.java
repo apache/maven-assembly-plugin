@@ -33,12 +33,13 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.filter.AndArtifactFilter;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
+import org.apache.maven.plugins.assembly.internal.PlexusLoggingHelper;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.artifact.filter.PatternExcludesArtifactFilter;
 import org.apache.maven.shared.artifact.filter.PatternIncludesArtifactFilter;
 import org.apache.maven.shared.artifact.filter.StatisticsReportingArtifactFilter;
 import org.apache.maven.shared.artifact.filter.resolve.ScopeFilter;
-import org.codehaus.plexus.logging.Logger;
+import org.slf4j.Logger;
 
 /**
  *
@@ -90,7 +91,7 @@ public final class FilterUtils
         {
             if ( f != null )
             {
-                f.reportMissedCriteria( logger );
+                f.reportMissedCriteria( PlexusLoggingHelper.wrap( logger ) );
             }
         }
         return result;
@@ -186,8 +187,8 @@ public final class FilterUtils
                     logger.debug( "Statistics for " + sFilter + "\n" );
                 }
 
-                sFilter.reportMissedCriteria( logger );
-                sFilter.reportFilteredArtifacts( logger );
+                sFilter.reportMissedCriteria( PlexusLoggingHelper.wrap( logger ) );
+                sFilter.reportFilteredArtifacts( PlexusLoggingHelper.wrap( logger ) );
             }
         }
     }

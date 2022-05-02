@@ -35,8 +35,6 @@ import org.codehaus.plexus.archiver.Archiver;
  */
 public interface AssemblyArchiverPhase
 {
-    String ROLE = AssemblyArchiverPhase.class.getName();
-
     /**
      * Handle the associated section of the assembly descriptor.
      *

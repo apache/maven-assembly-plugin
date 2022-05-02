@@ -21,7 +21,6 @@ package org.apache.maven.plugins.assembly.utils;
 
 import org.codehaus.plexus.components.io.fileselectors.FileInfo;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.Locale;
 
@@ -77,7 +76,7 @@ public final class AssemblyFileUtils
     }
 
     @SuppressWarnings( "ResultOfMethodCallIgnored" )
-    public static void verifyTempDirectoryAvailability( @Nonnull final File tempDir )
+    public static void verifyTempDirectoryAvailability( final File tempDir )
     {
         if ( !tempDir.exists() )
         {
@@ -85,14 +84,12 @@ public final class AssemblyFileUtils
         }
     }
 
-    @Nonnull
-    private static String normalizePath( @Nonnull String path )
+    private static String normalizePath( String path )
     {
         return path.replace( '\\', '/' );
     }
 
-    @Nonnull
-    public static String normalizeFileInfo( @Nonnull FileInfo fileInfo )
+    public static String normalizeFileInfo( FileInfo fileInfo )
     {
         String name = fileInfo.getName();
         name = normalizePath( name );

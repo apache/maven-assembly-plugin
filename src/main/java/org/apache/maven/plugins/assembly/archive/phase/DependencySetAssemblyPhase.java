@@ -19,6 +19,10 @@ package org.apache.maven.plugins.assembly.archive.phase;
  * under the License.
  */
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
@@ -31,55 +35,35 @@ import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.model.DependencySet;
 import org.apache.maven.project.ProjectBuilder;
 import org.codehaus.plexus.archiver.Archiver;
-import org.codehaus.plexus.archiver.manager.ArchiverManager;
-import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.component.annotations.Requirement;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
-import org.codehaus.plexus.logging.Logger;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Handles the top-level &lt;dependencySets/&gt; section of the assembly descriptor.
  *
  *
  */
-@Component( role = AssemblyArchiverPhase.class, hint = "dependency-sets" )
-public class DependencySetAssemblyPhase
-    extends AbstractLogEnabled
-    implements AssemblyArchiverPhase, PhaseOrder
+@Singleton
+@Named( "dependency-sets" )
+public class DependencySetAssemblyPhase implements AssemblyArchiverPhase, PhaseOrder
 {
+    private final ProjectBuilder projectBuilder;
 
-    @Requirement
-    private ProjectBuilder projectBuilder;
-
-    @Requirement
-    private ArchiverManager archiverManager;
-
-    @Requirement
-    private DependencyResolver dependencyResolver;
-
+    private final DependencyResolver dependencyResolver;
 
     /**
-     * Default constructor.
+     * Injected ctor.
      */
-    public DependencySetAssemblyPhase()
+    @Inject
+    public DependencySetAssemblyPhase( final ProjectBuilder projectBuilder,
+                                       final DependencyResolver dependencyResolver )
     {
-        // used for plexus init
-    }
-
-    /**
-     * @param projectBuilder The Maven Project Builder.
-     * @param logger         The Logger.
-     */
-    public DependencySetAssemblyPhase( final ProjectBuilder projectBuilder, DependencyResolver dependencyResolver,
-                                       final Logger logger )
-    {
-        this.projectBuilder = projectBuilder;
-        this.dependencyResolver = dependencyResolver;
-        enableLogging( logger );
+        this.projectBuilder = requireNonNull( projectBuilder );
+        this.dependencyResolver = requireNonNull( dependencyResolver );
     }
 
     /**
@@ -98,8 +82,8 @@ public class DependencySetAssemblyPhase
         {
             final AddDependencySetsTask task =
                 new AddDependencySetsTask( Collections.singletonList( dependencySetSetEntry.getKey() ),
-                                           dependencySetSetEntry.getValue(), configSource.getProject(), projectBuilder,
-                                           getLogger() );
+                        dependencySetSetEntry.getValue(), configSource.getProject(),
+                        projectBuilder );
 
             task.execute( archiver, configSource );
         }

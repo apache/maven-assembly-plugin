@@ -19,13 +19,14 @@ package org.apache.maven.plugins.assembly.filter;
  * under the License.
  */
 
-import org.codehaus.plexus.component.annotations.Component;
+import javax.inject.Named;
+
 import org.codehaus.plexus.components.io.fileselectors.FileInfo;
 
 /**
  *
  */
-@Component( role = ContainerDescriptorHandler.class, hint = "metaInf-spring", instantiationStrategy = "per-lookup" )
+@Named( "metaInf-spring" )
 public class MetaInfSpringHandler
     extends AbstractLineAggregatingHandler
 {

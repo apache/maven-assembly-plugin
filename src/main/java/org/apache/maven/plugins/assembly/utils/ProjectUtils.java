@@ -21,10 +21,8 @@ package org.apache.maven.plugins.assembly.utils;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.logging.Logger;
+import org.slf4j.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
@@ -43,8 +41,7 @@ public final class ProjectUtils
     {
     }
 
-    @Nullable
-    public static String getClassifier( @Nonnull Artifact artifact )
+    public static String getClassifier( Artifact artifact )
     {
         String classifier = artifact.getClassifier();
         if ( classifier != null && classifier.length() == 0 )
@@ -54,10 +51,9 @@ public final class ProjectUtils
         return classifier;
     }
 
-    @Nonnull
-    public static Set<MavenProject> getProjectModules( @Nonnull final MavenProject project,
-                                                       @Nonnull final List<MavenProject> reactorProjects,
-                                                       final boolean includeSubModules, @Nonnull final Logger logger )
+    public static Set<MavenProject> getProjectModules( final MavenProject project,
+                                                       final List<MavenProject> reactorProjects,
+                                                       final boolean includeSubModules, final Logger logger )
         throws IOException
     {
         final Set<MavenProject> singleParentSet = Collections.singleton( project );
@@ -147,8 +143,8 @@ public final class ProjectUtils
         return modules;
     }
 
-    private static boolean projectContainsModule( @Nonnull final MavenProject mainProject,
-                                                  @Nonnull final MavenProject moduleProject )
+    private static boolean projectContainsModule( final MavenProject mainProject,
+                                                  final MavenProject moduleProject )
         throws IOException
     {
         final List<String> modules = mainProject.getModules();

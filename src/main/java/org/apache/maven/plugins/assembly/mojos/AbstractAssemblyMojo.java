@@ -25,7 +25,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-import javax.annotation.Nonnull;
 import org.apache.maven.archiver.MavenArchiveConfiguration;
 import org.apache.maven.archiver.MavenArchiver;
 import org.apache.maven.artifact.repository.ArtifactRepository;
@@ -934,8 +933,7 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     }
 
     @Override
-    @Nonnull
-    public FixedStringSearchInterpolator getCommandLinePropsInterpolator()
+    public synchronized FixedStringSearchInterpolator getCommandLinePropsInterpolator()
     {
         if ( commandLinePropertiesInterpolator == null )
         {
@@ -945,8 +943,7 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     }
 
     @Override
-    @Nonnull
-    public FixedStringSearchInterpolator getEnvInterpolator()
+    public synchronized FixedStringSearchInterpolator getEnvInterpolator()
     {
         if ( envInterpolator == null )
         {
@@ -956,8 +953,7 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     }
 
     @Override
-    @Nonnull
-    public FixedStringSearchInterpolator getRepositoryInterpolator()
+    public synchronized FixedStringSearchInterpolator getRepositoryInterpolator()
     {
         if ( rootInterpolator == null )
         {
@@ -967,8 +963,7 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     }
 
     @Override
-    @Nonnull
-    public FixedStringSearchInterpolator getMainProjectInterpolator()
+    public synchronized FixedStringSearchInterpolator getMainProjectInterpolator()
     {
         if ( mainProjectInterpolator == null )
         {

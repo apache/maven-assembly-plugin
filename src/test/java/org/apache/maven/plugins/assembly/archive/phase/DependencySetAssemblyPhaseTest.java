@@ -42,6 +42,7 @@ import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.model.DependencySet;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.ProjectBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,7 +60,7 @@ public class DependencySetAssemblyPhaseTest
     {
         this.dependencyResolver = mock( DependencyResolver.class );
         
-        this.phase = new DependencySetAssemblyPhase( null, dependencyResolver, null );
+        this.phase = new DependencySetAssemblyPhase( mock( ProjectBuilder.class ), dependencyResolver );
     }
 
     @Test

@@ -19,6 +19,9 @@ package org.apache.maven.plugins.assembly.archive;
  * under the License.
  */
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.apache.maven.plugin.DebugConfigurationListener;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
@@ -29,12 +32,12 @@ import org.apache.maven.plugins.assembly.artifact.DependencyResolutionException;
 import org.apache.maven.plugins.assembly.filter.ComponentsXmlArchiverFileFilter;
 import org.apache.maven.plugins.assembly.filter.ContainerDescriptorHandler;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
+import org.apache.maven.plugins.assembly.internal.PlexusLoggingHelper;
 import org.apache.maven.plugins.assembly.interpolation.AssemblyExpressionEvaluator;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.model.ContainerDescriptorHandlerConfig;
 import org.apache.maven.plugins.assembly.utils.AssemblyFileUtils;
 import org.apache.maven.plugins.assembly.utils.AssemblyFormatUtils;
-import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.archiver.ArchiveFinalizer;
 import org.codehaus.plexus.archiver.Archiver;
@@ -48,8 +51,6 @@ import org.codehaus.plexus.archiver.tar.TarArchiver;
 import org.codehaus.plexus.archiver.tar.TarLongFileMode;
 import org.codehaus.plexus.archiver.war.WarArchiver;
 import org.codehaus.plexus.archiver.zip.AbstractZipArchiver;
-import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.component.configurator.ComponentConfigurationException;
 import org.codehaus.plexus.component.configurator.ComponentConfigurator;
 import org.codehaus.plexus.component.configurator.ConfigurationListener;
@@ -58,14 +59,12 @@ import org.codehaus.plexus.component.repository.exception.ComponentLookupExcepti
 import org.codehaus.plexus.components.io.fileselectors.FileSelector;
 import org.codehaus.plexus.configuration.PlexusConfiguration;
 import org.codehaus.plexus.configuration.xml.XmlPlexusConfiguration;
-import org.codehaus.plexus.context.Context;
-import org.codehaus.plexus.context.ContextException;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,6 +77,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * Controller component designed to organize the many activities involved in creating an assembly archive. This includes
  * locating and configuring {@link Archiver} instances, executing multiple {@link org.apache.maven.plugins.assembly
@@ -87,40 +88,30 @@ import java.util.Map;
  *
  *
  */
-@Component( role = AssemblyArchiver.class, instantiationStrategy = "per-lookup" )
-public class DefaultAssemblyArchiver
-    extends AbstractLogEnabled
-    implements AssemblyArchiver, Contextualizable
+@Named
+public class DefaultAssemblyArchiver implements AssemblyArchiver
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger( DefaultAssemblyArchiver.class );
 
-    @Requirement
-    private ArchiverManager archiverManager;
+    private final ArchiverManager archiverManager;
 
-    @Requirement( role = AssemblyArchiverPhase.class )
-    private List<AssemblyArchiverPhase> assemblyPhases;
+    private final List<AssemblyArchiverPhase> assemblyPhases;
 
     @SuppressWarnings( "MismatchedQueryAndUpdateOfCollection" )
-    @Requirement( role = ContainerDescriptorHandler.class )
-    private Map<String, ContainerDescriptorHandler> containerDescriptorHandlers;
+    private final Map<String, ContainerDescriptorHandler> containerDescriptorHandlers;
 
-    private PlexusContainer container;
+    private final PlexusContainer container;
 
-    @SuppressWarnings( "UnusedDeclaration" )
-    public DefaultAssemblyArchiver()
+
+    @Inject
+    public DefaultAssemblyArchiver( ArchiverManager archiverManager, List<AssemblyArchiverPhase> assemblyPhases,
+                                    Map<String, ContainerDescriptorHandler> containerDescriptorHandlers,
+                                    PlexusContainer container )
     {
-    }
-
-    // introduced for testing.
-
-    /**
-     * @param archiverManager The archive manager.
-     * @param assemblyPhases  The list of {@link AssemblyArchiverPhase}
-     */
-    protected DefaultAssemblyArchiver( final ArchiverManager archiverManager,
-                                       final List<AssemblyArchiverPhase> assemblyPhases )
-    {
-        this.archiverManager = archiverManager;
-        this.assemblyPhases = assemblyPhases;
+        this.archiverManager = requireNonNull( archiverManager );
+        this.assemblyPhases = requireNonNull( assemblyPhases );
+        this.containerDescriptorHandlers = requireNonNull( containerDescriptorHandlers );
+        this.container = requireNonNull( container );
     }
 
     private List<AssemblyArchiverPhase> sortedPhases()
@@ -221,7 +212,7 @@ public class DefaultAssemblyArchiver
         throws InvalidAssemblerConfigurationException
     // CHECKSTYLE_ON: LineLength
     {
-        getLogger().debug( "All known ContainerDescriptorHandler components: " + ( containerDescriptorHandlers == null
+        LOGGER.debug( "All known ContainerDescriptorHandler components: " + ( containerDescriptorHandlers == null
             ? "none; map is null."
             : "" + containerDescriptorHandlers.keySet() ) );
 
@@ -246,12 +237,12 @@ public class DefaultAssemblyArchiver
                         "Cannot find ContainerDescriptorHandler with hint: " + hint );
                 }
 
-                getLogger().debug(
+                LOGGER.debug(
                     "Found container descriptor handler with hint: " + hint + " (component: " + handler + ")" );
 
                 if ( config.getConfiguration() != null )
                 {
-                    getLogger().debug( "Configuring handler with:\n\n" + config.getConfiguration() + "\n\n" );
+                    LOGGER.debug( "Configuring handler with:\n\n" + config.getConfiguration() + "\n\n" );
 
                     configureContainerDescriptorHandler( handler, (Xpp3Dom) config.getConfiguration(), configSource );
                 }
@@ -338,10 +329,10 @@ public class DefaultAssemblyArchiver
         }
 
         archiver = new AssemblyProxyArchiver( prefix, archiver, containerHandlers, extraSelectors, extraFinalizers,
-                                              configSource.getWorkingDirectory(), getLogger() );
+                                              configSource.getWorkingDirectory() );
         if ( configSource.isDryRun() )
         {
-            archiver = new DryRunArchiver( archiver, getLogger() );
+            archiver = new DryRunArchiver( archiver, PlexusLoggingHelper.wrap( LOGGER ) );
         }
 
         archiver.setUseJvmChmod( configSource.isUpdateOnly() );
@@ -378,7 +369,7 @@ public class DefaultAssemblyArchiver
                                                       final AssemblerConfigurationSource configSource )
         throws InvalidAssemblerConfigurationException
     {
-        getLogger().debug( "Configuring handler: '" + handler.getClass().getName() + "' -->" );
+        LOGGER.debug( "Configuring handler: '" + handler.getClass().getName() + "' -->" );
 
         try
         {
@@ -395,7 +386,7 @@ public class DefaultAssemblyArchiver
                 "Failed to lookup configurator for setup of handler: " + handler.getClass().getName(), e );
         }
 
-        getLogger().debug( "-- end configuration --" );
+        LOGGER.debug( "-- end configuration --" );
     }
 
     private void configureArchiver( final Archiver archiver, final AssemblerConfigurationSource configSource )
@@ -411,7 +402,7 @@ public class DefaultAssemblyArchiver
                                          e );
         }
 
-        getLogger().debug( "Configuring archiver: '" + archiver.getClass().getName() + "' -->" );
+        LOGGER.debug( "Configuring archiver: '" + archiver.getClass().getName() + "' -->" );
 
         try
         {
@@ -427,7 +418,7 @@ public class DefaultAssemblyArchiver
                 "Failed to lookup configurator for setup of archiver: " + archiver.getClass().getName(), e );
         }
 
-        getLogger().debug( "-- end configuration --" );
+        LOGGER.debug( "-- end configuration --" );
     }
 
     private void configureComponent( final Object component, final Xpp3Dom config,
@@ -436,7 +427,8 @@ public class DefaultAssemblyArchiver
     {
         final ComponentConfigurator configurator = container.lookup( ComponentConfigurator.class, "basic" );
 
-        final ConfigurationListener listener = new DebugConfigurationListener( getLogger() );
+        final ConfigurationListener listener = new DebugConfigurationListener(
+                PlexusLoggingHelper.wrap( LOGGER ) );
 
         final ExpressionEvaluator expressionEvaluator = new AssemblyExpressionEvaluator( configSource );
 
@@ -553,17 +545,4 @@ public class DefaultAssemblyArchiver
 
         return tarArchiver;
     }
-
-    @Override
-    public void contextualize( final Context context )
-        throws ContextException
-    {
-        container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );
-    }
-
-    protected void setContainer( final PlexusContainer container )
-    {
-        this.container = container;
-    }
-
 }

@@ -36,8 +36,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.FileSet;
@@ -47,8 +45,6 @@ import org.codehaus.plexus.archiver.util.DefaultFileSet;
 import org.codehaus.plexus.components.io.fileselectors.FileInfo;
 import org.codehaus.plexus.components.io.fileselectors.FileSelector;
 import org.codehaus.plexus.components.io.functions.InputStreamTransformer;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -62,8 +58,6 @@ public class AssemblyProxyArchiverTest
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
     
-    private static final Logger logger = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
-
     @Test( timeout = 5000 )
     public void addFileSet_SkipWhenSourceIsAssemblyWorkDir()
         throws IOException, ArchiverException
@@ -74,7 +68,7 @@ public class AssemblyProxyArchiverTest
 
         final TrackingArchiver tracker = new TrackingArchiver();
         final AssemblyProxyArchiver archiver =
-            new AssemblyProxyArchiver( "", tracker, null, null, null, workdir, logger );
+            new AssemblyProxyArchiver( "", tracker, null, null, null, workdir );
 
         archiver.setForced( true );
 
@@ -102,7 +96,7 @@ public class AssemblyProxyArchiverTest
 
         final TrackingArchiver tracker = new TrackingArchiver();
         final AssemblyProxyArchiver archiver =
-            new AssemblyProxyArchiver( "", tracker, null, null, null, workdir, logger );
+            new AssemblyProxyArchiver( "", tracker, null, null, null, workdir );
 
         archiver.setForced( true );
 
@@ -130,8 +124,7 @@ public class AssemblyProxyArchiverTest
         selectors.add( counter );
 
         final AssemblyProxyArchiver archiver =
-            new AssemblyProxyArchiver( "", delegate, null, selectors, null, new File( "." ),
-                                       new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) );
+            new AssemblyProxyArchiver( "", delegate, null, selectors, null, new File( "." ) );
         archiver.setForced( true );
 
         final File inputFile = temporaryFolder.newFile();
@@ -157,8 +150,7 @@ public class AssemblyProxyArchiverTest
         selectors.add( counter );
 
         final AssemblyProxyArchiver archiver =
-            new AssemblyProxyArchiver( "", delegate, null, selectors, null, new File( "." ),
-                                       new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) );
+            new AssemblyProxyArchiver( "", delegate, null, selectors, null, new File( "." ) );
 
         archiver.setForced( true );
 
@@ -180,8 +172,7 @@ public class AssemblyProxyArchiverTest
 
         final AssemblyProxyArchiver archiver =
             new AssemblyProxyArchiver( "prefix", delegate, null, selectors, null,
-                                       new File( temporaryFolder.getRoot(), "module1" ),
-                                       new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) );
+                                       new File( temporaryFolder.getRoot(), "module1" ) );
         
         FileSet fileSet = mock( FileSet.class );
         when( fileSet.getDirectory() ).thenReturn( temporaryFolder.getRoot() ); 
@@ -220,7 +211,7 @@ public class AssemblyProxyArchiverTest
             return count;
         }
 
-        public boolean isSelected( final @Nonnull FileInfo fileInfo )
+        public boolean isSelected( final FileInfo fileInfo )
             throws IOException
         {
             if ( fileInfo.isFile() )

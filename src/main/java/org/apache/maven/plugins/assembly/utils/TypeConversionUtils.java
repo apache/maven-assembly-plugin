@@ -20,7 +20,7 @@ package org.apache.maven.plugins.assembly.utils;
  */
 
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
-import org.codehaus.plexus.logging.Logger;
+import org.slf4j.Logger;
 
 import java.util.List;
 
@@ -158,7 +158,7 @@ public final class TypeConversionUtils
         }
         // end execute-/list-access checks.
 
-        if ( warn )
+        if ( warn && logger != null )
         {
             logger.warn( messages.toString() );
         }

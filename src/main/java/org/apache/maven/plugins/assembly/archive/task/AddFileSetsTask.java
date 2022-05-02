@@ -36,18 +36,17 @@ import org.apache.maven.plugins.assembly.utils.TypeConversionUtils;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.components.io.functions.InputStreamTransformer;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  */
 public class AddFileSetsTask
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger( AddFileSetsTask.class );
 
     private final List<FileSet> fileSets;
-
-    private Logger logger;
 
     private MavenProject project;
 
@@ -97,9 +96,6 @@ public class AddFileSetsTask
                      final File archiveBaseDir )
         throws AssemblyFormattingException, ArchiveCreationException
     {
-        // throw this check in just in case someone extends this class...
-        checkLogger();
-
         if ( project == null )
         {
             project = configSource.getProject();
@@ -113,7 +109,7 @@ public class AddFileSetsTask
         {
             destDirectory = fileSet.getDirectory();
 
-            AssemblyFormatUtils.warnForPlatformSpecifics( logger, destDirectory );
+            AssemblyFormatUtils.warnForPlatformSpecifics( LOGGER, destDirectory );
         }
 
 
@@ -122,16 +118,16 @@ public class AddFileSetsTask
                                                     AssemblyFormatUtils.moduleProjectInterpolator( moduleProject ),
                                                     AssemblyFormatUtils.artifactProjectInterpolator( project ) );
 
-        if ( logger.isDebugEnabled() )
+        if ( LOGGER.isDebugEnabled() )
         {
-            logger.debug( "FileSet[" + destDirectory + "]" + " dir perms: " + Integer.toString(
+            LOGGER.debug( "FileSet[" + destDirectory + "]" + " dir perms: " + Integer.toString(
                 archiver.getOverrideDirectoryMode(), 8 ) + " file perms: " + Integer.toString(
                 archiver.getOverrideFileMode(), 8 ) + ( fileSet.getLineEnding() == null
                 ? ""
                 : " lineEndings: " + fileSet.getLineEnding() ) );
         }
 
-        logger.debug( "The archive base directory is '" + archiveBaseDir + "'" );
+        LOGGER.debug( "The archive base directory is '" + archiveBaseDir + "'" );
 
         File fileSetDir = getFileSetDirectory( fileSet, basedir, archiveBaseDir );
 
@@ -144,7 +140,7 @@ public class AddFileSetsTask
                                                         fileSet.getLineEnding() );
             if ( fileSetTransformers == null )
             {
-                logger.debug( "NOT reformatting any files in " + fileSetDir );
+                LOGGER.debug( "NOT reformatting any files in " + fileSetDir );
             }
 
             if ( fileSetDir.getPath().equals( File.separator ) )
@@ -155,13 +151,13 @@ public class AddFileSetsTask
             }
             final AddDirectoryTask task = new AddDirectoryTask( fileSetDir, fileSetTransformers );
 
-            final int dirMode = TypeConversionUtils.modeToInt( fileSet.getDirectoryMode(), logger );
+            final int dirMode = TypeConversionUtils.modeToInt( fileSet.getDirectoryMode(), LOGGER );
             if ( dirMode != -1 )
             {
                 task.setDirectoryMode( dirMode );
             }
 
-            final int fileMode = TypeConversionUtils.modeToInt( fileSet.getFileMode(), logger );
+            final int fileMode = TypeConversionUtils.modeToInt( fileSet.getFileMode(), LOGGER );
             if ( fileMode != -1 )
             {
                 task.setFileMode( fileMode );
@@ -208,19 +204,6 @@ public class AddFileSetsTask
         }
 
         return fileSetDir;
-    }
-
-    private void checkLogger()
-    {
-        if ( logger == null )
-        {
-            logger = new ConsoleLogger( Logger.LEVEL_INFO, "AddFileSetsTask-internal" );
-        }
-    }
-
-    public void setLogger( final Logger logger )
-    {
-        this.logger = logger;
     }
 
     public void setProject( final MavenProject project )

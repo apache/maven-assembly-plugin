@@ -19,6 +19,10 @@ package org.apache.maven.plugins.assembly.repository;
  * under the License.
  */
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,29 +51,37 @@ import org.apache.maven.shared.transfer.dependencies.resolve.DependencyResolver;
 import org.apache.maven.shared.transfer.dependencies.resolve.DependencyResolverException;
 import org.apache.maven.shared.transfer.repository.RepositoryManager;
 import org.apache.maven.shared.utils.io.FileUtils;
-import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.component.annotations.Requirement;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
-import org.codehaus.plexus.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Jason van Zyl
  */
 
 // todo will need to pop the processed project cache using reflection
-@Component( role = RepositoryAssembler.class )
-public class DefaultRepositoryAssembler
-    extends AbstractLogEnabled
-    implements RepositoryAssembler
+@Singleton
+@Named
+public class DefaultRepositoryAssembler implements RepositoryAssembler
 {
-    @Requirement
-    protected ArtifactResolver artifactResolver;
+    private static final Logger LOGGER = LoggerFactory.getLogger( DefaultRepositoryAssembler.class );
 
-    @Requirement
-    private DependencyResolver dependencyResolver;
+    private final ArtifactResolver artifactResolver;
 
-    @Requirement
-    private RepositoryManager repositoryManager;
+    private final RepositoryManager repositoryManager;
+
+    private final DependencyResolver dependencyResolver;
+
+    @Inject
+    public DefaultRepositoryAssembler( ArtifactResolver artifactResolver,
+                                       RepositoryManager repositoryManager,
+                                       DependencyResolver dependencyResolver )
+    {
+        this.artifactResolver = requireNonNull( artifactResolver );
+        this.repositoryManager = requireNonNull( repositoryManager );
+        this.dependencyResolver = requireNonNull( dependencyResolver );
+    }
 
     public void buildRemoteRepository( File repositoryDirectory, RepositoryInfo repository,
                                        RepositoryBuilderConfigSource configSource )
@@ -78,17 +90,15 @@ public class DefaultRepositoryAssembler
         MavenProject project = configSource.getProject();
         ProjectBuildingRequest buildingRequest = configSource.getProjectBuildingRequest();
 
-        Iterable<ArtifactResult> result = null;
+        Iterable<ArtifactResult> result;
 
         Collection<Dependency> dependencies = project.getDependencies();
 
         if ( dependencies == null )
         {
-            Logger logger = getLogger();
-
-            if ( logger.isDebugEnabled() )
+            if ( LOGGER.isDebugEnabled() )
             {
-                logger.debug( "dependency-artifact set for project: " + project.getId()
+                LOGGER.debug( "dependency-artifact set for project: " + project.getId()
                     + " is null. Skipping repository processing." );
             }
 
@@ -213,7 +223,7 @@ public class DefaultRepositoryAssembler
 
                 if ( filter.include( a ) )
                 {
-                    getLogger().debug( "Re-resolving: " + a + " for repository assembly." );
+                    LOGGER.debug( "Re-resolving: " + a + " for repository assembly." );
 
                     setAlignment( a, groupVersionAlignments );
 

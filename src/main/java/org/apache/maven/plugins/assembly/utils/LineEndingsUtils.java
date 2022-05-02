@@ -30,9 +30,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.RandomAccessFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 
 /**
@@ -60,7 +57,7 @@ public final class LineEndingsUtils
      * @param encoding    The encoding to use, null for platform encoding
      * @throws IOException .
      */
-    public static void convertLineEndings( @Nonnull File source, @Nonnull File dest, LineEndings lineEndings,
+    public static void convertLineEndings( final File source, File dest, LineEndings lineEndings,
                                            final Boolean atEndOfFile, String encoding )
         throws IOException
     {
@@ -146,7 +143,7 @@ public final class LineEndingsUtils
      * @return an input stream that enforces a specifi line ending style
      */
     @SuppressWarnings( "resource" )
-    public static InputStream lineEndingConverter( @Nonnull InputStream in, LineEndings lineEndings )
+    public static InputStream lineEndingConverter( InputStream in, LineEndings lineEndings )
         throws IOException
     {
         return lineEndings.isNewLine()
@@ -154,8 +151,7 @@ public final class LineEndingsUtils
             : lineEndings.isCrLF() ? new WindowsLineFeedInputStream( in, false ) : in;
     }
 
-    @Nonnull
-    public static LineEndings getLineEnding( @Nullable String lineEnding )
+    public static LineEndings getLineEnding( /* nullable */ String lineEnding )
         throws AssemblyFormattingException
     {
         LineEndings result = LineEndings.keep;
@@ -181,8 +177,7 @@ public final class LineEndingsUtils
      * @return The proper line ending characters
      * @throws AssemblyFormattingException
      */
-    @Nullable
-    public static String getLineEndingCharacters( @Nullable String lineEnding )
+    public static String getLineEndingCharacters( /* nullable */ String lineEnding )
         throws AssemblyFormattingException
     {
         String value = lineEnding;

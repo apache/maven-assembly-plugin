@@ -19,35 +19,39 @@ package org.apache.maven.plugins.assembly.utils;
  * under the License.
  */
 
-import junit.framework.TestCase;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import org.codehaus.plexus.util.IOUtil;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class LinuxLineFeedInputStreamTest
-    extends TestCase
 {
 
+    @Test
     public void testSimpleString()
         throws Exception
     {
         assertEquals( "abc\n", roundtrip( "abc" ) );
     }
 
+    @Test
     public void testInTheMiddleOfTheLine()
         throws Exception
     {
         assertEquals( "a\nbc\n", roundtrip( "a\r\nbc" ) );
     }
 
+    @Test
     public void testCrOnly()
         throws Exception
     {
         assertEquals( "a\nb\n", roundtrip( "a\rb" ) );
     }
 
+    @Test
     public void testCrAtEnd()
         throws Exception
     {
@@ -55,18 +59,21 @@ public class LinuxLineFeedInputStreamTest
     }
 
 
+    @Test
     public void testMultipleBlankLines()
         throws Exception
     {
         assertEquals( "a\n\nbc\n", roundtrip( "a\r\n\r\nbc" ) );
     }
 
+    @Test
     public void testTwoLinesAtEnd()
         throws Exception
     {
         assertEquals( "a\n\n", roundtrip( "a\r\n\r\n" ) );
     }
 
+    @Test
     public void testRetainLineFeed()
         throws Exception
     {

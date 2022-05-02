@@ -31,7 +31,6 @@ import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.model.FileSet;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.archiver.Archiver;
-import org.codehaus.plexus.logging.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,11 +44,7 @@ public class FileSetAssemblyPhaseTest
     @Before
     public void setUp() 
     {
-        Logger logger = mock( Logger.class );
-        when( logger.isDebugEnabled() ).thenReturn( true );
-
         this.phase = new FileSetAssemblyPhase();
-        phase.enableLogging( logger );
     }
 
     @Test

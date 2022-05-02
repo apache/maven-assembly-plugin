@@ -41,8 +41,6 @@ import org.apache.maven.plugins.assembly.utils.TypeConversionUtils;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.archiver.ArchivedFileSet;
 import org.codehaus.plexus.archiver.Archiver;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -50,10 +48,14 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RunWith( MockitoJUnitRunner.class )
 public class AddArtifactTaskTest
 {
+    private final Logger logger = LoggerFactory.getLogger( getClass() );
+
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
@@ -142,7 +144,7 @@ public class AddArtifactTaskTest
 
         DefaultAssemblyArchiverTest.setupInterpolators( configSource, mainProject );
 
-        AddArtifactTask task = new AddArtifactTask( artifact, new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ), null );
+        AddArtifactTask task = new AddArtifactTask( artifact, null );
         task.setOutputDirectory( outputDir );
         task.setFileNameMapping( new DependencySet().getOutputFileNameMapping() );
 
@@ -167,7 +169,7 @@ public class AddArtifactTaskTest
 
     private AddArtifactTask createTask( Artifact artifact )
     {
-        AddArtifactTask task = new AddArtifactTask( artifact, new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ), null );
+        AddArtifactTask task = new AddArtifactTask( artifact, null );
 
         task.setFileNameMapping( "artifact" );
 
@@ -207,8 +209,8 @@ public class AddArtifactTaskTest
     public void testShouldAddArchiveFileWithUnpackAndModes()
         throws Exception
     {
-        final int directoryMode = TypeConversionUtils.modeToInt( "777", new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) );
-        final int fileMode = TypeConversionUtils.modeToInt( "777", new ConsoleLogger( Logger.LEVEL_DEBUG, "test" ) );
+        final int directoryMode = TypeConversionUtils.modeToInt( "777", logger );
+        final int fileMode = TypeConversionUtils.modeToInt( "777", logger );
         final int originalDirMode = -1;
         final int originalFileMode = -1;
         

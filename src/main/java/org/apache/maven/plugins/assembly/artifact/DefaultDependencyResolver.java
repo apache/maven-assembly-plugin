@@ -19,6 +19,10 @@ package org.apache.maven.plugins.assembly.artifact;
  * under the License.
  */
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,23 +38,30 @@ import org.apache.maven.plugins.assembly.model.ModuleBinaries;
 import org.apache.maven.plugins.assembly.model.ModuleSet;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.repository.RepositorySystem;
-import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.component.annotations.Requirement;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author jdcasey
  *
  */
-@Component( role = DependencyResolver.class )
-public class DefaultDependencyResolver
-    extends AbstractLogEnabled
-    implements DependencyResolver
+@Singleton
+@Named
+public class DefaultDependencyResolver implements DependencyResolver
 {
-    @Requirement
-    private RepositorySystem resolver;
-    
+    private static final Logger LOGGER = LoggerFactory.getLogger( DefaultDependencyResolver.class );
+
+    private final RepositorySystem resolver;
+
+    @Inject
+    public DefaultDependencyResolver( RepositorySystem resolver )
+    {
+        this.resolver = requireNonNull( resolver );
+    }
+
     @Override
     public Map<DependencySet, Set<Artifact>> resolveDependencySets( final Assembly assembly, ModuleSet moduleSet,
                                                                     final AssemblerConfigurationSource configSource,
@@ -107,7 +118,7 @@ public class DefaultDependencyResolver
             Set<MavenProject> projects;
             try
             {
-                projects = ModuleSetAssemblyPhase.getModuleProjects( set, configSource, getLogger() );
+                projects = ModuleSetAssemblyPhase.getModuleProjects( set, configSource, LOGGER );
             }
             catch ( final ArchiveCreationException e )
             {
@@ -157,7 +168,7 @@ public class DefaultDependencyResolver
             }
 
             requirements.addArtifacts( dependencyArtifacts );
-            getLogger().debug( "Dependencies for project: " + project.getId() + " are:\n" + StringUtils.join(
+            LOGGER.debug( "Dependencies for project: " + project.getId() + " are:\n" + StringUtils.join(
                 dependencyArtifacts.iterator(), "\n" ) );
         }
     }

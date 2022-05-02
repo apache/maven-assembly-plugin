@@ -19,15 +19,16 @@ package org.apache.maven.plugins.assembly.filter;
  * under the License.
  */
 
+import javax.inject.Named;
+
 import java.nio.file.Paths;
 
-import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.components.io.fileselectors.FileInfo;
 
 /**
  *
  */
-@Component( role = ContainerDescriptorHandler.class, hint = "metaInf-services", instantiationStrategy = "per-lookup" )
+@Named( "metaInf-services" )
 public class MetaInfServicesHandler
     extends AbstractLineAggregatingHandler
 {

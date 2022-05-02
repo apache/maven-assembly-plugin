@@ -29,8 +29,6 @@ import org.apache.maven.shared.filtering.MavenReaderFilterRequest;
 import org.codehaus.plexus.components.io.functions.InputStreamTransformer;
 import org.codehaus.plexus.components.io.resources.PlexusIoResource;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -45,7 +43,7 @@ import java.util.Set;
  */
 public class ReaderFormatter
 {
-    private static Reader createReaderFilter( @Nonnull Reader source, String escapeString, List<String> delimiters,
+    private static Reader createReaderFilter( Reader source, String escapeString, List<String> delimiters,
                                               AssemblerConfigurationSource configSource, boolean isPropertiesFile,
                                               Properties additionalProperties )
         throws IOException
@@ -115,7 +113,6 @@ public class ReaderFormatter
 
     }
 
-    @Nullable
     public static InputStreamTransformer getFileSetTransformers( final AssemblerConfigurationSource configSource,
                                                                  final boolean isFiltered,
                                                                  final Set<String> nonFilteredFileExtensions,
@@ -131,9 +128,8 @@ public class ReaderFormatter
             return new InputStreamTransformer()
             {
                 @Override
-                @Nonnull
-                public InputStream transform( @Nonnull PlexusIoResource plexusIoResource,
-                                              @Nonnull InputStream inputStream )
+                public InputStream transform( PlexusIoResource plexusIoResource,
+                                              InputStream inputStream )
                     throws IOException
                 {
                     final String fileName = plexusIoResource.getName();

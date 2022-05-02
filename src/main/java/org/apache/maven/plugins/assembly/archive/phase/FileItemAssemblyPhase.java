@@ -19,6 +19,9 @@ package org.apache.maven.plugins.assembly.archive.phase;
  * under the License.
  */
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import static org.codehaus.plexus.components.io.resources.ResourceFactory.createResource;
 
 import java.io.File;
@@ -43,23 +46,23 @@ import org.apache.maven.plugins.assembly.utils.AssemblyFormatUtils;
 import org.apache.maven.plugins.assembly.utils.TypeConversionUtils;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
-import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.components.io.functions.ContentSupplier;
 import org.codehaus.plexus.components.io.functions.InputStreamTransformer;
 import org.codehaus.plexus.components.io.resources.PlexusIoFileResource;
 import org.codehaus.plexus.components.io.resources.PlexusIoResource;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Handles the top-level &lt;files/&gt; section of the assembly descriptor.
  *
  *
  */
-@Component( role = AssemblyArchiverPhase.class, hint = "file-items" )
-public class FileItemAssemblyPhase
-    extends AbstractLogEnabled
-    implements AssemblyArchiverPhase, PhaseOrder
+@Singleton
+@Named( "file-items" )
+public class FileItemAssemblyPhase implements AssemblyArchiverPhase, PhaseOrder
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger( FileItemAssemblyPhase.class );
 
     /**
      * {@inheritDoc}
@@ -167,7 +170,7 @@ public class FileItemAssemblyPhase
                     restoUse = createResource( source, fileSetTransformers );
                 }
 
-                int mode = TypeConversionUtils.modeToInt( fileItem.getFileMode(), getLogger() );
+                int mode = TypeConversionUtils.modeToInt( fileItem.getFileMode(), LOGGER );
                 archiver.addResource( restoUse, target, mode );
             }
             catch ( final ArchiverException | IOException e )
