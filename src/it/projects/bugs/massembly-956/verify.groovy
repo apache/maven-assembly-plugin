@@ -18,6 +18,8 @@
  * under the License.
  */
 
+def sisuPom = new File( localRepositoryPath, 'org/eclipse/sisu/org.eclipse.sisu.inject/0.3.5/org.eclipse.sisu.inject-0.3.5.pom' )
 def tychoPom = new File(localRepositoryPath, 'org/eclipse/tycho/tycho-maven-plugin/0.22.0/tycho-maven-plugin-0.22.0.pom')
 
+assert sisuPom.isFile()
 assert !tychoPom.isFile()
