@@ -30,7 +30,6 @@ import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
-import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
@@ -185,11 +184,7 @@ public class AddDependencySetsTask
 
     private ProjectBuildingRequest getProjectBuildingRequest( AssemblerConfigurationSource configSource )
     {
-        MavenSession mavenSession = configSource.getMavenSession();
-        return new DefaultProjectBuildingRequest()
-                .setRepositorySession( mavenSession.getRepositorySession() )
-                .setSystemProperties( mavenSession.getSystemProperties() )
-                .setUserProperties( mavenSession.getUserProperties() )
+        return new DefaultProjectBuildingRequest( configSource.getMavenSession().getProjectBuildingRequest() )
                 .setProcessPlugins( false );
     }
 

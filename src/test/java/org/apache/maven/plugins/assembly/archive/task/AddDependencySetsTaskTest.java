@@ -25,7 +25,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
@@ -128,8 +127,9 @@ public class AddDependencySetsTaskTest
         final ProjectBuilder projectBuilder = mock( ProjectBuilder.class );
         when( projectBuilder.build( any( Artifact.class ), any( ProjectBuildingRequest.class ) ) ).thenReturn( pbr );
 
+        final ProjectBuildingRequest projectBuildingRequest = mock( ProjectBuildingRequest.class );
         final MavenSession session = mock( MavenSession.class );
-        when( session.getExecutionProperties() ).thenReturn( new Properties() );
+        when( session.getProjectBuildingRequest() ).thenReturn( projectBuildingRequest );
 
         final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
         when( configSource.getFinalName() ).thenReturn( mainAid + "-" + mainVer );
@@ -163,9 +163,8 @@ public class AddDependencySetsTaskTest
         verify( archiver ).setFileMode( 10 );
         verify( archiver ).setFileMode( 146 );
 
-        verify( session ).getRepositorySession();
-        verify( session, times( 2 ) ).getExecutionProperties();
-        
+        verify( session, times( 1 ) ).getProjectBuildingRequest();
+
         verify( projectBuilder ).build( any( Artifact.class ), any( ProjectBuildingRequest.class ) );
     }
 
@@ -217,9 +216,10 @@ public class AddDependencySetsTaskTest
 
         final ProjectBuilder projectBuilder = mock( ProjectBuilder.class );
         when( projectBuilder.build( any(Artifact.class), any(ProjectBuildingRequest.class) ) ).thenThrow( pbe );
-        
+
+        final ProjectBuildingRequest projectBuildingRequest = mock( ProjectBuildingRequest.class );
         final MavenSession session = mock( MavenSession.class );
-        when( session.getExecutionProperties() ).thenReturn( new Properties() );
+        when( session.getProjectBuildingRequest() ).thenReturn( projectBuildingRequest );
 
         final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
         when( configSource.getFinalName() ).thenReturn( "final-name" );
@@ -247,8 +247,7 @@ public class AddDependencySetsTaskTest
         verify( archiver ).getOverrideDirectoryMode();
         verify( archiver ).getOverrideFileMode();
 
-        verify( session ).getRepositorySession();
-        verify( session, times( 2 ) ).getExecutionProperties();
+        verify( session ).getProjectBuildingRequest();
 
         verify( projectBuilder ).build( any(Artifact.class), any(ProjectBuildingRequest.class) );
     }
@@ -283,11 +282,11 @@ public class AddDependencySetsTaskTest
         ds.setFileMode( Integer.toString( 10, 8 ) );
 
         final RepositorySystemSession repoSession = mock( RepositorySystemSession.class );
+
+        final ProjectBuildingRequest projectBuildingRequest = mock( ProjectBuildingRequest.class );
+
         final MavenSession session = mock( MavenSession.class );
-        when( session.getRepositorySession() ).thenReturn( repoSession );
-        when( session.getExecutionProperties() ).thenReturn( new Properties() );
-        when( session.getSystemProperties() ).thenReturn( new Properties() );
-        when( session.getUserProperties() ).thenReturn( new Properties() );
+        when( session.getProjectBuildingRequest() ).thenReturn( projectBuildingRequest );
 
         final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
         when( configSource.getMavenSession() ).thenReturn( session );
@@ -338,9 +337,8 @@ public class AddDependencySetsTaskTest
         verify( archiver ).setDirectoryMode( 10 );
         verify( archiver ).setDirectoryMode( 146 );
         
-        verify( session ).getRepositorySession();
-        verify( session, atLeastOnce() ).getExecutionProperties();
-        
+        verify( session ).getProjectBuildingRequest();
+
         verify( projectBuilder ).build( any( Artifact.class ), any( ProjectBuildingRequest.class ) );
         
         if ( unpack )
@@ -486,7 +484,9 @@ public class AddDependencySetsTaskTest
         final AddDependencySetsTask task = new AddDependencySetsTask( Collections.singletonList( dependencySet ),
                                                                       artifacts, project, projectBuilder );
 
+        final ProjectBuildingRequest projectBuildingRequest = mock( ProjectBuildingRequest.class );
         final MavenSession session = mock( MavenSession.class );
+        when( session.getProjectBuildingRequest() ).thenReturn( projectBuildingRequest );
 
         final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
         when( configSource.getMavenSession() ).thenReturn( session );
