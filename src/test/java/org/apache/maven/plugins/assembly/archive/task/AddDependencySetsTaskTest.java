@@ -386,14 +386,12 @@ public class AddDependencySetsTaskTest
         Artifact am1 = mock( Artifact.class );
         when( am1.getGroupId() ).thenReturn( "group" );
         when( am1.getArtifactId() ).thenReturn( "artifact" );
-        when( am1.getId() ).thenReturn( "group:artifact:1.0:jar" );
         artifacts.add( am1 );
 
         Artifact am2 = mock( Artifact.class );
         when( am2.getGroupId() ).thenReturn( "group2" );
         when( am2.getArtifactId() ).thenReturn( "artifact2" );
         when( am2.getId() ).thenReturn( "group2:artifact2:1.0:jar" );
-        when( am2.getDependencyConflictId() ).thenReturn( "group2:artifact2:jar" );
         artifacts.add( am2 );
 
         final DependencySet dependencySet = new DependencySet();
@@ -422,14 +420,12 @@ public class AddDependencySetsTaskTest
         Artifact am1 = mock( Artifact.class );
         when( am1.getGroupId() ).thenReturn( "group" );
         when( am1.getArtifactId() ).thenReturn( "artifact" );
-        when( am1.getId() ).thenReturn( "group:artifact:1.0:jar" );
         artifacts.add( am1 );
 
         Artifact am2 = mock( Artifact.class );
         when( am2.getGroupId() ).thenReturn( "group2" );
         when( am2.getArtifactId() ).thenReturn( "artifact2" );
         when( am2.getId() ).thenReturn( "group2:artifact2:1.0:jar" );
-        when( am2.getDependencyConflictId() ).thenReturn( "group2:artifact2:jar" );
         artifacts.add( am2 );
 
         final DependencySet dependencySet = new DependencySet();
@@ -482,7 +478,7 @@ public class AddDependencySetsTaskTest
         when( pbRes.getProject() ).thenReturn( project );
 
         final ProjectBuilder projectBuilder = mock( ProjectBuilder.class );
-        when( projectBuilder.build( any( Artifact.class ), eq( pbReq ) ) ).thenReturn( pbRes );
+        when( projectBuilder.build( any( Artifact.class ), any( ProjectBuildingRequest.class ) ) ).thenReturn( pbRes );
 
         final AddDependencySetsTask task = new AddDependencySetsTask( Collections.singletonList( dependencySet ),
                                                                       artifacts, project, projectBuilder );
