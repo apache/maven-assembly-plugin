@@ -74,15 +74,18 @@ public class RepositoryAssemblyPhase implements AssemblyArchiverPhase, PhaseOrde
                          final AssemblerConfigurationSource configSource )
         throws ArchiveCreationException, AssemblyFormattingException, InvalidAssemblerConfigurationException
     {
-        LOGGER.warn( "" );
-        LOGGER.warn( "The <repository> element in assembly descriptor is deprecated," );
-        LOGGER.warn( "support for it will be removed. For details see:" );
-        LOGGER.warn( "https://issues.apache.org/jira/browse/MASSEMBLY-957" );
-        LOGGER.warn( "" );
-
         final List<Repository> repositoriesList = assembly.getRepositories();
 
         final File tempRoot = configSource.getTemporaryRootDirectory();
+
+        if ( !repositoriesList.isEmpty() )
+        {
+            LOGGER.warn( "" );
+            LOGGER.warn( "The <repository> element in assembly descriptor is deprecated," );
+            LOGGER.warn( "support for it will be removed. For details see:" );
+            LOGGER.warn( "https://issues.apache.org/jira/browse/MASSEMBLY-957" );
+            LOGGER.warn( "" );
+        }
 
         for ( final Repository repository : repositoriesList )
         {
