@@ -25,7 +25,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
@@ -35,7 +34,6 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -343,7 +341,7 @@ public class AddDependencySetsTaskTest
         
         if ( unpack )
         {
-            verify( archiver ).addArchivedFileSet( any( ArchivedFileSet.class ), isNull( Charset.class ) );
+            verify( archiver ).addArchivedFileSet( any( ArchivedFileSet.class ), isNull() );
         }
         else
         {
@@ -495,7 +493,7 @@ public class AddDependencySetsTaskTest
         task.addDependencySet( dependencySet, archiver, configSource );
 
         ArgumentCaptor<ArchivedFileSet> archivedFileSet = ArgumentCaptor.forClass( ArchivedFileSet.class );
-        verify( archiver ).addArchivedFileSet( archivedFileSet.capture(), isNull( Charset.class ) );
+        verify( archiver ).addArchivedFileSet( archivedFileSet.capture(), isNull() );
         assertThat( archivedFileSet.getValue().isUsingDefaultExcludes(), is( false ) );
 
         ArgumentCaptor<FileSet> fileSet = ArgumentCaptor.forClass( FileSet.class );

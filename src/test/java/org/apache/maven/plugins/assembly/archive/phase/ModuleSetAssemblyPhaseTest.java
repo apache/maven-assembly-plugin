@@ -25,7 +25,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyListOf;
+import static org.mockito.Mockito.anyList;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.isNull;
@@ -312,7 +312,7 @@ public class ModuleSetAssemblyPhaseTest
         when( dependencyResolver.resolveDependencySets( eq( assembly ), 
                                                         eq( ms ),
                                                         eq( configSource ),
-                                                        anyListOf( DependencySet.class ) ) ).thenReturn( new LinkedHashMap<DependencySet, Set<Artifact>>() );
+                                                        anyList() ) ).thenReturn( new LinkedHashMap<DependencySet, Set<Artifact>>() );
         DefaultAssemblyArchiverTest.setupInterpolators( configSource, module );
 
         this.phase.execute( assembly, archiver, configSource );
@@ -332,7 +332,7 @@ public class ModuleSetAssemblyPhaseTest
         verify( dependencyResolver ).resolveDependencySets( eq( assembly ), 
                                                             eq( ms ),
                                                             eq( configSource ), 
-                                                            anyListOf( DependencySet.class ) );
+                                                            anyList() );
     }
 
     @Test
@@ -396,10 +396,10 @@ public class ModuleSetAssemblyPhaseTest
 
         final Set<MavenProject> projects = singleton( project );
 
-        when( dependencyResolver.resolveDependencySets( isNull( Assembly.class ), 
-                                                        isNull( ModuleSet.class ),
+        when( dependencyResolver.resolveDependencySets( isNull(),
+                                                        isNull(),
                                                         eq( configSource ),
-                                                        anyListOf( DependencySet.class ) ) ).thenReturn( new LinkedHashMap<DependencySet, Set<Artifact>>() );
+                                                        anyList() ) ).thenReturn( new LinkedHashMap<DependencySet, Set<Artifact>>() );
         DefaultAssemblyArchiverTest.setupInterpolators( configSource, project );
 
         this.phase.addModuleBinaries( null, null, binaries, projects, archiver, configSource );
@@ -416,10 +416,10 @@ public class ModuleSetAssemblyPhaseTest
         verify( archiver ).setFileMode( 511 );
         verify( archiver ).setFileMode( 146 );
 
-        verify( dependencyResolver ).resolveDependencySets( isNull( Assembly.class ), 
-                                                            isNull( ModuleSet.class ),
+        verify( dependencyResolver ).resolveDependencySets( isNull(),
+                                                            isNull(),
                                                             eq( configSource ), 
-                                                            anyListOf( DependencySet.class ) );
+                                                            anyList() );
     }
 
     @Test
@@ -486,10 +486,10 @@ public class ModuleSetAssemblyPhaseTest
 
         final Set<MavenProject> projects = singleton( project );
 
-        when( dependencyResolver.resolveDependencySets( isNull( Assembly.class ), 
-                                                        isNull( ModuleSet.class ),
+        when( dependencyResolver.resolveDependencySets( isNull(),
+                                                        isNull(),
                                                         any( AssemblerConfigurationSource.class ),
-                                                        anyListOf( DependencySet.class ) ) ).thenReturn( new LinkedHashMap<DependencySet, Set<Artifact>>() );
+                                                        anyList() ) ).thenReturn( new LinkedHashMap<DependencySet, Set<Artifact>>() );
         DefaultAssemblyArchiverTest.setupInterpolators( configSource, project );
 
         this.phase.addModuleBinaries( null, null, binaries, projects, archiver, configSource );
@@ -499,10 +499,10 @@ public class ModuleSetAssemblyPhaseTest
         verify( configSource, atLeastOnce() ).getMavenSession();
         verify( configSource, atLeastOnce() ).getProject();
         
-        verify( dependencyResolver ).resolveDependencySets( isNull( Assembly.class ), 
-                                                            isNull( ModuleSet.class ),
+        verify( dependencyResolver ).resolveDependencySets( isNull(),
+                                                            isNull(),
                                                             any( AssemblerConfigurationSource.class ),
-                                                            anyListOf( DependencySet.class ) );
+                                                            anyList() );
 
         verify( archiver ).addFile( artifactFile, "out/artifact", 511 );
         verify( archiver, atLeastOnce() ).getDestFile();
