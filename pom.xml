@@ -65,7 +65,7 @@ under the License.
 
   <properties>
     <javaVersion>7</javaVersion>
-    <mdoVersion>2.1.0</mdoVersion>
+    <mdoVersion>2.1.1</mdoVersion>
     <mavenVersion>3.2.5</mavenVersion>
     <slf4jVersion>1.7.5</slf4jVersion>
 
@@ -179,10 +179,10 @@ under the License.
       <version>4.2.1</version>
     </dependency>
     <dependency>
-    <groupId>commons-io</groupId>
-    <artifactId>commons-io</artifactId>
-    <version>2.6</version>
-  </dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.6</version>
+    </dependency>
     <dependency>
       <groupId>org.apache.maven.shared</groupId>
       <artifactId>maven-filtering</artifactId>
