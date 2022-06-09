@@ -23,7 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import org.apache.maven.shared.utils.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 /**
  * The URL Location.
@@ -72,7 +72,7 @@ class URLLocation
                 tempFile.deleteOnExit();
             }
 
-            FileUtils.copyURLToFile( url, tempFile );
+            IOUtils.copy( url, tempFile );
 
             setFile( tempFile );
         }

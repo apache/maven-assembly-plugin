@@ -19,8 +19,8 @@ package org.apache.maven.plugins.assembly.filter;
  * under the License.
  */
 
-import org.apache.maven.shared.utils.ReaderFactory;
-import org.apache.maven.shared.utils.WriterFactory;
+import org.apache.commons.io.input.XmlStreamReader;
+import org.apache.commons.io.output.XmlStreamWriter;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.ResourceIterator;
@@ -35,10 +35,10 @@ import javax.inject.Named;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.file.Files;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -106,7 +106,7 @@ public class ComponentsXmlArchiverFileFilter
             f.deleteOnExit();
 
             
-            try ( Writer fileWriter = WriterFactory.newXmlWriter( new FileOutputStream( f ) ) )
+            try ( Writer fileWriter = new XmlStreamWriter( Files.newOutputStream( f.toPath() ) ) )
             {
                 final Xpp3Dom dom = new Xpp3Dom( "component-set" );
                 final Xpp3Dom componentDom = new Xpp3Dom( "components" );
@@ -182,7 +182,7 @@ public class ComponentsXmlArchiverFileFilter
 
             if ( ComponentsXmlArchiverFileFilter.COMPONENTS_XML_PATH.equals( entry ) )
             {
-                try ( Reader reader = new BufferedReader( ReaderFactory.newXmlReader( fileInfo.getContents() ) ) )
+                try ( Reader reader = new BufferedReader( new XmlStreamReader( fileInfo.getContents() ) ) )
                 {
                     addComponentsXml( reader );
                 }
