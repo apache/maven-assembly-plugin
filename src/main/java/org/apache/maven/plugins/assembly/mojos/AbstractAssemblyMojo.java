@@ -20,6 +20,8 @@ package org.apache.maven.plugins.assembly.mojos;
  */
 
 import java.io.File;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -48,11 +50,11 @@ import org.apache.maven.plugins.assembly.utils.InterpolationConstants;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectHelper;
 import org.apache.maven.shared.filtering.MavenReaderFilter;
-import org.apache.maven.shared.utils.cli.CommandLineUtils;
 import org.codehaus.plexus.configuration.PlexusConfiguration;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
 import org.codehaus.plexus.interpolation.fixed.PrefixedPropertiesValueSource;
 import org.codehaus.plexus.interpolation.fixed.PropertiesBasedValueSource;
+import org.codehaus.plexus.util.cli.CommandLineUtils;
 
 /**
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
@@ -622,9 +624,17 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
 
     private FixedStringSearchInterpolator createEnvInterpolator()
     {
-        PrefixedPropertiesValueSource envProps = new PrefixedPropertiesValueSource( Collections.singletonList( "env." ),
-                CommandLineUtils.getSystemEnvVars( false ), true );
-        return FixedStringSearchInterpolator.create( envProps );
+        try
+        {
+            PrefixedPropertiesValueSource envProps =
+                    new PrefixedPropertiesValueSource( Collections.singletonList( "env." ),
+                            CommandLineUtils.getSystemEnvVars( false ), true );
+            return FixedStringSearchInterpolator.create( envProps );
+        }
+        catch ( IOException e )
+        {
+            throw new UncheckedIOException( e );
+        }
     }
 
     /**

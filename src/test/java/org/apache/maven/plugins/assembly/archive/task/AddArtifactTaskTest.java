@@ -28,7 +28,6 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.Arrays;
 
 import org.apache.maven.artifact.Artifact;
@@ -199,7 +198,7 @@ public class AddArtifactTaskTest
         task.execute( archiver, configSource );
         
         // result of easymock migration, should be assert of expected result instead of verifying methodcalls
-        verify( archiver ).addArchivedFileSet( any( ArchivedFileSet.class ), isNull( Charset.class ) );
+        verify( archiver ).addArchivedFileSet( any( ArchivedFileSet.class ), isNull() );
         verify( archiver, atLeastOnce() ).getDestFile();
         verify( archiver ).getOverrideDirectoryMode();
         verify( archiver ).getOverrideFileMode();
@@ -232,7 +231,7 @@ public class AddArtifactTaskTest
         task.execute( archiver, configSource );
 
         // result of easymock migration, should be assert of expected result instead of verifying methodcalls
-        verify( archiver ).addArchivedFileSet( any( ArchivedFileSet.class ), isNull( Charset.class ) );
+        verify( archiver ).addArchivedFileSet( any( ArchivedFileSet.class ), isNull() );
         verify( archiver, atLeastOnce() ).getDestFile();
         verify( archiver ).getOverrideDirectoryMode();
         verify( archiver ).getOverrideFileMode();
@@ -270,7 +269,7 @@ public class AddArtifactTaskTest
         task.execute( archiver, configSource );
 
         // result of easymock migration, should be assert of expected result instead of verifying methodcalls
-        verify( archiver ).addArchivedFileSet( any( ArchivedFileSet.class ), isNull( Charset.class ) );
+        verify( archiver ).addArchivedFileSet( any( ArchivedFileSet.class ), isNull() );
         verify( archiver, atLeastOnce() ).getDestFile();
         verify( archiver ).getOverrideDirectoryMode();
         verify( archiver ).getOverrideFileMode();

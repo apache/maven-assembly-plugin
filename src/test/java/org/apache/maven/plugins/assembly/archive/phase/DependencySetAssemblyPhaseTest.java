@@ -19,7 +19,7 @@ package org.apache.maven.plugins.assembly.archive.phase;
  * under the License.
  */
 
-import static org.mockito.ArgumentMatchers.anyListOf;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
@@ -33,7 +33,6 @@ import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Model;
-import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
 import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
 import org.apache.maven.plugins.assembly.artifact.DependencyResolutionException;
@@ -92,15 +91,15 @@ public class DependencySetAssemblyPhaseTest
         project.setArtifacts( Collections.singleton( artifact ) );
 
         when( dependencyResolver.resolveDependencySets( eq( assembly ),
-                                                        isNull(AssemblerConfigurationSource.class),
-                                                        anyListOf( DependencySet.class ) ) ).thenReturn( new LinkedHashMap<DependencySet, Set<Artifact>>() );
+                                                        isNull(),
+                                                        anyList() ) ).thenReturn( new LinkedHashMap<DependencySet, Set<Artifact>>() );
         
         this.phase.execute( assembly, null, null );
 
         // result of easymock migration, should be assert of expected result instead of verifying methodcalls
         verify( dependencyResolver ).resolveDependencySets( eq( assembly ),
-                                                            isNull(AssemblerConfigurationSource.class),
-                                                            anyListOf( DependencySet.class ) );
+                                                            isNull(),
+                                                            anyList() );
     }
 
     @Test
@@ -112,15 +111,15 @@ public class DependencySetAssemblyPhaseTest
         assembly.setIncludeBaseDirectory( false );
         
         when( dependencyResolver.resolveDependencySets( eq( assembly ), 
-                                                        isNull( AssemblerConfigurationSource.class ),
-                                                        anyListOf( DependencySet.class ) ) ).thenReturn( new LinkedHashMap<DependencySet, Set<Artifact>>() );
+                                                        isNull(),
+                                                        anyList() ) ).thenReturn( new LinkedHashMap<DependencySet, Set<Artifact>>() );
 
         this.phase.execute( assembly, null, null );
 
         // result of easymock migration, should be assert of expected result instead of verifying methodcalls
         verify( dependencyResolver ).resolveDependencySets( eq( assembly ),
-                                                            isNull( AssemblerConfigurationSource.class ),
-                                                            anyListOf( DependencySet.class ) );        
+                                                            isNull(),
+                                                            anyList() );
     }
     
     private MavenProject newMavenProject( final String groupId, final String artifactId, final String version )

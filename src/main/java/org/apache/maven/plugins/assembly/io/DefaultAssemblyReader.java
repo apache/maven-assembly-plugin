@@ -22,6 +22,7 @@ package org.apache.maven.plugins.assembly.io;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.apache.commons.io.input.XmlStreamReader;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
 import org.apache.maven.plugins.assembly.interpolation.AssemblyExpressionEvaluator;
@@ -40,7 +41,6 @@ import org.apache.maven.plugins.assembly.model.io.xpp3.ComponentXpp3Reader;
 import org.apache.maven.plugins.assembly.resolved.AssemblyId;
 import org.apache.maven.plugins.assembly.utils.InterpolationConstants;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.shared.utils.ReaderFactory;
 import org.codehaus.plexus.interpolation.PrefixAwareRecursionInterceptor;
 import org.codehaus.plexus.interpolation.RecursionInterceptor;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
@@ -206,7 +206,7 @@ public class DefaultAssemblyReader implements AssemblyReader
             }
         }
 
-        try ( Reader reader = ReaderFactory.newXmlReader( resourceAsStream ) )
+        try ( Reader reader = new XmlStreamReader( resourceAsStream ) )
         {
             final Assembly assembly = readAssembly( reader, ref, null, configSource );
             assemblies.add( assembly );
@@ -237,7 +237,7 @@ public class DefaultAssemblyReader implements AssemblyReader
             }
         }
 
-        try ( Reader r = ReaderFactory.newXmlReader( descriptor ) )
+        try ( Reader r = new XmlStreamReader( descriptor ) )
         {
             final Assembly assembly =
                 readAssembly( r, descriptor.getAbsolutePath(), descriptor.getParentFile(), configSource );
@@ -275,7 +275,7 @@ public class DefaultAssemblyReader implements AssemblyReader
         }
 
         
-        try ( Reader r = ReaderFactory.newXmlReader( location.getInputStream() ) )
+        try ( Reader r = new XmlStreamReader( location.getInputStream() ) )
         {
             File dir = null;
             if ( location.getFile() != null )

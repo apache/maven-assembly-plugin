@@ -23,7 +23,7 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
@@ -82,8 +82,7 @@ public class RepositoryAssemblyPhaseTest
         
         // result of easymock migration, should be assert of expected result instead of verifying methodcalls
         verify( configSource, atLeastOnce() ).getTemporaryRootDirectory();
-        
-        verifyZeroInteractions( repositoryAssembler );
+        verifyNoInteractions( repositoryAssembler );
     }
 
     @Test
