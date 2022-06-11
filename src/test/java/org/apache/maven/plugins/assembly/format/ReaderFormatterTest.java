@@ -39,7 +39,6 @@ import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.model.Model;
-import org.apache.maven.plugins.assembly.internal.PlexusLoggingHelper;
 import org.apache.maven.plugins.assembly.testutils.PojoConfigSource;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.filtering.DefaultMavenReaderFilter;
@@ -50,7 +49,6 @@ import org.codehaus.plexus.components.io.functions.InputStreamTransformer;
 import org.codehaus.plexus.components.io.resources.PlexusIoResource;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.slf4j.LoggerFactory;
 
 
 public class ReaderFormatterTest
@@ -158,7 +156,6 @@ public class ReaderFormatterTest
         final PojoConfigSource cfg = new PojoConfigSource();
         cfg.setEncoding( "UTF-8" );
         DefaultMavenReaderFilter mavenReaderFilter = new DefaultMavenReaderFilter();
-        mavenReaderFilter.enableLogging( PlexusLoggingHelper.wrap( LoggerFactory.getLogger( getClass() ) ) );
         cfg.setMavenReaderFilter( mavenReaderFilter );
         cfg.setEscapeString( null );
         cfg.setMavenProject( createBasicMavenProject() );
