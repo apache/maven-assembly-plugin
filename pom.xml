@@ -188,6 +188,7 @@ under the License.
       <artifactId>maven-archiver</artifactId>
       <version>3.6.0-SNAPSHOT</version>
     </dependency>
+
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
