@@ -388,7 +388,6 @@ public class AddDependencySetsTaskTest
 
         Artifact am2 = mock( Artifact.class );
         when( am2.getGroupId() ).thenReturn( "group2" );
-        when( am2.getArtifactId() ).thenReturn( "artifact2" );
         when( am2.getId() ).thenReturn( "group2:artifact2:1.0:jar" );
         artifacts.add( am2 );
 
@@ -422,7 +421,6 @@ public class AddDependencySetsTaskTest
 
         Artifact am2 = mock( Artifact.class );
         when( am2.getGroupId() ).thenReturn( "group2" );
-        when( am2.getArtifactId() ).thenReturn( "artifact2" );
         when( am2.getId() ).thenReturn( "group2:artifact2:1.0:jar" );
         artifacts.add( am2 );
 
