@@ -156,6 +156,8 @@ under the License.
       <artifactId>plexus-interpolation</artifactId>
       <version>1.26</version>
     </dependency>
+
+    <!-- Solo user: plexus-archiver -->
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-slf4j-logging</artifactId>
