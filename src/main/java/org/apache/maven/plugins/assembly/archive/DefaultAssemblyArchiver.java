@@ -22,7 +22,6 @@ package org.apache.maven.plugins.assembly.archive;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.maven.plugin.DebugConfigurationListener;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
 import org.apache.maven.plugins.assembly.archive.archiver.AssemblyProxyArchiver;
@@ -32,7 +31,7 @@ import org.apache.maven.plugins.assembly.artifact.DependencyResolutionException;
 import org.apache.maven.plugins.assembly.filter.ComponentsXmlArchiverFileFilter;
 import org.apache.maven.plugins.assembly.filter.ContainerDescriptorHandler;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
-import org.apache.maven.plugins.assembly.internal.PlexusLoggingHelper;
+import org.apache.maven.plugins.assembly.internal.DebugConfigurationListener;
 import org.apache.maven.plugins.assembly.interpolation.AssemblyExpressionEvaluator;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.model.ContainerDescriptorHandlerConfig;
@@ -332,7 +331,7 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver
                                               configSource.getWorkingDirectory() );
         if ( configSource.isDryRun() )
         {
-            archiver = new DryRunArchiver( archiver, PlexusLoggingHelper.wrap( LOGGER ) );
+            archiver = new DryRunArchiver( archiver, LOGGER );
         }
 
         archiver.setUseJvmChmod( configSource.isUpdateOnly() );
@@ -427,8 +426,7 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver
     {
         final ComponentConfigurator configurator = container.lookup( ComponentConfigurator.class, "basic" );
 
-        final ConfigurationListener listener = new DebugConfigurationListener(
-                PlexusLoggingHelper.wrap( LOGGER ) );
+        final ConfigurationListener listener = new DebugConfigurationListener( LOGGER );
 
         final ExpressionEvaluator expressionEvaluator = new AssemblyExpressionEvaluator( configSource );
 
