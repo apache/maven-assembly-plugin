@@ -171,7 +171,7 @@ under the License.
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-archiver</artifactId>
-      <version>4.2.7</version>
+      <version>4.4.0</version>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>
