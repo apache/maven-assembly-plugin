@@ -27,4 +27,4 @@ assert deployDir.exists()
 
 assert new File( deployDir, 'reproducible-1.0-src.zip.sha1' ).text == '5ce34fc133d47cbc9c81195877dbe10b9ec7d864'
 assert new File( deployDir, 'reproducible-1.0-src.tar.sha1' ).text == '0b9dc1da069705a93b4954a198c18bd248822bf8'
-assert new File( deployDir, 'reproducible-1.0-src.jar.sha1' ).text == '2e84c54834ad80e58b4564471a02356904c7b1e3'
+assert new File( deployDir, 'reproducible-1.0-src.jar.sha1' ).text == '289cb3ecd418b8099deefb930dc7aa39c06888cb'

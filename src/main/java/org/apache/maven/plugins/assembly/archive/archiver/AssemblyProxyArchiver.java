@@ -42,6 +42,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -1099,4 +1100,21 @@ public class AssemblyProxyArchiver implements Archiver
         return delegate.getOverrideGroupName();
     }
 
+    @Override
+    public void setLastModifiedTime( FileTime fileTime )
+    {
+        delegate.setLastModifiedTime( fileTime );
+    }
+
+    @Override
+    public FileTime getLastModifiedTime()
+    {
+        return delegate.getLastModifiedTime();
+    }
+
+    @Override
+    public void configureReproducibleBuild( FileTime fileTime )
+    {
+        delegate.configureReproducibleBuild( fileTime );
+    }
 }
