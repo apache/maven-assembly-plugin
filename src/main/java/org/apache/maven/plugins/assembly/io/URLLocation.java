@@ -59,8 +59,8 @@ class URLLocation
         this.tempFileDeleteOnExit = tempFileDeleteOnExit;
     }
 
-    /** {@inheritDoc} */
-    void initFile()
+    @Override
+    protected void initFile()
         throws IOException
     {
         if ( unsafeGetFile() == null )
