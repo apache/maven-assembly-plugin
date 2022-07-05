@@ -283,6 +283,8 @@ under the License.
               <exclude>src/it/projects/bugs/massembly-731/**</exclude>
               <exclude>.java-version</exclude>
               <exclude>.asf.yaml</exclude>
+              <!-- this is a symbolic link -->
+              <exclude>src/it/projects/file-sets/symbolic-links/src/main/assembly-resources/a-symbolic-link</exclude>
             </excludes>
           </configuration>
         </plugin>
