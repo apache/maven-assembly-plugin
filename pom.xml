@@ -30,7 +30,7 @@ under the License.
   </parent>
 
   <artifactId>maven-assembly-plugin</artifactId>
-  <version>3.4.1-SNAPSHOT</version>
+  <version>3.4.2-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>Apache Maven Assembly Plugin</name>
@@ -70,7 +70,7 @@ under the License.
     <surefire.version>3.0.0-M6</surefire.version>
     <testOutputToFile>true</testOutputToFile>
     <checkstyle.violation.ignore>RedundantThrows,NewlineAtEndOfFile,ParameterNumber,MethodLength,FileLength,ModifierOrder,JavadocMethod</checkstyle.violation.ignore>
-    <project.build.outputTimestamp>2022-06-29T11:39:31Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2022-07-04T05:46:14Z</project.build.outputTimestamp>
   </properties>
 
   <contributors>

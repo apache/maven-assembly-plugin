@@ -58,7 +58,7 @@ class FileLocation
         this.specification = specification;
     }
 
-    /** {@inheritDoc} */
+    @Override
     public void close()
     {
         if ( ( channel != null ) && channel.isOpen() )
@@ -86,7 +86,7 @@ class FileLocation
         }
     }
 
-    /** {@inheritDoc} */
+    @Override
     public File getFile()
         throws IOException
     {
@@ -107,7 +107,7 @@ class FileLocation
      * initialize file.
      * @throws IOException in case of error
      */
-    private void initFile()
+    protected void initFile()
         throws IOException
     {
         if ( file == null )
@@ -129,13 +129,13 @@ class FileLocation
         this.file = file;
     }
 
-    /** {@inheritDoc} */
+    @Override
     public String getSpecification()
     {
         return specification;
     }
 
-    /** {@inheritDoc} */
+    @Override
     public void open()
         throws IOException
     {
@@ -148,7 +148,7 @@ class FileLocation
         }
     }
 
-    /** {@inheritDoc} */
+    @Override
     public int read( ByteBuffer buffer )
         throws IOException
     {
@@ -156,7 +156,7 @@ class FileLocation
         return channel.read( buffer );
     }
 
-    /** {@inheritDoc} */
+    @Override
     public int read( byte[] buffer )
         throws IOException
     {
@@ -164,7 +164,7 @@ class FileLocation
         return channel.read( ByteBuffer.wrap( buffer ) );
     }
 
-    /** {@inheritDoc} */
+    @Override
     public InputStream getInputStream()
         throws IOException
     {
