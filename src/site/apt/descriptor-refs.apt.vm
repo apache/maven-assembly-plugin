@@ -26,7 +26,7 @@
 ~~ under the License.
 
 ~~ NOTE: For help with the syntax of this file, see:
-~~ http://maven.apache.org/doxia/references/apt-format.html
+~~ https://maven.apache.org/doxia/references/apt-format.html
 
 Pre-defined Descriptor Files
 
@@ -60,7 +60,7 @@ Pre-defined Descriptor Files
 
   Note that <<<jar-with-dependencies>>> provides only basic support for uber-jars. 
   For more control, use the
-  {{{http://maven.apache.org/plugins/maven-shade-plugin/} Maven Shade Plugin}}.
+  {{{https://maven.apache.org/plugins/maven-shade-plugin/} Maven Shade Plugin}}.
 
   Below is the <<<jar-with-dependencies>>> descriptor format:
 

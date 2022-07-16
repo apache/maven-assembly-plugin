@@ -22,7 +22,7 @@ under the License.
 
 <faqs xmlns="http://maven.apache.org/FML/1.0.1"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/FML/1.0.1 http://maven.apache.org/xsd/fml-1.0.1.xsd"
+  xsi:schemaLocation="http://maven.apache.org/FML/1.0.1 https://maven.apache.org/xsd/fml-1.0.1.xsd"
   id="FAQ" title="Frequently Asked Questions">
   <part id="General">
     <faq id="deploy">
@@ -41,7 +41,7 @@ under the License.
       <question>How do I use the Assembly Plugin to package my project's javadoc files?</question>
       <answer>
         <p>The Javadoc Plugin can generate the javadoc files of your projects. Also, the Javadoc Plugin can package them!</p>
-        <p>Please see the <a href="http://maven.apache.org/plugins/maven-javadoc-plugin/">Javadoc Plugin Documentation</a>.</p>
+        <p>Please see the <a href="https://maven.apache.org/plugins/maven-javadoc-plugin/">Javadoc Plugin Documentation</a>.</p>
       </answer>
     </faq>
     <faq id="inherit">
@@ -168,7 +168,7 @@ under the License.
           <li>all system or maven properties available in your build with the syntax <code>${myProperty}</code>.</li>
           <li>all environment variables with <code>${env.XXX}</code> where <code>XXX</code> is the environment variable.</li>
           <li>the special <code>${dashClassifier?}</code> property (see above).</li>
-          <li>all artifacts attributes (<a href="http://maven.apache.org/ref/3.0.4/maven-artifact/apidocs/org/apache/maven/artifact/Artifact.html"> from the Artifact class</a>) like :
+          <li>all artifacts attributes (<a href="https://maven.apache.org/ref/3.0.4/maven-artifact/apidocs/org/apache/maven/artifact/Artifact.html"> from the Artifact class</a>) like :
           <ul>
               <li><code>${artifact.groupId}</code> : The artifact groupId.</li>
               <li><code>${artifact.artifactId}</code> :  The artifact artifactId.</li>
