@@ -66,6 +66,8 @@ under the License.
     <mdoVersion>2.1.1</mdoVersion>
     <mavenVersion>3.2.5</mavenVersion>
     <slf4jVersion>1.7.5</slf4jVersion>
+    <mavenFilteringVersion>3.3.0</mavenFilteringVersion>
+    <mavenArchiverVersion>3.6.0</mavenArchiverVersion>
 
     <surefire.version>3.0.0-M6</surefire.version>
     <testOutputToFile>true</testOutputToFile>
@@ -163,7 +165,7 @@ under the License.
     <dependency>
       <groupId>org.apache.maven.shared</groupId>
       <artifactId>maven-filtering</artifactId>
-      <version>3.3.0</version>
+      <version>${mavenFilteringVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
@@ -178,7 +180,7 @@ under the License.
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-archiver</artifactId>
-      <version>3.6.0</version>
+      <version>${mavenArchiverVersion}</version>
     </dependency>
 
     <dependency>
