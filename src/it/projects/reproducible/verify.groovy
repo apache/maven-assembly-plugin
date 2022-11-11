@@ -18,13 +18,13 @@
  * under the License.
  */
 
-//import java.util.zip.*;
-import org.apache.commons.compress.archivers.zip.*;
+//import java.util.zip.*
+import org.apache.commons.compress.archivers.zip.*
 
 File deployDir = new File( basedir, 'target/repo/org/apache/maven/its/reproducible/1.0' )
 
 assert deployDir.exists()
 
-assert new File( deployDir, 'reproducible-1.0-src.zip.sha1' ).text == '5ce34fc133d47cbc9c81195877dbe10b9ec7d864'
-assert new File( deployDir, 'reproducible-1.0-src.tar.sha1' ).text == '0b9dc1da069705a93b4954a198c18bd248822bf8'
-assert new File( deployDir, 'reproducible-1.0-src.jar.sha1' ).text == '289cb3ecd418b8099deefb930dc7aa39c06888cb'
+assert new File( deployDir, 'reproducible-1.0-src.zip.sha1' ).text == 'abf1cf8f84b839d796d55b9e3eb7f41530f517e5'
+assert new File( deployDir, 'reproducible-1.0-src.tar.sha1' ).text == '7535236be97964050e8c4734746733c185fe1762'
+assert new File( deployDir, 'reproducible-1.0-src.jar.sha1' ).text == '18a3fd34d53bf763c3b57f82260662ab7241a20c'
