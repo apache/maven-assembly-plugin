@@ -39,7 +39,10 @@ for( String type : [ "zip", "jar", "tar" ] )
 
 effective = sb.toString()
 
-reference = "zip-content-" + ( effective.contains( "0775" ) ? "775" : "755" ) +  ".txt"
+// 3 different reference results:
+// 1. Windows does not support executable flag
+// 2. on *nix, based on system configuration, group flag differs
+reference = "zip-content-" + ( effective.contains( "644 executable" ) ? "win" : effective.contains( "0775" ) ? "775" : "755" ) + ".txt"
 content = new File( basedir, reference ).text.replace( "\r\n", "\n" )
 
 assert content == effective
