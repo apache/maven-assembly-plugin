@@ -31,17 +31,17 @@ under the License.
   <fileSets>
     <fileSet>
       <outputDirectory></outputDirectory>
-      <directory>src</directory>
+      <directory>src/main/resources</directory>
       <filtered>true</filtered>
       <lineEnding>lf</lineEnding>
     </fileSet>
   </fileSets>
-  <files>
+  <!--files>
     <file>
       <source>src/main/resources/executable.txt</source>
       <fileMode>0755</fileMode>
       <filtered>true</filtered>
       <lineEnding>lf</lineEnding>
     </file>
-  </files>
+  </files-->
 </assembly>
