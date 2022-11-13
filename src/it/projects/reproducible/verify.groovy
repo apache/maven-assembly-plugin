@@ -31,11 +31,15 @@ for( ZipArchiveEntry entry : zip.getEntries() )
 {
     sb.append( String.format("%o %s\n", entry.getUnixMode(), entry.getName() ) )
 }
+for( String type : [ "zip", "jar", "tar" ] )
+{
+    String name = "reproducible-1.0-src." + type + ".sha1"
+    sb.append( String.format("%s %s\n", new File( deployDir, name ).text, name ) )
+}
 
-content = new File( basedir, "zip-content.txt" ).text.replace( "\r\n", "\n" )
 effective = sb.toString()
-assert content == effective
 
-assert new File( deployDir, 'reproducible-1.0-src.zip.sha1' ).text == '50116502c6107740c2a35ef296b5abda08c5dec7'
-assert new File( deployDir, 'reproducible-1.0-src.tar.sha1' ).text == '3efc10ec9c3099ba061e58d5b2a935ba643da237'
-assert new File( deployDir, 'reproducible-1.0-src.jar.sha1' ).text == 'cc7e3a984179f63d6b37bc86c61e9cc461c62288'
+reference = "zip-content-" + ( effective.contains( "0775" ) ? "775" : "755" ) +  ".txt"
+content = new File( basedir, reference ).text.replace( "\r\n", "\n" )
+
+assert content == effective
