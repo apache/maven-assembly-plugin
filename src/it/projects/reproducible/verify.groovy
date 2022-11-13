@@ -29,7 +29,7 @@ ZipFile zip = new ZipFile( new File( deployDir, "reproducible-1.0-src.zip" ) )
 StringBuilder sb = new StringBuilder()
 for( ZipArchiveEntry entry : zip.getEntries() )
 {
-    sb.append( String.format("%d %o %s\n", entry.getTime(), entry.getUnixMode(), entry.getName() ) )
+    sb.append( String.format("%o %s\n", entry.getUnixMode(), entry.getName() ) )
 }
 
 content = new File( basedir, "zip-content.txt" ).text.replace( "\r\n", "\n" )
