@@ -29,6 +29,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.nio.file.Files;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -262,9 +263,9 @@ public class LineEndingsUtilsTest
     private void testConversion( String test, String check, LineEndings lineEndingChars, Boolean eof )
         throws IOException
     {
-        File source = File.createTempFile( "line-conversion-test-in.", "" );
+        File source = Files.createTempFile( "line-conversion-test-in.", "" ).toFile();
         source.deleteOnExit();
-        File dest = File.createTempFile( "line-conversion-test-out.", "" );
+        File dest = Files.createTempFile( "line-conversion-test-out.", "" ).toFile();
         dest.deleteOnExit();
 
         FileWriter sourceWriter = null;

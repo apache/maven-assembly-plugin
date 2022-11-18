@@ -102,7 +102,7 @@ public class ComponentsXmlArchiverFileFilter
     {
         if ( components != null )
         {
-            final File f = File.createTempFile( "maven-assembly-plugin", "tmp" );
+            final File f = Files.createTempFile( "maven-assembly-plugin", "tmp" ).toFile();
             f.deleteOnExit();
 
             

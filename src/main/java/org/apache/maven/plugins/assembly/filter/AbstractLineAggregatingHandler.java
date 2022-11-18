@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -81,7 +82,7 @@ abstract class AbstractLineAggregatingHandler
             File f;
             try
             {
-                f = File.createTempFile( "assembly-" + fname, ".tmp" );
+                f = Files.createTempFile( "assembly-" + fname, ".tmp" ).toFile();
                 f.deleteOnExit();
 
                 try ( PrintWriter writer =
