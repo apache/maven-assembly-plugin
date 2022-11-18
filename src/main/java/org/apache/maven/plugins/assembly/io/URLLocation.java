@@ -22,6 +22,7 @@ package org.apache.maven.plugins.assembly.io;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 
 import org.apache.commons.io.IOUtils;
 
@@ -65,7 +66,7 @@ class URLLocation
     {
         if ( unsafeGetFile() == null )
         {
-            File tempFile = File.createTempFile( tempFilePrefix, tempFileSuffix );
+            File tempFile = Files.createTempFile( tempFilePrefix, tempFileSuffix ).toFile();
 
             if ( tempFileDeleteOnExit )
             {

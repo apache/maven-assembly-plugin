@@ -38,6 +38,7 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -97,7 +98,7 @@ public class SimpleAggregatingDescriptorHandler implements ContainerDescriptorHa
         File f;
         try
         {
-            f = File.createTempFile( "maven-assembly-plugin", "tmp" );
+            f = Files.createTempFile( "maven-assembly-plugin", "tmp" ).toFile();
             f.deleteOnExit();
 
             try ( Writer writer = getWriter( f ) )

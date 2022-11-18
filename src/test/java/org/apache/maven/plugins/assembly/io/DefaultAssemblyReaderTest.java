@@ -96,7 +96,7 @@ public class DefaultAssemblyReaderTest
     public void testIncludeSiteInAssembly_ShouldFailIfSiteDirectoryNonExistent()
         throws Exception
     {
-        final File siteDir = File.createTempFile( "assembly-reader.", ".test" );
+        final File siteDir = Files.createTempFile( "assembly-reader.", ".test" ).toFile();
         siteDir.delete();
 
         when( configSource.getSiteDirectory() ).thenReturn( siteDir );
