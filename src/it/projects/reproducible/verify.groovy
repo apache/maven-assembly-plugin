@@ -18,13 +18,31 @@
  * under the License.
  */
 
-//import java.util.zip.*;
-import org.apache.commons.compress.archivers.zip.*;
+//import java.util.zip.*
+import org.apache.commons.compress.archivers.zip.*
 
 File deployDir = new File( basedir, 'target/repo/org/apache/maven/its/reproducible/1.0' )
 
 assert deployDir.exists()
 
-assert new File( deployDir, 'reproducible-1.0-src.zip.sha1' ).text == '5ce34fc133d47cbc9c81195877dbe10b9ec7d864'
-assert new File( deployDir, 'reproducible-1.0-src.tar.sha1' ).text == '0b9dc1da069705a93b4954a198c18bd248822bf8'
-assert new File( deployDir, 'reproducible-1.0-src.jar.sha1' ).text == '289cb3ecd418b8099deefb930dc7aa39c06888cb'
+ZipFile zip = new ZipFile( new File( deployDir, "reproducible-1.0-src.zip" ) )
+StringBuilder sb = new StringBuilder()
+for( ZipArchiveEntry entry : zip.getEntries() )
+{
+    sb.append( String.format("%o %s\n", entry.getUnixMode(), entry.getName() ) )
+}
+for( String type : [ "zip", "jar", "tar" ] )
+{
+    String name = "reproducible-1.0-src." + type + ".sha1"
+    sb.append( String.format("%s %s\n", new File( deployDir, name ).text, name ) )
+}
+
+effective = sb.toString()
+
+// 3 different reference results:
+// 1. Windows does not support executable flag
+// 2. on *nix, based on system configuration, group flag differs
+reference = "zip-content-" + ( effective.contains( "644 executable" ) ? "win" : effective.contains( "0775" ) ? "775" : "755" ) + ".txt"
+content = new File( basedir, reference ).text.replace( "\r\n", "\n" )
+
+assert content == effective
