@@ -468,6 +468,44 @@ public class DefaultAssemblyArchiverTest
     }
 
     @Test
+    public void testCreateTarArchiver_TarZstFormat_ShouldInitializeZstCompression()
+            throws Exception
+    {
+        final TestTarArchiver archiver = new TestTarArchiver();
+
+        when( archiverManager.getArchiver( "tar" ) ).thenReturn( archiver );
+
+        final DefaultAssemblyArchiver subject = createSubject( new ArrayList<AssemblyArchiverPhase>() );
+
+        subject.createTarArchiver( "tar.zst", TarLongFileMode.fail );
+
+        assertEquals( TarArchiver.TarCompressionMethod.zstd, archiver.compressionMethod );
+        assertEquals( TarLongFileMode.fail, archiver.longFileMode );
+
+        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
+        verify( archiverManager ).getArchiver( "tar" );
+    }
+
+    @Test
+    public void testCreateTarArchiver_TZstFormat_ShouldInitializeZstCompression()
+            throws Exception
+    {
+        final TestTarArchiver archiver = new TestTarArchiver();
+
+        when( archiverManager.getArchiver( "tar" ) ).thenReturn( archiver );
+
+        final DefaultAssemblyArchiver subject = createSubject( new ArrayList<AssemblyArchiverPhase>() );
+
+        subject.createTarArchiver( "tzst", TarLongFileMode.fail );
+
+        assertEquals( TarArchiver.TarCompressionMethod.zstd, archiver.compressionMethod );
+        assertEquals( TarLongFileMode.fail, archiver.longFileMode );
+
+        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
+        verify( archiverManager ).getArchiver( "tar" );
+    }
+
+    @Test
     public void testCreateTarArchiver_InvalidFormat_ShouldFailWithInvalidCompression()
         throws Exception
     {

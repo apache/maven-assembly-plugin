@@ -59,6 +59,8 @@ ${project.name}
 
     * tar.xz (or txz)
 
+    * tar.zst (or tzst)
+
     * jar
 
     * dir

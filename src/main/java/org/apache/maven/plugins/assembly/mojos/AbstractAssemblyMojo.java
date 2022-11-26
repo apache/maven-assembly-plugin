@@ -163,6 +163,7 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
      * <li><em>tar.bz2</em> or <em>tbz2</em> - Creates a bzip'd TAR format</li>
      * <li><em>tar.snappy</em> - Creates a snappy'd TAR format</li>
      * <li><em>tar.xz</em> or <em>txz</em> - Creates a xz'd TAR format</li>
+     * <li><em>tar.zst</em> or <em>tzst</em> - Creates a zst'd TAR format</li>
      * </ul>
      */
     @Parameter
