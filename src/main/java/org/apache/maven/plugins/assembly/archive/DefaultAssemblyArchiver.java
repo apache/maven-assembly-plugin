@@ -280,7 +280,8 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver
         throws NoSuchArchiverException
     {
         Archiver archiver;
-        if ( "txz".equals( format ) || "tgz".equals( format ) || "tbz2".equals( format ) || format.startsWith( "tar" ) )
+        if ( "txz".equals( format ) || "tgz".equals( format ) || "tbz2".equals( format ) || "tzst".equals( format )
+                || format.startsWith( "tar" ) )
         {
             archiver = createTarArchiver( format, TarLongFileMode.valueOf( configSource.getTarLongFileMode() ) );
         }
@@ -519,6 +520,10 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver
             {
                 tarCompressionMethod = TarArchiver.TarCompressionMethod.snappy;
             }
+            else if ( "zst".equals( compression ) )
+            {
+                tarCompressionMethod = TarArchiver.TarCompressionMethod.zstd;
+            }
             else
             {
                 // TODO: better handling
@@ -537,6 +542,10 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver
         else if ( "txz".equals( format ) )
         {
             tarArchiver.setCompression( TarArchiver.TarCompressionMethod.xz );
+        }
+        else if ( "tzst".equals( format ) )
+        {
+            tarArchiver.setCompression( TarArchiver.TarCompressionMethod.zstd );
         }
 
         tarArchiver.setLongfile( tarLongFileMode );

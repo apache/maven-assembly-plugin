@@ -394,6 +394,11 @@ under the License.
                 <artifactId>commons-compress</artifactId>
                 <version>1.21</version>
               </dependency>
+              <dependency>
+                <groupId>com.github.luben</groupId>
+                <artifactId>zstd-jni</artifactId>
+                <version>1.5.4-2</version>
+              </dependency>
             </dependencies>
           </plugin>
         </plugins>
