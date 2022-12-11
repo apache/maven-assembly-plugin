@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Components XML file filter.
+ * <code>plexus</code>: Plexus Components XML file filter <code>META-INF/plexus/components.xml</code>.
  *
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
  *

@@ -26,7 +26,7 @@ import java.net.URL;
 import org.apache.commons.io.IOUtils;
 
 /**
- * The URL Location.
+ * The URL Location, storing the URL content to a temporary local file.
  *
  */
 class URLLocation

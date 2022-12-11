@@ -26,7 +26,7 @@ import java.nio.file.Paths;
 import org.codehaus.plexus.components.io.fileselectors.FileInfo;
 
 /**
- *
+ * <code>metaInf-services</code>: <code>META-INF/services/*</code> aggregating handler.
  */
 @Named( "metaInf-services" )
 public class MetaInfServicesHandler

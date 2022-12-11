@@ -24,7 +24,7 @@ import javax.inject.Named;
 import org.codehaus.plexus.components.io.fileselectors.FileInfo;
 
 /**
- *
+ * <code>metaInf-spring</code>: Spring's <code>META-INF/spring.*</code> aggregating handler.
  */
 @Named( "metaInf-spring" )
 public class MetaInfSpringHandler

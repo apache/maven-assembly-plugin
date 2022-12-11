@@ -44,7 +44,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- *
+ * <code>file-aggregator</code>: Generic aggregating handler, configured with filePattern and outputPath.
  */
 @Named( "file-aggregator" )
 public class SimpleAggregatingDescriptorHandler implements ContainerDescriptorHandler
