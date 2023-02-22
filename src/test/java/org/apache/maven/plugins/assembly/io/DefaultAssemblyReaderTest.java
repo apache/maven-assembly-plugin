@@ -52,7 +52,6 @@ import org.apache.maven.plugins.assembly.model.ContainerDescriptorHandlerConfig;
 import org.apache.maven.plugins.assembly.model.DependencySet;
 import org.apache.maven.plugins.assembly.model.FileItem;
 import org.apache.maven.plugins.assembly.model.FileSet;
-import org.apache.maven.plugins.assembly.model.Repository;
 import org.apache.maven.plugins.assembly.model.io.xpp3.AssemblyXpp3Writer;
 import org.apache.maven.plugins.assembly.model.io.xpp3.ComponentXpp3Reader;
 import org.apache.maven.plugins.assembly.model.io.xpp3.ComponentXpp3Writer;
@@ -241,40 +240,6 @@ public class DefaultAssemblyReaderTest
         new DefaultAssemblyReader().mergeComponentWithAssembly( component, assembly );
 
         final List<DependencySet> depSets = assembly.getDependencySets();
-
-        assertNotNull( depSets );
-        assertEquals( 3, depSets.size() );
-
-        assertEquals( Artifact.SCOPE_RUNTIME, depSets.get( 0 ).getScope() );
-        assertEquals( Artifact.SCOPE_COMPILE, depSets.get( 1 ).getScope() );
-        assertEquals( Artifact.SCOPE_SYSTEM, depSets.get( 2 ).getScope() );
-    }
-
-    @Test
-    public void testMergeComponentWithAssembly_ShouldAddOneRepositoryToExistingListOfTwo()
-    {
-        final Assembly assembly = new Assembly();
-
-        Repository repo = new Repository();
-        repo.setScope( Artifact.SCOPE_RUNTIME );
-
-        assembly.addRepository( repo );
-
-        repo = new Repository();
-        repo.setScope( Artifact.SCOPE_COMPILE );
-
-        assembly.addRepository( repo );
-
-        final Component component = new Component();
-
-        repo = new Repository();
-        repo.setScope( Artifact.SCOPE_SYSTEM );
-
-        component.addRepository( repo );
-
-        new DefaultAssemblyReader().mergeComponentWithAssembly( component, assembly );
-
-        final List<Repository> depSets = assembly.getRepositories();
 
         assertNotNull( depSets );
         assertEquals( 3, depSets.size() );

@@ -116,12 +116,6 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     private boolean ignoreDirFormatExtensions;
 
     /**
-     * Local Maven repository where artifacts are cached during the build process.
-     */
-    @Parameter( defaultValue = "${localRepository}", required = true, readonly = true )
-    private ArtifactRepository localRepository;
-
-    /**
      *
      */
     @Parameter( defaultValue = "${project.remoteArtifactRepositories}", required = true, readonly = true )
@@ -589,17 +583,11 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     {
         final Properties settingsProperties = new Properties();
         final MavenSession session = getMavenSession();
+        final File basedir = session.getRepositorySession()
+                .getLocalRepositoryManager().getRepository().getBasedir();
 
-        if ( getLocalRepository() != null )
-        {
-            settingsProperties.setProperty( "localRepository", getLocalRepository().getBasedir() );
-            settingsProperties.setProperty( "settings.localRepository", getLocalRepository().getBasedir() );
-        }
-        else if ( session != null && session.getSettings() != null )
-        {
-            settingsProperties.setProperty( "localRepository", session.getSettings().getLocalRepository() );
-            settingsProperties.setProperty( "settings.localRepository", getLocalRepository().getBasedir() );
-        }
+        settingsProperties.setProperty( "localRepository", basedir.toString() );
+        settingsProperties.setProperty( "settings.localRepository", basedir.toString() );
 
         return FixedStringSearchInterpolator.create( new PropertiesBasedValueSource( settingsProperties ) );
 
@@ -757,17 +745,6 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     public File getWorkingDirectory()
     {
         return workDirectory;
-    }
-
-    @Override
-    public ArtifactRepository getLocalRepository()
-    {
-        return localRepository;
-    }
-
-    public void setLocalRepository( final ArtifactRepository localRepository )
-    {
-        this.localRepository = localRepository;
     }
 
     @Override

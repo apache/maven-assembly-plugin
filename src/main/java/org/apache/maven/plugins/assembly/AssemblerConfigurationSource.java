@@ -96,11 +96,6 @@ public interface AssemblerConfigurationSource
     MavenArchiveConfiguration getJarArchiveConfiguration();
 
     /**
-     * @return The local repository.
-     */
-    ArtifactRepository getLocalRepository();
-
-    /**
      * @return The temporary root directory.
      */
     File getTemporaryRootDirectory();
