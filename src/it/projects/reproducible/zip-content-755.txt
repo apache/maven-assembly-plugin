@@ -20,6 +20,13 @@
 100644 dir-d/d.txt
 100755 executable.txt
 100644 lowercase.txt
+
+unix modes summary:
+ directory: 40755
+      file: 100644
+executable: 100755
+
+resulting sha1:
 97d0ea3b4a87cd3ea78edd1c3c25914d69ea97f3 reproducible-1.0-src.zip.sha1
 a0c4cf1ed244e60221e12367f50ff676066b8e65 reproducible-1.0-src.jar.sha1
 bf93dd529253157352b87097d9d23eba8c9ca61a reproducible-1.0-src.tar.sha1
