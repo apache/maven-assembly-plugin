@@ -1138,7 +1138,7 @@
 
     <class>
       <name>Repository</name>
-      <version>1.0.0+</version>
+      <version>1.0.0/2.1.1</version>
       <description>
         <![CDATA[
         <b>Deprecated since model version 2.1.1</b>.
