@@ -20,8 +20,6 @@ package org.apache.maven.plugins.assembly.mojos;
  */
 
 import java.io.File;
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -613,17 +611,10 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
 
     private FixedStringSearchInterpolator createEnvInterpolator()
     {
-        try
-        {
-            PrefixedPropertiesValueSource envProps =
-                    new PrefixedPropertiesValueSource( Collections.singletonList( "env." ),
-                            CommandLineUtils.getSystemEnvVars( false ), true );
-            return FixedStringSearchInterpolator.create( envProps );
-        }
-        catch ( IOException e )
-        {
-            throw new UncheckedIOException( e );
-        }
+        PrefixedPropertiesValueSource envProps =
+                new PrefixedPropertiesValueSource( Collections.singletonList( "env." ),
+                        CommandLineUtils.getSystemEnvVars( false ), true );
+        return FixedStringSearchInterpolator.create( envProps );
     }
 
     /**
