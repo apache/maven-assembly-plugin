@@ -34,7 +34,6 @@ import org.apache.maven.plugins.assembly.model.DependencySet;
 import org.apache.maven.plugins.assembly.model.FileItem;
 import org.apache.maven.plugins.assembly.model.FileSet;
 import org.apache.maven.plugins.assembly.model.ModuleSet;
-import org.apache.maven.plugins.assembly.model.Repository;
 import org.apache.maven.plugins.assembly.model.io.xpp3.AssemblyXpp3Reader;
 import org.apache.maven.plugins.assembly.model.io.xpp3.AssemblyXpp3Writer;
 import org.apache.maven.plugins.assembly.model.io.xpp3.ComponentXpp3Reader;
@@ -460,13 +459,6 @@ public class DefaultAssemblyReader implements AssemblyReader
         for ( final FileItem fileItem : fileList )
         {
             assembly.addFile( fileItem );
-        }
-
-        final List<Repository> repositoriesList = component.getRepositories();
-
-        for ( final Repository repository : repositoriesList )
-        {
-            assembly.addRepository( repository );
         }
 
         final List<ModuleSet> moduleSets = component.getModuleSets();
