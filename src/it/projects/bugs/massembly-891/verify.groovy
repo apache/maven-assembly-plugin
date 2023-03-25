@@ -20,7 +20,7 @@
 
 import java.util.jar.*
 
-def log4jApi = new JarFile(new File(localRepositoryPath, 'org/apache/logging/log4j/log4j-api/2.9.1/log4j-api-2.9.1.jar'))
+def log4jApi = new JarFile(new File(localRepositoryPath, 'org/apache/logging/log4j/log4j-api/2.20.0/log4j-api-2.20.0.jar'))
 def jarWithDeps = new JarFile(new File( basedir, 'target/massembly891-0.0.1-SNAPSHOT-jar-with-dependencies.jar'))
 
 cls = 'org/apache/logging/log4j/util/StackLocator.class'

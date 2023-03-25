@@ -34,9 +34,9 @@ under the License.
 		</dependency>
 		<!-- comment-out this dependency in the second run to verify the behaviour -->
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.16</version>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.20.0</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
