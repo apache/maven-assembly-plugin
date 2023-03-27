@@ -35,7 +35,7 @@ Including and Excluding Artifacts
   be an identical match for it to be included or excluded. At present there is
   no support for regular expressions.
 
-  This example excludes the log4j and commons-lang jar files from the assembly.
+  This example excludes the log4j-1.2-api and commons-lang3 jar files from the assembly.
   This would be useful when you are building a super distribution assembly which
   contained sub distributions (i.e. other already assembled zips or tars) where
   in your pom you are depenedent upon those distributions.  But because the
@@ -57,7 +57,7 @@ Including and Excluding Artifacts
 +-----
 
   And then in your assembly you exclude all the jar dependencies pulled in
-  from the binary assembly. In this example the commons-lang and log4j jars
+  from the binary assembly. In this example the commons-lang3 and log4j-1.2-api jars
   are included unnecessarily (as they are in the bin.zip file already)
 
 +-----
@@ -65,8 +65,8 @@ Including and Excluding Artifacts
     <dependencySet>
       ....
       <excludes>
-        <exclude>commons-lang:commons-lang</exclude>
-        <exclude>log4j:log4j</exclude>
+        <exclude>org.apache.commons:commons-lang3</exclude>
+        <exclude>org.apache.logging.log4j:log4j-1.2-api</exclude>
       </excludes>
     </dependencySet>
     ....

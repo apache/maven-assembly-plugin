@@ -34,18 +34,18 @@ under the License.
   <dependencies>
     <dependency>
       <!-- Keep the jar-with-dependencies from being file-less... -->
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>5.9.2</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
       
       <!-- Both the range AND the scope are critical here, 
            since this artifact will be EXCLUDED from the depSet. -->
-      <version>[1.2.16]</version>
+      <version>[2.20.0]</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
