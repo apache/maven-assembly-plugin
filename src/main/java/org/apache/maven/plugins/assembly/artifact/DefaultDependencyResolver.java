@@ -29,6 +29,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.DefaultArtifact;
+import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
+import org.apache.maven.artifact.versioning.VersionRange;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
 import org.apache.maven.plugins.assembly.archive.phase.ModuleSetAssemblyPhase;
@@ -37,7 +40,6 @@ import org.apache.maven.plugins.assembly.model.DependencySet;
 import org.apache.maven.plugins.assembly.model.ModuleBinaries;
 import org.apache.maven.plugins.assembly.model.ModuleSet;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.repository.RepositorySystem;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,12 +56,12 @@ public class DefaultDependencyResolver implements DependencyResolver
 {
     private static final Logger LOGGER = LoggerFactory.getLogger( DefaultDependencyResolver.class );
 
-    private final RepositorySystem resolver;
+    private final ArtifactHandlerManager artifactHandlerManager;
 
     @Inject
-    public DefaultDependencyResolver( RepositorySystem resolver )
+    public DefaultDependencyResolver( ArtifactHandlerManager artifactHandlerManager )
     {
-        this.resolver = requireNonNull( resolver );
+        this.artifactHandlerManager = requireNonNull( artifactHandlerManager );
     }
 
     @Override
@@ -130,10 +132,8 @@ public class DefaultDependencyResolver implements DependencyResolver
             {
                 if ( p.getArtifact() == null )
                 {
-                    // TODO: such a call in MavenMetadataSource too - packaging not really the intention of type
-                    final Artifact artifact =
-                        resolver.createArtifact( p.getGroupId(), p.getArtifactId(), p.getVersion(), p.getPackaging() );
-                    p.setArtifact( artifact );
+                    p.setArtifact( createArtifact( p.getGroupId(), p.getArtifactId(),
+                            p.getVersion(), p.getPackaging() ) );
                 }
             }
 
@@ -143,6 +143,17 @@ public class DefaultDependencyResolver implements DependencyResolver
                                                            projects.toArray( new MavenProject[0] ) );
             }
         }
+    }
+
+    private Artifact createArtifact( String groupId, String artifactId, String version, String type )
+    {
+        VersionRange versionRange = null;
+        if ( version != null )
+        {
+            versionRange = VersionRange.createFromVersion( version );
+        }
+        return new DefaultArtifact( groupId, artifactId, versionRange, null, type, null,
+                artifactHandlerManager.getArtifactHandler( type ), false );
     }
 
     void updateDependencySetResolutionRequirements( final DependencySet set,
