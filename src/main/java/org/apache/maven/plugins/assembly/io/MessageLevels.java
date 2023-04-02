@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.io;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,7 @@ package org.apache.maven.plugins.assembly.io;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.io;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,10 +24,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * 
+ *
  */
-final class MessageLevels
-{
+final class MessageLevels {
 
     /**
      * Debug.
@@ -57,43 +55,38 @@ final class MessageLevels
 
     private static final List<String> LEVEL_NAMES;
 
-    static
-    {
+    static {
         List<String> names = new ArrayList<String>();
-        names.add( "DEBUG" );
-        names.add( "INFO" );
-        names.add( "WARN" );
-        names.add( "ERROR" );
-        names.add( "SEVERE" );
+        names.add("DEBUG");
+        names.add("INFO");
+        names.add("WARN");
+        names.add("ERROR");
+        names.add("SEVERE");
 
-        LEVEL_NAMES = Collections.unmodifiableList( names );
+        LEVEL_NAMES = Collections.unmodifiableList(names);
     }
 
-    private MessageLevels()
-    {
-    }
+    private MessageLevels() {}
 
     /**
      * @param maxMessageLevel for which level
      * @return level states
      */
-    static boolean[] getLevelStates( int maxMessageLevel )
-    {
+    static boolean[] getLevelStates(int maxMessageLevel) {
         boolean[] states = new boolean[5];
 
-        Arrays.fill( states, false );
+        Arrays.fill(states, false);
 
-        switch ( maxMessageLevel )
-        {
-            case ( LEVEL_DEBUG ):
+        switch (maxMessageLevel) {
+            case (LEVEL_DEBUG):
                 states[LEVEL_DEBUG] = true;
-            case ( LEVEL_INFO ):
+            case (LEVEL_INFO):
                 states[LEVEL_INFO] = true;
-            case ( LEVEL_WARNING ):
+            case (LEVEL_WARNING):
                 states[LEVEL_WARNING] = true;
-            case ( LEVEL_ERROR ):
+            case (LEVEL_ERROR):
                 states[LEVEL_ERROR] = true;
-            case ( LEVEL_SEVERE ):
+            case (LEVEL_SEVERE):
                 states[LEVEL_SEVERE] = true;
             default:
         }
@@ -105,13 +98,11 @@ final class MessageLevels
      * @param messageLevel the message leve.
      * @return The label.
      */
-    static String getLevelLabel( int messageLevel )
-    {
-        if ( messageLevel > -1 && LEVEL_NAMES.size() > messageLevel )
-        {
-            return (String) LEVEL_NAMES.get( messageLevel );
+    static String getLevelLabel(int messageLevel) {
+        if (messageLevel > -1 && LEVEL_NAMES.size() > messageLevel) {
+            return (String) LEVEL_NAMES.get(messageLevel);
         }
 
-        throw new IllegalArgumentException( "Invalid message level: " + messageLevel );
+        throw new IllegalArgumentException("Invalid message level: " + messageLevel);
     }
 }

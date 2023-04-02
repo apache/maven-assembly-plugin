@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.artifact;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,7 @@ package org.apache.maven.plugins.assembly.artifact;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.artifact;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -52,136 +51,121 @@ import static java.util.Objects.requireNonNull;
  */
 @Singleton
 @Named
-public class DefaultDependencyResolver implements DependencyResolver
-{
-    private static final Logger LOGGER = LoggerFactory.getLogger( DefaultDependencyResolver.class );
+public class DefaultDependencyResolver implements DependencyResolver {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultDependencyResolver.class);
 
     private final ArtifactHandlerManager artifactHandlerManager;
 
     @Inject
-    public DefaultDependencyResolver( ArtifactHandlerManager artifactHandlerManager )
-    {
-        this.artifactHandlerManager = requireNonNull( artifactHandlerManager );
+    public DefaultDependencyResolver(ArtifactHandlerManager artifactHandlerManager) {
+        this.artifactHandlerManager = requireNonNull(artifactHandlerManager);
     }
 
     @Override
-    public Map<DependencySet, Set<Artifact>> resolveDependencySets( final Assembly assembly, ModuleSet moduleSet,
-                                                                    final AssemblerConfigurationSource configSource,
-                                                                    List<DependencySet> dependencySets )
-        throws DependencyResolutionException
-    {
+    public Map<DependencySet, Set<Artifact>> resolveDependencySets(
+            final Assembly assembly,
+            ModuleSet moduleSet,
+            final AssemblerConfigurationSource configSource,
+            List<DependencySet> dependencySets)
+            throws DependencyResolutionException {
         Map<DependencySet, Set<Artifact>> result = new LinkedHashMap<>();
 
-        for ( DependencySet dependencySet : dependencySets )
-        {
+        for (DependencySet dependencySet : dependencySets) {
 
             final MavenProject currentProject = configSource.getProject();
 
             final ResolutionManagementInfo info = new ResolutionManagementInfo();
-            updateDependencySetResolutionRequirements( dependencySet, info, currentProject );
-            updateModuleSetResolutionRequirements( moduleSet, dependencySet, info, configSource );
+            updateDependencySetResolutionRequirements(dependencySet, info, currentProject);
+            updateModuleSetResolutionRequirements(moduleSet, dependencySet, info, configSource);
 
-            result.put( dependencySet, info.getArtifacts() );
-
+            result.put(dependencySet, info.getArtifacts());
         }
         return result;
     }
 
     @Override
-    public Map<DependencySet, Set<Artifact>> resolveDependencySets( final Assembly assembly,
-                                                                    final AssemblerConfigurationSource configSource,
-                                                                    List<DependencySet> dependencySets )
-        throws DependencyResolutionException
-    {
+    public Map<DependencySet, Set<Artifact>> resolveDependencySets(
+            final Assembly assembly,
+            final AssemblerConfigurationSource configSource,
+            List<DependencySet> dependencySets)
+            throws DependencyResolutionException {
         Map<DependencySet, Set<Artifact>> result = new LinkedHashMap<>();
 
-        for ( DependencySet dependencySet : dependencySets )
-        {
+        for (DependencySet dependencySet : dependencySets) {
 
             final MavenProject currentProject = configSource.getProject();
 
             final ResolutionManagementInfo info = new ResolutionManagementInfo();
-            updateDependencySetResolutionRequirements( dependencySet, info, currentProject );
+            updateDependencySetResolutionRequirements(dependencySet, info, currentProject);
 
-            result.put( dependencySet, info.getArtifacts() );
-
+            result.put(dependencySet, info.getArtifacts());
         }
         return result;
     }
 
-    void updateModuleSetResolutionRequirements( ModuleSet set, DependencySet dependencySet,
-                                                final ResolutionManagementInfo requirements,
-                                                final AssemblerConfigurationSource configSource )
-        throws DependencyResolutionException
-    {
+    void updateModuleSetResolutionRequirements(
+            ModuleSet set,
+            DependencySet dependencySet,
+            final ResolutionManagementInfo requirements,
+            final AssemblerConfigurationSource configSource)
+            throws DependencyResolutionException {
         final ModuleBinaries binaries = set.getBinaries();
-        if ( binaries != null )
-        {
+        if (binaries != null) {
             Set<MavenProject> projects;
-            try
-            {
-                projects = ModuleSetAssemblyPhase.getModuleProjects( set, configSource, LOGGER );
-            }
-            catch ( final ArchiveCreationException e )
-            {
-                throw new DependencyResolutionException( "Error determining project-set for moduleSet with binaries.",
-                                                         e );
+            try {
+                projects = ModuleSetAssemblyPhase.getModuleProjects(set, configSource, LOGGER);
+            } catch (final ArchiveCreationException e) {
+                throw new DependencyResolutionException(
+                        "Error determining project-set for moduleSet with binaries.", e);
             }
 
-            for ( final MavenProject p : projects )
-            {
-                if ( p.getArtifact() == null )
-                {
-                    p.setArtifact( createArtifact( p.getGroupId(), p.getArtifactId(),
-                            p.getVersion(), p.getPackaging() ) );
+            for (final MavenProject p : projects) {
+                if (p.getArtifact() == null) {
+                    p.setArtifact(createArtifact(p.getGroupId(), p.getArtifactId(), p.getVersion(), p.getPackaging()));
                 }
             }
 
-            if ( binaries.isIncludeDependencies() )
-            {
-                updateDependencySetResolutionRequirements( dependencySet, requirements,
-                                                           projects.toArray( new MavenProject[0] ) );
+            if (binaries.isIncludeDependencies()) {
+                updateDependencySetResolutionRequirements(
+                        dependencySet, requirements, projects.toArray(new MavenProject[0]));
             }
         }
     }
 
-    private Artifact createArtifact( String groupId, String artifactId, String version, String type )
-    {
+    private Artifact createArtifact(String groupId, String artifactId, String version, String type) {
         VersionRange versionRange = null;
-        if ( version != null )
-        {
-            versionRange = VersionRange.createFromVersion( version );
+        if (version != null) {
+            versionRange = VersionRange.createFromVersion(version);
         }
-        return new DefaultArtifact( groupId, artifactId, versionRange, null, type, null,
-                artifactHandlerManager.getArtifactHandler( type ), false );
+        return new DefaultArtifact(
+                groupId,
+                artifactId,
+                versionRange,
+                null,
+                type,
+                null,
+                artifactHandlerManager.getArtifactHandler(type),
+                false);
     }
 
-    void updateDependencySetResolutionRequirements( final DependencySet set,
-                                                    final ResolutionManagementInfo requirements,
-                                                    final MavenProject... projects )
-        throws DependencyResolutionException
-    {
-        for ( final MavenProject project : projects )
-        {
-            if ( project == null )
-            {
+    void updateDependencySetResolutionRequirements(
+            final DependencySet set, final ResolutionManagementInfo requirements, final MavenProject... projects)
+            throws DependencyResolutionException {
+        for (final MavenProject project : projects) {
+            if (project == null) {
                 continue;
             }
 
             Set<Artifact> dependencyArtifacts = null;
-            if ( set.isUseTransitiveDependencies() )
-            {
+            if (set.isUseTransitiveDependencies()) {
                 dependencyArtifacts = project.getArtifacts();
-            }
-            else
-            {
+            } else {
                 dependencyArtifacts = project.getDependencyArtifacts();
             }
 
-            requirements.addArtifacts( dependencyArtifacts );
-            LOGGER.debug( "Dependencies for project: " + project.getId() + " are:\n" + StringUtils.join(
-                dependencyArtifacts.iterator(), "\n" ) );
+            requirements.addArtifacts(dependencyArtifacts);
+            LOGGER.debug("Dependencies for project: " + project.getId() + " are:\n"
+                    + StringUtils.join(dependencyArtifacts.iterator(), "\n"));
         }
     }
-
 }

@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.archive.phase;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,11 +16,10 @@ package org.apache.maven.plugins.assembly.archive.phase;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.archive.phase;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
-
-import static org.codehaus.plexus.components.io.resources.ResourceFactory.createResource;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -53,148 +50,121 @@ import org.codehaus.plexus.components.io.resources.PlexusIoResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.codehaus.plexus.components.io.resources.ResourceFactory.createResource;
+
 /**
  * Handles the top-level &lt;files/&gt; section of the assembly descriptor.
  *
  *
  */
 @Singleton
-@Named( "file-items" )
-public class FileItemAssemblyPhase implements AssemblyArchiverPhase, PhaseOrder
-{
-    private static final Logger LOGGER = LoggerFactory.getLogger( FileItemAssemblyPhase.class );
+@Named("file-items")
+public class FileItemAssemblyPhase implements AssemblyArchiverPhase, PhaseOrder {
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileItemAssemblyPhase.class);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void execute( final Assembly assembly, final Archiver archiver,
-                         final AssemblerConfigurationSource configSource )
-        throws ArchiveCreationException, AssemblyFormattingException, InvalidAssemblerConfigurationException
-    {
+    public void execute(
+            final Assembly assembly, final Archiver archiver, final AssemblerConfigurationSource configSource)
+            throws ArchiveCreationException, AssemblyFormattingException, InvalidAssemblerConfigurationException {
         final List<FileItem> fileList = assembly.getFiles();
         final File basedir = configSource.getBasedir();
 
-        for ( final FileItem fileItem : fileList )
-        {
-            if ( fileItem.getSource() != null ^ fileItem.getSources().isEmpty() )
-            {
-                throw new InvalidAssemblerConfigurationException( 
-                                                      "Misconfigured file: one of source or sources must be set" );
+        for (final FileItem fileItem : fileList) {
+            if (fileItem.getSource() != null ^ fileItem.getSources().isEmpty()) {
+                throw new InvalidAssemblerConfigurationException(
+                        "Misconfigured file: one of source or sources must be set");
             }
-            
+
             String destName = fileItem.getDestName();
-            
+
             final String sourcePath;
-            if ( fileItem.getSource() != null )
-            {
+            if (fileItem.getSource() != null) {
                 sourcePath = fileItem.getSource();
-            }
-            else if ( destName != null )
-            {
+            } else if (destName != null) {
                 // because createResource() requires a file
-                sourcePath = fileItem.getSources().get( 0 );
+                sourcePath = fileItem.getSources().get(0);
+            } else {
+                throw new InvalidAssemblerConfigurationException(
+                        "Misconfigured file: specify destName when using sources");
             }
-            else
-            {
-                throw new InvalidAssemblerConfigurationException( 
-                                "Misconfigured file: specify destName when using sources" );
-            }            
 
             // ensure source file is in absolute path for reactor build to work
-            File source = new File( sourcePath );
+            File source = new File(sourcePath);
 
             // save the original sourcefile's name, because filtration may
             // create a temp file with a different name.
             final String sourceName = source.getName();
 
-            if ( !AssemblyFileUtils.isAbsolutePath( source ) )
-            {
-                source = new File( basedir, sourcePath );
+            if (!AssemblyFileUtils.isAbsolutePath(source)) {
+                source = new File(basedir, sourcePath);
             }
-            if ( destName == null )
-            {
+            if (destName == null) {
                 destName = sourceName;
             }
 
             final String outputDirectory1 = fileItem.getOutputDirectory();
 
-            final String outputDirectory =
-                AssemblyFormatUtils.getOutputDirectory( outputDirectory1, configSource.getFinalName(), configSource,
-                                                        AssemblyFormatUtils.moduleProjectInterpolator(
-                                                            configSource.getProject() ),
-                                                        AssemblyFormatUtils.artifactProjectInterpolator( null ) );
+            final String outputDirectory = AssemblyFormatUtils.getOutputDirectory(
+                    outputDirectory1,
+                    configSource.getFinalName(),
+                    configSource,
+                    AssemblyFormatUtils.moduleProjectInterpolator(configSource.getProject()),
+                    AssemblyFormatUtils.artifactProjectInterpolator(null));
 
             String target;
 
             // omit the last char if ends with / or \\
-            if ( outputDirectory.endsWith( "/" ) || outputDirectory.endsWith( "\\" ) )
-            {
+            if (outputDirectory.endsWith("/") || outputDirectory.endsWith("\\")) {
                 target = outputDirectory + destName;
-            }
-            else if ( outputDirectory.length() < 1 )
-            {
+            } else if (outputDirectory.length() < 1) {
                 target = destName;
-            }
-            else
-            {
+            } else {
                 target = outputDirectory + "/" + destName;
             }
 
-            try
-            {
-                final InputStreamTransformer fileSetTransformers =
-                    ReaderFormatter.getFileSetTransformers( configSource, fileItem.isFiltered(),
-                                                            Collections.<String>emptySet(),
-                                                            fileItem.getLineEnding() );
-                
+            try {
+                final InputStreamTransformer fileSetTransformers = ReaderFormatter.getFileSetTransformers(
+                        configSource, fileItem.isFiltered(), Collections.<String>emptySet(), fileItem.getLineEnding());
+
                 final PlexusIoResource restoUse;
-                if ( !fileItem.getSources().isEmpty() )
-                {
-                    List<InputStream> content = new ArrayList<>( fileItem.getSources().size() );
-                    for ( String contentSourcePath : fileItem.getSources() )
-                    {
-                        File contentSource = new File( contentSourcePath );
-                        if ( !AssemblyFileUtils.isAbsolutePath( contentSource ) )
-                        {
-                            contentSource = new File( basedir, contentSourcePath );
+                if (!fileItem.getSources().isEmpty()) {
+                    List<InputStream> content =
+                            new ArrayList<>(fileItem.getSources().size());
+                    for (String contentSourcePath : fileItem.getSources()) {
+                        File contentSource = new File(contentSourcePath);
+                        if (!AssemblyFileUtils.isAbsolutePath(contentSource)) {
+                            contentSource = new File(basedir, contentSourcePath);
                         }
-                        content.add( new FileInputStream( contentSource ) );
+                        content.add(new FileInputStream(contentSource));
                     }
-                    
-                    String name = PlexusIoFileResource.getName( source );
-                    restoUse = createResource( source, name, getContentSupplier( content ), fileSetTransformers );
-                }
-                else
-                {
-                    restoUse = createResource( source, fileSetTransformers );
+
+                    String name = PlexusIoFileResource.getName(source);
+                    restoUse = createResource(source, name, getContentSupplier(content), fileSetTransformers);
+                } else {
+                    restoUse = createResource(source, fileSetTransformers);
                 }
 
-                int mode = TypeConversionUtils.modeToInt( fileItem.getFileMode(), LOGGER );
-                archiver.addResource( restoUse, target, mode );
-            }
-            catch ( final ArchiverException | IOException e )
-            {
-                throw new ArchiveCreationException( "Error adding file to archive: " + e.getMessage(), e );
+                int mode = TypeConversionUtils.modeToInt(fileItem.getFileMode(), LOGGER);
+                archiver.addResource(restoUse, target, mode);
+            } catch (final ArchiverException | IOException e) {
+                throw new ArchiveCreationException("Error adding file to archive: " + e.getMessage(), e);
             }
         }
     }
 
     @Override
-    public int order()
-    {
+    public int order() {
         return 10;
     }
-    
-    private ContentSupplier getContentSupplier( final Collection<InputStream> contentStreams ) 
-    {
-        return new ContentSupplier()
-        {
+
+    private ContentSupplier getContentSupplier(final Collection<InputStream> contentStreams) {
+        return new ContentSupplier() {
             @Override
-            public InputStream getContents()
-                throws IOException
-            {
-                return new SequenceInputStream( Collections.enumeration( contentStreams ) );
+            public InputStream getContents() throws IOException {
+                return new SequenceInputStream(Collections.enumeration(contentStreams));
             }
         };
     }

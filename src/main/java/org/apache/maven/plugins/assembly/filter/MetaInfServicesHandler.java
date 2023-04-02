@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.filter;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,7 @@ package org.apache.maven.plugins.assembly.filter;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.filter;
 
 import javax.inject.Named;
 
@@ -28,35 +27,27 @@ import org.codehaus.plexus.components.io.fileselectors.FileInfo;
 /**
  * <code>metaInf-services</code>: <code>META-INF/services/*</code> aggregating handler.
  */
-@Named( "metaInf-services" )
-public class MetaInfServicesHandler
-    extends AbstractLineAggregatingHandler
-{
+@Named("metaInf-services")
+public class MetaInfServicesHandler extends AbstractLineAggregatingHandler {
 
     private static final String SERVICES_PATH_PREFIX = "META-INF/services/";
 
     @Override
-    protected String getOutputPathPrefix( final FileInfo fileInfo )
-    {
-        return Paths.get( fileInfo.getName() ).getParent().toString() + "/";
+    protected String getOutputPathPrefix(final FileInfo fileInfo) {
+        return Paths.get(fileInfo.getName()).getParent().toString() + "/";
     }
 
     @Override
-    protected boolean fileMatches( final FileInfo fileInfo )
-    {
+    protected boolean fileMatches(final FileInfo fileInfo) {
         final String path = fileInfo.getName();
 
         String leftover = null;
-        if ( path.startsWith( SERVICES_PATH_PREFIX ) )
-        {
-            leftover = path.substring( SERVICES_PATH_PREFIX.length() );
-        }
-        else if ( path.startsWith( "/META-INF/services/" ) )
-        {
-            leftover = path.substring( SERVICES_PATH_PREFIX.length() - 1 );
+        if (path.startsWith(SERVICES_PATH_PREFIX)) {
+            leftover = path.substring(SERVICES_PATH_PREFIX.length());
+        } else if (path.startsWith("/META-INF/services/")) {
+            leftover = path.substring(SERVICES_PATH_PREFIX.length() - 1);
         }
 
         return leftover != null && leftover.length() > 0;
     }
-
 }

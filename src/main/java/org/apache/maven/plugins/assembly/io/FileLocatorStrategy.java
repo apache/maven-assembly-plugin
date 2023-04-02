@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.io;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,7 @@ package org.apache.maven.plugins.assembly.io;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.io;
 
 import java.io.File;
 
@@ -25,27 +24,20 @@ import java.io.File;
  * file locator strategy.
  *
  */
-class FileLocatorStrategy
-    implements LocatorStrategy
-{
+class FileLocatorStrategy implements LocatorStrategy {
 
     /** {@inheritDoc} */
-    public Location resolve( String locationSpecification, MessageHolder messageHolder )
-    {
-        File file = new File( locationSpecification );
+    public Location resolve(String locationSpecification, MessageHolder messageHolder) {
+        File file = new File(locationSpecification);
 
         Location location = null;
 
-        if ( file.exists() )
-        {
-            location = new FileLocation( file, locationSpecification );
-        }
-        else
-        {
-            messageHolder.addMessage( "File: " + file.getAbsolutePath() + " does not exist." );
+        if (file.exists()) {
+            location = new FileLocation(file, locationSpecification);
+        } else {
+            messageHolder.addMessage("File: " + file.getAbsolutePath() + " does not exist.");
         }
 
         return location;
     }
-
 }

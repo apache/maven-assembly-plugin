@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.interpolation;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,9 @@ package org.apache.maven.plugins.assembly.interpolation;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.interpolation;
+
+import java.io.File;
 
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.io.DefaultAssemblyReader;
@@ -29,14 +30,10 @@ import org.codehaus.plexus.interpolation.PrefixAwareRecursionInterceptor;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
 import org.codehaus.plexus.interpolation.fixed.InterpolationState;
 
-import java.io.File;
-
 /**
  *
  */
-public class AssemblyExpressionEvaluator
-    implements ExpressionEvaluator
-{
+public class AssemblyExpressionEvaluator implements ExpressionEvaluator {
 
     private final AssemblerConfigurationSource configSource;
 
@@ -44,40 +41,32 @@ public class AssemblyExpressionEvaluator
 
     private final PrefixAwareRecursionInterceptor interceptor;
 
-    public AssemblyExpressionEvaluator( AssemblerConfigurationSource configSource )
-    {
+    public AssemblyExpressionEvaluator(AssemblerConfigurationSource configSource) {
         this.configSource = configSource;
 
         final MavenProject project = configSource.getProject();
         final FixedStringSearchInterpolator projectInterpolator =
-            DefaultAssemblyReader.createProjectInterpolator( project );
-        interpolator = AssemblyInterpolator.fullInterpolator( project, projectInterpolator, configSource );
-        interceptor = new PrefixAwareRecursionInterceptor( InterpolationConstants.PROJECT_PREFIXES, true );
+                DefaultAssemblyReader.createProjectInterpolator(project);
+        interpolator = AssemblyInterpolator.fullInterpolator(project, projectInterpolator, configSource);
+        interceptor = new PrefixAwareRecursionInterceptor(InterpolationConstants.PROJECT_PREFIXES, true);
     }
 
     @Override
-    public File alignToBaseDirectory( File f )
-    {
+    public File alignToBaseDirectory(File f) {
         String basePath = configSource.getBasedir().getAbsolutePath();
         String path = f.getPath();
 
-        if ( !f.isAbsolute() && !path.startsWith( basePath ) )
-        {
-            return new File( configSource.getBasedir(), path );
-        }
-        else
-        {
+        if (!f.isAbsolute() && !path.startsWith(basePath)) {
+            return new File(configSource.getBasedir(), path);
+        } else {
             return f;
         }
     }
 
     @Override
-    public Object evaluate( String expression )
-        throws ExpressionEvaluationException
-    {
+    public Object evaluate(String expression) throws ExpressionEvaluationException {
         InterpolationState is = new InterpolationState();
-        is.setRecursionInterceptor( interceptor );
-        return interpolator.interpolate( expression, is );
+        is.setRecursionInterceptor(interceptor);
+        return interpolator.interpolate(expression, is);
     }
-
 }

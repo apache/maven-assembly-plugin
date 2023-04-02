@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.utils;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,40 +16,36 @@ package org.apache.maven.plugins.assembly.utils;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.utils;
 
 /**
  * Enumeration to keep the different line ending types we support.
  *
  * @author Karl-Heinz Marbaise <a href="mailto:khmarbaise@apache.org">khmarbaise@apache.org</a>
  */
-public enum LineEndings
-{
-    keep( null ),
-    dos( "\r\n" ),
-    windows( "\r\n" ),
-    unix( "\n" ),
-    crlf( "\r\n" ),
-    lf( "\n" );
+public enum LineEndings {
+    keep(null),
+    dos("\r\n"),
+    windows("\r\n"),
+    unix("\n"),
+    crlf("\r\n"),
+    lf("\n");
 
     private final String lineEndingCharacters;
 
-    LineEndings( String lineEndingCharacters )
-    {
+    LineEndings(String lineEndingCharacters) {
         this.lineEndingCharacters = lineEndingCharacters;
     }
 
-    public boolean isNewLine()
-    {
+    public boolean isNewLine() {
         return this == unix || this == lf;
     }
 
-    public boolean isCrLF()
-    {
+    public boolean isCrLF() {
         return this == windows || this == crlf || this == dos;
     }
 
-    public String getLineEndingCharacters()
-    {
+    public String getLineEndingCharacters() {
         return this.lineEndingCharacters;
     }
 }

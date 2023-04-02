@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.io;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,30 +16,25 @@ package org.apache.maven.plugins.assembly.io;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.io;
 
 /**
  *
  */
-class PrefixedClasspathLocatorStrategy
-    extends ClasspathResourceLocatorStrategy
-{
+class PrefixedClasspathLocatorStrategy extends ClasspathResourceLocatorStrategy {
 
     private final String prefix;
 
-    PrefixedClasspathLocatorStrategy( String prefix )
-    {
-        this.prefix = formatPrefix( prefix );
+    PrefixedClasspathLocatorStrategy(String prefix) {
+        this.prefix = formatPrefix(prefix);
     }
 
-    private String formatPrefix( String prefix )
-    {
-        if ( prefix.startsWith( "/" ) )
-        {
-            prefix = prefix.substring( 1 );
+    private String formatPrefix(String prefix) {
+        if (prefix.startsWith("/")) {
+            prefix = prefix.substring(1);
         }
 
-        if ( prefix.length() > 0 && !prefix.endsWith( "/" ) )
-        {
+        if (prefix.length() > 0 && !prefix.endsWith("/")) {
             prefix += "/";
         }
 
@@ -49,21 +42,17 @@ class PrefixedClasspathLocatorStrategy
     }
 
     @Override
-    public Location resolve( String locationSpecification, MessageHolder messageHolder )
-    {
-        String spec = formatLocation( locationSpecification );
+    public Location resolve(String locationSpecification, MessageHolder messageHolder) {
+        String spec = formatLocation(locationSpecification);
 
-        return super.resolve( spec, messageHolder );
+        return super.resolve(spec, messageHolder);
     }
 
-    private String formatLocation( String location )
-    {
-        if ( location.startsWith( "/" ) )
-        {
-            location = location.substring( 1 );
+    private String formatLocation(String location) {
+        if (location.startsWith("/")) {
+            location = location.substring(1);
         }
 
         return prefix + location;
     }
-
 }

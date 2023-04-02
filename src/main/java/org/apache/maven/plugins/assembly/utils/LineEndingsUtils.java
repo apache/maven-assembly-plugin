@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.utils;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,7 @@ package org.apache.maven.plugins.assembly.utils;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.utils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -35,11 +34,9 @@ import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 /**
  * Line Ending class which contains convenience methods to change line endings.
  */
-public final class LineEndingsUtils
-{
+public final class LineEndingsUtils {
 
-    private LineEndingsUtils()
-    {
+    private LineEndingsUtils() {
         // prevent creations of instances.
     }
 
@@ -57,80 +54,60 @@ public final class LineEndingsUtils
      * @param encoding    The encoding to use, null for platform encoding
      * @throws IOException .
      */
-    public static void convertLineEndings( final File source, File dest, LineEndings lineEndings,
-                                           final Boolean atEndOfFile, String encoding )
-        throws IOException
-    {
+    public static void convertLineEndings(
+            final File source, File dest, LineEndings lineEndings, final Boolean atEndOfFile, String encoding)
+            throws IOException {
         // MASSEMBLY-637, MASSEMBLY-96
         // find characters at the end of the file
         // needed to preserve the last line ending
         // only check for LF (as CRLF also ends in LF)
         String eofChars = "";
-        if ( atEndOfFile == null )
-        {
-            if ( source.length() >= 1 )
-            {
-                try ( RandomAccessFile raf = new RandomAccessFile( source, "r" ) )
-                {
-                    raf.seek( source.length() - 1 );
+        if (atEndOfFile == null) {
+            if (source.length() >= 1) {
+                try (RandomAccessFile raf = new RandomAccessFile(source, "r")) {
+                    raf.seek(source.length() - 1);
                     byte last = raf.readByte();
-                    if ( last == '\n' )
-                    {
+                    if (last == '\n') {
                         eofChars = lineEndings.getLineEndingCharacters();
                     }
                 }
             }
-        }
-        else if ( atEndOfFile )
-        {
+        } else if (atEndOfFile) {
             eofChars = lineEndings.getLineEndingCharacters();
         }
 
-        try ( BufferedReader in = getBufferedReader( source, encoding );
-              BufferedWriter out = getBufferedWriter( dest, encoding ) )
-        {
+        try (BufferedReader in = getBufferedReader(source, encoding);
+                BufferedWriter out = getBufferedWriter(dest, encoding)) {
             String line = in.readLine();
-            while ( line != null )
-            {
-                out.write( line );
+            while (line != null) {
+                out.write(line);
                 line = in.readLine();
-                if ( line != null )
-                {
-                    out.write( lineEndings.getLineEndingCharacters() );
-                }
-                else
-                {
-                    out.write( eofChars );
+                if (line != null) {
+                    out.write(lineEndings.getLineEndingCharacters());
+                } else {
+                    out.write(eofChars);
                 }
             }
         }
     }
 
-    private static BufferedReader getBufferedReader( File source, String encoding ) throws IOException
-    {
-        if ( encoding == null )
-        {
+    private static BufferedReader getBufferedReader(File source, String encoding) throws IOException {
+        if (encoding == null) {
             // platform encoding
-            return new BufferedReader( new InputStreamReader( new FileInputStream( source ) ) );
-        }
-        else
-        {
+            return new BufferedReader(new InputStreamReader(new FileInputStream(source)));
+        } else {
             // MASSEMBLY-371
-            return new BufferedReader( new InputStreamReader( new FileInputStream( source ), encoding ) );
+            return new BufferedReader(new InputStreamReader(new FileInputStream(source), encoding));
         }
     }
 
-    private static BufferedWriter getBufferedWriter( File dest, String encoding ) throws IOException
-    {
-        if ( encoding == null )
-        {
+    private static BufferedWriter getBufferedWriter(File dest, String encoding) throws IOException {
+        if (encoding == null) {
             // platform encoding
-            return new BufferedWriter( new OutputStreamWriter( new FileOutputStream( dest ) ) );
-        }
-        else
-        {
+            return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dest)));
+        } else {
             // MASSEMBLY-371
-            return new BufferedWriter( new OutputStreamWriter( new FileOutputStream( dest ), encoding ) );
+            return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dest), encoding));
         }
     }
 
@@ -142,28 +119,20 @@ public final class LineEndingsUtils
      *                    line-ending characters, not null.
      * @return an input stream that enforces a specifi line ending style
      */
-    @SuppressWarnings( "resource" )
-    public static InputStream lineEndingConverter( InputStream in, LineEndings lineEndings )
-        throws IOException
-    {
+    @SuppressWarnings("resource")
+    public static InputStream lineEndingConverter(InputStream in, LineEndings lineEndings) throws IOException {
         return lineEndings.isNewLine()
-            ? new LinuxLineFeedInputStream( in, false )
-            : lineEndings.isCrLF() ? new WindowsLineFeedInputStream( in, false ) : in;
+                ? new LinuxLineFeedInputStream(in, false)
+                : lineEndings.isCrLF() ? new WindowsLineFeedInputStream(in, false) : in;
     }
 
-    public static LineEndings getLineEnding( /* nullable */ String lineEnding )
-        throws AssemblyFormattingException
-    {
+    public static LineEndings getLineEnding(/* nullable */ String lineEnding) throws AssemblyFormattingException {
         LineEndings result = LineEndings.keep;
-        if ( lineEnding != null )
-        {
-            try
-            {
-                result = LineEndings.valueOf( lineEnding );
-            }
-            catch ( IllegalArgumentException e )
-            {
-                throw new AssemblyFormattingException( "Illegal lineEnding specified: '" + lineEnding + "'", e );
+        if (lineEnding != null) {
+            try {
+                result = LineEndings.valueOf(lineEnding);
+            } catch (IllegalArgumentException e) {
+                throw new AssemblyFormattingException("Illegal lineEnding specified: '" + lineEnding + "'", e);
             }
         }
         return result;
@@ -177,24 +146,17 @@ public final class LineEndingsUtils
      * @return The proper line ending characters
      * @throws AssemblyFormattingException
      */
-    public static String getLineEndingCharacters( /* nullable */ String lineEnding )
-        throws AssemblyFormattingException
-    {
+    public static String getLineEndingCharacters(/* nullable */ String lineEnding) throws AssemblyFormattingException {
         String value = lineEnding;
 
-        if ( lineEnding != null )
-        {
-            try
-            {
-                value = LineEndings.valueOf( lineEnding ).getLineEndingCharacters();
-            }
-            catch ( IllegalArgumentException e )
-            {
-                throw new AssemblyFormattingException( "Illegal lineEnding specified: '" + lineEnding + "'", e );
+        if (lineEnding != null) {
+            try {
+                value = LineEndings.valueOf(lineEnding).getLineEndingCharacters();
+            } catch (IllegalArgumentException e) {
+                throw new AssemblyFormattingException("Illegal lineEnding specified: '" + lineEnding + "'", e);
             }
         }
 
         return value;
     }
-
 }

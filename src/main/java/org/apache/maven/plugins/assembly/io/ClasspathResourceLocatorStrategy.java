@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.io;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,15 +16,14 @@ package org.apache.maven.plugins.assembly.io;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.io;
 
 import java.net.URL;
 
 /**
  * classpath resource locator strategy.
  */
-class ClasspathResourceLocatorStrategy
-    implements LocatorStrategy
-{
+class ClasspathResourceLocatorStrategy implements LocatorStrategy {
 
     private String tempFilePrefix = "location.";
 
@@ -37,31 +34,24 @@ class ClasspathResourceLocatorStrategy
     /**
      * Create instance.
      */
-    ClasspathResourceLocatorStrategy()
-    {
-    }
+    ClasspathResourceLocatorStrategy() {}
 
     /** {@inheritDoc} */
-    public Location resolve( String locationSpecification, MessageHolder messageHolder )
-    {
+    public Location resolve(String locationSpecification, MessageHolder messageHolder) {
         ClassLoader cloader = Thread.currentThread().getContextClassLoader();
 
-        URL resource = cloader.getResource( locationSpecification );
+        URL resource = cloader.getResource(locationSpecification);
 
         Location location = null;
 
-        if ( resource != null )
-        {
-            location = new URLLocation( resource, locationSpecification, tempFilePrefix, tempFileSuffix,
-                                        tempFileDeleteOnExit );
-        }
-        else
-        {
-            messageHolder.addMessage( "Failed to resolve classpath resource: " + locationSpecification
-                + " from classloader: " + cloader );
+        if (resource != null) {
+            location = new URLLocation(
+                    resource, locationSpecification, tempFilePrefix, tempFileSuffix, tempFileDeleteOnExit);
+        } else {
+            messageHolder.addMessage(
+                    "Failed to resolve classpath resource: " + locationSpecification + " from classloader: " + cloader);
         }
 
         return location;
     }
-
 }

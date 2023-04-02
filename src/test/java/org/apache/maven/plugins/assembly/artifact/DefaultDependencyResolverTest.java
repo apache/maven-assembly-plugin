@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.artifact;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,12 +16,7 @@ package org.apache.maven.plugins.assembly.artifact;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+package org.apache.maven.plugins.assembly.artifact;
 
 import java.io.File;
 import java.util.Arrays;
@@ -46,157 +39,150 @@ import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusTestCase;
 import org.junit.Test;
 
-public class DefaultDependencyResolverTest
-        extends PlexusTestCase
-{
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+public class DefaultDependencyResolverTest extends PlexusTestCase {
 
     private DefaultDependencyResolver resolver;
 
-    protected void customizeContainerConfiguration( ContainerConfiguration configuration) {
-        configuration.setClassPathScanning( PlexusConstants.SCANNING_CACHE ).setAutoWiring( true );
+    protected void customizeContainerConfiguration(ContainerConfiguration configuration) {
+        configuration.setClassPathScanning(PlexusConstants.SCANNING_CACHE).setAutoWiring(true);
     }
 
     @Override
-    public void setUp()
-        throws Exception
-    {
+    public void setUp() throws Exception {
         super.setUp();
 
-        resolver = (DefaultDependencyResolver) lookup( DependencyResolver.class );
+        resolver = (DefaultDependencyResolver) lookup(DependencyResolver.class);
     }
 
     @Test
-    public void test_getDependencySetResolutionRequirements_transitive()
-        throws DependencyResolutionException
-    {
+    public void test_getDependencySetResolutionRequirements_transitive() throws DependencyResolutionException {
         final DependencySet ds = new DependencySet();
-        ds.setScope( Artifact.SCOPE_SYSTEM );
-        ds.setUseTransitiveDependencies( true );
+        ds.setScope(Artifact.SCOPE_SYSTEM);
+        ds.setUseTransitiveDependencies(true);
 
-        final MavenProject project = createMavenProject( "main-group", "main-artifact", "1", null );
+        final MavenProject project = createMavenProject("main-group", "main-artifact", "1", null);
 
         Set<Artifact> dependencyArtifacts = new HashSet<>();
-        dependencyArtifacts.add( newArtifact( "g.id", "a-id", "1" ) );
-        Set<Artifact> artifacts = new HashSet<>( dependencyArtifacts );
-        artifacts.add( newArtifact( "g.id", "a-id-2", "2" ) );
-        project.setArtifacts( artifacts );
-        project.setDependencyArtifacts( dependencyArtifacts );
+        dependencyArtifacts.add(newArtifact("g.id", "a-id", "1"));
+        Set<Artifact> artifacts = new HashSet<>(dependencyArtifacts);
+        artifacts.add(newArtifact("g.id", "a-id-2", "2"));
+        project.setArtifacts(artifacts);
+        project.setDependencyArtifacts(dependencyArtifacts);
 
         final ResolutionManagementInfo info = new ResolutionManagementInfo();
-        resolver.updateDependencySetResolutionRequirements( ds, info, project );
-        assertEquals( artifacts, info.getArtifacts() );
+        resolver.updateDependencySetResolutionRequirements(ds, info, project);
+        assertEquals(artifacts, info.getArtifacts());
     }
 
     @Test
-    public void test_getDependencySetResolutionRequirements_nonTransitive()
-        throws DependencyResolutionException
-    {
+    public void test_getDependencySetResolutionRequirements_nonTransitive() throws DependencyResolutionException {
         final DependencySet ds = new DependencySet();
-        ds.setScope( Artifact.SCOPE_SYSTEM );
-        ds.setUseTransitiveDependencies( false );
+        ds.setScope(Artifact.SCOPE_SYSTEM);
+        ds.setUseTransitiveDependencies(false);
 
-        final MavenProject project = createMavenProject( "main-group", "main-artifact", "1", null );
+        final MavenProject project = createMavenProject("main-group", "main-artifact", "1", null);
 
         Set<Artifact> dependencyArtifacts = new HashSet<>();
-        dependencyArtifacts.add( newArtifact( "g.id", "a-id", "1" ) );
-        Set<Artifact> artifacts = new HashSet<>( dependencyArtifacts );
-        artifacts.add( newArtifact( "g.id", "a-id-2", "2" ) );
-        project.setArtifacts( artifacts );
-        project.setDependencyArtifacts( dependencyArtifacts );
+        dependencyArtifacts.add(newArtifact("g.id", "a-id", "1"));
+        Set<Artifact> artifacts = new HashSet<>(dependencyArtifacts);
+        artifacts.add(newArtifact("g.id", "a-id-2", "2"));
+        project.setArtifacts(artifacts);
+        project.setDependencyArtifacts(dependencyArtifacts);
 
         final ResolutionManagementInfo info = new ResolutionManagementInfo();
-        resolver.updateDependencySetResolutionRequirements( ds, info, project );
-        assertEquals( dependencyArtifacts, info.getArtifacts() );
+        resolver.updateDependencySetResolutionRequirements(ds, info, project);
+        assertEquals(dependencyArtifacts, info.getArtifacts());
     }
 
     @Test
-    public void test_getModuleSetResolutionRequirements_withoutBinaries()
-        throws DependencyResolutionException
-    {
-        final File rootDir = new File( "root" );
-        final MavenProject project = createMavenProject( "main-group", "main-artifact", "1", rootDir );
-        final MavenProject module1 =
-            createMavenProject( "main-group", "module-1", "1", new File( rootDir, "module-1" ) );
-        final MavenProject module2 =
-            createMavenProject( "main-group", "module-2", "1", new File( rootDir, "module-2" ) );
+    public void test_getModuleSetResolutionRequirements_withoutBinaries() throws DependencyResolutionException {
+        final File rootDir = new File("root");
+        final MavenProject project = createMavenProject("main-group", "main-artifact", "1", rootDir);
+        final MavenProject module1 = createMavenProject("main-group", "module-1", "1", new File(rootDir, "module-1"));
+        final MavenProject module2 = createMavenProject("main-group", "module-2", "1", new File(rootDir, "module-2"));
 
-        project.getModel().addModule( module1.getArtifactId() );
-        project.getModel().addModule( module2.getArtifactId() );
+        project.getModel().addModule(module1.getArtifactId());
+        project.getModel().addModule(module2.getArtifactId());
 
         final ResolutionManagementInfo info = new ResolutionManagementInfo();
 
         final ModuleSet ms = new ModuleSet();
-        ms.setBinaries( null );
+        ms.setBinaries(null);
 
-        resolver.updateModuleSetResolutionRequirements( ms, new DependencySet(), info, null );
-        assertTrue( info.getArtifacts().isEmpty() );
+        resolver.updateModuleSetResolutionRequirements(ms, new DependencySet(), info, null);
+        assertTrue(info.getArtifacts().isEmpty());
     }
 
     @Test
-    public void test_getModuleSetResolutionRequirements_includeDeps()
-        throws DependencyResolutionException
-    {
-        final File rootDir = new File( "root" );
-        final MavenProject project = createMavenProject( "main-group", "main-artifact", "1", rootDir );
-        final MavenProject module1 =
-            createMavenProject( "main-group", "module-1", "1", new File( rootDir, "module-1" ) );
-        final MavenProject module2 =
-            createMavenProject( "main-group", "module-2", "1", new File( rootDir, "module-2" ) );
+    public void test_getModuleSetResolutionRequirements_includeDeps() throws DependencyResolutionException {
+        final File rootDir = new File("root");
+        final MavenProject project = createMavenProject("main-group", "main-artifact", "1", rootDir);
+        final MavenProject module1 = createMavenProject("main-group", "module-1", "1", new File(rootDir, "module-1"));
+        final MavenProject module2 = createMavenProject("main-group", "module-2", "1", new File(rootDir, "module-2"));
 
-        Set<Artifact> module1Artifacts = Collections.singleton( newArtifact( "group.id", "module-1-dep", "1" ) );
-        Set<Artifact> module2Artifacts = Collections.singleton( newArtifact( "group.id", "module-2-dep", "1" ) );
-        module1.setArtifacts( module1Artifacts );
-        module2.setArtifacts( module2Artifacts );
+        Set<Artifact> module1Artifacts = Collections.singleton(newArtifact("group.id", "module-1-dep", "1"));
+        Set<Artifact> module2Artifacts = Collections.singleton(newArtifact("group.id", "module-2-dep", "1"));
+        module1.setArtifacts(module1Artifacts);
+        module2.setArtifacts(module2Artifacts);
 
-        project.getModel().addModule( module1.getArtifactId() );
-        project.getModel().addModule( module2.getArtifactId() );
+        project.getModel().addModule(module1.getArtifactId());
+        project.getModel().addModule(module2.getArtifactId());
 
-        final AssemblerConfigurationSource cs = mock( AssemblerConfigurationSource.class );
-        when( cs.getReactorProjects() ).thenReturn( Arrays.asList( project, module1, module2 ) );
-        when( cs.getProject() ).thenReturn( project );
+        final AssemblerConfigurationSource cs = mock(AssemblerConfigurationSource.class);
+        when(cs.getReactorProjects()).thenReturn(Arrays.asList(project, module1, module2));
+        when(cs.getProject()).thenReturn(project);
 
         final ResolutionManagementInfo info = new ResolutionManagementInfo();
 
         final ModuleSet ms = new ModuleSet();
         final ModuleBinaries mb = new ModuleBinaries();
-        mb.setIncludeDependencies( true );
-        ms.setBinaries( mb );
-        ms.addInclude( "*:module-1" );
+        mb.setIncludeDependencies(true);
+        ms.setBinaries(mb);
+        ms.addInclude("*:module-1");
 
-        resolver.updateModuleSetResolutionRequirements( ms, new DependencySet(), info, cs );
-        assertEquals( module1Artifacts, info.getArtifacts() );
+        resolver.updateModuleSetResolutionRequirements(ms, new DependencySet(), info, cs);
+        assertEquals(module1Artifacts, info.getArtifacts());
 
         // result of easymock migration, should be assert of expected result instead of verifying methodcalls
-        verify( cs ).getReactorProjects();
-        verify( cs ).getProject();
+        verify(cs).getReactorProjects();
+        verify(cs).getProject();
     }
 
-    private MavenProject createMavenProject( final String groupId, final String artifactId, final String version,
-                                             final File basedir )
-    {
+    private MavenProject createMavenProject(
+            final String groupId, final String artifactId, final String version, final File basedir) {
         final Model model = new Model();
 
-        model.setGroupId( groupId );
-        model.setArtifactId( artifactId );
-        model.setVersion( version );
-        model.setPackaging( "pom" );
+        model.setGroupId(groupId);
+        model.setArtifactId(artifactId);
+        model.setVersion(version);
+        model.setPackaging("pom");
 
-        final MavenProject project = new MavenProject( model );
+        final MavenProject project = new MavenProject(model);
 
-        final Artifact pomArtifact = newArtifact( groupId, artifactId, version );
-        project.setArtifact( pomArtifact );
-        project.setArtifacts( new HashSet<Artifact>() );
-        project.setDependencyArtifacts( new HashSet<Artifact>() );
+        final Artifact pomArtifact = newArtifact(groupId, artifactId, version);
+        project.setArtifact(pomArtifact);
+        project.setArtifacts(new HashSet<Artifact>());
+        project.setDependencyArtifacts(new HashSet<Artifact>());
 
-        project.setFile( new File( basedir, "pom.xml" ) );
+        project.setFile(new File(basedir, "pom.xml"));
 
         return project;
     }
 
-    private Artifact newArtifact( final String groupId, final String artifactId, final String version )
-    {
-        return new DefaultArtifact( groupId, artifactId, VersionRange.createFromVersion( version ), "compile", "jar",
-                                    null, new DefaultArtifactHandler() );
+    private Artifact newArtifact(final String groupId, final String artifactId, final String version) {
+        return new DefaultArtifact(
+                groupId,
+                artifactId,
+                VersionRange.createFromVersion(version),
+                "compile",
+                "jar",
+                null,
+                new DefaultArtifactHandler());
     }
-
 }

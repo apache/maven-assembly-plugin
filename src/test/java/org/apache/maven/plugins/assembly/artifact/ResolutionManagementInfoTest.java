@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.artifact;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,11 @@ package org.apache.maven.plugins.assembly.artifact;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.artifact;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
@@ -25,69 +28,92 @@ import org.apache.maven.artifact.handler.DefaultArtifactHandler;
 import org.apache.maven.artifact.versioning.VersionRange;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-
 import static org.junit.Assert.assertEquals;
 
-public class ResolutionManagementInfoTest
-{
+public class ResolutionManagementInfoTest {
 
     @Test
-    public void testAddSingleArtifactWithReplacemen()
-        throws Exception
-    {
+    public void testAddSingleArtifactWithReplacemen() throws Exception {
         ResolutionManagementInfo rmi = new ResolutionManagementInfo();
-        Artifact a1 = new DefaultArtifact( "groupid", "1", VersionRange.createFromVersion( "1.0" ), "test", "jar", null,
-                                           new DefaultArtifactHandler() );
-        rmi.addArtifacts( Collections.singleton( a1 ) );
-        Artifact a2 =
-            new DefaultArtifact( "groupid", "1", VersionRange.createFromVersion( "1.0" ), "compile", "jar", null,
-                                 new DefaultArtifactHandler() );
-        rmi.addArtifacts( Collections.singleton( a2 ) );
-        assertEquals( 1, rmi.getArtifacts().size() );
+        Artifact a1 = new DefaultArtifact(
+                "groupid",
+                "1",
+                VersionRange.createFromVersion("1.0"),
+                "test",
+                "jar",
+                null,
+                new DefaultArtifactHandler());
+        rmi.addArtifacts(Collections.singleton(a1));
+        Artifact a2 = new DefaultArtifact(
+                "groupid",
+                "1",
+                VersionRange.createFromVersion("1.0"),
+                "compile",
+                "jar",
+                null,
+                new DefaultArtifactHandler());
+        rmi.addArtifacts(Collections.singleton(a2));
+        assertEquals(1, rmi.getArtifacts().size());
         Artifact next = rmi.getArtifacts().iterator().next();
-        assertEquals( "compile", next.getScope() );
+        assertEquals("compile", next.getScope());
     }
 
     @Test
-    public void testAddMultiArtifactWithReplacemen()
-        throws Exception
-    {
+    public void testAddMultiArtifactWithReplacemen() throws Exception {
         ResolutionManagementInfo rmi = new ResolutionManagementInfo();
-        Artifact a1 =
-            new DefaultArtifact( "groupid", "a1", VersionRange.createFromVersion( "1.0" ), "test", "jar", null,
-                                 new DefaultArtifactHandler() );
-        Artifact a2 =
-            new DefaultArtifact( "groupid", "a2", VersionRange.createFromVersion( "1.0" ), "test", "jar", null,
-                                 new DefaultArtifactHandler() );
-        Artifact a3 =
-            new DefaultArtifact( "groupid", "a3", VersionRange.createFromVersion( "1.0" ), "test", "jar", null,
-                                 new DefaultArtifactHandler() );
-        rmi.addArtifacts( new HashSet<>( Arrays.asList( a1, a2, a3 ) ) );
-        Artifact b2 =
-            new DefaultArtifact( "groupid", "a2", VersionRange.createFromVersion( "1.0" ), "compile", "jar", null,
-                                 new DefaultArtifactHandler() );
-        Artifact b3 =
-            new DefaultArtifact( "groupid", "a3", VersionRange.createFromVersion( "1.0" ), "compile", "jar", null,
-                                 new DefaultArtifactHandler() );
-        rmi.addArtifacts( new HashSet<>( Arrays.asList( b2, b3 ) ) );
-        assertEquals( 3, rmi.getArtifacts().size() );
+        Artifact a1 = new DefaultArtifact(
+                "groupid",
+                "a1",
+                VersionRange.createFromVersion("1.0"),
+                "test",
+                "jar",
+                null,
+                new DefaultArtifactHandler());
+        Artifact a2 = new DefaultArtifact(
+                "groupid",
+                "a2",
+                VersionRange.createFromVersion("1.0"),
+                "test",
+                "jar",
+                null,
+                new DefaultArtifactHandler());
+        Artifact a3 = new DefaultArtifact(
+                "groupid",
+                "a3",
+                VersionRange.createFromVersion("1.0"),
+                "test",
+                "jar",
+                null,
+                new DefaultArtifactHandler());
+        rmi.addArtifacts(new HashSet<>(Arrays.asList(a1, a2, a3)));
+        Artifact b2 = new DefaultArtifact(
+                "groupid",
+                "a2",
+                VersionRange.createFromVersion("1.0"),
+                "compile",
+                "jar",
+                null,
+                new DefaultArtifactHandler());
+        Artifact b3 = new DefaultArtifact(
+                "groupid",
+                "a3",
+                VersionRange.createFromVersion("1.0"),
+                "compile",
+                "jar",
+                null,
+                new DefaultArtifactHandler());
+        rmi.addArtifacts(new HashSet<>(Arrays.asList(b2, b3)));
+        assertEquals(3, rmi.getArtifacts().size());
         int compile = 0;
         int test = 0;
-        for ( Artifact artifact : rmi.getArtifacts() )
-        {
-            if ( Artifact.SCOPE_COMPILE.equals( artifact.getScope() ) )
-            {
+        for (Artifact artifact : rmi.getArtifacts()) {
+            if (Artifact.SCOPE_COMPILE.equals(artifact.getScope())) {
                 compile++;
-            }
-            else
-            {
+            } else {
                 test++;
             }
         }
-        assertEquals( 2, compile );
-        assertEquals( 1, test );
+        assertEquals(2, compile);
+        assertEquals(1, test);
     }
 }

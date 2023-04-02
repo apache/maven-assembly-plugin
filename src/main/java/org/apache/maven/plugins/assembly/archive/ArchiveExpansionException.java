@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.archive;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,13 +16,12 @@ package org.apache.maven.plugins.assembly.archive;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.archive;
 
 /**
  *
  */
-public class ArchiveExpansionException
-    extends Exception
-{
+public class ArchiveExpansionException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
@@ -32,17 +29,14 @@ public class ArchiveExpansionException
      * @param message The message to use for this instance.
      * @param error   The error which has been thrown.
      */
-    public ArchiveExpansionException( final String message, final Throwable error )
-    {
-        super( message, error );
+    public ArchiveExpansionException(final String message, final Throwable error) {
+        super(message, error);
     }
 
     /**
      * @param message The message.
      */
-    public ArchiveExpansionException( final String message )
-    {
-        super( message );
+    public ArchiveExpansionException(final String message) {
+        super(message);
     }
-
 }

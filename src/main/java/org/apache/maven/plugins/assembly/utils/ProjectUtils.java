@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.utils;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,10 +16,7 @@ package org.apache.maven.plugins.assembly.utils;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.project.MavenProject;
-import org.slf4j.Logger;
+package org.apache.maven.plugins.assembly.utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,34 +26,34 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.project.MavenProject;
+import org.slf4j.Logger;
+
 /**
  *
  */
-public final class ProjectUtils
-{
+public final class ProjectUtils {
 
-    private ProjectUtils()
-    {
-    }
+    private ProjectUtils() {}
 
-    public static String getClassifier( Artifact artifact )
-    {
+    public static String getClassifier(Artifact artifact) {
         String classifier = artifact.getClassifier();
-        if ( classifier != null && classifier.length() == 0 )
-        {
+        if (classifier != null && classifier.length() == 0) {
             classifier = null;
         }
         return classifier;
     }
 
-    public static Set<MavenProject> getProjectModules( final MavenProject project,
-                                                       final List<MavenProject> reactorProjects,
-                                                       final boolean includeSubModules, final Logger logger )
-        throws IOException
-    {
-        final Set<MavenProject> singleParentSet = Collections.singleton( project );
+    public static Set<MavenProject> getProjectModules(
+            final MavenProject project,
+            final List<MavenProject> reactorProjects,
+            final boolean includeSubModules,
+            final Logger logger)
+            throws IOException {
+        final Set<MavenProject> singleParentSet = Collections.singleton(project);
 
-        final Set<MavenProject> moduleCandidates = new LinkedHashSet<>( reactorProjects );
+        final Set<MavenProject> moduleCandidates = new LinkedHashSet<>(reactorProjects);
 
         final Set<MavenProject> modules = new LinkedHashSet<>();
 
@@ -68,56 +63,46 @@ public final class ProjectUtils
         // project...this allows us to use the same looping
         // algorithm below to discover both direct modules of the master project
         // AND modules of those direct modules.
-        modules.add( project );
+        modules.add(project);
 
         int changed;
 
-        do
-        {
+        do {
             changed = 0;
 
-            for ( final Iterator<MavenProject> candidateIterator = moduleCandidates.iterator();
-                  candidateIterator.hasNext(); )
-            {
+            for (final Iterator<MavenProject> candidateIterator = moduleCandidates.iterator();
+                    candidateIterator.hasNext(); ) {
                 final MavenProject moduleCandidate = candidateIterator.next();
 
-                if ( moduleCandidate.getFile() == null )
-                {
-                    logger.warn(
-                        "Cannot compute whether " + moduleCandidate.getId() + " is a module of: " + project.getId()
-                            + "; it does not have an associated POM file on the local filesystem." );
+                if (moduleCandidate.getFile() == null) {
+                    logger.warn("Cannot compute whether " + moduleCandidate.getId() + " is a module of: "
+                            + project.getId() + "; it does not have an associated POM file on the local filesystem.");
                     continue;
                 }
 
                 Set<MavenProject> currentPotentialParents;
-                if ( includeSubModules )
-                {
-                    currentPotentialParents = new LinkedHashSet<>( modules );
-                }
-                else
-                {
+                if (includeSubModules) {
+                    currentPotentialParents = new LinkedHashSet<>(modules);
+                } else {
                     currentPotentialParents = singleParentSet;
                 }
 
-                for ( final MavenProject potentialParent : currentPotentialParents )
-                {
-                    if ( potentialParent.getFile() == null )
-                    {
-                        logger.warn( "Cannot use: " + moduleCandidate.getId()
-                                         + " as a potential module-parent while computing the module set for: "
-                                         + project.getId()
-                                         + "; it does not have an associated POM file on the local filesystem." );
+                for (final MavenProject potentialParent : currentPotentialParents) {
+                    if (potentialParent.getFile() == null) {
+                        logger.warn("Cannot use: " + moduleCandidate.getId()
+                                + " as a potential module-parent while computing the module set for: "
+                                + project.getId()
+                                + "; it does not have an associated POM file on the local filesystem.");
                         continue;
                     }
 
                     // if this parent has an entry for the module candidate in
                     // the path adjustments map, it's a direct
                     // module of that parent.
-                    if ( projectContainsModule( potentialParent, moduleCandidate ) )
-                    {
+                    if (projectContainsModule(potentialParent, moduleCandidate)) {
                         // add the candidate to the list of modules (and
                         // potential parents)
-                        modules.add( moduleCandidate );
+                        modules.add(moduleCandidate);
 
                         // remove the candidate from the candidate pool, because
                         // it's been verified.
@@ -126,27 +111,24 @@ public final class ProjectUtils
                         // increment the change counter, to show that we
                         // verified a new module on this pass.
                         changed++;
-                        
+
                         // We need to move on to the next candidate since this one was just verified
                         break;
                     }
                 }
             }
-        }
-        while ( changed != 0 );
+        } while (changed != 0);
 
         // remove the master project from the modules set, now that we're done
         // using it as a set of potential module
         // parents...
-        modules.remove( project );
+        modules.remove(project);
 
         return modules;
     }
 
-    private static boolean projectContainsModule( final MavenProject mainProject,
-                                                  final MavenProject moduleProject )
-        throws IOException
-    {
+    private static boolean projectContainsModule(final MavenProject mainProject, final MavenProject moduleProject)
+            throws IOException {
         final List<String> modules = mainProject.getModules();
         final File basedir = mainProject.getBasedir();
 
@@ -154,29 +136,24 @@ public final class ProjectUtils
 
         File moduleBasedir = moduleProject.getBasedir();
 
-        if ( moduleBasedir == null )
-        {
+        if (moduleBasedir == null) {
             moduleBasedir = moduleFile.getParentFile();
 
-            if ( moduleBasedir == null )
-            {
-                moduleBasedir = new File( "." );
+            if (moduleBasedir == null) {
+                moduleBasedir = new File(".");
             }
         }
 
         moduleBasedir = moduleBasedir.getCanonicalFile();
 
-        for ( final String moduleSubpath : modules )
-        {
-            final File moduleDir = new File( basedir, moduleSubpath ).getCanonicalFile();
+        for (final String moduleSubpath : modules) {
+            final File moduleDir = new File(basedir, moduleSubpath).getCanonicalFile();
 
-            if ( moduleDir.equals( moduleFile ) || moduleDir.equals( moduleBasedir ) )
-            {
+            if (moduleDir.equals(moduleFile) || moduleDir.equals(moduleBasedir)) {
                 return true;
             }
         }
 
         return false;
     }
-
 }

@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.resolved;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,34 +16,30 @@ package org.apache.maven.plugins.assembly.resolved;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.resolved;
 
 import org.apache.maven.plugins.assembly.model.Assembly;
 
 /**
  *
  */
-public class AssemblyId
-{
+public class AssemblyId {
     private final String id;
 
-    private AssemblyId( String id )
-    {
+    private AssemblyId(String id) {
         this.id = id;
     }
 
-    public static AssemblyId createAssemblyId( String id )
-    {
-        return new AssemblyId( id );
+    public static AssemblyId createAssemblyId(String id) {
+        return new AssemblyId(id);
     }
 
-    public static AssemblyId createAssemblyId( Assembly id )
-    {
-        return new AssemblyId( id.getId() );
+    public static AssemblyId createAssemblyId(Assembly id) {
+        return new AssemblyId(id.getId());
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return id;
     }
 }

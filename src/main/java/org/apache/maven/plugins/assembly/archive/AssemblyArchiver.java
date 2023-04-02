@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.archive;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,22 +16,22 @@ package org.apache.maven.plugins.assembly.archive;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.archive;
+
+import java.io.File;
+import java.util.Date;
 
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.model.Assembly;
 
-import java.io.File;
-import java.util.Date;
-
 /**
  * Creates an archive
  *
  *
  */
-public interface AssemblyArchiver
-{
+public interface AssemblyArchiver {
     /**
      * Create the assembly archive. Generally:
      * <ol>
@@ -60,7 +58,13 @@ public interface AssemblyArchiver
      * @throws org.apache.maven.plugins.assembly.format.AssemblyFormattingException     when formatting fails
      * @throws org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException when the configuration is bad
      */
-    File createArchive( Assembly assembly, String fullName, String format, AssemblerConfigurationSource configSource,
-                        boolean recompressZippedFiles, String mergeManifestMode, Date sourceDateEpoch )
-        throws ArchiveCreationException, AssemblyFormattingException, InvalidAssemblerConfigurationException;
+    File createArchive(
+            Assembly assembly,
+            String fullName,
+            String format,
+            AssemblerConfigurationSource configSource,
+            boolean recompressZippedFiles,
+            String mergeManifestMode,
+            Date sourceDateEpoch)
+            throws ArchiveCreationException, AssemblyFormattingException, InvalidAssemblerConfigurationException;
 }

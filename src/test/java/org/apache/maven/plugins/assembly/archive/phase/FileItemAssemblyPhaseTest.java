@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.archive.phase;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,12 +16,7 @@ package org.apache.maven.plugins.assembly.archive.phase;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+package org.apache.maven.plugins.assembly.archive.phase;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -47,323 +40,332 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@RunWith( MockitoJUnitRunner.class )
-public class FileItemAssemblyPhaseTest
-{
-    private final Logger logger = LoggerFactory.getLogger( getClass() );
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@RunWith(MockitoJUnitRunner.class)
+public class FileItemAssemblyPhaseTest {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
-    
+
     @Test
-    public void testExecute_ShouldAddNothingWhenNoFileItemsArePresent()
-        throws Exception
-    {
-        final AssemblerConfigurationSource macCS = mock( AssemblerConfigurationSource.class );
+    public void testExecute_ShouldAddNothingWhenNoFileItemsArePresent() throws Exception {
+        final AssemblerConfigurationSource macCS = mock(AssemblerConfigurationSource.class);
 
         final File basedir = temporaryFolder.getRoot();
 
-        when( macCS.getBasedir()).thenReturn( basedir );
+        when(macCS.getBasedir()).thenReturn(basedir);
 
         final Assembly assembly = new Assembly();
-        assembly.setId( "test" );
+        assembly.setId("test");
 
-        new FileItemAssemblyPhase().execute( assembly, null, macCS );
+        new FileItemAssemblyPhase().execute(assembly, null, macCS);
 
-        verify( macCS ).getBasedir();
+        verify(macCS).getBasedir();
     }
 
     @Test
-    public void testExecute_ShouldAddAbsoluteFileNoFilterNoLineEndingConversion()
-        throws Exception
-    {
-        final AssemblerConfigurationSource macCS = mock( AssemblerConfigurationSource.class );
+    public void testExecute_ShouldAddAbsoluteFileNoFilterNoLineEndingConversion() throws Exception {
+        final AssemblerConfigurationSource macCS = mock(AssemblerConfigurationSource.class);
 
         final File basedir = temporaryFolder.getRoot();
 
-        final File file = temporaryFolder.newFile( "file.txt" );
-        Files.write( file.toPath(), Arrays.asList( "This is a test file." ), StandardCharsets.UTF_8 );
+        final File file = temporaryFolder.newFile("file.txt");
+        Files.write(file.toPath(), Arrays.asList("This is a test file."), StandardCharsets.UTF_8);
 
-        when( macCS.getBasedir() ).thenReturn( basedir );
-        when( macCS.getProject() ).thenReturn( new MavenProject( new Model() ) );
-        when( macCS.getFinalName() ) .thenReturn( "final-name" );
-        prepareInterpolators( macCS );
+        when(macCS.getBasedir()).thenReturn(basedir);
+        when(macCS.getProject()).thenReturn(new MavenProject(new Model()));
+        when(macCS.getFinalName()).thenReturn("final-name");
+        prepareInterpolators(macCS);
 
-        final Archiver macArchiver = mock( Archiver.class );
+        final Archiver macArchiver = mock(Archiver.class);
 
         final Assembly assembly = new Assembly();
-        assembly.setId( "test" );
+        assembly.setId("test");
 
         final FileItem fi = new FileItem();
-        fi.setSource( file.getAbsolutePath() );
-        fi.setFiltered( false );
-        fi.setLineEnding( "keep" );
-        fi.setFileMode( "777" );
+        fi.setSource(file.getAbsolutePath());
+        fi.setFiltered(false);
+        fi.setLineEnding("keep");
+        fi.setFileMode("777");
 
-        assembly.addFile( fi );
+        assembly.addFile(fi);
 
-        new FileItemAssemblyPhase().execute( assembly, macArchiver, macCS );
+        new FileItemAssemblyPhase().execute(assembly, macArchiver, macCS);
 
-        verify( macArchiver ).addResource( any( PlexusIoResource.class ),
-                                           eq( "file.txt" ),
-                                           eq( TypeConversionUtils.modeToInt( "777",
-                                                                              logger ) ) );
+        verify(macArchiver)
+                .addResource(
+                        any(PlexusIoResource.class), eq("file.txt"), eq(TypeConversionUtils.modeToInt("777", logger)));
     }
 
     @Test
-    public void testExecute_ShouldAddRelativeFileNoFilterNoLineEndingConversion()
-        throws Exception
-    {
-        final AssemblerConfigurationSource macCS = mock( AssemblerConfigurationSource.class );
+    public void testExecute_ShouldAddRelativeFileNoFilterNoLineEndingConversion() throws Exception {
+        final AssemblerConfigurationSource macCS = mock(AssemblerConfigurationSource.class);
 
         final File basedir = temporaryFolder.getRoot();
 
-        final File file = temporaryFolder.newFile( "file.txt" );
-        Files.write( file.toPath(), Arrays.asList( "This is a test file." ), StandardCharsets.UTF_8 );
+        final File file = temporaryFolder.newFile("file.txt");
+        Files.write(file.toPath(), Arrays.asList("This is a test file."), StandardCharsets.UTF_8);
 
-        when( macCS.getBasedir() ).thenReturn( basedir );
-        when( macCS.getProject() ).thenReturn( new MavenProject( new Model() ) );
-        when( macCS.getFinalName() ) .thenReturn( "final-name" );
-        prepareInterpolators( macCS );
+        when(macCS.getBasedir()).thenReturn(basedir);
+        when(macCS.getProject()).thenReturn(new MavenProject(new Model()));
+        when(macCS.getFinalName()).thenReturn("final-name");
+        prepareInterpolators(macCS);
 
-        final Archiver macArchiver = mock( Archiver.class );
+        final Archiver macArchiver = mock(Archiver.class);
 
         final Assembly assembly = new Assembly();
-        assembly.setId( "test" );
+        assembly.setId("test");
 
         final FileItem fi = new FileItem();
-        fi.setSource( "file.txt" );
-        fi.setFiltered( false );
-        fi.setLineEnding( "keep" );
-        fi.setFileMode( "777" );
+        fi.setSource("file.txt");
+        fi.setFiltered(false);
+        fi.setLineEnding("keep");
+        fi.setFileMode("777");
 
-        assembly.addFile( fi );
+        assembly.addFile(fi);
 
-        new FileItemAssemblyPhase().execute( assembly, macArchiver, macCS );
+        new FileItemAssemblyPhase().execute(assembly, macArchiver, macCS);
 
-        verify( macArchiver ).addResource( any( PlexusIoResource.class ),
-                                           eq( "file.txt" ),
-                                           eq( TypeConversionUtils.modeToInt( "777",
-                                                                              logger ) ) );
+        verify(macArchiver)
+                .addResource(
+                        any(PlexusIoResource.class), eq("file.txt"), eq(TypeConversionUtils.modeToInt("777", logger)));
     }
 
     @Test
-    public void testExecute_WithOutputDirectory()
-        throws Exception
-    {
-        final AssemblerConfigurationSource macCS = mock( AssemblerConfigurationSource.class );
+    public void testExecute_WithOutputDirectory() throws Exception {
+        final AssemblerConfigurationSource macCS = mock(AssemblerConfigurationSource.class);
 
         final File basedir = temporaryFolder.getRoot();
 
-        final File readmeFile = temporaryFolder.newFile( "README.txt" );
-        Files.write( readmeFile.toPath(), Arrays.asList( "This is a test file for README.txt." ), StandardCharsets.UTF_8 );
+        final File readmeFile = temporaryFolder.newFile("README.txt");
+        Files.write(readmeFile.toPath(), Arrays.asList("This is a test file for README.txt."), StandardCharsets.UTF_8);
 
-        final File licenseFile = temporaryFolder.newFile( "LICENSE.txt" );
-        Files.write( licenseFile.toPath(), Arrays.asList( "This is a test file for LICENSE.txt." ), StandardCharsets.UTF_8 );
+        final File licenseFile = temporaryFolder.newFile("LICENSE.txt");
+        Files.write(
+                licenseFile.toPath(), Arrays.asList("This is a test file for LICENSE.txt."), StandardCharsets.UTF_8);
 
-        final File configFile = new File( temporaryFolder.newFolder( "config" ), "config.txt" );
-        Files.write( configFile.toPath(), Arrays.asList( "This is a test file for config/config.txt" ), StandardCharsets.UTF_8 );
+        final File configFile = new File(temporaryFolder.newFolder("config"), "config.txt");
+        Files.write(
+                configFile.toPath(),
+                Arrays.asList("This is a test file for config/config.txt"),
+                StandardCharsets.UTF_8);
 
-        when( macCS.getBasedir() ).thenReturn( basedir );
-        when( macCS.getProject() ).thenReturn( new MavenProject( new Model() ) );
-        when( macCS.getFinalName() ) .thenReturn( "final-name" );
-        prepareInterpolators( macCS );
+        when(macCS.getBasedir()).thenReturn(basedir);
+        when(macCS.getProject()).thenReturn(new MavenProject(new Model()));
+        when(macCS.getFinalName()).thenReturn("final-name");
+        prepareInterpolators(macCS);
 
-        final Archiver macArchiver = mock( Archiver.class );
+        final Archiver macArchiver = mock(Archiver.class);
 
         final Assembly assembly = new Assembly();
-        assembly.setId( "test" );
-        assembly.setIncludeBaseDirectory( true );
+        assembly.setId("test");
+        assembly.setIncludeBaseDirectory(true);
 
         final FileItem readmeFileItem = new FileItem();
-        readmeFileItem.setSource( "README.txt" );
-        readmeFileItem.setOutputDirectory( "" );
-        readmeFileItem.setFiltered( false );
-        readmeFileItem.setLineEnding( "keep" );
-        readmeFileItem.setFileMode( "777" );
+        readmeFileItem.setSource("README.txt");
+        readmeFileItem.setOutputDirectory("");
+        readmeFileItem.setFiltered(false);
+        readmeFileItem.setLineEnding("keep");
+        readmeFileItem.setFileMode("777");
 
         final FileItem licenseFileItem = new FileItem();
-        licenseFileItem.setSource( "LICENSE.txt" );
-        licenseFileItem.setOutputDirectory( "/" );
-        licenseFileItem.setFiltered( false );
-        licenseFileItem.setLineEnding( "keep" );
-        licenseFileItem.setFileMode( "777" );
+        licenseFileItem.setSource("LICENSE.txt");
+        licenseFileItem.setOutputDirectory("/");
+        licenseFileItem.setFiltered(false);
+        licenseFileItem.setLineEnding("keep");
+        licenseFileItem.setFileMode("777");
 
         final FileItem configFileItem = new FileItem();
-        configFileItem.setSource( "config/config.txt" );
-        configFileItem.setOutputDirectory( "config" );
-        configFileItem.setFiltered( false );
-        configFileItem.setLineEnding( "keep" );
-        configFileItem.setFileMode( "777" );
+        configFileItem.setSource("config/config.txt");
+        configFileItem.setOutputDirectory("config");
+        configFileItem.setFiltered(false);
+        configFileItem.setLineEnding("keep");
+        configFileItem.setFileMode("777");
 
-        assembly.addFile( readmeFileItem );
-        assembly.addFile( licenseFileItem );
-        assembly.addFile( configFileItem );
+        assembly.addFile(readmeFileItem);
+        assembly.addFile(licenseFileItem);
+        assembly.addFile(configFileItem);
 
-        new FileItemAssemblyPhase().execute( assembly, macArchiver, macCS );
+        new FileItemAssemblyPhase().execute(assembly, macArchiver, macCS);
 
-        verify( macArchiver ).addResource( any( PlexusIoResource.class ),
-                                           eq( "README.txt" ),
-                                           eq( TypeConversionUtils.modeToInt( "777",
-                                                                              logger ) ) );
-        verify( macArchiver ).addResource( any( PlexusIoResource.class ),
-                                           eq( "LICENSE.txt" ),
-                                           eq( TypeConversionUtils.modeToInt( "777",
-                                                                              logger ) ) );
-        verify( macArchiver ).addResource( any( PlexusIoResource.class ),
-                                           eq( "config/config.txt" ),
-                                           eq( TypeConversionUtils.modeToInt( "777",
-                                                                              logger ) ) );
-    
+        verify(macArchiver)
+                .addResource(
+                        any(PlexusIoResource.class),
+                        eq("README.txt"),
+                        eq(TypeConversionUtils.modeToInt("777", logger)));
+        verify(macArchiver)
+                .addResource(
+                        any(PlexusIoResource.class),
+                        eq("LICENSE.txt"),
+                        eq(TypeConversionUtils.modeToInt("777", logger)));
+        verify(macArchiver)
+                .addResource(
+                        any(PlexusIoResource.class),
+                        eq("config/config.txt"),
+                        eq(TypeConversionUtils.modeToInt("777", logger)));
     }
 
     @Test
-    public void testExecute_WithOutputDirectoryAndDestName()
-        throws Exception
-    {
-        final AssemblerConfigurationSource macCS = mock( AssemblerConfigurationSource.class );
+    public void testExecute_WithOutputDirectoryAndDestName() throws Exception {
+        final AssemblerConfigurationSource macCS = mock(AssemblerConfigurationSource.class);
 
         final File basedir = temporaryFolder.getRoot();
 
-        final File readmeFile = temporaryFolder.newFile( "README.txt" );
-        Files.write( readmeFile.toPath(), Arrays.asList( "This is a test file for README.txt." ), StandardCharsets.UTF_8 );
+        final File readmeFile = temporaryFolder.newFile("README.txt");
+        Files.write(readmeFile.toPath(), Arrays.asList("This is a test file for README.txt."), StandardCharsets.UTF_8);
 
-        final File licenseFile = temporaryFolder.newFile( "LICENSE.txt" );
-        Files.write( licenseFile.toPath(), Arrays.asList( "This is a test file for LICENSE.txt." ), StandardCharsets.UTF_8 );
+        final File licenseFile = temporaryFolder.newFile("LICENSE.txt");
+        Files.write(
+                licenseFile.toPath(), Arrays.asList("This is a test file for LICENSE.txt."), StandardCharsets.UTF_8);
 
-        final File configFile = new File( temporaryFolder.newFolder( "config" ), "config.txt" );
-        Files.write( configFile.toPath(), Arrays.asList( "This is a test file for config/config.txt" ), StandardCharsets.UTF_8 );
+        final File configFile = new File(temporaryFolder.newFolder("config"), "config.txt");
+        Files.write(
+                configFile.toPath(),
+                Arrays.asList("This is a test file for config/config.txt"),
+                StandardCharsets.UTF_8);
 
-        when( macCS.getBasedir() ).thenReturn( basedir );
-        when( macCS.getProject() ).thenReturn( new MavenProject( new Model() ) );
-        when( macCS.getFinalName() ) .thenReturn( "final-name" );
-        prepareInterpolators( macCS );
+        when(macCS.getBasedir()).thenReturn(basedir);
+        when(macCS.getProject()).thenReturn(new MavenProject(new Model()));
+        when(macCS.getFinalName()).thenReturn("final-name");
+        prepareInterpolators(macCS);
 
-        final Archiver macArchiver = mock( Archiver.class );
+        final Archiver macArchiver = mock(Archiver.class);
 
         final Assembly assembly = new Assembly();
-        assembly.setId( "test" );
-        assembly.setIncludeBaseDirectory( true );
+        assembly.setId("test");
+        assembly.setIncludeBaseDirectory(true);
 
         final FileItem readmeFileItem = new FileItem();
-        readmeFileItem.setSource( "README.txt" );
-        readmeFileItem.setOutputDirectory( "" );
-        readmeFileItem.setDestName( "README_renamed.txt" );
-        readmeFileItem.setFiltered( false );
-        readmeFileItem.setLineEnding( "keep" );
-        readmeFileItem.setFileMode( "777" );
+        readmeFileItem.setSource("README.txt");
+        readmeFileItem.setOutputDirectory("");
+        readmeFileItem.setDestName("README_renamed.txt");
+        readmeFileItem.setFiltered(false);
+        readmeFileItem.setLineEnding("keep");
+        readmeFileItem.setFileMode("777");
 
         final FileItem licenseFileItem = new FileItem();
-        licenseFileItem.setSource( "LICENSE.txt" );
-        licenseFileItem.setOutputDirectory( "/" );
-        licenseFileItem.setDestName( "LICENSE_renamed.txt" );
-        licenseFileItem.setFiltered( false );
-        licenseFileItem.setLineEnding( "keep" );
-        licenseFileItem.setFileMode( "777" );
+        licenseFileItem.setSource("LICENSE.txt");
+        licenseFileItem.setOutputDirectory("/");
+        licenseFileItem.setDestName("LICENSE_renamed.txt");
+        licenseFileItem.setFiltered(false);
+        licenseFileItem.setLineEnding("keep");
+        licenseFileItem.setFileMode("777");
 
         final FileItem configFileItem = new FileItem();
-        configFileItem.setSource( "config/config.txt" );
-        configFileItem.setDestName( "config_renamed.txt" );
-        configFileItem.setOutputDirectory( "config" );
-        configFileItem.setFiltered( false );
-        configFileItem.setLineEnding( "keep" );
-        configFileItem.setFileMode( "777" );
+        configFileItem.setSource("config/config.txt");
+        configFileItem.setDestName("config_renamed.txt");
+        configFileItem.setOutputDirectory("config");
+        configFileItem.setFiltered(false);
+        configFileItem.setLineEnding("keep");
+        configFileItem.setFileMode("777");
 
-        assembly.addFile( readmeFileItem );
-        assembly.addFile( licenseFileItem );
-        assembly.addFile( configFileItem );
+        assembly.addFile(readmeFileItem);
+        assembly.addFile(licenseFileItem);
+        assembly.addFile(configFileItem);
 
-        new FileItemAssemblyPhase().execute( assembly, macArchiver, macCS );
+        new FileItemAssemblyPhase().execute(assembly, macArchiver, macCS);
 
-        verify( macArchiver ).addResource( any( PlexusIoResource.class ), 
-                                           eq( "README_renamed.txt" ),
-                                           eq( TypeConversionUtils.modeToInt( "777",
-                                                                              logger ) ) );
-        verify( macArchiver ).addResource( any( PlexusIoResource.class ), 
-                                           eq( "LICENSE_renamed.txt" ),
-                                           eq( TypeConversionUtils.modeToInt( "777",
-                                                                              logger ) ) );
-        verify( macArchiver ).addResource( any( PlexusIoResource.class ), 
-                                           eq( "config/config_renamed.txt" ),
-                                           eq( TypeConversionUtils.modeToInt( "777",
-                                                                              logger ) ) );
+        verify(macArchiver)
+                .addResource(
+                        any(PlexusIoResource.class),
+                        eq("README_renamed.txt"),
+                        eq(TypeConversionUtils.modeToInt("777", logger)));
+        verify(macArchiver)
+                .addResource(
+                        any(PlexusIoResource.class),
+                        eq("LICENSE_renamed.txt"),
+                        eq(TypeConversionUtils.modeToInt("777", logger)));
+        verify(macArchiver)
+                .addResource(
+                        any(PlexusIoResource.class),
+                        eq("config/config_renamed.txt"),
+                        eq(TypeConversionUtils.modeToInt("777", logger)));
     }
 
     @Test
-    public void testExecute_WithOutputDirectoryAndDestNameAndIncludeBaseDirectoryFalse()
-        throws Exception
-    {
-        final AssemblerConfigurationSource macCS = mock( AssemblerConfigurationSource.class );
+    public void testExecute_WithOutputDirectoryAndDestNameAndIncludeBaseDirectoryFalse() throws Exception {
+        final AssemblerConfigurationSource macCS = mock(AssemblerConfigurationSource.class);
 
         final File basedir = temporaryFolder.getRoot();
 
-        final File readmeFile = temporaryFolder.newFile( "README.txt" );
-        Files.write( readmeFile.toPath(), Arrays.asList( "This is a test file for README.txt." ), StandardCharsets.UTF_8 );
+        final File readmeFile = temporaryFolder.newFile("README.txt");
+        Files.write(readmeFile.toPath(), Arrays.asList("This is a test file for README.txt."), StandardCharsets.UTF_8);
 
-        final File licenseFile = temporaryFolder.newFile( "LICENSE.txt" );
-        Files.write( licenseFile.toPath(), Arrays.asList( "This is a test file for LICENSE.txt." ), StandardCharsets.UTF_8 );
+        final File licenseFile = temporaryFolder.newFile("LICENSE.txt");
+        Files.write(
+                licenseFile.toPath(), Arrays.asList("This is a test file for LICENSE.txt."), StandardCharsets.UTF_8);
 
-        final File configFile = new File( temporaryFolder.newFolder( "config" ), "config.txt" );
-        Files.write( configFile.toPath(), Arrays.asList( "This is a test file for config/config.txt" ), StandardCharsets.UTF_8 );
+        final File configFile = new File(temporaryFolder.newFolder("config"), "config.txt");
+        Files.write(
+                configFile.toPath(),
+                Arrays.asList("This is a test file for config/config.txt"),
+                StandardCharsets.UTF_8);
 
-        when( macCS.getBasedir() ).thenReturn( basedir );
-        when( macCS.getProject() ).thenReturn( new MavenProject( new Model() ) );
-        when( macCS.getFinalName() ) .thenReturn( "final-name" );
-        prepareInterpolators( macCS );
+        when(macCS.getBasedir()).thenReturn(basedir);
+        when(macCS.getProject()).thenReturn(new MavenProject(new Model()));
+        when(macCS.getFinalName()).thenReturn("final-name");
+        prepareInterpolators(macCS);
 
-        final Archiver macArchiver = mock( Archiver.class );
+        final Archiver macArchiver = mock(Archiver.class);
 
         final Assembly assembly = new Assembly();
-        assembly.setId( "test" );
-        assembly.setIncludeBaseDirectory( false );
+        assembly.setId("test");
+        assembly.setIncludeBaseDirectory(false);
 
         final FileItem readmeFileItem = new FileItem();
-        readmeFileItem.setSource( "README.txt" );
-        readmeFileItem.setDestName( "README_renamed.txt" );
-        readmeFileItem.setFiltered( false );
-        readmeFileItem.setLineEnding( "keep" );
-        readmeFileItem.setFileMode( "777" );
+        readmeFileItem.setSource("README.txt");
+        readmeFileItem.setDestName("README_renamed.txt");
+        readmeFileItem.setFiltered(false);
+        readmeFileItem.setLineEnding("keep");
+        readmeFileItem.setFileMode("777");
 
         final FileItem licenseFileItem = new FileItem();
-        licenseFileItem.setSource( "LICENSE.txt" );
-        licenseFileItem.setDestName( "LICENSE_renamed.txt" );
-        licenseFileItem.setFiltered( false );
-        licenseFileItem.setLineEnding( "keep" );
-        licenseFileItem.setFileMode( "777" );
+        licenseFileItem.setSource("LICENSE.txt");
+        licenseFileItem.setDestName("LICENSE_renamed.txt");
+        licenseFileItem.setFiltered(false);
+        licenseFileItem.setLineEnding("keep");
+        licenseFileItem.setFileMode("777");
 
         final FileItem configFileItem = new FileItem();
-        configFileItem.setSource( "config/config.txt" );
-        configFileItem.setDestName( "config_renamed.txt" );
-        configFileItem.setOutputDirectory( "config" );
-        configFileItem.setFiltered( false );
-        configFileItem.setLineEnding( "keep" );
-        configFileItem.setFileMode( "777" );
+        configFileItem.setSource("config/config.txt");
+        configFileItem.setDestName("config_renamed.txt");
+        configFileItem.setOutputDirectory("config");
+        configFileItem.setFiltered(false);
+        configFileItem.setLineEnding("keep");
+        configFileItem.setFileMode("777");
 
-        assembly.addFile( readmeFileItem );
-        assembly.addFile( licenseFileItem );
-        assembly.addFile( configFileItem );
+        assembly.addFile(readmeFileItem);
+        assembly.addFile(licenseFileItem);
+        assembly.addFile(configFileItem);
 
-        new FileItemAssemblyPhase().execute( assembly, macArchiver, macCS );
+        new FileItemAssemblyPhase().execute(assembly, macArchiver, macCS);
 
-        verify( macArchiver ).addResource( any( PlexusIoResource.class ), 
-                                           eq( "README_renamed.txt" ),
-                                           eq( TypeConversionUtils.modeToInt( "777",
-                                                                              logger ) ) );
-        verify( macArchiver ).addResource( any( PlexusIoResource.class ),
-                                           eq( "LICENSE_renamed.txt" ),
-                                           eq( TypeConversionUtils.modeToInt( "777",
-                                                                              logger ) ) );
-        verify( macArchiver ).addResource( any( PlexusIoResource.class ), 
-                                           eq( "config/config_renamed.txt" ),
-                                           eq( TypeConversionUtils.modeToInt( "777",
-                                                                              logger ) ) );
+        verify(macArchiver)
+                .addResource(
+                        any(PlexusIoResource.class),
+                        eq("README_renamed.txt"),
+                        eq(TypeConversionUtils.modeToInt("777", logger)));
+        verify(macArchiver)
+                .addResource(
+                        any(PlexusIoResource.class),
+                        eq("LICENSE_renamed.txt"),
+                        eq(TypeConversionUtils.modeToInt("777", logger)));
+        verify(macArchiver)
+                .addResource(
+                        any(PlexusIoResource.class),
+                        eq("config/config_renamed.txt"),
+                        eq(TypeConversionUtils.modeToInt("777", logger)));
     }
 
-    private void prepareInterpolators( AssemblerConfigurationSource configSource )
-    {
-        when( configSource.getCommandLinePropsInterpolator() ).thenReturn( FixedStringSearchInterpolator.empty() );
-        when( configSource.getEnvInterpolator() ).thenReturn( FixedStringSearchInterpolator.empty() );
-        when( configSource.getMainProjectInterpolator() ).thenReturn( FixedStringSearchInterpolator.empty() );
+    private void prepareInterpolators(AssemblerConfigurationSource configSource) {
+        when(configSource.getCommandLinePropsInterpolator()).thenReturn(FixedStringSearchInterpolator.empty());
+        when(configSource.getEnvInterpolator()).thenReturn(FixedStringSearchInterpolator.empty());
+        when(configSource.getMainProjectInterpolator()).thenReturn(FixedStringSearchInterpolator.empty());
     }
-
 }

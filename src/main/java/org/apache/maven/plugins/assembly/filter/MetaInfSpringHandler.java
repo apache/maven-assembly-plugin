@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.filter;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,7 @@ package org.apache.maven.plugins.assembly.filter;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.filter;
 
 import javax.inject.Named;
 
@@ -26,35 +25,27 @@ import org.codehaus.plexus.components.io.fileselectors.FileInfo;
 /**
  * <code>metaInf-spring</code>: Spring's <code>META-INF/spring.*</code> aggregating handler.
  */
-@Named( "metaInf-spring" )
-public class MetaInfSpringHandler
-    extends AbstractLineAggregatingHandler
-{
+@Named("metaInf-spring")
+public class MetaInfSpringHandler extends AbstractLineAggregatingHandler {
 
     private static final String SPRING_PATH_PREFIX = "META-INF/";
 
     @Override
-    protected String getOutputPathPrefix( final FileInfo fileInfo )
-    {
+    protected String getOutputPathPrefix(final FileInfo fileInfo) {
         return SPRING_PATH_PREFIX;
     }
 
     @Override
-    protected boolean fileMatches( final FileInfo fileInfo )
-    {
+    protected boolean fileMatches(final FileInfo fileInfo) {
         final String path = fileInfo.getName();
 
         String leftover = null;
-        if ( path.startsWith( "/META-INF/spring." ) )
-        {
-            leftover = path.substring( "/META-INF/spring.".length() );
-        }
-        else if ( path.startsWith( "META-INF/spring." ) )
-        {
-            leftover = path.substring( "META-INF/spring.".length() - 1 );
+        if (path.startsWith("/META-INF/spring.")) {
+            leftover = path.substring("/META-INF/spring.".length());
+        } else if (path.startsWith("META-INF/spring.")) {
+            leftover = path.substring("META-INF/spring.".length() - 1);
         }
 
         return leftover != null && leftover.length() > 0;
     }
-
 }

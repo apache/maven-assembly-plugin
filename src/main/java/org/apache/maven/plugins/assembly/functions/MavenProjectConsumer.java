@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.functions;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,13 +16,13 @@ package org.apache.maven.plugins.assembly.functions;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.functions;
 
 import org.apache.maven.project.MavenProject;
 
 /**
  *
  */
-public interface MavenProjectConsumer
-{
-    void accept( MavenProject project );
+public interface MavenProjectConsumer {
+    void accept(MavenProject project);
 }

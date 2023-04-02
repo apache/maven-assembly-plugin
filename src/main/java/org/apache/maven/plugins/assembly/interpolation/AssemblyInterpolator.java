@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.interpolation;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,13 @@ package org.apache.maven.plugins.assembly.interpolation;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.interpolation;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.model.io.xpp3.AssemblyXpp3Reader;
@@ -31,57 +36,40 @@ import org.codehaus.plexus.interpolation.fixed.InterpolationState;
 import org.codehaus.plexus.interpolation.object.FieldBasedObjectInterpolator;
 import org.slf4j.Logger;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 /**
  *
  */
-public class AssemblyInterpolator
-{
+public class AssemblyInterpolator {
     private static final Set<String> INTERPOLATION_BLACKLIST;
 
-    static
-    {
+    static {
         final Set<String> blacklist = new HashSet<>();
 
-        blacklist.add( "outputFileNameMapping" );
-        blacklist.add( "outputDirectoryMapping" );
-        blacklist.add( "outputDirectory" );
+        blacklist.add("outputFileNameMapping");
+        blacklist.add("outputDirectoryMapping");
+        blacklist.add("outputDirectory");
 
         INTERPOLATION_BLACKLIST = blacklist;
     }
 
-    public AssemblyInterpolator()
-        throws IOException
-    {
-    }
+    public AssemblyInterpolator() throws IOException {}
 
     public static AssemblyXpp3Reader.ContentTransformer assemblyInterpolator(
-        final FixedStringSearchInterpolator interpolator, final InterpolationState is, final Logger logger )
-    {
-        final Set<String> blacklistFields =
-            new HashSet<>( FieldBasedObjectInterpolator.DEFAULT_BLACKLISTED_FIELD_NAMES );
-        blacklistFields.addAll( INTERPOLATION_BLACKLIST );
+            final FixedStringSearchInterpolator interpolator, final InterpolationState is, final Logger logger) {
+        final Set<String> blacklistFields = new HashSet<>(FieldBasedObjectInterpolator.DEFAULT_BLACKLISTED_FIELD_NAMES);
+        blacklistFields.addAll(INTERPOLATION_BLACKLIST);
 
-        return new AssemblyXpp3Reader.ContentTransformer()
-        {
+        return new AssemblyXpp3Reader.ContentTransformer() {
             @Override
-            public String transform( String source, String contextDescription )
-            {
-                if ( blacklistFields.contains( contextDescription ) )
-                {
+            public String transform(String source, String contextDescription) {
+                if (blacklistFields.contains(contextDescription)) {
                     return source;
                 }
 
-                String interpolated = interpolator.interpolate( source, is );
-                if ( !source.equals( interpolated ) && logger.isDebugEnabled() )
-                {
+                String interpolated = interpolator.interpolate(source, is);
+                if (!source.equals(interpolated) && logger.isDebugEnabled()) {
                     logger.debug(
-                        "Field " + contextDescription + " source: " + source + " interpolated to: " + interpolated );
+                            "Field " + contextDescription + " source: " + source + " interpolated to: " + interpolated);
                 }
                 return interpolated;
             }
@@ -89,85 +77,71 @@ public class AssemblyInterpolator
     }
 
     public static ComponentXpp3Reader.ContentTransformer componentInterpolator(
-        final FixedStringSearchInterpolator interpolator, final InterpolationState is, final Logger logger )
-    {
-        final Set<String> blacklistFields =
-            new HashSet<>( FieldBasedObjectInterpolator.DEFAULT_BLACKLISTED_FIELD_NAMES );
-        blacklistFields.addAll( INTERPOLATION_BLACKLIST );
+            final FixedStringSearchInterpolator interpolator, final InterpolationState is, final Logger logger) {
+        final Set<String> blacklistFields = new HashSet<>(FieldBasedObjectInterpolator.DEFAULT_BLACKLISTED_FIELD_NAMES);
+        blacklistFields.addAll(INTERPOLATION_BLACKLIST);
 
-        return new ComponentXpp3Reader.ContentTransformer()
-        {
+        return new ComponentXpp3Reader.ContentTransformer() {
             @Override
-            public String transform( String source, String contextDescription )
-            {
-                if ( blacklistFields.contains( contextDescription ) )
-                {
+            public String transform(String source, String contextDescription) {
+                if (blacklistFields.contains(contextDescription)) {
                     return source;
                 }
 
-                String interpolated = interpolator.interpolate( source, is );
-                if ( !source.equals( interpolated ) )
-                {
+                String interpolated = interpolator.interpolate(source, is);
+                if (!source.equals(interpolated)) {
                     logger.debug(
-                        "Field " + contextDescription + " source: " + source + " interpolated to: " + interpolated );
+                            "Field " + contextDescription + " source: " + source + " interpolated to: " + interpolated);
                 }
                 return interpolated;
             }
         };
     }
 
-
-    public static void checkErrors( AssemblyId assemblyId, InterpolationState interpolationState, Logger logger )
-    {
-        if ( interpolationState.asList() != null && interpolationState.asList().size() > 0 && logger.isDebugEnabled() )
-        {
+    public static void checkErrors(AssemblyId assemblyId, InterpolationState interpolationState, Logger logger) {
+        if (interpolationState.asList() != null && interpolationState.asList().size() > 0 && logger.isDebugEnabled()) {
             final StringBuilder sb = new StringBuilder();
 
-            sb.append( "One or more minor errors occurred while interpolating the assembly with ID: " ).append(
-                assemblyId ).append( ":\n" );
+            sb.append("One or more minor errors occurred while interpolating the assembly with ID: ")
+                    .append(assemblyId)
+                    .append(":\n");
 
-            @SuppressWarnings( "unchecked" ) final List<Object> warnings = interpolationState.asList();
-            for ( final Object warning : warnings )
-            {
-                sb.append( '\n' ).append( warning );
+            @SuppressWarnings("unchecked")
+            final List<Object> warnings = interpolationState.asList();
+            for (final Object warning : warnings) {
+                sb.append('\n').append(warning);
             }
 
-            sb.append( "\n\nThese values were SKIPPED, but the assembly process will continue.\n" );
+            sb.append("\n\nThese values were SKIPPED, but the assembly process will continue.\n");
 
-            logger.debug( sb.toString() );
+            logger.debug(sb.toString());
         }
     }
 
-    public static FixedStringSearchInterpolator fullInterpolator( final MavenProject project,
-                                                                  final FixedStringSearchInterpolator projectIp,
-                                                                  final AssemblerConfigurationSource configSource )
-    {
-        FixedStringSearchInterpolator fixedStringSearchInterpolator =
-            FixedStringSearchInterpolator.create( configSource.getRepositoryInterpolator(),
-                                                  configSource.getCommandLinePropsInterpolator(),
-                                                  configSource.getEnvInterpolator(), projectIp );
-        return fixedStringSearchInterpolator.withPostProcessor(
-            new PathTranslatingPostProcessor( project.getBasedir() ) );
-
+    public static FixedStringSearchInterpolator fullInterpolator(
+            final MavenProject project,
+            final FixedStringSearchInterpolator projectIp,
+            final AssemblerConfigurationSource configSource) {
+        FixedStringSearchInterpolator fixedStringSearchInterpolator = FixedStringSearchInterpolator.create(
+                configSource.getRepositoryInterpolator(),
+                configSource.getCommandLinePropsInterpolator(),
+                configSource.getEnvInterpolator(),
+                projectIp);
+        return fixedStringSearchInterpolator.withPostProcessor(new PathTranslatingPostProcessor(project.getBasedir()));
     }
 
-    private static final class PathTranslatingPostProcessor
-        implements InterpolationPostProcessor
-    {
+    private static final class PathTranslatingPostProcessor implements InterpolationPostProcessor {
 
         private final File basedir;
 
-        PathTranslatingPostProcessor( final File basedir )
-        {
+        PathTranslatingPostProcessor(final File basedir) {
             this.basedir = basedir;
         }
 
         @Override
-        public Object execute( final String expression, final Object value )
-        {
-            final String path = String.valueOf( value );
-            return AssemblyFileUtils.makePathRelativeTo( path, basedir );
+        public Object execute(final String expression, final Object value) {
+            final String path = String.valueOf(value);
+            return AssemblyFileUtils.makePathRelativeTo(path, basedir);
         }
-
     }
 }

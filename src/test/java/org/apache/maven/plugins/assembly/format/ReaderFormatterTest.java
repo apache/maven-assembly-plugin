@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.format;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,14 +16,7 @@ package org.apache.maven.plugins.assembly.format;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.sameInstance;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
+package org.apache.maven.plugins.assembly.format;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -50,122 +41,116 @@ import org.codehaus.plexus.components.io.resources.PlexusIoResource;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.sameInstance;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-public class ReaderFormatterTest
-{
+public class ReaderFormatterTest {
     @Test
-    public void lineDosFeed()
-        throws IOException, AssemblyFormattingException
-    {
+    public void lineDosFeed() throws IOException, AssemblyFormattingException {
         final PojoConfigSource cfg = getPojoConfigSource();
-        InputStreamTransformer fileSetTransformers = ReaderFormatter.getFileSetTransformers( cfg, true, Collections.<String>emptySet(), "dos" );
-        InputStream fud = fileSetTransformers.transform( dummyResource(), payload( "This is a\ntest." ) );
-        assertEquals( "This is a\r\ntest.", readResultStream( fud ) );
+        InputStreamTransformer fileSetTransformers =
+                ReaderFormatter.getFileSetTransformers(cfg, true, Collections.<String>emptySet(), "dos");
+        InputStream fud = fileSetTransformers.transform(dummyResource(), payload("This is a\ntest."));
+        assertEquals("This is a\r\ntest.", readResultStream(fud));
     }
 
     @Test
-    public void lineDosFeed_withoutFiltering()
-        throws IOException, AssemblyFormattingException
-    {
+    public void lineDosFeed_withoutFiltering() throws IOException, AssemblyFormattingException {
         final PojoConfigSource cfg = getPojoConfigSource();
-        InputStreamTransformer fileSetTransformers = ReaderFormatter.getFileSetTransformers( cfg, false, Collections.<String>emptySet(), "dos" );
-        InputStream fud = fileSetTransformers.transform( dummyResource(), payload( "This is a\ntest." ) );
-        assertEquals( "This is a\r\ntest.", readResultStream( fud ) );
+        InputStreamTransformer fileSetTransformers =
+                ReaderFormatter.getFileSetTransformers(cfg, false, Collections.<String>emptySet(), "dos");
+        InputStream fud = fileSetTransformers.transform(dummyResource(), payload("This is a\ntest."));
+        assertEquals("This is a\r\ntest.", readResultStream(fud));
     }
 
     @Test
-    public void lineUnixFeedWithInterpolation()
-        throws IOException, AssemblyFormattingException
-    {
+    public void lineUnixFeedWithInterpolation() throws IOException, AssemblyFormattingException {
         final PojoConfigSource cfg = getPojoConfigSource();
-        InputStreamTransformer fileSetTransformers = ReaderFormatter.getFileSetTransformers( cfg, true, Collections.<String>emptySet(), "unix" );
-        InputStream fud = fileSetTransformers.transform( dummyResource(), payload(
-            "This is a test for project: ${artifactId} @artifactId@." ) );
-        assertEquals( "This is a test for project: anArtifact anArtifact.", readResultStream( fud ) );
+        InputStreamTransformer fileSetTransformers =
+                ReaderFormatter.getFileSetTransformers(cfg, true, Collections.<String>emptySet(), "unix");
+        InputStream fud = fileSetTransformers.transform(
+                dummyResource(), payload("This is a test for project: ${artifactId} @artifactId@."));
+        assertEquals("This is a test for project: anArtifact anArtifact.", readResultStream(fud));
     }
 
     @Test
-    public void nonFilteredFileExtensions() throws Exception
-    {
+    public void nonFilteredFileExtensions() throws Exception {
         final PojoConfigSource cfg = getPojoConfigSource();
-        Set<String> nonFilteredFileExtensions = new HashSet<>( Arrays.asList( "jpg", "tar.gz" ) );
-        InputStreamTransformer transformer = ReaderFormatter.getFileSetTransformers( cfg, true, nonFilteredFileExtensions, "unix" );
+        Set<String> nonFilteredFileExtensions = new HashSet<>(Arrays.asList("jpg", "tar.gz"));
+        InputStreamTransformer transformer =
+                ReaderFormatter.getFileSetTransformers(cfg, true, nonFilteredFileExtensions, "unix");
 
-        final InputStream is = new ByteArrayInputStream( new byte[0] );
-        PlexusIoResource resource = mock( PlexusIoResource.class );
+        final InputStream is = new ByteArrayInputStream(new byte[0]);
+        PlexusIoResource resource = mock(PlexusIoResource.class);
 
-        when( resource.getName() ).thenReturn( "file.jpg", "file.tar.gz", "file.txt", "file.nojpg", "file.gz", "file" );
-        assertThat( transformer.transform( resource, is ), sameInstance( is ) );
-        assertThat( transformer.transform( resource, is ), sameInstance( is ) );
-        assertThat( transformer.transform( resource, is ), not( sameInstance( is ) ) );
-        assertThat( transformer.transform( resource, is ), not( sameInstance( is ) ) );
-        assertThat( transformer.transform( resource, is ), not( sameInstance( is ) ) );
-        assertThat( transformer.transform( resource, is ), not( sameInstance( is ) ) );
+        when(resource.getName()).thenReturn("file.jpg", "file.tar.gz", "file.txt", "file.nojpg", "file.gz", "file");
+        assertThat(transformer.transform(resource, is), sameInstance(is));
+        assertThat(transformer.transform(resource, is), sameInstance(is));
+        assertThat(transformer.transform(resource, is), not(sameInstance(is)));
+        assertThat(transformer.transform(resource, is), not(sameInstance(is)));
+        assertThat(transformer.transform(resource, is), not(sameInstance(is)));
+        assertThat(transformer.transform(resource, is), not(sameInstance(is)));
     }
 
     @Test
-    public void additionalProperties() throws Exception
-    {
-        final MavenReaderFilter mavenReaderFilter = mock( MavenReaderFilter.class );
+    public void additionalProperties() throws Exception {
+        final MavenReaderFilter mavenReaderFilter = mock(MavenReaderFilter.class);
 
         final PojoConfigSource cfg = getPojoConfigSource();
-        cfg.setMavenReaderFilter( mavenReaderFilter );
+        cfg.setMavenReaderFilter(mavenReaderFilter);
         Properties additionalProperties = new Properties();
-        cfg.setAdditionalProperties( additionalProperties );
-        
-        InputStreamTransformer transformer =  ReaderFormatter.getFileSetTransformers( cfg, true, Collections.<String>emptySet(), "unix" );
-        
-        final InputStream inputStream = new ByteArrayInputStream( new byte[0] );
-        PlexusIoResource resource = mock( PlexusIoResource.class );
-        when( resource.getName() ).thenReturn( "file.txt" );
+        cfg.setAdditionalProperties(additionalProperties);
 
-        transformer.transform( resource, inputStream );
+        InputStreamTransformer transformer =
+                ReaderFormatter.getFileSetTransformers(cfg, true, Collections.<String>emptySet(), "unix");
 
-        ArgumentCaptor<MavenReaderFilterRequest> filteringRequest = 
-                        ArgumentCaptor.forClass(MavenReaderFilterRequest.class);
-        verify( mavenReaderFilter ).filter( filteringRequest.capture() );
-        assertThat( filteringRequest.getValue().getAdditionalProperties(), sameInstance( additionalProperties ) );
+        final InputStream inputStream = new ByteArrayInputStream(new byte[0]);
+        PlexusIoResource resource = mock(PlexusIoResource.class);
+        when(resource.getName()).thenReturn("file.txt");
+
+        transformer.transform(resource, inputStream);
+
+        ArgumentCaptor<MavenReaderFilterRequest> filteringRequest =
+                ArgumentCaptor.forClass(MavenReaderFilterRequest.class);
+        verify(mavenReaderFilter).filter(filteringRequest.capture());
+        assertThat(filteringRequest.getValue().getAdditionalProperties(), sameInstance(additionalProperties));
     }
 
-    private MavenProject createBasicMavenProject()
-    {
+    private MavenProject createBasicMavenProject() {
         final Model model = new Model();
-        model.setArtifactId( "anArtifact" );
-        model.setGroupId( "group" );
-        model.setVersion( "version" );
+        model.setArtifactId("anArtifact");
+        model.setGroupId("group");
+        model.setVersion("version");
 
-        return new MavenProject( model );
+        return new MavenProject(model);
     }
 
-
-    private String readResultStream( InputStream fud )
-        throws IOException
-    {
+    private String readResultStream(InputStream fud) throws IOException {
         byte[] actual = new byte[100];
-        int read = IOUtils.read( fud, actual );
-        return new String( actual, 0, read );
+        int read = IOUtils.read(fud, actual);
+        return new String(actual, 0, read);
     }
 
-    private ByteArrayInputStream payload( String payload )
-    {
-        return new ByteArrayInputStream( payload.getBytes() );
+    private ByteArrayInputStream payload(String payload) {
+        return new ByteArrayInputStream(payload.getBytes());
     }
 
-    private PojoConfigSource getPojoConfigSource()
-    {
+    private PojoConfigSource getPojoConfigSource() {
         final PojoConfigSource cfg = new PojoConfigSource();
-        cfg.setEncoding( "UTF-8" );
+        cfg.setEncoding("UTF-8");
         DefaultMavenReaderFilter mavenReaderFilter = new DefaultMavenReaderFilter();
-        cfg.setMavenReaderFilter( mavenReaderFilter );
-        cfg.setEscapeString( null );
-        cfg.setMavenProject( createBasicMavenProject() );
+        cfg.setMavenReaderFilter(mavenReaderFilter);
+        cfg.setEscapeString(null);
+        cfg.setMavenProject(createBasicMavenProject());
         return cfg;
     }
 
-    private PlexusIoVirtualFileResource dummyResource()
-    {
-        return new PlexusIoVirtualFileResource( new File( "fud" ), "fud" )
-        {
-        };
+    private PlexusIoVirtualFileResource dummyResource() {
+        return new PlexusIoVirtualFileResource(new File("fud"), "fud") {};
     }
 }

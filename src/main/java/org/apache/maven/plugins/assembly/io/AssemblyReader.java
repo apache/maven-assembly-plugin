@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.io;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,31 +16,30 @@ package org.apache.maven.plugins.assembly.io;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.io;
+
+import java.io.File;
+import java.util.List;
 
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
 import org.apache.maven.plugins.assembly.model.Assembly;
 
-import java.io.File;
-import java.util.List;
-
 /**
  *
  */
-public interface AssemblyReader
-{
+public interface AssemblyReader {
 
-    List<Assembly> readAssemblies( AssemblerConfigurationSource configSource )
-        throws AssemblyReadException, InvalidAssemblerConfigurationException;
+    List<Assembly> readAssemblies(AssemblerConfigurationSource configSource)
+            throws AssemblyReadException, InvalidAssemblerConfigurationException;
 
-    Assembly getAssemblyForDescriptorReference( String ref, AssemblerConfigurationSource configSource )
-        throws AssemblyReadException, InvalidAssemblerConfigurationException;
+    Assembly getAssemblyForDescriptorReference(String ref, AssemblerConfigurationSource configSource)
+            throws AssemblyReadException, InvalidAssemblerConfigurationException;
 
-    Assembly getAssemblyFromDescriptorFile( File file, AssemblerConfigurationSource configSource )
-        throws AssemblyReadException, InvalidAssemblerConfigurationException;
+    Assembly getAssemblyFromDescriptorFile(File file, AssemblerConfigurationSource configSource)
+            throws AssemblyReadException, InvalidAssemblerConfigurationException;
 
-    void includeSiteInAssembly( Assembly assembly, AssemblerConfigurationSource configSource )
-        throws MojoFailureException, InvalidAssemblerConfigurationException;
-
+    void includeSiteInAssembly(Assembly assembly, AssemblerConfigurationSource configSource)
+            throws MojoFailureException, InvalidAssemblerConfigurationException;
 }

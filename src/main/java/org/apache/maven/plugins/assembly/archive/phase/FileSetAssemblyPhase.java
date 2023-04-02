@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.archive.phase;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,12 @@ package org.apache.maven.plugins.assembly.archive.phase;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.archive.phase;
+
+import javax.inject.Named;
+import javax.inject.Singleton;
+
+import java.util.List;
 
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
@@ -27,43 +31,32 @@ import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.model.FileSet;
 import org.codehaus.plexus.archiver.Archiver;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
-import java.util.List;
-
 /**
  * Handles the &lt;fileSets/&gt; top-level section of the assembly descriptor.
  *
  *
  */
 @Singleton
-@Named( "file-sets" )
-public class FileSetAssemblyPhase
-        implements AssemblyArchiverPhase, PhaseOrder
-{
+@Named("file-sets")
+public class FileSetAssemblyPhase implements AssemblyArchiverPhase, PhaseOrder {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void execute( final Assembly assembly, final Archiver archiver,
-                         final AssemblerConfigurationSource configSource )
-        throws ArchiveCreationException, AssemblyFormattingException
-    {
+    public void execute(
+            final Assembly assembly, final Archiver archiver, final AssemblerConfigurationSource configSource)
+            throws ArchiveCreationException, AssemblyFormattingException {
         final List<FileSet> fileSets = assembly.getFileSets();
 
-        if ( ( fileSets != null ) && !fileSets.isEmpty() )
-        {
-            final AddFileSetsTask task = new AddFileSetsTask( fileSets );
-            task.execute( archiver, configSource );
+        if ((fileSets != null) && !fileSets.isEmpty()) {
+            final AddFileSetsTask task = new AddFileSetsTask(fileSets);
+            task.execute(archiver, configSource);
         }
     }
 
-
     @Override
-    public int order()
-    {
+    public int order() {
         // CHECKSTYLE_OFF: MagicNumber
         return 20;
         // CHECKSTYLE_ON: MagicNumber

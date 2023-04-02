@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.archive.archiver;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,21 +16,20 @@ package org.apache.maven.plugins.assembly.archive.archiver;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import org.codehaus.plexus.archiver.ArchivedFileSet;
-import org.codehaus.plexus.components.io.fileselectors.FileSelector;
-import org.codehaus.plexus.components.io.functions.InputStreamTransformer;
+package org.apache.maven.plugins.assembly.archive.archiver;
 
 import java.io.File;
+
+import org.codehaus.plexus.archiver.ArchivedFileSet;
 import org.codehaus.plexus.components.io.filemappers.FileMapper;
+import org.codehaus.plexus.components.io.fileselectors.FileSelector;
+import org.codehaus.plexus.components.io.functions.InputStreamTransformer;
 
 /**
  *
  */
-class PrefixedArchivedFileSet
-    implements ArchivedFileSet
-{
-    private final static FileMapper[] EMPTY_FILE_MAPPERS_ARRAY = new FileMapper[0];
+class PrefixedArchivedFileSet implements ArchivedFileSet {
+    private static final FileMapper[] EMPTY_FILE_MAPPERS_ARRAY = new FileMapper[0];
 
     private final String rootPrefix;
 
@@ -45,17 +42,13 @@ class PrefixedArchivedFileSet
      * @param rootPrefix The root prefix.
      * @param selectors  The file selectors.
      */
-    PrefixedArchivedFileSet( ArchivedFileSet fileSet, String rootPrefix, FileSelector[] selectors )
-    {
+    PrefixedArchivedFileSet(ArchivedFileSet fileSet, String rootPrefix, FileSelector[] selectors) {
         this.fileSet = fileSet;
         this.selectors = selectors;
 
-        if ( rootPrefix.length() > 0 && !rootPrefix.endsWith( "/" ) )
-        {
+        if (rootPrefix.length() > 0 && !rootPrefix.endsWith("/")) {
             this.rootPrefix = rootPrefix + "/";
-        }
-        else
-        {
+        } else {
             this.rootPrefix = rootPrefix;
         }
     }
@@ -64,8 +57,7 @@ class PrefixedArchivedFileSet
      * {@inheritDoc}
      */
     @Override
-    public File getArchive()
-    {
+    public File getArchive() {
         return fileSet.getArchive();
     }
 
@@ -73,8 +65,7 @@ class PrefixedArchivedFileSet
      * {@inheritDoc}
      */
     @Override
-    public String[] getExcludes()
-    {
+    public String[] getExcludes() {
         return fileSet.getExcludes();
     }
 
@@ -82,17 +73,15 @@ class PrefixedArchivedFileSet
      * {@inheritDoc}
      */
     @Override
-    public FileSelector[] getFileSelectors()
-    {
-        return PrefixedFileSet.combineSelectors( fileSet.getFileSelectors(), selectors );
+    public FileSelector[] getFileSelectors() {
+        return PrefixedFileSet.combineSelectors(fileSet.getFileSelectors(), selectors);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String[] getIncludes()
-    {
+    public String[] getIncludes() {
         return fileSet.getIncludes();
     }
 
@@ -100,17 +89,12 @@ class PrefixedArchivedFileSet
      * {@inheritDoc}
      */
     @Override
-    public String getPrefix()
-    {
+    public String getPrefix() {
         String prefix = fileSet.getPrefix();
-        if ( prefix.startsWith( "/" ) )
-        {
-            if ( prefix.length() > 1 )
-            {
-                prefix = prefix.substring( 1 );
-            }
-            else
-            {
+        if (prefix.startsWith("/")) {
+            if (prefix.length() > 1) {
+                prefix = prefix.substring(1);
+            } else {
                 prefix = "";
             }
         }
@@ -122,8 +106,7 @@ class PrefixedArchivedFileSet
      * {@inheritDoc}
      */
     @Override
-    public boolean isCaseSensitive()
-    {
+    public boolean isCaseSensitive() {
         return fileSet.isCaseSensitive();
     }
 
@@ -131,8 +114,7 @@ class PrefixedArchivedFileSet
      * {@inheritDoc}
      */
     @Override
-    public boolean isIncludingEmptyDirectories()
-    {
+    public boolean isIncludingEmptyDirectories() {
         return fileSet.isIncludingEmptyDirectories();
     }
 
@@ -140,20 +122,17 @@ class PrefixedArchivedFileSet
      * {@inheritDoc}
      */
     @Override
-    public boolean isUsingDefaultExcludes()
-    {
+    public boolean isUsingDefaultExcludes() {
         return fileSet.isUsingDefaultExcludes();
     }
 
     @Override
-    public InputStreamTransformer getStreamTransformer()
-    {
+    public InputStreamTransformer getStreamTransformer() {
         return fileSet.getStreamTransformer();
     }
 
     @Override
-    public FileMapper[] getFileMappers()
-    {
+    public FileMapper[] getFileMappers() {
         return EMPTY_FILE_MAPPERS_ARRAY;
     }
 }

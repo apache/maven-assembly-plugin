@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,7 @@ package org.apache.maven.plugins.assembly;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly;
 
 import java.io.File;
 import java.util.List;
@@ -33,8 +32,7 @@ import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
 /**
  *
  */
-public interface AssemblerConfigurationSource
-{
+public interface AssemblerConfigurationSource {
     /**
      * @return The descriptors.
      */
@@ -109,7 +107,7 @@ public interface AssemblerConfigurationSource
      * @return The filters.
      */
     List<String> getFilters();
-    
+
     /**
      * @return the additional properties
      */

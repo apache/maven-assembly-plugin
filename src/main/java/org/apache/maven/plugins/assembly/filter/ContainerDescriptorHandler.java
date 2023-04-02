@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.filter;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,7 @@ package org.apache.maven.plugins.assembly.filter;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.filter;
 
 import org.codehaus.plexus.archiver.ArchiveFinalizer;
 import org.codehaus.plexus.components.io.fileselectors.FileSelector;
@@ -25,8 +24,4 @@ import org.codehaus.plexus.components.io.fileselectors.FileSelector;
 /**
  *
  */
-public interface ContainerDescriptorHandler
-    extends ArchiveFinalizer, FileSelector
-{
-
-}
+public interface ContainerDescriptorHandler extends ArchiveFinalizer, FileSelector {}

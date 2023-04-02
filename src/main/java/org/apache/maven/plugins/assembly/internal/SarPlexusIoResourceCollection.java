@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.internal;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,7 @@ package org.apache.maven.plugins.assembly.internal;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.internal;
 
 import javax.inject.Named;
 import javax.inject.Provider;
@@ -30,12 +29,10 @@ import org.codehaus.plexus.components.io.resources.PlexusIoZipFileResourceCollec
  * Provider for "sar" {@link PlexusIoResourceCollection}.
  */
 @Singleton
-@Named( "sar" )
-public class SarPlexusIoResourceCollection implements Provider<PlexusIoResourceCollection>
-{
+@Named("sar")
+public class SarPlexusIoResourceCollection implements Provider<PlexusIoResourceCollection> {
     @Override
-    public PlexusIoResourceCollection get()
-    {
+    public PlexusIoResourceCollection get() {
         return new PlexusIoZipFileResourceCollection();
     }
 }

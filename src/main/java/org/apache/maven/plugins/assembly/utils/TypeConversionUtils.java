@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.utils;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,17 +16,17 @@ package org.apache.maven.plugins.assembly.utils;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.utils;
+
+import java.util.List;
 
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.slf4j.Logger;
 
-import java.util.List;
-
 /**
  *
  */
-public final class TypeConversionUtils
-{
+public final class TypeConversionUtils {
 
     private static final int U_R = 256;
 
@@ -48,122 +46,99 @@ public final class TypeConversionUtils
 
     private static final int W_X = 1;
 
-    private TypeConversionUtils()
-    {
-    }
+    private TypeConversionUtils() {}
 
-    public static String[] toStringArray( final List<String> list )
-    {
+    public static String[] toStringArray(final List<String> list) {
         String[] result = null;
 
-        if ( ( list != null ) && !list.isEmpty() )
-        {
-            result = list.toArray( new String[0] );
+        if ((list != null) && !list.isEmpty()) {
+            result = list.toArray(new String[0]);
         }
 
         return result;
     }
 
-    public static int modeToInt( final String mode, final Logger logger )
-        throws AssemblyFormattingException
-    {
-        if ( mode == null || mode.trim().length() < 1 )
-        {
+    public static int modeToInt(final String mode, final Logger logger) throws AssemblyFormattingException {
+        if (mode == null || mode.trim().length() < 1) {
             return -1;
         }
 
-        try
-        {
-            final int value = Integer.parseInt( mode, 8 );
+        try {
+            final int value = Integer.parseInt(mode, 8);
 
             // discard sanity assessment here; we're pushing ahead.
-            verifyModeSanity( value, logger );
+            verifyModeSanity(value, logger);
 
             return value;
-        }
-        catch ( final NumberFormatException e )
-        {
-            throw new AssemblyFormattingException( "Failed to parse mode as an octal number: \'" + mode + "\'.", e );
+        } catch (final NumberFormatException e) {
+            throw new AssemblyFormattingException("Failed to parse mode as an octal number: \'" + mode + "\'.", e);
         }
     }
 
     // the boolean return type is for people who want to make a decision based on the sanity
     // assessment.
-    public static boolean verifyModeSanity( final int mode, final Logger logger )
-    {
+    public static boolean verifyModeSanity(final int mode, final Logger logger) {
         final StringBuilder messages = new StringBuilder();
 
-        messages.append( "The mode: " ).append( Integer.toString( mode, 8 ) ).append(
-            " contains nonsensical permissions:" );
+        messages.append("The mode: ").append(Integer.toString(mode, 8)).append(" contains nonsensical permissions:");
 
         boolean warn = false;
 
         // read-access checks.
-        if ( ( ( mode & U_R ) == 0 ) && ( ( mode & G_R ) == G_R ) )
-        {
-            messages.append( "\n- Group has read access, but user does not." );
+        if (((mode & U_R) == 0) && ((mode & G_R) == G_R)) {
+            messages.append("\n- Group has read access, but user does not.");
             warn = true;
         }
 
-        if ( ( ( mode & U_R ) == 0 ) && ( ( mode & W_R ) == W_R ) )
-        {
-            messages.append( "\n- World has read access, but user does not." );
+        if (((mode & U_R) == 0) && ((mode & W_R) == W_R)) {
+            messages.append("\n- World has read access, but user does not.");
             warn = true;
         }
 
-        if ( ( ( mode & G_R ) == 0 ) && ( ( mode & W_R ) == W_R ) )
-        {
-            messages.append( "\n- World has read access, but group does not." );
+        if (((mode & G_R) == 0) && ((mode & W_R) == W_R)) {
+            messages.append("\n- World has read access, but group does not.");
             warn = true;
         }
         // end read-access checks.
 
         // write-access checks.
-        if ( ( ( mode & U_W ) == 0 ) && ( ( mode & G_W ) == G_W ) )
-        {
-            messages.append( "\n- Group has write access, but user does not." );
+        if (((mode & U_W) == 0) && ((mode & G_W) == G_W)) {
+            messages.append("\n- Group has write access, but user does not.");
             warn = true;
         }
 
-        if ( ( ( mode & U_W ) == 0 ) && ( ( mode & W_W ) == W_W ) )
-        {
-            messages.append( "\n- World has write access, but user does not." );
+        if (((mode & U_W) == 0) && ((mode & W_W) == W_W)) {
+            messages.append("\n- World has write access, but user does not.");
             warn = true;
         }
 
-        if ( ( ( mode & G_W ) == 0 ) && ( ( mode & W_W ) == W_W ) )
-        {
-            messages.append( "\n- World has write access, but group does not." );
+        if (((mode & G_W) == 0) && ((mode & W_W) == W_W)) {
+            messages.append("\n- World has write access, but group does not.");
             warn = true;
         }
         // end write-access checks.
 
         // execute-/list-access checks.
-        if ( ( ( mode & U_X ) == 0 ) && ( ( mode & G_X ) == G_X ) )
-        {
-            messages.append( "\n- Group has execute/list access, but user does not." );
+        if (((mode & U_X) == 0) && ((mode & G_X) == G_X)) {
+            messages.append("\n- Group has execute/list access, but user does not.");
             warn = true;
         }
 
-        if ( ( ( mode & U_X ) == 0 ) && ( ( mode & W_X ) == W_X ) )
-        {
-            messages.append( "\n- World has execute/list access, but user does not." );
+        if (((mode & U_X) == 0) && ((mode & W_X) == W_X)) {
+            messages.append("\n- World has execute/list access, but user does not.");
             warn = true;
         }
 
-        if ( ( ( mode & G_X ) == 0 ) && ( ( mode & W_X ) == W_X ) )
-        {
-            messages.append( "\n- World has execute/list access, but group does not." );
+        if (((mode & G_X) == 0) && ((mode & W_X) == W_X)) {
+            messages.append("\n- World has execute/list access, but group does not.");
             warn = true;
         }
         // end execute-/list-access checks.
 
-        if ( warn && logger != null )
-        {
-            logger.warn( messages.toString() );
+        if (warn && logger != null) {
+            logger.warn(messages.toString());
         }
 
         return !warn;
     }
-
 }

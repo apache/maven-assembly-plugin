@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.archive.task;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,7 @@ package org.apache.maven.plugins.assembly.archive.task;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.archive.task;
 
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
@@ -28,10 +27,8 @@ import org.codehaus.plexus.archiver.Archiver;
 /**
  *
  */
-public interface ArchiverTask
-{
+public interface ArchiverTask {
 
-    void execute( Archiver archiver, AssemblerConfigurationSource configSource )
-        throws ArchiveCreationException, AssemblyFormattingException, InvalidAssemblerConfigurationException;
-
+    void execute(Archiver archiver, AssemblerConfigurationSource configSource)
+            throws ArchiveCreationException, AssemblyFormattingException, InvalidAssemblerConfigurationException;
 }

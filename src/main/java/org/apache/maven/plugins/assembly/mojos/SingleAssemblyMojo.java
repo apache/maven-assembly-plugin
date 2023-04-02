@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.mojos;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,11 +16,11 @@ package org.apache.maven.plugins.assembly.mojos;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.mojos;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
-
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
@@ -41,48 +39,40 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
  *
  */
-@Mojo( name = "single", requiresDependencyResolution = ResolutionScope.TEST, threadSafe = true )
-public class SingleAssemblyMojo
-    extends AbstractAssemblyMojo
-{
-    @Parameter( defaultValue = "${plugin}", readonly = true )
+@Mojo(name = "single", requiresDependencyResolution = ResolutionScope.TEST, threadSafe = true)
+public class SingleAssemblyMojo extends AbstractAssemblyMojo {
+    @Parameter(defaultValue = "${plugin}", readonly = true)
     private PluginDescriptor plugin;
 
     @Override
-    public void execute()
-        throws MojoExecutionException, MojoFailureException
-    {
-        verifyRemovedParameter( "classifier" );
-        verifyRemovedParameter( "descriptor" );
-        verifyRemovedParameter( "descriptorId" );
-        verifyRemovedParameter( "includeSite" );
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        verifyRemovedParameter("classifier");
+        verifyRemovedParameter("descriptor");
+        verifyRemovedParameter("descriptorId");
+        verifyRemovedParameter("includeSite");
 
         super.execute();
     }
 
-    private void verifyRemovedParameter( String paramName )
-    {
+    private void verifyRemovedParameter(String paramName) {
         Object pluginConfiguration = plugin.getPlugin().getConfiguration();
-        if ( pluginConfiguration instanceof Xpp3Dom )
-        {
+        if (pluginConfiguration instanceof Xpp3Dom) {
             Xpp3Dom configDom = (Xpp3Dom) pluginConfiguration;
 
-            if ( configDom.getChild( paramName ) != null )
-            {
-                throw new IllegalArgumentException( "parameter '" + paramName
-                    + "' has been removed from the plugin, please verify documentation." );
+            if (configDom.getChild(paramName) != null) {
+                throw new IllegalArgumentException(
+                        "parameter '" + paramName + "' has been removed from the plugin, please verify documentation.");
             }
         }
     }
 
     /**
      */
-    @Parameter( defaultValue = "${project}", readonly = true, required = true )
+    @Parameter(defaultValue = "${project}", readonly = true, required = true)
     private MavenProject project;
 
     @Override
-    public MavenProject getProject()
-    {
+    public MavenProject getProject() {
         return project;
     }
 }

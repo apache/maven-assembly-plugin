@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.archive;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,13 +16,12 @@ package org.apache.maven.plugins.assembly.archive;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.archive;
 
 /**
  *
  */
-public class ArchiveCreationException
-    extends Exception
-{
+public class ArchiveCreationException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
@@ -34,17 +31,14 @@ public class ArchiveCreationException
      * @param message The message to use.
      * @param error   The error.
      */
-    public ArchiveCreationException( final String message, final Throwable error )
-    {
-        super( message, error );
+    public ArchiveCreationException(final String message, final Throwable error) {
+        super(message, error);
     }
 
     /**
      * @param message The message.
      */
-    public ArchiveCreationException( final String message )
-    {
-        super( message );
+    public ArchiveCreationException(final String message) {
+        super(message);
     }
-
 }
