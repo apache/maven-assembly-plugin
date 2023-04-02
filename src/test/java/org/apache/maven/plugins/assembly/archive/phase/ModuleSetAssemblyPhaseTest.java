@@ -57,15 +57,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyList;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.isNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ModuleSetAssemblyPhaseTest {
@@ -692,16 +684,16 @@ public class ModuleSetAssemblyPhaseTest {
         Artifact artifact2 = mock(Artifact.class);
         when(artifact2.getGroupId()).thenReturn("group");
         when(artifact2.getArtifactId()).thenReturn("artifact2");
-        when(artifact2.getId()).thenReturn("group:artifact2:version:jar");
-        when(artifact2.getDependencyConflictId()).thenReturn("group:artifact2:jar");
+        lenient().when(artifact2.getId()).thenReturn("group:artifact2:version:jar");
+        lenient().when(artifact2.getDependencyConflictId()).thenReturn("group:artifact2:jar");
         project2.setArtifact(artifact2);
 
         final MavenProject project3 = createProject("group", "artifact3", "version", project2);
         Artifact artifact3 = mock(Artifact.class);
         when(artifact3.getGroupId()).thenReturn("group");
         when(artifact3.getArtifactId()).thenReturn("artifact3");
-        when(artifact3.getId()).thenReturn("group:artifact3:version:jar");
-        when(artifact3.getDependencyConflictId()).thenReturn("group:artifact3:jar");
+        lenient().when(artifact3.getId()).thenReturn("group:artifact3:version:jar");
+        lenient().when(artifact3.getDependencyConflictId()).thenReturn("group:artifact3:jar");
         when(artifact3.getDependencyTrail()).thenReturn(Arrays.asList(project2.getId(), project.getId()));
         project3.setArtifact(artifact3);
 
