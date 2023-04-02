@@ -39,8 +39,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FilterUtilsTest {
@@ -49,9 +48,9 @@ public class FilterUtilsTest {
     public void testFilterArtifacts_ShouldThrowExceptionUsingStrictModeWithUnmatchedInclude() {
         final Artifact artifact = mock(Artifact.class);
         when(artifact.getGroupId()).thenReturn("group");
-        when(artifact.getArtifactId()).thenReturn("artifact");
-        when(artifact.getBaseVersion()).thenReturn("version");
-        when(artifact.getType()).thenReturn("jar");
+        lenient().when(artifact.getArtifactId()).thenReturn("artifact");
+        lenient().when(artifact.getBaseVersion()).thenReturn("version");
+        lenient().when(artifact.getType()).thenReturn("jar");
 
         final List<String> includes = new ArrayList<>();
 
@@ -219,7 +218,7 @@ public class FilterUtilsTest {
         when(artifact.getDependencyConflictId()).thenReturn(groupId + ":" + artifactId + ":jar");
         when(artifact.getGroupId()).thenReturn(groupId);
         when(artifact.getArtifactId()).thenReturn(artifactId);
-        when(artifact.getBaseVersion()).thenReturn("version");
+        lenient().when(artifact.getBaseVersion()).thenReturn("version");
         when(artifact.getType()).thenReturn("jar");
 
         if (depTrail != null) {
@@ -294,8 +293,8 @@ public class FilterUtilsTest {
         // this is always enabled, for verification purposes.
         when(artifact.getGroupId()).thenReturn(groupId);
         when(artifact.getArtifactId()).thenReturn(artifactId);
-        when(artifact.getBaseVersion()).thenReturn("version");
-        when(artifact.getType()).thenReturn("jar");
+        lenient().when(artifact.getBaseVersion()).thenReturn("version");
+        lenient().when(artifact.getType()).thenReturn("jar");
 
         if (depTrail != null) {
             when(artifact.getDependencyTrail()).thenReturn(depTrail);
