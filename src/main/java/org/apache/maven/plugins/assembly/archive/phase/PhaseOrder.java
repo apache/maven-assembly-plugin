@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.archive.phase;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,12 +16,12 @@ package org.apache.maven.plugins.assembly.archive.phase;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.archive.phase;
 
 /**
  * Indicates the order of a phase
  * Elements without order will come before the ordered elements
  */
-public interface PhaseOrder
-{
+public interface PhaseOrder {
     int order();
 }

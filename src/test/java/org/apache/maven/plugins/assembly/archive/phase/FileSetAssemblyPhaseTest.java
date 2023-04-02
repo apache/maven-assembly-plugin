@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.archive.phase;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,11 +16,7 @@ package org.apache.maven.plugins.assembly.archive.phase;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+package org.apache.maven.plugins.assembly.archive.phase;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
@@ -36,72 +30,71 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
-@RunWith( MockitoJUnitRunner.class )
-public class FileSetAssemblyPhaseTest
-{
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@RunWith(MockitoJUnitRunner.class)
+public class FileSetAssemblyPhaseTest {
     private FileSetAssemblyPhase phase;
-    
+
     @Before
-    public void setUp() 
-    {
+    public void setUp() {
         this.phase = new FileSetAssemblyPhase();
     }
 
     @Test
-    public void testShouldNotFailWhenNoFileSetsSpecified()
-        throws Exception
-    {
+    public void testShouldNotFailWhenNoFileSetsSpecified() throws Exception {
         final Assembly assembly = new Assembly();
-        assembly.setId( "test" );
+        assembly.setId("test");
 
-        this.phase.execute( assembly, null, null );
+        this.phase.execute(assembly, null, null);
     }
 
     @Test
-    public void testShouldAddOneFileSet()
-        throws Exception
-    {
+    public void testShouldAddOneFileSet() throws Exception {
         final Assembly assembly = new Assembly();
 
-        assembly.setId( "test" );
-        assembly.setIncludeBaseDirectory( false );
+        assembly.setId("test");
+        assembly.setIncludeBaseDirectory(false);
 
         final FileSet fs = new FileSet();
-        fs.setOutputDirectory( "/out" );
-        fs.setDirectory( "/input" );
-        fs.setFileMode( "777" );
-        fs.setDirectoryMode( "777" );
+        fs.setOutputDirectory("/out");
+        fs.setDirectory("/input");
+        fs.setFileMode("777");
+        fs.setDirectoryMode("777");
 
-        assembly.addFileSet( fs );
+        assembly.addFileSet(fs);
 
-        final MavenProject project = new MavenProject( new Model() );
-        project.setGroupId( "GROUPID" );
+        final MavenProject project = new MavenProject(new Model());
+        project.setGroupId("GROUPID");
 
-        final int dirMode = Integer.parseInt( "777", 8 );
-        final int fileMode = Integer.parseInt( "777", 8 );
+        final int dirMode = Integer.parseInt("777", 8);
+        final int fileMode = Integer.parseInt("777", 8);
 
-        final int[] modes = { -1, -1, dirMode, fileMode };
+        final int[] modes = {-1, -1, dirMode, fileMode};
 
         // the logger sends a debug message with this info inside the addFileSet(..) method..
-        final Archiver archiver = mock( Archiver.class );
-        when( archiver.getOverrideDirectoryMode() ).thenReturn( modes[0] );
-        when( archiver.getOverrideFileMode() ).thenReturn( modes[1] );
-    
-        final AssemblerConfigurationSource configSource = mock( AssemblerConfigurationSource.class );
-        when( configSource.getProject() ).thenReturn( project );
-        when( configSource.getFinalName() ).thenReturn( "final-name" );
-        
-        DefaultAssemblyArchiverTest.setupInterpolators( configSource, project );
+        final Archiver archiver = mock(Archiver.class);
+        when(archiver.getOverrideDirectoryMode()).thenReturn(modes[0]);
+        when(archiver.getOverrideFileMode()).thenReturn(modes[1]);
 
-        this.phase.execute( assembly, archiver, configSource );
+        final AssemblerConfigurationSource configSource = mock(AssemblerConfigurationSource.class);
+        when(configSource.getProject()).thenReturn(project);
+        when(configSource.getFinalName()).thenReturn("final-name");
+
+        DefaultAssemblyArchiverTest.setupInterpolators(configSource, project);
+
+        this.phase.execute(assembly, archiver, configSource);
 
         // result of easymock migration, should be assert of expected result instead of verifying methodcalls
-        verify( configSource ).getArchiveBaseDirectory();
-        verify( configSource, atLeastOnce() ).getFinalName();
-        verify( configSource, atLeastOnce() ).getMavenSession();
-        verify( configSource, atLeastOnce() ).getProject();
+        verify(configSource).getArchiveBaseDirectory();
+        verify(configSource, atLeastOnce()).getFinalName();
+        verify(configSource, atLeastOnce()).getMavenSession();
+        verify(configSource, atLeastOnce()).getProject();
 
-        verify( archiver ).getOverrideDirectoryMode();
-        verify( archiver ).getOverrideFileMode();
+        verify(archiver).getOverrideDirectoryMode();
+        verify(archiver).getOverrideFileMode();
     }
 }

@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.io;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,24 +16,20 @@ package org.apache.maven.plugins.assembly.io;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.io;
 
 /**
  *
  */
-public class AssemblyReadException
-    extends Exception
-{
+public class AssemblyReadException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
-    public AssemblyReadException( final String message, final Throwable cause )
-    {
-        super( message, cause );
+    public AssemblyReadException(final String message, final Throwable cause) {
+        super(message, cause);
     }
 
-    public AssemblyReadException( final String message )
-    {
-        super( message );
+    public AssemblyReadException(final String message) {
+        super(message);
     }
-
 }

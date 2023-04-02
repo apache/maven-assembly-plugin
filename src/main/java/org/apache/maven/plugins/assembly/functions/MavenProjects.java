@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.functions;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,67 +16,55 @@ package org.apache.maven.plugins.assembly.functions;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.functions;
+
+import java.util.List;
+import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.ArtifactUtils;
 import org.apache.maven.project.MavenProject;
 import org.slf4j.Logger;
 
-import java.util.List;
-import java.util.Set;
-
 /**
  *
  */
-public class MavenProjects
-{
-    public static void without( Iterable<MavenProject> source, String packagingType, MavenProjectConsumer consumer )
-    {
-        for ( MavenProject project : source )
-        {
-            if ( !packagingType.equals( project.getPackaging() ) )
-            {
-                consumer.accept( project );
+public class MavenProjects {
+    public static void without(Iterable<MavenProject> source, String packagingType, MavenProjectConsumer consumer) {
+        for (MavenProject project : source) {
+            if (!packagingType.equals(project.getPackaging())) {
+                consumer.accept(project);
             }
         }
     }
 
-    public static void select( Iterable<MavenProject> source, String packagingType, MavenProjectConsumer consumer )
-    {
-        for ( MavenProject project : source )
-        {
-            if ( packagingType.equals( project.getPackaging() ) )
-            {
-                consumer.accept( project );
+    public static void select(Iterable<MavenProject> source, String packagingType, MavenProjectConsumer consumer) {
+        for (MavenProject project : source) {
+            if (packagingType.equals(project.getPackaging())) {
+                consumer.accept(project);
             }
         }
     }
 
-    public static void select( Iterable<MavenProject> source, String packagingType, MavenProjectConsumer include,
-                               MavenProjectConsumer excluded )
-    {
-        for ( MavenProject project : source )
-        {
-            if ( packagingType.equals( project.getPackaging() ) )
-            {
-                include.accept( project );
-            }
-            else
-            {
-                excluded.accept( project );
+    public static void select(
+            Iterable<MavenProject> source,
+            String packagingType,
+            MavenProjectConsumer include,
+            MavenProjectConsumer excluded) {
+        for (MavenProject project : source) {
+            if (packagingType.equals(project.getPackaging())) {
+                include.accept(project);
+            } else {
+                excluded.accept(project);
             }
         }
     }
 
-    public static Artifact findArtifactByClassifier( MavenProject mavenProject, String classifier )
-    {
+    public static Artifact findArtifactByClassifier(MavenProject mavenProject, String classifier) {
         final List<Artifact> attachments = mavenProject.getAttachedArtifacts();
-        if ( ( attachments != null ) && !attachments.isEmpty() )
-        {
-            for ( final Artifact attachment : attachments )
-            {
-                if ( classifier.equals( attachment.getClassifier() ) )
-                {
+        if ((attachments != null) && !attachments.isEmpty()) {
+            for (final Artifact attachment : attachments) {
+                if (classifier.equals(attachment.getClassifier())) {
                     return attachment;
                 }
             }
@@ -86,31 +72,23 @@ public class MavenProjects
         return null;
     }
 
-
-    public static MavenProjectConsumer log( final Logger logger )
-    {
-        return new MavenProjectConsumer()
-        {
+    public static MavenProjectConsumer log(final Logger logger) {
+        return new MavenProjectConsumer() {
             @Override
-            public void accept( MavenProject project )
-            {
-                final String projectId = ArtifactUtils.versionlessKey( project.getGroupId(), project.getArtifactId() );
+            public void accept(MavenProject project) {
+                final String projectId = ArtifactUtils.versionlessKey(project.getGroupId(), project.getArtifactId());
 
-                logger.debug( "Excluding POM-packaging module: " + projectId );
+                logger.debug("Excluding POM-packaging module: " + projectId);
             }
         };
     }
 
-    public static MavenProjectConsumer addTo( final Set<MavenProject> set )
-    {
-        return new MavenProjectConsumer()
-        {
+    public static MavenProjectConsumer addTo(final Set<MavenProject> set) {
+        return new MavenProjectConsumer() {
             @Override
-            public void accept( MavenProject project )
-            {
-                set.add( project );
+            public void accept(MavenProject project) {
+                set.add(project);
             }
         };
     }
-
 }

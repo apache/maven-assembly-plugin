@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.utils;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,7 @@ package org.apache.maven.plugins.assembly.utils;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,8 +25,7 @@ import java.util.List;
 /**
  *
  */
-public final class InterpolationConstants
-{
+public final class InterpolationConstants {
 
     public static final List<String> PROJECT_PREFIXES;
 
@@ -35,24 +33,20 @@ public final class InterpolationConstants
 
     public static final String SETTINGS_PREFIX = "settings.";
 
-    static
-    {
+    static {
         final List<String> projectPrefixes = new ArrayList<>();
-        projectPrefixes.add( "pom." );
-        projectPrefixes.add( "project." );
+        projectPrefixes.add("pom.");
+        projectPrefixes.add("project.");
 
-        PROJECT_PREFIXES = Collections.unmodifiableList( projectPrefixes );
+        PROJECT_PREFIXES = Collections.unmodifiableList(projectPrefixes);
 
         final List<String> projectPropertiesPrefixes = new ArrayList<>();
 
-        projectPropertiesPrefixes.add( "pom.properties." );
-        projectPropertiesPrefixes.add( "project.properties." );
+        projectPropertiesPrefixes.add("pom.properties.");
+        projectPropertiesPrefixes.add("project.properties.");
 
-        PROJECT_PROPERTIES_PREFIXES = Collections.unmodifiableList( projectPropertiesPrefixes );
+        PROJECT_PROPERTIES_PREFIXES = Collections.unmodifiableList(projectPropertiesPrefixes);
     }
 
-    private InterpolationConstants()
-    {
-    }
-
+    private InterpolationConstants() {}
 }

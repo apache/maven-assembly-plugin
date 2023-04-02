@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -18,13 +17,12 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <artifactId>maven-plugins</artifactId>
     <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-plugins</artifactId>
     <version>39</version>
     <relativePath />
   </parent>
@@ -36,6 +34,15 @@ under the License.
   <name>Apache Maven Assembly Plugin</name>
   <description>A Maven plugin to create archives of your project's sources, classes, dependencies etc. from flexible assembly descriptors.</description>
 
+  <contributors>
+    <contributor>
+      <name>Stephen Colebourne</name>
+    </contributor>
+    <contributor>
+      <name>Tony Jewell</name>
+    </contributor>
+  </contributors>
+
   <prerequisites>
     <maven>${mavenVersion}</maven>
   </prerequisites>
@@ -43,8 +50,8 @@ under the License.
   <scm>
     <connection>scm:git:https://gitbox.apache.org/repos/asf/maven-assembly-plugin.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/maven-assembly-plugin.git</developerConnection>
-    <url>https://github.com/apache/maven-assembly-plugin/tree/${project.scm.tag}</url>
     <tag>HEAD</tag>
+    <url>https://github.com/apache/maven-assembly-plugin/tree/${project.scm.tag}</url>
   </scm>
   <issueManagement>
     <system>jira</system>
@@ -73,15 +80,6 @@ under the License.
     <testOutputToFile>true</testOutputToFile>
     <project.build.outputTimestamp>2023-02-19T15:09:17Z</project.build.outputTimestamp>
   </properties>
-
-  <contributors>
-    <contributor>
-      <name>Stephen Colebourne</name>
-    </contributor>
-    <contributor>
-      <name>Tony Jewell</name>
-    </contributor>
-  </contributors>
 
   <dependencies>
     <dependency>
@@ -240,8 +238,8 @@ under the License.
   <build>
     <resources>
       <resource>
-        <directory>src/main/resources</directory>
         <filtering>true</filtering>
+        <directory>src/main/resources</directory>
       </resource>
       <resource>
         <directory>${project.build.directory}/generated-resources/plexus</directory>
@@ -314,21 +312,21 @@ under the License.
         <executions>
           <execution>
             <id>mdo</id>
-            <phase>generate-sources</phase>
             <goals>
               <goal>xpp3-reader</goal>
               <goal>xpp3-writer</goal>
               <goal>java</goal>
               <goal>xsd</goal>
             </goals>
+            <phase>generate-sources</phase>
           </execution>
           <execution>
             <id>mdo-site</id>
-            <phase>pre-site</phase>
             <goals>
               <goal>xdoc</goal>
               <goal>xsd</goal>
             </goals>
+            <phase>pre-site</phase>
           </execution>
         </executions>
       </plugin>
@@ -354,6 +352,18 @@ under the License.
               </properties>
               <showVersion>true</showVersion>
             </configuration>
+            <dependencies>
+              <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>1.23.0</version>
+              </dependency>
+              <dependency>
+                <groupId>com.github.luben</groupId>
+                <artifactId>zstd-jni</artifactId>
+                <version>1.5.4-2</version>
+              </dependency>
+            </dependencies>
             <executions>
               <execution>
                 <id>integration-test</id>
@@ -374,18 +384,6 @@ under the License.
                 </configuration>
               </execution>
             </executions>
-            <dependencies>
-              <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-compress</artifactId>
-                <version>1.23.0</version>
-              </dependency>
-              <dependency>
-                <groupId>com.github.luben</groupId>
-                <artifactId>zstd-jni</artifactId>
-                <version>1.5.4-2</version>
-              </dependency>
-            </dependencies>
           </plugin>
         </plugins>
       </build>

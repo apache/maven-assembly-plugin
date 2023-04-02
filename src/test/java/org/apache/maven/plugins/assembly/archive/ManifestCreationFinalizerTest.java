@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.archive;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,8 +16,7 @@ package org.apache.maven.plugins.assembly.archive;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import static org.junit.Assert.assertTrue;
+package org.apache.maven.plugins.assembly.archive;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -45,104 +42,97 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
-@RunWith( MockitoJUnitRunner.class )
-public class ManifestCreationFinalizerTest
-{
+import static org.junit.Assert.assertTrue;
+
+@RunWith(MockitoJUnitRunner.class)
+public class ManifestCreationFinalizerTest {
 
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     @Test
-    public void testShouldDoNothingWhenArchiveConfigIsNull()
-        throws Exception
-    {
-        new ManifestCreationFinalizer( null, null, null ).finalizeArchiveCreation( null );
+    public void testShouldDoNothingWhenArchiveConfigIsNull() throws Exception {
+        new ManifestCreationFinalizer(null, null, null).finalizeArchiveCreation(null);
     }
 
     @Test
-    public void testShouldDoNothingWhenArchiverIsNotJarArchiver()
-        throws Exception
-    {
-        MavenProject project = new MavenProject( new Model() );
+    public void testShouldDoNothingWhenArchiverIsNotJarArchiver() throws Exception {
+        MavenProject project = new MavenProject(new Model());
         MavenArchiveConfiguration config = new MavenArchiveConfiguration();
 
-        new ManifestCreationFinalizer( null, project, config ).finalizeArchiveCreation( null );
+        new ManifestCreationFinalizer(null, project, config).finalizeArchiveCreation(null);
     }
 
     @Test
-    public void testShouldAddManifestWhenArchiverIsJarArchiver()
-        throws Exception
-    {
-        MavenProject project = new MavenProject( new Model() );
+    public void testShouldAddManifestWhenArchiverIsJarArchiver() throws Exception {
+        MavenProject project = new MavenProject(new Model());
         MavenArchiveConfiguration config = new MavenArchiveConfiguration();
 
         File tempDir = temporaryFolder.getRoot();
 
         Path manifestFile = tempDir.toPath().resolve("MANIFEST.MF");
-        
-        Files.write( manifestFile, Arrays.asList( "Main-Class: Stuff\n" ), StandardCharsets.UTF_8 );
 
-        config.setManifestFile( manifestFile.toFile() );
+        Files.write(manifestFile, Arrays.asList("Main-Class: Stuff\n"), StandardCharsets.UTF_8);
+
+        config.setManifestFile(manifestFile.toFile());
 
         JarArchiver archiver = new JarArchiver();
 
         archiver.setArchiveFinalizers(
-            Collections.<ArchiveFinalizer>singletonList( new ManifestCreationFinalizer( null, project, config ) ) );
+                Collections.<ArchiveFinalizer>singletonList(new ManifestCreationFinalizer(null, project, config)));
 
         File file = temporaryFolder.newFile();
 
-        archiver.setDestFile( file );
+        archiver.setDestFile(file);
 
         archiver.createArchive();
 
-        URL resource = new URL( "jar:file:" + file.getAbsolutePath() + "!/META-INF/MANIFEST.MF" );
+        URL resource = new URL("jar:file:" + file.getAbsolutePath() + "!/META-INF/MANIFEST.MF");
 
-        BufferedReader reader = new BufferedReader( new InputStreamReader( resource.openStream() ) );
+        BufferedReader reader = new BufferedReader(new InputStreamReader(resource.openStream()));
 
         StringWriter writer = new StringWriter();
 
-        IOUtil.copy( reader, writer );
+        IOUtil.copy(reader, writer);
 
-        assertTrue( writer.toString().contains( "Main-Class: Stuff" ) );
+        assertTrue(writer.toString().contains("Main-Class: Stuff"));
 
         // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4823678
-        ( (JarURLConnection) resource.openConnection() ).getJarFile().close();
+        ((JarURLConnection) resource.openConnection()).getJarFile().close();
     }
 
     @Test
-    public void testShouldAddManifestEntriesWhenArchiverIsJarArchiver()
-        throws Exception
-    {
-        MavenProject project = new MavenProject( new Model() );
+    public void testShouldAddManifestEntriesWhenArchiverIsJarArchiver() throws Exception {
+        MavenProject project = new MavenProject(new Model());
         MavenArchiveConfiguration config = new MavenArchiveConfiguration();
 
         String testKey = "Test-Key";
         String testValue = "test-value";
 
-        config.addManifestEntry( testKey, testValue );
+        config.addManifestEntry(testKey, testValue);
 
         JarArchiver archiver = new JarArchiver();
 
         archiver.setArchiveFinalizers(
-            Collections.<ArchiveFinalizer>singletonList( new ManifestCreationFinalizer( null, project, config ) ) );
+                Collections.<ArchiveFinalizer>singletonList(new ManifestCreationFinalizer(null, project, config)));
 
         File file = temporaryFolder.newFile();
 
-        archiver.setDestFile( file );
+        archiver.setDestFile(file);
 
         archiver.createArchive();
 
-        URL resource = new URL( "jar:file:" + file.getAbsolutePath() + "!/META-INF/MANIFEST.MF" );
+        URL resource = new URL("jar:file:" + file.getAbsolutePath() + "!/META-INF/MANIFEST.MF");
 
-        BufferedReader reader = new BufferedReader( new InputStreamReader( resource.openStream() ) );
+        BufferedReader reader = new BufferedReader(new InputStreamReader(resource.openStream()));
 
         StringWriter writer = new StringWriter();
 
-        IOUtil.copy( reader, writer );
+        IOUtil.copy(reader, writer);
 
-        assertTrue( writer.toString().contains( testKey + ": " + testValue ) );
+        assertTrue(writer.toString().contains(testKey + ": " + testValue));
 
         // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4823678
-        ( (JarURLConnection) resource.openConnection() ).getJarFile().close();
+        ((JarURLConnection) resource.openConnection()).getJarFile().close();
     }
 }

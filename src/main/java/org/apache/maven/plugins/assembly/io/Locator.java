@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.io;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,7 @@ package org.apache.maven.plugins.assembly.io;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.io;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,8 +26,7 @@ import java.util.List;
  * The Locator.
  *
  */
-final class Locator
-{
+final class Locator {
 
     private List<LocatorStrategy> strategies;
     private final MessageHolder messageHolder;
@@ -37,17 +35,15 @@ final class Locator
      * @param strategies List of strategies
      * @param messageHolder {@link MessageHolder}
      */
-    Locator( List<LocatorStrategy> strategies, MessageHolder messageHolder )
-    {
+    Locator(List<LocatorStrategy> strategies, MessageHolder messageHolder) {
         this.messageHolder = messageHolder;
-        this.strategies = new ArrayList<LocatorStrategy>( strategies );
+        this.strategies = new ArrayList<LocatorStrategy>(strategies);
     }
 
     /**
      * Create instance.
      */
-    Locator()
-    {
+    Locator() {
         this.messageHolder = new DefaultMessageHolder();
         this.strategies = new ArrayList<LocatorStrategy>();
     }
@@ -55,41 +51,36 @@ final class Locator
     /**
      * @return {@link MessageHolder}
      */
-    MessageHolder getMessageHolder()
-    {
+    MessageHolder getMessageHolder() {
         return messageHolder;
     }
 
     /**
      * @param strategy The strategy to be added.
      */
-    void addStrategy( LocatorStrategy strategy )
-    {
-        this.strategies.add( strategy );
+    void addStrategy(LocatorStrategy strategy) {
+        this.strategies.add(strategy);
     }
 
     /**
      * @param strategy the strategy to remove.
      */
-    void removeStrategy( LocatorStrategy strategy )
-    {
-        this.strategies.remove( strategy );
+    void removeStrategy(LocatorStrategy strategy) {
+        this.strategies.remove(strategy);
     }
 
     /**
      * @param strategies the strategies to be set.
      */
-    void setStrategies( List<LocatorStrategy> strategies )
-    {
+    void setStrategies(List<LocatorStrategy> strategies) {
         this.strategies.clear();
-        this.strategies.addAll( strategies );
+        this.strategies.addAll(strategies);
     }
 
     /**
      * @return list of strategies.
      */
-    List<LocatorStrategy> getStrategies()
-    {
+    List<LocatorStrategy> getStrategies() {
         return strategies;
     }
 
@@ -97,18 +88,15 @@ final class Locator
      * @param locationSpecification location spec
      * @return {@link Location}
      */
-    Location resolve( String locationSpecification )
-    {
+    Location resolve(String locationSpecification) {
         Location location = null;
 
-        for ( Iterator<LocatorStrategy> it = strategies.iterator(); location == null && it.hasNext(); )
-        {
+        for (Iterator<LocatorStrategy> it = strategies.iterator(); location == null && it.hasNext(); ) {
             LocatorStrategy strategy = (LocatorStrategy) it.next();
 
-            location = strategy.resolve( locationSpecification, messageHolder );
+            location = strategy.resolve(locationSpecification, messageHolder);
         }
 
         return location;
     }
-
 }

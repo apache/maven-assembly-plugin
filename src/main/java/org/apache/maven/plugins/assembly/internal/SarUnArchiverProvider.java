@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.internal;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,7 @@ package org.apache.maven.plugins.assembly.internal;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.internal;
 
 import javax.inject.Named;
 import javax.inject.Provider;
@@ -30,12 +29,10 @@ import org.codehaus.plexus.archiver.zip.ZipUnArchiver;
  * Provider for "sar" {@link UnArchiver}.
  */
 @Singleton
-@Named( "sar" )
-public class SarUnArchiverProvider implements Provider<UnArchiver>
-{
+@Named("sar")
+public class SarUnArchiverProvider implements Provider<UnArchiver> {
     @Override
-    public UnArchiver get()
-    {
+    public UnArchiver get() {
         return new ZipUnArchiver();
     }
 }

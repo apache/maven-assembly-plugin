@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.utils;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,92 +16,77 @@ package org.apache.maven.plugins.assembly.utils;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import org.codehaus.plexus.components.io.fileselectors.FileInfo;
+package org.apache.maven.plugins.assembly.utils;
 
 import java.io.File;
 import java.util.Locale;
 
+import org.codehaus.plexus.components.io.fileselectors.FileInfo;
+
 /**
  *
  */
-public final class AssemblyFileUtils
-{
+public final class AssemblyFileUtils {
 
-    private AssemblyFileUtils()
-    {
+    private AssemblyFileUtils() {
         // no op
     }
 
-    public static String makePathRelativeTo( String path, final File basedir )
-    {
-        if ( basedir == null )
-        {
+    public static String makePathRelativeTo(String path, final File basedir) {
+        if (basedir == null) {
             return path;
         }
 
-        if ( path == null )
-        {
+        if (path == null) {
             return null;
         }
 
         path = path.trim();
 
         String base = basedir.getAbsolutePath();
-        if ( path.startsWith( base ) )
-        {
-            path = path.substring( base.length() );
-            if ( path.length() > 0 )
-            {
-                if ( path.startsWith( "/" ) || path.startsWith( "\\" ) )
-                {
-                    path = path.substring( 1 );
+        if (path.startsWith(base)) {
+            path = path.substring(base.length());
+            if (path.length() > 0) {
+                if (path.startsWith("/") || path.startsWith("\\")) {
+                    path = path.substring(1);
                 }
             }
 
-            if ( path.length() == 0 )
-            {
+            if (path.length() == 0) {
                 path = ".";
             }
         }
 
-        if ( !new File( path ).isAbsolute() )
-        {
-            path = path.replace( '\\', '/' );
+        if (!new File(path).isAbsolute()) {
+            path = path.replace('\\', '/');
         }
 
         return path;
     }
 
-    @SuppressWarnings( "ResultOfMethodCallIgnored" )
-    public static void verifyTempDirectoryAvailability( final File tempDir )
-    {
-        if ( !tempDir.exists() )
-        {
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public static void verifyTempDirectoryAvailability(final File tempDir) {
+        if (!tempDir.exists()) {
             tempDir.mkdirs();
         }
     }
 
-    private static String normalizePath( String path )
-    {
-        return path.replace( '\\', '/' );
+    private static String normalizePath(String path) {
+        return path.replace('\\', '/');
     }
 
-    public static String normalizeFileInfo( FileInfo fileInfo )
-    {
+    public static String normalizeFileInfo(FileInfo fileInfo) {
         String name = fileInfo.getName();
-        name = normalizePath( name );
-        return name.replace( File.separatorChar, '/' ); // How can this be anything but a no-op
+        name = normalizePath(name);
+        return name.replace(File.separatorChar, '/'); // How can this be anything but a no-op
     }
 
-    public static boolean isPropertyFile( String sourceName )
-    {
-        return sourceName.toLowerCase( Locale.ENGLISH ).endsWith( ".properties" );
+    public static boolean isPropertyFile(String sourceName) {
+        return sourceName.toLowerCase(Locale.ENGLISH).endsWith(".properties");
     }
 
-    public static boolean isPropertyFile( File file )
-    {
-        return isPropertyFile( file.getName() );
+    public static boolean isPropertyFile(File file) {
+        return isPropertyFile(file.getName());
     }
 
     /**
@@ -113,10 +96,7 @@ public final class AssemblyFileUtils
      *
      * @return {@code true} if {@code File#isAbsolute()} or starts with a '/'
      */
-    public static boolean isAbsolutePath( File dir )
-    {
-        return dir != null
-                && ( dir.isAbsolute()
-                   || dir.getPath().startsWith( "\\" ) ); // on Win* platforms
+    public static boolean isAbsolutePath(File dir) {
+        return dir != null && (dir.isAbsolute() || dir.getPath().startsWith("\\")); // on Win* platforms
     }
 }

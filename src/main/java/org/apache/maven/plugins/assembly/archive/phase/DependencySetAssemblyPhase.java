@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.archive.phase;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,10 +16,15 @@ package org.apache.maven.plugins.assembly.archive.phase;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.archive.phase;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
@@ -36,10 +39,6 @@ import org.apache.maven.plugins.assembly.model.DependencySet;
 import org.apache.maven.project.ProjectBuilder;
 import org.codehaus.plexus.archiver.Archiver;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
-
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -48,9 +47,8 @@ import static java.util.Objects.requireNonNull;
  *
  */
 @Singleton
-@Named( "dependency-sets" )
-public class DependencySetAssemblyPhase implements AssemblyArchiverPhase, PhaseOrder
-{
+@Named("dependency-sets")
+public class DependencySetAssemblyPhase implements AssemblyArchiverPhase, PhaseOrder {
     private final ProjectBuilder projectBuilder;
 
     private final DependencyResolver dependencyResolver;
@@ -59,39 +57,36 @@ public class DependencySetAssemblyPhase implements AssemblyArchiverPhase, PhaseO
      * Injected ctor.
      */
     @Inject
-    public DependencySetAssemblyPhase( final ProjectBuilder projectBuilder,
-                                       final DependencyResolver dependencyResolver )
-    {
-        this.projectBuilder = requireNonNull( projectBuilder );
-        this.dependencyResolver = requireNonNull( dependencyResolver );
+    public DependencySetAssemblyPhase(
+            final ProjectBuilder projectBuilder, final DependencyResolver dependencyResolver) {
+        this.projectBuilder = requireNonNull(projectBuilder);
+        this.dependencyResolver = requireNonNull(dependencyResolver);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void execute( final Assembly assembly, final Archiver archiver,
-                         final AssemblerConfigurationSource configSource )
-        throws ArchiveCreationException, AssemblyFormattingException, InvalidAssemblerConfigurationException,
-        DependencyResolutionException
-    {
+    public void execute(
+            final Assembly assembly, final Archiver archiver, final AssemblerConfigurationSource configSource)
+            throws ArchiveCreationException, AssemblyFormattingException, InvalidAssemblerConfigurationException,
+                    DependencyResolutionException {
 
         Map<DependencySet, Set<Artifact>> resolved =
-            dependencyResolver.resolveDependencySets( assembly, configSource, assembly.getDependencySets() );
-        for ( Map.Entry<DependencySet, Set<Artifact>> dependencySetSetEntry : resolved.entrySet() )
-        {
-            final AddDependencySetsTask task =
-                new AddDependencySetsTask( Collections.singletonList( dependencySetSetEntry.getKey() ),
-                        dependencySetSetEntry.getValue(), configSource.getProject(),
-                        projectBuilder );
+                dependencyResolver.resolveDependencySets(assembly, configSource, assembly.getDependencySets());
+        for (Map.Entry<DependencySet, Set<Artifact>> dependencySetSetEntry : resolved.entrySet()) {
+            final AddDependencySetsTask task = new AddDependencySetsTask(
+                    Collections.singletonList(dependencySetSetEntry.getKey()),
+                    dependencySetSetEntry.getValue(),
+                    configSource.getProject(),
+                    projectBuilder);
 
-            task.execute( archiver, configSource );
+            task.execute(archiver, configSource);
         }
     }
 
     @Override
-    public int order()
-    {
+    public int order() {
         // CHECKSTYLE_OFF: MagicNumber
         return 40;
         // CHECKSTYLE_ON: MagicNumber

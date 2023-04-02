@@ -30,9 +30,7 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.filtering.MavenReaderFilter;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
 
-public class PojoConfigSource
-    implements AssemblerConfigurationSource
-{
+public class PojoConfigSource implements AssemblerConfigurationSource {
     String descriptor;
 
     private File basedir;
@@ -88,7 +86,7 @@ public class PojoConfigSource
     private File archiveBaseDirectory;
 
     private List<String> filters;
-    
+
     private Properties additionalProperties;
 
     private boolean isIncludeProjectBuildFilter;
@@ -113,429 +111,344 @@ public class PojoConfigSource
 
     private FixedStringSearchInterpolator mainProjectInterpolator;
 
-    public String getDescriptor()
-    {
+    public String getDescriptor() {
         return descriptor;
     }
 
-    public void setDescriptor( String descriptor )
-    {
+    public void setDescriptor(String descriptor) {
         this.descriptor = descriptor;
     }
 
-    public String getDescriptorId()
-    {
+    public String getDescriptorId() {
         return decriptorId;
     }
 
-    public String[] getDescriptors()
-    {
+    public String[] getDescriptors() {
         return descriptors;
     }
 
-    public void setDescriptors( String[] descriptors )
-    {
+    public void setDescriptors(String[] descriptors) {
         this.descriptors = descriptors;
     }
 
-    public String[] getDescriptorReferences()
-    {
+    public String[] getDescriptorReferences() {
         return descriptorReferences;
     }
 
-    public void setDescriptorReferences( String[] descriptorReferences )
-    {
+    public void setDescriptorReferences(String[] descriptorReferences) {
         this.descriptorReferences = descriptorReferences;
     }
 
-    public File getDescriptorSourceDirectory()
-    {
+    public File getDescriptorSourceDirectory() {
         return descriptorSourceReference;
     }
 
-    public File getBasedir()
-    {
+    public File getBasedir() {
         return basedir;
     }
 
-    public void setBasedir( File basedir )
-    {
+    public void setBasedir(File basedir) {
         this.basedir = basedir;
     }
 
-    public MavenProject getProject()
-    {
+    public MavenProject getProject() {
         return mavenProject;
     }
 
-    public boolean isSiteIncluded()
-    {
+    public boolean isSiteIncluded() {
         return isSitencluded;
     }
 
-    public File getSiteDirectory()
-    {
+    public File getSiteDirectory() {
         return siteDirectory;
     }
 
-    public void setSiteDirectory( File siteDirectory )
-    {
+    public void setSiteDirectory(File siteDirectory) {
         this.siteDirectory = siteDirectory;
     }
 
-    public String getFinalName()
-    {
+    public String getFinalName() {
         return finalName;
     }
 
-    public void setFinalName( String finalName )
-    {
+    public void setFinalName(String finalName) {
         this.finalName = finalName;
     }
 
-    public boolean isAssemblyIdAppended()
-    {
+    public boolean isAssemblyIdAppended() {
         return isAssemblyIdAppended;
     }
 
-    public void setAssemblyIdAppended( boolean isAssemblyIdAppended )
-    {
+    public void setAssemblyIdAppended(boolean isAssemblyIdAppended) {
         this.isAssemblyIdAppended = isAssemblyIdAppended;
     }
 
-    public String getClassifier()
-    {
+    public String getClassifier() {
         return classifier;
     }
 
-    public void setClassifier( String classifier )
-    {
+    public void setClassifier(String classifier) {
         this.classifier = classifier;
     }
 
-    public String getTarLongFileMode()
-    {
+    public String getTarLongFileMode() {
         return tarLongFileMode;
     }
 
-    public void setTarLongFileMode( String tarLongFileMode )
-    {
+    public void setTarLongFileMode(String tarLongFileMode) {
         this.tarLongFileMode = tarLongFileMode;
     }
 
-    public File getOutputDirectory()
-    {
+    public File getOutputDirectory() {
         return outputDirectory;
     }
 
-    public void setOutputDirectory( File outputDirectory )
-    {
+    public void setOutputDirectory(File outputDirectory) {
         this.outputDirectory = outputDirectory;
     }
 
-    public File getWorkingDirectory()
-    {
+    public File getWorkingDirectory() {
         return workingDirectory;
     }
 
-    public void setWorkingDirectory( File workingDirectory )
-    {
+    public void setWorkingDirectory(File workingDirectory) {
         this.workingDirectory = workingDirectory;
     }
 
-    public MavenArchiveConfiguration getJarArchiveConfiguration()
-    {
+    public MavenArchiveConfiguration getJarArchiveConfiguration() {
         return jarArchiveConfiguration;
     }
 
-    public void setJarArchiveConfiguration( MavenArchiveConfiguration jarArchiveConfiguration )
-    {
+    public void setJarArchiveConfiguration(MavenArchiveConfiguration jarArchiveConfiguration) {
         this.jarArchiveConfiguration = jarArchiveConfiguration;
     }
 
-    public ArtifactRepository getLocalRepository()
-    {
+    public ArtifactRepository getLocalRepository() {
         return localRepository;
     }
 
-    public void setLocalRepository( ArtifactRepository localRepository )
-    {
+    public void setLocalRepository(ArtifactRepository localRepository) {
         this.localRepository = localRepository;
     }
 
-    public File getTemporaryRootDirectory()
-    {
+    public File getTemporaryRootDirectory() {
         return temporaryRootDirectory;
     }
 
-    public void setTemporaryRootDirectory( File temporaryRootDirectory )
-    {
+    public void setTemporaryRootDirectory(File temporaryRootDirectory) {
         this.temporaryRootDirectory = temporaryRootDirectory;
     }
 
-    public File getArchiveBaseDirectory()
-    {
+    public File getArchiveBaseDirectory() {
         return archiveBaseDirectory;
     }
 
-    public void setArchiveBaseDirectory( File archiveBaseDirectory )
-    {
+    public void setArchiveBaseDirectory(File archiveBaseDirectory) {
         this.archiveBaseDirectory = archiveBaseDirectory;
     }
 
-    public List<String> getFilters()
-    {
+    public List<String> getFilters() {
         return filters;
     }
 
-    public void setFilters( List<String> filters )
-    {
+    public void setFilters(List<String> filters) {
         this.filters = filters;
     }
 
     @Override
-    public Properties getAdditionalProperties()
-    {
+    public Properties getAdditionalProperties() {
         return additionalProperties;
     }
 
-    public void setAdditionalProperties( Properties additionalProperties )
-    {
+    public void setAdditionalProperties(Properties additionalProperties) {
         this.additionalProperties = additionalProperties;
     }
 
-    public boolean isIncludeProjectBuildFilters()
-    {
+    public boolean isIncludeProjectBuildFilters() {
         return isIncludeProjectBuildFilter;
     }
 
-    public List<MavenProject> getReactorProjects()
-    {
+    public List<MavenProject> getReactorProjects() {
         return reactorProjects;
     }
 
-    public void setReactorProjects( List<MavenProject> reactorProjects )
-    {
+    public void setReactorProjects(List<MavenProject> reactorProjects) {
         this.reactorProjects = reactorProjects;
     }
 
-    public List<ArtifactRepository> getRemoteRepositories()
-    {
+    public List<ArtifactRepository> getRemoteRepositories() {
         return remoteRepository;
     }
 
-    public boolean isDryRun()
-    {
+    public boolean isDryRun() {
         return isDryRun;
     }
 
-    public void setDryRun( boolean isDryRun )
-    {
+    public void setDryRun(boolean isDryRun) {
         this.isDryRun = isDryRun;
     }
 
-    public boolean isIgnoreDirFormatExtensions()
-    {
+    public boolean isIgnoreDirFormatExtensions() {
         return isIgnoreDirFormatExtensions;
     }
 
-    public void setIgnoreDirFormatExtensions( boolean isIgnoreDirFormatExtensions )
-    {
+    public void setIgnoreDirFormatExtensions(boolean isIgnoreDirFormatExtensions) {
         this.isIgnoreDirFormatExtensions = isIgnoreDirFormatExtensions;
     }
 
-    public boolean isIgnoreMissingDescriptor()
-    {
+    public boolean isIgnoreMissingDescriptor() {
         return isIgnoreMissingDescriptor;
     }
 
-    public void setIgnoreMissingDescriptor( boolean isIgnoreMissingDescriptor )
-    {
+    public void setIgnoreMissingDescriptor(boolean isIgnoreMissingDescriptor) {
         this.isIgnoreMissingDescriptor = isIgnoreMissingDescriptor;
     }
 
-    public MavenSession getMavenSession()
-    {
+    public MavenSession getMavenSession() {
         return mavenSession;
     }
 
-    public void setMavenSession( MavenSession mavenSession )
-    {
+    public void setMavenSession(MavenSession mavenSession) {
         this.mavenSession = mavenSession;
     }
 
-    public String getArchiverConfig()
-    {
+    public String getArchiverConfig() {
         return archiverConfig;
     }
 
-    public void setArchiverConfig( String archiverConfig )
-    {
+    public void setArchiverConfig(String archiverConfig) {
         this.archiverConfig = archiverConfig;
     }
 
-    public MavenReaderFilter getMavenReaderFilter()
-    {
+    public MavenReaderFilter getMavenReaderFilter() {
         return mavenReaderFilter;
     }
 
-    public void setMavenReaderFilter( MavenReaderFilter mavenReaderFilter )
-    {
+    public void setMavenReaderFilter(MavenReaderFilter mavenReaderFilter) {
         this.mavenReaderFilter = mavenReaderFilter;
     }
 
-    public boolean isUpdateOnly()
-    {
+    public boolean isUpdateOnly() {
         return isUpdateOnly;
     }
 
-    public void setUpdateOnly( boolean isUpdateOnly )
-    {
+    public void setUpdateOnly(boolean isUpdateOnly) {
         this.isUpdateOnly = isUpdateOnly;
     }
 
-    public boolean isUseJvmChmod()
-    {
+    public boolean isUseJvmChmod() {
         return isUseJvmChmod;
     }
 
-    public void setUseJvmChmod( boolean isUseJvmChmod )
-    {
+    public void setUseJvmChmod(boolean isUseJvmChmod) {
         this.isUseJvmChmod = isUseJvmChmod;
     }
 
-    public boolean isIgnorePermissions()
-    {
+    public boolean isIgnorePermissions() {
         return isIgnorePermissions;
     }
 
-    public void setIgnorePermissions( boolean isIgnorePermissions )
-    {
+    public void setIgnorePermissions(boolean isIgnorePermissions) {
         this.isIgnorePermissions = isIgnorePermissions;
     }
 
-    public String getEncoding()
-    {
+    public String getEncoding() {
         return encoding;
     }
 
-    public void setEncoding( String encoding )
-    {
+    public void setEncoding(String encoding) {
         this.encoding = encoding;
     }
 
-    public String getEscapeString()
-    {
+    public String getEscapeString() {
         return escapeString;
     }
 
-    public void setEscapeString( String escapeString )
-    {
+    public void setEscapeString(String escapeString) {
         this.escapeString = escapeString;
     }
 
-    public List<String> getDelimiters()
-    {
+    public List<String> getDelimiters() {
         return delimiters;
     }
 
-    public void setDelimiters( List<String> delimiters )
-    {
+    public void setDelimiters(List<String> delimiters) {
         this.delimiters = delimiters;
     }
 
-    public void setMavenProject( MavenProject mavenProject )
-    {
+    public void setMavenProject(MavenProject mavenProject) {
         this.mavenProject = mavenProject;
     }
 
-    public void setSitencluded( boolean isSitencluded )
-    {
+    public void setSitencluded(boolean isSitencluded) {
         this.isSitencluded = isSitencluded;
     }
 
-    public void setDecriptorId( String decriptorId )
-    {
+    public void setDecriptorId(String decriptorId) {
         this.decriptorId = decriptorId;
     }
 
-    public void setDescriptorSourceReference( File descriptorSourceReference )
-    {
+    public void setDescriptorSourceReference(File descriptorSourceReference) {
         this.descriptorSourceReference = descriptorSourceReference;
     }
 
-    public void setIncludeProjectBuildFilter( boolean isIncludeProjectBuildFilter )
-    {
+    public void setIncludeProjectBuildFilter(boolean isIncludeProjectBuildFilter) {
         this.isIncludeProjectBuildFilter = isIncludeProjectBuildFilter;
     }
 
-    public void setRemoteRepository( List<ArtifactRepository> remoteRepository )
-    {
+    public void setRemoteRepository(List<ArtifactRepository> remoteRepository) {
         this.remoteRepository = remoteRepository;
     }
 
-    public FixedStringSearchInterpolator getRepositoryInterpolator()
-    {
+    public FixedStringSearchInterpolator getRepositoryInterpolator() {
         return rootInterpolator;
     }
 
-    public FixedStringSearchInterpolator getCommandLinePropsInterpolator()
-    {
+    public FixedStringSearchInterpolator getCommandLinePropsInterpolator() {
         return environmentInterpolator;
     }
 
-    public void setRootInterpolator( FixedStringSearchInterpolator rootInterpolator )
-    {
+    public void setRootInterpolator(FixedStringSearchInterpolator rootInterpolator) {
         this.rootInterpolator = rootInterpolator;
     }
 
-    public FixedStringSearchInterpolator getEnvInterpolator()
-    {
+    public FixedStringSearchInterpolator getEnvInterpolator() {
         return envInterpolator;
     }
 
-    public void setEnvInterpolator( FixedStringSearchInterpolator envInterpolator )
-    {
+    public void setEnvInterpolator(FixedStringSearchInterpolator envInterpolator) {
         this.envInterpolator = envInterpolator;
     }
 
-    public FixedStringSearchInterpolator getMainProjectInterpolator()
-    {
+    public FixedStringSearchInterpolator getMainProjectInterpolator() {
         return mainProjectInterpolator;
     }
 
-
-    public void setMainProjectInterpolator( FixedStringSearchInterpolator mainProjectInterpolator )
-    {
+    public void setMainProjectInterpolator(FixedStringSearchInterpolator mainProjectInterpolator) {
         this.mainProjectInterpolator = mainProjectInterpolator;
     }
 
-    public void setEnvironmentInterpolator( FixedStringSearchInterpolator environmentInterpolator )
-    {
+    public void setEnvironmentInterpolator(FixedStringSearchInterpolator environmentInterpolator) {
         this.environmentInterpolator = environmentInterpolator;
     }
 
     @Override
-    public Integer getOverrideUid()
-    {
+    public Integer getOverrideUid() {
         return 0;
     }
 
     @Override
-    public String getOverrideUserName()
-    {
+    public String getOverrideUserName() {
         return "root";
     }
 
     @Override
-    public Integer getOverrideGid()
-    {
+    public Integer getOverrideGid() {
         return 0;
     }
 
     @Override
-    public String getOverrideGroupName()
-    {
+    public String getOverrideGroupName() {
         return "root";
     }
 }

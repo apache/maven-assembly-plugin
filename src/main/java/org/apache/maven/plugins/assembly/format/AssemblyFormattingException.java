@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.format;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,24 +16,20 @@ package org.apache.maven.plugins.assembly.format;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.format;
 
 /**
  *
  */
-public class AssemblyFormattingException
-    extends Exception
-{
+public class AssemblyFormattingException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
-    public AssemblyFormattingException( final String message, final Throwable error )
-    {
-        super( message, error );
+    public AssemblyFormattingException(final String message, final Throwable error) {
+        super(message, error);
     }
 
-    public AssemblyFormattingException( final String message )
-    {
-        super( message );
+    public AssemblyFormattingException(final String message) {
+        super(message);
     }
-
 }

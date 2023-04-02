@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.utils;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,7 @@ package org.apache.maven.plugins.assembly.utils;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,9 +24,7 @@ import java.io.InputStream;
 /**
  * @author Kristian Rosenvold
  */
-class WindowsLineFeedInputStream
-    extends InputStream
-{
+class WindowsLineFeedInputStream extends InputStream {
 
     private final InputStream target;
 
@@ -41,19 +38,15 @@ class WindowsLineFeedInputStream
 
     private boolean eofSeen = false;
 
-    WindowsLineFeedInputStream( InputStream in, boolean ensureLineFeedAtEndOfFile )
-    {
+    WindowsLineFeedInputStream(InputStream in, boolean ensureLineFeedAtEndOfFile) {
         this.target = in;
         this.ensureLineFeedAtEndOfFile = ensureLineFeedAtEndOfFile;
     }
 
-    private int readWithUpdate()
-        throws IOException
-    {
+    private int readWithUpdate() throws IOException {
         final int target = this.target.read();
         eofSeen = target == -1;
-        if ( eofSeen )
-        {
+        if (eofSeen) {
             return target;
         }
         slashRSeen = target == '\r';
@@ -62,30 +55,20 @@ class WindowsLineFeedInputStream
     }
 
     @Override
-    public int read()
-        throws IOException
-    {
-        if ( eofSeen )
-        {
+    public int read() throws IOException {
+        if (eofSeen) {
             return eofGame();
-        }
-        else if ( injectSlashN )
-        {
+        } else if (injectSlashN) {
             injectSlashN = false;
             return '\n';
-        }
-        else
-        {
+        } else {
             boolean prevWasSlashR = slashRSeen;
             int target = readWithUpdate();
-            if ( eofSeen )
-            {
+            if (eofSeen) {
                 return eofGame();
             }
-            if ( target == '\n' )
-            {
-                if ( !prevWasSlashR )
-                {
+            if (target == '\n') {
+                if (!prevWasSlashR) {
                     injectSlashN = true;
                     return '\r';
                 }
@@ -94,40 +77,31 @@ class WindowsLineFeedInputStream
         }
     }
 
-    private int eofGame()
-    {
-        if ( !ensureLineFeedAtEndOfFile )
-        {
+    private int eofGame() {
+        if (!ensureLineFeedAtEndOfFile) {
             return -1;
         }
-        if ( !slashNSeen && !slashRSeen )
-        {
+        if (!slashNSeen && !slashRSeen) {
             slashRSeen = true;
             return '\r';
         }
-        if ( !slashNSeen )
-        {
+        if (!slashNSeen) {
             slashRSeen = false;
             slashNSeen = true;
             return '\n';
-        }
-        else
-        {
+        } else {
             return -1;
         }
     }
 
     @Override
-    public void close()
-        throws IOException
-    {
+    public void close() throws IOException {
         super.close();
         target.close();
     }
 
     @Override
-    public synchronized void mark( int readlimit )
-    {
-        throw new UnsupportedOperationException( "Mark not implemented yet" );
+    public synchronized void mark(int readlimit) {
+        throw new UnsupportedOperationException("Mark not implemented yet");
     }
 }

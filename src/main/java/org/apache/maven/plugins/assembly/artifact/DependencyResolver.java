@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.artifact;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,11 @@ package org.apache.maven.plugins.assembly.artifact;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.artifact;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
@@ -25,27 +28,22 @@ import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.model.DependencySet;
 import org.apache.maven.plugins.assembly.model.ModuleSet;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 /**
  * Convenience component that aids in the resolution of dependency artifacts, according to various configurations such
  * as transitivity flag and scope.
  *
  *
  */
-public interface DependencyResolver
-{
+public interface DependencyResolver {
 
-    Map<DependencySet, Set<Artifact>> resolveDependencySets( final Assembly assembly, ModuleSet moduleSet,
-                                                             final AssemblerConfigurationSource configSource,
-                                                             List<DependencySet> dependencySets )
-        throws DependencyResolutionException;
+    Map<DependencySet, Set<Artifact>> resolveDependencySets(
+            Assembly assembly,
+            ModuleSet moduleSet,
+            AssemblerConfigurationSource configSource,
+            List<DependencySet> dependencySets)
+            throws DependencyResolutionException;
 
-    Map<DependencySet, Set<Artifact>> resolveDependencySets( final Assembly assembly,
-                                                             final AssemblerConfigurationSource configSource,
-                                                             List<DependencySet> dependencySets )
-        throws DependencyResolutionException;
-
+    Map<DependencySet, Set<Artifact>> resolveDependencySets(
+            Assembly assembly, AssemblerConfigurationSource configSource, List<DependencySet> dependencySets)
+            throws DependencyResolutionException;
 }

@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.archive.phase;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,7 @@ package org.apache.maven.plugins.assembly.archive.phase;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.archive.phase;
 
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
@@ -33,8 +32,7 @@ import org.codehaus.plexus.archiver.Archiver;
  *
  *
  */
-public interface AssemblyArchiverPhase
-{
+public interface AssemblyArchiverPhase {
     /**
      * Handle the associated section of the assembly descriptor.
      *
@@ -50,7 +48,7 @@ public interface AssemblyArchiverPhase
      * @throws org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException in case of an invalid
      *                                                                                  assembler configuration.
      */
-    void execute( Assembly assembly, Archiver archiver, AssemblerConfigurationSource configSource )
-        throws ArchiveCreationException, AssemblyFormattingException, InvalidAssemblerConfigurationException,
-        DependencyResolutionException;
+    void execute(Assembly assembly, Archiver archiver, AssemblerConfigurationSource configSource)
+            throws ArchiveCreationException, AssemblyFormattingException, InvalidAssemblerConfigurationException,
+                    DependencyResolutionException;
 }

@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.interpolation;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,11 +16,7 @@ package org.apache.maven.plugins.assembly.interpolation;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
+package org.apache.maven.plugins.assembly.interpolation;
 
 import java.util.Properties;
 
@@ -38,131 +32,124 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
-@RunWith( MockitoJUnitRunner.class )
-public class AssemblyExpressionEvaluatorTest
-{
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@RunWith(MockitoJUnitRunner.class)
+public class AssemblyExpressionEvaluatorTest {
     private final PojoConfigSource configSourceStub = new PojoConfigSource();
 
     @Test
-    public void testShouldResolveModelGroupId()
-        throws ExpressionEvaluationException
-    {
+    public void testShouldResolveModelGroupId() throws ExpressionEvaluationException {
         final Model model = new Model();
-        model.setArtifactId( "artifact-id" );
-        model.setGroupId( "group.id" );
-        model.setVersion( "1" );
-        model.setPackaging( "jar" );
+        model.setArtifactId("artifact-id");
+        model.setGroupId("group.id");
+        model.setVersion("1");
+        model.setPackaging("jar");
 
-        configSourceStub.setMavenProject( new MavenProject( model ) );
+        configSourceStub.setMavenProject(new MavenProject(model));
         setupInterpolation();
 
-        final Object result = new AssemblyExpressionEvaluator( configSourceStub ).evaluate( "assembly.${groupId}" );
+        final Object result = new AssemblyExpressionEvaluator(configSourceStub).evaluate("assembly.${groupId}");
 
-        assertEquals( "assembly.group.id", result );
+        assertEquals("assembly.group.id", result);
     }
 
-    private void setupInterpolation()
-    {
-        configSourceStub.setRootInterpolator( FixedStringSearchInterpolator.create() );
-        configSourceStub.setEnvironmentInterpolator( FixedStringSearchInterpolator.create() );
-        configSourceStub.setEnvInterpolator( FixedStringSearchInterpolator.create() );
+    private void setupInterpolation() {
+        configSourceStub.setRootInterpolator(FixedStringSearchInterpolator.create());
+        configSourceStub.setEnvironmentInterpolator(FixedStringSearchInterpolator.create());
+        configSourceStub.setEnvInterpolator(FixedStringSearchInterpolator.create());
     }
 
     @Test
-    public void testShouldResolveModelPropertyBeforeModelGroupId()
-        throws ExpressionEvaluationException
-    {
+    public void testShouldResolveModelPropertyBeforeModelGroupId() throws ExpressionEvaluationException {
         final Model model = new Model();
-        model.setArtifactId( "artifact-id" );
-        model.setGroupId( "group.id" );
-        model.setVersion( "1" );
-        model.setPackaging( "jar" );
+        model.setArtifactId("artifact-id");
+        model.setGroupId("group.id");
+        model.setVersion("1");
+        model.setPackaging("jar");
 
         final Properties props = new Properties();
-        props.setProperty( "groupId", "other.id" );
+        props.setProperty("groupId", "other.id");
 
-        model.setProperties( props );
+        model.setProperties(props);
 
-        configSourceStub.setMavenProject( new MavenProject( model ) );
+        configSourceStub.setMavenProject(new MavenProject(model));
         setupInterpolation();
 
-        final Object result = new AssemblyExpressionEvaluator( configSourceStub ).evaluate( "assembly.${groupId}" );
+        final Object result = new AssemblyExpressionEvaluator(configSourceStub).evaluate("assembly.${groupId}");
 
-        assertEquals( "assembly.other.id", result );
+        assertEquals("assembly.other.id", result);
     }
 
     @Test
     public void testShouldResolveContextValueBeforeModelPropertyOrModelGroupIdInAssemblyId()
-        throws ExpressionEvaluationException
-    {
+            throws ExpressionEvaluationException {
         final Model model = new Model();
-        model.setArtifactId( "artifact-id" );
-        model.setGroupId( "group.id" );
-        model.setVersion( "1" );
-        model.setPackaging( "jar" );
+        model.setArtifactId("artifact-id");
+        model.setGroupId("group.id");
+        model.setVersion("1");
+        model.setPackaging("jar");
 
         final Properties props = new Properties();
-        props.setProperty( "groupId", "other.id" );
+        props.setProperty("groupId", "other.id");
 
-        model.setProperties( props );
+        model.setProperties(props);
 
         final Properties execProps = new Properties();
-        execProps.setProperty( "groupId", "still.another.id" );
+        execProps.setProperty("groupId", "still.another.id");
 
-        PropertiesBasedValueSource cliProps = new PropertiesBasedValueSource( execProps );
+        PropertiesBasedValueSource cliProps = new PropertiesBasedValueSource(execProps);
 
-        AssemblerConfigurationSource cs = mock( AssemblerConfigurationSource.class );
-        when( cs.getCommandLinePropsInterpolator() ).thenReturn( FixedStringSearchInterpolator.create( cliProps ) );
-        when( cs.getRepositoryInterpolator() ).thenReturn( FixedStringSearchInterpolator.create() );
-        when( cs.getEnvInterpolator() ).thenReturn( FixedStringSearchInterpolator.create() );
-        when( cs.getProject() ).thenReturn( new MavenProject( model ) );
+        AssemblerConfigurationSource cs = mock(AssemblerConfigurationSource.class);
+        when(cs.getCommandLinePropsInterpolator()).thenReturn(FixedStringSearchInterpolator.create(cliProps));
+        when(cs.getRepositoryInterpolator()).thenReturn(FixedStringSearchInterpolator.create());
+        when(cs.getEnvInterpolator()).thenReturn(FixedStringSearchInterpolator.create());
+        when(cs.getProject()).thenReturn(new MavenProject(model));
 
-        final Object result = new AssemblyExpressionEvaluator( cs ).evaluate( "assembly.${groupId}" );
+        final Object result = new AssemblyExpressionEvaluator(cs).evaluate("assembly.${groupId}");
 
-        assertEquals( "assembly.still.another.id", result );
+        assertEquals("assembly.still.another.id", result);
 
         // result of easymock migration, should be assert of expected result instead of verifying methodcalls
-        verify( cs ).getCommandLinePropsInterpolator();
-        verify( cs ).getRepositoryInterpolator();
-        verify( cs ).getEnvInterpolator();
-        verify( cs ).getProject();
+        verify(cs).getCommandLinePropsInterpolator();
+        verify(cs).getRepositoryInterpolator();
+        verify(cs).getEnvInterpolator();
+        verify(cs).getProject();
     }
 
     @Test
-    public void testShouldReturnUnchangedInputForUnresolvedExpression()
-        throws ExpressionEvaluationException
-    {
+    public void testShouldReturnUnchangedInputForUnresolvedExpression() throws ExpressionEvaluationException {
         final Model model = new Model();
-        model.setArtifactId( "artifact-id" );
-        model.setGroupId( "group.id" );
-        model.setVersion( "1" );
-        model.setPackaging( "jar" );
+        model.setArtifactId("artifact-id");
+        model.setGroupId("group.id");
+        model.setVersion("1");
+        model.setPackaging("jar");
 
-        configSourceStub.setMavenProject( new MavenProject( model ) );
+        configSourceStub.setMavenProject(new MavenProject(model));
         setupInterpolation();
 
-        final Object result = new AssemblyExpressionEvaluator( configSourceStub ).evaluate( "assembly.${unresolved}" );
+        final Object result = new AssemblyExpressionEvaluator(configSourceStub).evaluate("assembly.${unresolved}");
 
-        assertEquals( "assembly.${unresolved}", result );
+        assertEquals("assembly.${unresolved}", result);
     }
 
     @Test
-    public void testShouldInterpolateMultiDotProjectExpression()
-        throws ExpressionEvaluationException
-    {
+    public void testShouldInterpolateMultiDotProjectExpression() throws ExpressionEvaluationException {
         final Build build = new Build();
-        build.setFinalName( "final-name" );
+        build.setFinalName("final-name");
 
         final Model model = new Model();
-        model.setBuild( build );
+        model.setBuild(build);
 
-        configSourceStub.setMavenProject( new MavenProject( model ) );
+        configSourceStub.setMavenProject(new MavenProject(model));
         setupInterpolation();
 
         final Object result =
-            new AssemblyExpressionEvaluator( configSourceStub ).evaluate( "assembly.${project.build.finalName}" );
+                new AssemblyExpressionEvaluator(configSourceStub).evaluate("assembly.${project.build.finalName}");
 
-        assertEquals( "assembly.final-name", result );
+        assertEquals("assembly.final-name", result);
     }
-
 }

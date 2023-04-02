@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.io;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,7 @@ package org.apache.maven.plugins.assembly.io;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.io;
 
 import org.junit.Test;
 
@@ -27,49 +26,43 @@ import static org.junit.Assert.assertNotNull;
 /**
  * @author Benjamin Bentmann
  */
-public class PrefixedClasspathLocatorStrategyTest
-{
-    
+public class PrefixedClasspathLocatorStrategyTest {
+
     private MessageHolder mh = new DefaultMessageHolder();
 
     @Test
-    public void testResolvePrefixWithLeadingSlashAndWithTrailingSlash()
-    {
-        LocatorStrategy ls = new PrefixedClasspathLocatorStrategy( "/assemblies/" );
-        Location location = ls.resolve( "empty.xml", mh );
+    public void testResolvePrefixWithLeadingSlashAndWithTrailingSlash() {
+        LocatorStrategy ls = new PrefixedClasspathLocatorStrategy("/assemblies/");
+        Location location = ls.resolve("empty.xml", mh);
 
-        assertNotNull( location );
-        assertEquals( 0, mh.size() );
+        assertNotNull(location);
+        assertEquals(0, mh.size());
     }
 
     @Test
-    public void testResolvePrefixWithLeadingSlashAndWithoutTrailingSlash()
-    {
-        LocatorStrategy ls = new PrefixedClasspathLocatorStrategy( "/assemblies" );
-        Location location = ls.resolve( "empty.xml", mh );
+    public void testResolvePrefixWithLeadingSlashAndWithoutTrailingSlash() {
+        LocatorStrategy ls = new PrefixedClasspathLocatorStrategy("/assemblies");
+        Location location = ls.resolve("empty.xml", mh);
 
-        assertNotNull( location );
-        assertEquals( 0, mh.size() );
+        assertNotNull(location);
+        assertEquals(0, mh.size());
     }
 
     @Test
-    public void testResolvePrefixWithoutLeadingSlashAndWithTrailingSlash()
-    {
-        LocatorStrategy ls = new PrefixedClasspathLocatorStrategy( "assemblies/" );
-        Location location = ls.resolve( "empty.xml", mh );
+    public void testResolvePrefixWithoutLeadingSlashAndWithTrailingSlash() {
+        LocatorStrategy ls = new PrefixedClasspathLocatorStrategy("assemblies/");
+        Location location = ls.resolve("empty.xml", mh);
 
-        assertNotNull( location );
-        assertEquals( 0, mh.size() );
+        assertNotNull(location);
+        assertEquals(0, mh.size());
     }
 
     @Test
-    public void testResolvePrefixWithoutLeadingSlashAndWithoutTrailingSlash()
-    {
-        LocatorStrategy ls = new PrefixedClasspathLocatorStrategy( "assemblies" );
-        Location location = ls.resolve( "empty.xml", mh );
+    public void testResolvePrefixWithoutLeadingSlashAndWithoutTrailingSlash() {
+        LocatorStrategy ls = new PrefixedClasspathLocatorStrategy("assemblies");
+        Location location = ls.resolve("empty.xml", mh);
 
-        assertNotNull( location );
-        assertEquals( 0, mh.size() );
+        assertNotNull(location);
+        assertEquals(0, mh.size());
     }
-
 }

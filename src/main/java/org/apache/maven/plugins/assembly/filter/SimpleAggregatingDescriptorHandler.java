@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.filter;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,13 +16,7 @@ package org.apache.maven.plugins.assembly.filter;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import org.apache.maven.plugins.assembly.utils.AssemblyFileUtils;
-import org.codehaus.plexus.archiver.Archiver;
-import org.codehaus.plexus.archiver.ArchiverException;
-import org.codehaus.plexus.archiver.UnArchiver;
-import org.codehaus.plexus.components.io.fileselectors.FileInfo;
-import org.codehaus.plexus.util.IOUtil;
+package org.apache.maven.plugins.assembly.filter;
 
 import javax.inject.Named;
 
@@ -44,15 +36,21 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.maven.plugins.assembly.utils.AssemblyFileUtils;
+import org.codehaus.plexus.archiver.Archiver;
+import org.codehaus.plexus.archiver.ArchiverException;
+import org.codehaus.plexus.archiver.UnArchiver;
+import org.codehaus.plexus.components.io.fileselectors.FileInfo;
+import org.codehaus.plexus.util.IOUtil;
+
 /**
  * <code>file-aggregator</code>: Generic aggregating handler, configured with filePattern and outputPath.
  */
-@Named( "file-aggregator" )
-public class SimpleAggregatingDescriptorHandler implements ContainerDescriptorHandler
-{
+@Named("file-aggregator")
+public class SimpleAggregatingDescriptorHandler implements ContainerDescriptorHandler {
     // component configuration.
 
-    @SuppressWarnings( "FieldCanBeLocal" )
+    @SuppressWarnings("FieldCanBeLocal")
     private final String commentChars = "#";
 
     private final StringWriter aggregateWriter = new StringWriter();
@@ -68,101 +66,83 @@ public class SimpleAggregatingDescriptorHandler implements ContainerDescriptorHa
     private boolean overrideFilterAction;
 
     @Override
-    public void finalizeArchiveCreation( final Archiver archiver )
-    {
+    public void finalizeArchiveCreation(final Archiver archiver) {
         checkConfig();
 
-        if ( outputPath.endsWith( "/" ) )
-        {
-            throw new ArchiverException( "Cannot write aggregated properties to a directory. "
-                                             + "You must specify a file name in the outputPath configuration for this"
-                                             + " handler. (handler: " + getClass().getName() );
+        if (outputPath.endsWith("/")) {
+            throw new ArchiverException("Cannot write aggregated properties to a directory. "
+                    + "You must specify a file name in the outputPath configuration for this"
+                    + " handler. (handler: " + getClass().getName());
         }
 
-        if ( outputPath.startsWith( "/" ) )
-        {
-            outputPath = outputPath.substring( 1 );
+        if (outputPath.startsWith("/")) {
+            outputPath = outputPath.substring(1);
         }
 
         final File temp = writePropertiesFile();
 
         overrideFilterAction = true;
 
-        archiver.addFile( temp, outputPath );
+        archiver.addFile(temp, outputPath);
 
         overrideFilterAction = false;
     }
 
-    private File writePropertiesFile()
-    {
+    private File writePropertiesFile() {
         File f;
-        try
-        {
-            f = Files.createTempFile( "maven-assembly-plugin", "tmp" ).toFile();
+        try {
+            f = Files.createTempFile("maven-assembly-plugin", "tmp").toFile();
             f.deleteOnExit();
 
-            try ( Writer writer = getWriter( f ) )
-            {
-                writer.write( commentChars + " Aggregated on " + new Date() + " from: " );
+            try (Writer writer = getWriter(f)) {
+                writer.write(commentChars + " Aggregated on " + new Date() + " from: ");
 
-                for ( final String filename : filenames )
-                {
-                    writer.write( "\n" + commentChars + " " + filename );
+                for (final String filename : filenames) {
+                    writer.write("\n" + commentChars + " " + filename);
                 }
 
-                writer.write( "\n\n" );
-                writer.write( aggregateWriter.toString() );
+                writer.write("\n\n");
+                writer.write(aggregateWriter.toString());
             }
-        }
-        catch ( final IOException e )
-        {
+        } catch (final IOException e) {
             throw new ArchiverException(
-                "Error adding aggregated properties to finalize archive creation. Reason: " + e.getMessage(), e );
+                    "Error adding aggregated properties to finalize archive creation. Reason: " + e.getMessage(), e);
         }
 
         return f;
     }
 
-    private Writer getWriter( File f )
-        throws FileNotFoundException
-    {
+    private Writer getWriter(File f) throws FileNotFoundException {
         Writer writer;
-        writer = AssemblyFileUtils.isPropertyFile( f )
-                     ? new OutputStreamWriter( new FileOutputStream( f ), StandardCharsets.ISO_8859_1 )
-                     : new OutputStreamWriter( new FileOutputStream( f ) ); // Still platform encoding
+        writer = AssemblyFileUtils.isPropertyFile(f)
+                ? new OutputStreamWriter(new FileOutputStream(f), StandardCharsets.ISO_8859_1)
+                : new OutputStreamWriter(new FileOutputStream(f)); // Still platform encoding
         return writer;
     }
 
     @Override
-    public void finalizeArchiveExtraction( final UnArchiver unarchiver )
-    {
+    public void finalizeArchiveExtraction(final UnArchiver unarchiver) {}
+
+    @Override
+    public List<String> getVirtualFiles() {
+        checkConfig();
+
+        return Collections.singletonList(outputPath);
     }
 
     @Override
-    public List<String> getVirtualFiles()
-    {
+    public boolean isSelected(final FileInfo fileInfo) throws IOException {
         checkConfig();
 
-        return Collections.singletonList( outputPath );
-    }
-
-    @Override
-    public boolean isSelected( final FileInfo fileInfo )
-        throws IOException
-    {
-        checkConfig();
-
-        if ( overrideFilterAction )
-        {
+        if (overrideFilterAction) {
             return true;
         }
 
-        String name = AssemblyFileUtils.normalizeFileInfo( fileInfo );
+        String name = AssemblyFileUtils.normalizeFileInfo(fileInfo);
 
-        if ( fileInfo.isFile() && name.matches( filePattern ) )
-        {
-            readProperties( fileInfo );
-            filenames.add( name );
+        if (fileInfo.isFile() && name.matches(filePattern)) {
+            readProperties(fileInfo);
+            filenames.add(name);
 
             return false;
         }
@@ -170,52 +150,43 @@ public class SimpleAggregatingDescriptorHandler implements ContainerDescriptorHa
         return true;
     }
 
-    private void checkConfig()
-    {
-        if ( filePattern == null || outputPath == null )
-        {
+    private void checkConfig() {
+        if (filePattern == null || outputPath == null) {
             throw new IllegalStateException(
-                "You must configure filePattern and outputPath in your containerDescriptorHandler declaration." );
+                    "You must configure filePattern and outputPath in your containerDescriptorHandler declaration.");
         }
     }
 
-    private void readProperties( final FileInfo fileInfo )
-        throws IOException
-    {
-        try ( StringWriter writer = new StringWriter();
-            Reader reader = AssemblyFileUtils.isPropertyFile( fileInfo.getName() )
-                ? new InputStreamReader( fileInfo.getContents(), StandardCharsets.ISO_8859_1 )
-                : new InputStreamReader( fileInfo.getContents() ) ) // platform encoding
+    private void readProperties(final FileInfo fileInfo) throws IOException {
+        try (StringWriter writer = new StringWriter();
+                Reader reader = AssemblyFileUtils.isPropertyFile(fileInfo.getName())
+                        ? new InputStreamReader(fileInfo.getContents(), StandardCharsets.ISO_8859_1)
+                        : new InputStreamReader(fileInfo.getContents())) // platform encoding
         {
-            IOUtil.copy( reader, writer );
+            IOUtil.copy(reader, writer);
             final String content = writer.toString();
-            aggregateWriter.write( "\n" );
-            aggregateWriter.write( content );
+            aggregateWriter.write("\n");
+            aggregateWriter.write(content);
         }
     }
 
-    @SuppressWarnings( "UnusedDeclaration" )
-    public String getFilePattern()
-    {
+    @SuppressWarnings("UnusedDeclaration")
+    public String getFilePattern() {
         return filePattern;
     }
 
-    @SuppressWarnings( "UnusedDeclaration" )
-    public void setFilePattern( final String filePattern )
-    {
+    @SuppressWarnings("UnusedDeclaration")
+    public void setFilePattern(final String filePattern) {
         this.filePattern = filePattern;
     }
 
-    @SuppressWarnings( "UnusedDeclaration" )
-    public String getOutputPath()
-    {
+    @SuppressWarnings("UnusedDeclaration")
+    public String getOutputPath() {
         return outputPath;
     }
 
-    @SuppressWarnings( "UnusedDeclaration" )
-    public void setOutputPath( final String outputPath )
-    {
+    @SuppressWarnings("UnusedDeclaration")
+    public void setOutputPath(final String outputPath) {
         this.outputPath = outputPath;
     }
-
 }

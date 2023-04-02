@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.io;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,7 @@ package org.apache.maven.plugins.assembly.io;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.io;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,8 +27,7 @@ import java.nio.ByteBuffer;
  * The location interface.
  *
  */
-interface Location
-{
+interface Location {
 
     /**
      * @return {@link File}
@@ -39,7 +37,7 @@ interface Location
 
     /**
      * Open the location.
-     * 
+     *
      * @throws IOException in case of an error
      */
     void open() throws IOException;
@@ -54,14 +52,14 @@ interface Location
      * @return number of read bytes
      * @throws IOException in case of an error
      */
-    int read( ByteBuffer buffer ) throws IOException;
+    int read(ByteBuffer buffer) throws IOException;
 
     /**
      * @param buffer the buffer
      * @return number of read bytes
      * @throws IOException in case of an error
      */
-    int read( byte[] buffer ) throws IOException;
+    int read(byte[] buffer) throws IOException;
 
     /**
      * @return the resulting input stream.
@@ -73,5 +71,4 @@ interface Location
      * @return spec
      */
     String getSpecification();
-
 }

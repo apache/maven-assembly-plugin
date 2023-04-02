@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.io;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,41 +16,34 @@ package org.apache.maven.plugins.assembly.io;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.io;
 
 import java.io.File;
 
 /**
  *
  */
-class RelativeFileLocatorStrategy
-    implements LocatorStrategy
-{
+class RelativeFileLocatorStrategy implements LocatorStrategy {
 
     private final File basedir;
 
-    RelativeFileLocatorStrategy( File basedir )
-    {
+    RelativeFileLocatorStrategy(File basedir) {
         this.basedir = basedir;
     }
 
     @Override
-    public Location resolve( String locationSpecification, MessageHolder messageHolder )
-    {
-        File file = new File( basedir, locationSpecification );
-        messageHolder.addInfoMessage( "Searching for file location: " + file.getAbsolutePath() );
+    public Location resolve(String locationSpecification, MessageHolder messageHolder) {
+        File file = new File(basedir, locationSpecification);
+        messageHolder.addInfoMessage("Searching for file location: " + file.getAbsolutePath());
 
         Location location = null;
 
-        if ( file.exists() )
-        {
-            location = new FileLocation( file, locationSpecification );
-        }
-        else
-        {
-            messageHolder.addMessage( "File: " + file.getAbsolutePath() + " does not exist." );
+        if (file.exists()) {
+            location = new FileLocation(file, locationSpecification);
+        } else {
+            messageHolder.addMessage("File: " + file.getAbsolutePath() + " does not exist.");
         }
 
         return location;
     }
-
 }

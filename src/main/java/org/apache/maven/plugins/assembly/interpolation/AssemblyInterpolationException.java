@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.interpolation;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,18 +16,15 @@ package org.apache.maven.plugins.assembly.interpolation;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.interpolation;
 
 /**
  *
  */
-public class AssemblyInterpolationException
-    extends Exception
-{
+public class AssemblyInterpolationException extends Exception {
     private static final long serialVersionUID = 1L;
 
-    public AssemblyInterpolationException( final String message, final Throwable cause )
-    {
-        super( message, cause );
+    public AssemblyInterpolationException(final String message, final Throwable cause) {
+        super(message, cause);
     }
-
 }

@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.utils;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,7 @@ package org.apache.maven.plugins.assembly.utils;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,9 +24,7 @@ import java.io.InputStream;
 /**
  * @author Kristian Rosenvold
  */
-class LinuxLineFeedInputStream
-    extends InputStream
-{
+class LinuxLineFeedInputStream extends InputStream {
 
     private final InputStream target;
 
@@ -39,19 +36,15 @@ class LinuxLineFeedInputStream
 
     private boolean eofSeen = false;
 
-    LinuxLineFeedInputStream( InputStream in, boolean ensureLineFeedAtEndOfFile )
-    {
+    LinuxLineFeedInputStream(InputStream in, boolean ensureLineFeedAtEndOfFile) {
         this.target = in;
         this.ensureLineFeedAtEndOfFile = ensureLineFeedAtEndOfFile;
     }
 
-    private int readWithUpdate()
-        throws IOException
-    {
+    private int readWithUpdate() throws IOException {
         final int target = this.target.read();
         eofSeen = target == -1;
-        if ( eofSeen )
-        {
+        if (eofSeen) {
             return target;
         }
         slashNSeen = target == '\n';
@@ -60,62 +53,46 @@ class LinuxLineFeedInputStream
     }
 
     @Override
-    public int read()
-        throws IOException
-    {
+    public int read() throws IOException {
         boolean prevWasSlashR = slashRSeen;
-        if ( eofSeen )
-        {
-            return eofGame( prevWasSlashR );
-        }
-        else
-        {
+        if (eofSeen) {
+            return eofGame(prevWasSlashR);
+        } else {
             int target = readWithUpdate();
-            if ( eofSeen )
-            {
-                return eofGame( prevWasSlashR );
+            if (eofSeen) {
+                return eofGame(prevWasSlashR);
             }
-            if ( slashRSeen )
-            {
+            if (slashRSeen) {
                 return '\n';
             }
 
-            if ( prevWasSlashR && slashNSeen )
-            { // Lone /r
+            if (prevWasSlashR && slashNSeen) { // Lone /r
                 return read();
             }
             return target;
         }
     }
 
-    private int eofGame( boolean previousWasSlashR )
-    {
-        if ( previousWasSlashR || !ensureLineFeedAtEndOfFile )
-        {
+    private int eofGame(boolean previousWasSlashR) {
+        if (previousWasSlashR || !ensureLineFeedAtEndOfFile) {
             return -1;
         }
-        if ( !slashNSeen )
-        {
+        if (!slashNSeen) {
             slashNSeen = true;
             return '\n';
-        }
-        else
-        {
+        } else {
             return -1;
         }
     }
 
     @Override
-    public void close()
-        throws IOException
-    {
+    public void close() throws IOException {
         super.close();
         target.close();
     }
 
     @Override
-    public synchronized void mark( int readlimit )
-    {
-        throw new UnsupportedOperationException( "Mark not implemented yet" );
+    public synchronized void mark(int readlimit) {
+        throw new UnsupportedOperationException("Mark not implemented yet");
     }
 }

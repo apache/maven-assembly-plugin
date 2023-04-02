@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.utils;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,7 @@ package org.apache.maven.plugins.assembly.utils;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,96 +42,87 @@ import org.slf4j.Logger;
 /**
  *
  */
-public final class FilterUtils
-{
+public final class FilterUtils {
 
-    private FilterUtils()
-    {
-    }
+    private FilterUtils() {}
 
-    public static Set<MavenProject> filterProjects( final Set<MavenProject> projects, final List<String> includes,
-                                                    final List<String> excludes, final boolean actTransitively,
-                                                    final Logger logger )
-    {
+    public static Set<MavenProject> filterProjects(
+            final Set<MavenProject> projects,
+            final List<String> includes,
+            final List<String> excludes,
+            final boolean actTransitively,
+            final Logger logger) {
         final List<PatternIncludesArtifactFilter> allFilters = new ArrayList<>();
 
         final AndArtifactFilter filter = new AndArtifactFilter();
 
-        if ( !includes.isEmpty() )
-        {
+        if (!includes.isEmpty()) {
             final PatternIncludesArtifactFilter includeFilter =
-                new PatternIncludesArtifactFilter( includes, actTransitively );
+                    new PatternIncludesArtifactFilter(includes, actTransitively);
 
-            filter.add( includeFilter );
-            allFilters.add( includeFilter );
+            filter.add(includeFilter);
+            allFilters.add(includeFilter);
         }
-        if ( !excludes.isEmpty() )
-        {
+        if (!excludes.isEmpty()) {
             final PatternExcludesArtifactFilter excludeFilter =
-                new PatternExcludesArtifactFilter( excludes, actTransitively );
+                    new PatternExcludesArtifactFilter(excludes, actTransitively);
 
-            filter.add( excludeFilter );
-            allFilters.add( excludeFilter );
+            filter.add(excludeFilter);
+            allFilters.add(excludeFilter);
         }
 
-        Set<MavenProject> result = new LinkedHashSet<>( projects.size() );
-        for ( MavenProject project : projects )
-        {
+        Set<MavenProject> result = new LinkedHashSet<>(projects.size());
+        for (MavenProject project : projects) {
             final Artifact artifact = project.getArtifact();
 
-            if ( filter.include( artifact ) )
-            {
-                result.add( project );
+            if (filter.include(artifact)) {
+                result.add(project);
             }
         }
 
-        for ( final PatternIncludesArtifactFilter f : allFilters )
-        {
-            if ( f != null )
-            {
-                f.reportMissedCriteria( logger );
+        for (final PatternIncludesArtifactFilter f : allFilters) {
+            if (f != null) {
+                f.reportMissedCriteria(logger);
             }
         }
         return result;
     }
 
-    public static void filterArtifacts( final Set<Artifact> artifacts, final List<String> includes,
-                                        final List<String> excludes, final boolean strictFiltering,
-                                        final boolean actTransitively, final Logger logger,
-                                        final ArtifactFilter... additionalFilters )
-        throws InvalidAssemblerConfigurationException
-    {
+    public static void filterArtifacts(
+            final Set<Artifact> artifacts,
+            final List<String> includes,
+            final List<String> excludes,
+            final boolean strictFiltering,
+            final boolean actTransitively,
+            final Logger logger,
+            final ArtifactFilter... additionalFilters)
+            throws InvalidAssemblerConfigurationException {
         final List<ArtifactFilter> allFilters = new ArrayList<>();
 
         final AndArtifactFilter filter = new AndArtifactFilter();
 
-        if ( additionalFilters != null && additionalFilters.length > 0 )
-        {
-            for ( final ArtifactFilter additionalFilter : additionalFilters )
-            {
-                if ( additionalFilter != null )
-                {
-                    filter.add( additionalFilter );
+        if (additionalFilters != null && additionalFilters.length > 0) {
+            for (final ArtifactFilter additionalFilter : additionalFilters) {
+                if (additionalFilter != null) {
+                    filter.add(additionalFilter);
                 }
             }
         }
 
-        if ( !includes.isEmpty() )
-        {
-            final ArtifactFilter includeFilter = new PatternIncludesArtifactFilter( includes, actTransitively );
+        if (!includes.isEmpty()) {
+            final ArtifactFilter includeFilter = new PatternIncludesArtifactFilter(includes, actTransitively);
 
-            filter.add( includeFilter );
+            filter.add(includeFilter);
 
-            allFilters.add( includeFilter );
+            allFilters.add(includeFilter);
         }
 
-        if ( !excludes.isEmpty() )
-        {
-            final ArtifactFilter excludeFilter = new PatternExcludesArtifactFilter( excludes, actTransitively );
+        if (!excludes.isEmpty()) {
+            final ArtifactFilter excludeFilter = new PatternExcludesArtifactFilter(excludes, actTransitively);
 
-            filter.add( excludeFilter );
+            filter.add(excludeFilter);
 
-            allFilters.add( excludeFilter );
+            allFilters.add(excludeFilter);
         }
 
         // FIXME: Why is this added twice??
@@ -141,103 +131,84 @@ public final class FilterUtils
         // allFilters.addAll( additionalFilters );
         // }
 
-        for ( final Iterator<Artifact> it = artifacts.iterator(); it.hasNext(); )
-        {
+        for (final Iterator<Artifact> it = artifacts.iterator(); it.hasNext(); ) {
             final Artifact artifact = it.next();
 
-            if ( !filter.include( artifact ) )
-            {
+            if (!filter.include(artifact)) {
                 it.remove();
 
-                if ( logger.isDebugEnabled() )
-                {
-                    logger.debug( artifact.getId() + " was removed by one or more filters." );
+                if (logger.isDebugEnabled()) {
+                    logger.debug(artifact.getId() + " was removed by one or more filters.");
                 }
             }
         }
 
-        reportFilteringStatistics( allFilters, logger );
+        reportFilteringStatistics(allFilters, logger);
 
-        for ( final ArtifactFilter f : allFilters )
-        {
-            if ( f instanceof StatisticsReportingArtifactFilter )
-            {
+        for (final ArtifactFilter f : allFilters) {
+            if (f instanceof StatisticsReportingArtifactFilter) {
                 final StatisticsReportingArtifactFilter sFilter = (StatisticsReportingArtifactFilter) f;
 
-                if ( strictFiltering && sFilter.hasMissedCriteria() )
-                {
+                if (strictFiltering && sFilter.hasMissedCriteria()) {
                     throw new InvalidAssemblerConfigurationException(
-                        "One or more filters had unmatched criteria. Check debug log for more information." );
+                            "One or more filters had unmatched criteria. Check debug log for more information.");
                 }
             }
         }
     }
 
-    public static void reportFilteringStatistics( final Collection<ArtifactFilter> filters, final Logger logger )
-    {
-        for ( final ArtifactFilter f : filters )
-        {
-            if ( f instanceof StatisticsReportingArtifactFilter )
-            {
+    public static void reportFilteringStatistics(final Collection<ArtifactFilter> filters, final Logger logger) {
+        for (final ArtifactFilter f : filters) {
+            if (f instanceof StatisticsReportingArtifactFilter) {
                 final StatisticsReportingArtifactFilter sFilter = (StatisticsReportingArtifactFilter) f;
 
-                if ( logger.isDebugEnabled() )
-                {
-                    logger.debug( "Statistics for " + sFilter + "\n" );
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Statistics for " + sFilter + "\n");
                 }
 
-                sFilter.reportMissedCriteria( logger );
-                sFilter.reportFilteredArtifacts( logger );
+                sFilter.reportMissedCriteria(logger);
+                sFilter.reportFilteredArtifacts(logger);
             }
         }
     }
 
     /**
-     * Results in a filter including the rootScope and its transitive scopes 
-     * 
+     * Results in a filter including the rootScope and its transitive scopes
+     *
      * @param rootScope the root scope
      * @return the filter
      */
-    public static ScopeFilter newScopeFilter( final String rootScope )
-    {
-        return newScopeFilter( Collections.singleton( rootScope ) );
+    public static ScopeFilter newScopeFilter(final String rootScope) {
+        return newScopeFilter(Collections.singleton(rootScope));
     }
-    
+
     /**
-     * Results in a filter including all rootScopes and their transitive scopes 
-     * 
+     * Results in a filter including all rootScopes and their transitive scopes
+     *
      * @param rootScopes all root scopes
      * @return the filter
      */
-    public static ScopeFilter newScopeFilter( final Collection<String> rootScopes )
-    {
+    public static ScopeFilter newScopeFilter(final Collection<String> rootScopes) {
         Set<String> scopes = new HashSet<>();
-        
-        for ( String rootScope : rootScopes )
-        {
-            if ( Artifact.SCOPE_COMPILE.equals( rootScope ) )
-            {
-                scopes.addAll( Arrays.asList( "compile", "provided", "system" ) );
+
+        for (String rootScope : rootScopes) {
+            if (Artifact.SCOPE_COMPILE.equals(rootScope)) {
+                scopes.addAll(Arrays.asList("compile", "provided", "system"));
             }
-            if ( Artifact.SCOPE_PROVIDED.equals( rootScope ) )
-            {
-                scopes.add( "provided" );
+            if (Artifact.SCOPE_PROVIDED.equals(rootScope)) {
+                scopes.add("provided");
             }
-            if ( Artifact.SCOPE_RUNTIME.equals( rootScope ) )
-            {
-                scopes.addAll( Arrays.asList( "compile", "runtime" ) );
+            if (Artifact.SCOPE_RUNTIME.equals(rootScope)) {
+                scopes.addAll(Arrays.asList("compile", "runtime"));
             }
-            if ( Artifact.SCOPE_SYSTEM.equals( rootScope ) )
-            {
-                scopes.add( "system" );
+            if (Artifact.SCOPE_SYSTEM.equals(rootScope)) {
+                scopes.add("system");
             }
-            if ( Artifact.SCOPE_TEST.equals( rootScope ) )
-            {
-                scopes.addAll( Arrays.asList( "compile", "provided", "runtime", "system", "test" ) );
+            if (Artifact.SCOPE_TEST.equals(rootScope)) {
+                scopes.addAll(Arrays.asList("compile", "provided", "runtime", "system", "test"));
             }
         }
-        
-        return ScopeFilter.including( scopes );
-    }
 
+        return ScopeFilter.including(scopes);
+    }
 }

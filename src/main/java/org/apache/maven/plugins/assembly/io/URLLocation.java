@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.io;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,7 @@ package org.apache.maven.plugins.assembly.io;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.io;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,9 +29,7 @@ import org.apache.commons.io.IOUtils;
  * The URL Location, storing the URL content to a temporary local file.
  *
  */
-class URLLocation
-    extends FileLocation
-{
+class URLLocation extends FileLocation {
 
     private final URL url;
 
@@ -49,10 +46,9 @@ class URLLocation
      * @param tempFileSuffix the suffix
      * @param tempFileDeleteOnExit delete on exit
      */
-    URLLocation( URL url, String specification, String tempFilePrefix, String tempFileSuffix,
-                        boolean tempFileDeleteOnExit )
-    {
-        super( specification );
+    URLLocation(
+            URL url, String specification, String tempFilePrefix, String tempFileSuffix, boolean tempFileDeleteOnExit) {
+        super(specification);
 
         this.url = url;
         this.tempFilePrefix = tempFilePrefix;
@@ -61,22 +57,17 @@ class URLLocation
     }
 
     @Override
-    protected void initFile()
-        throws IOException
-    {
-        if ( unsafeGetFile() == null )
-        {
-            File tempFile = Files.createTempFile( tempFilePrefix, tempFileSuffix ).toFile();
+    protected void initFile() throws IOException {
+        if (unsafeGetFile() == null) {
+            File tempFile = Files.createTempFile(tempFilePrefix, tempFileSuffix).toFile();
 
-            if ( tempFileDeleteOnExit )
-            {
+            if (tempFileDeleteOnExit) {
                 tempFile.deleteOnExit();
             }
 
-            IOUtils.copy( url, tempFile );
+            IOUtils.copy(url, tempFile);
 
-            setFile( tempFile );
+            setFile(tempFile);
         }
     }
-
 }

@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.io;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,38 +16,36 @@ package org.apache.maven.plugins.assembly.io;
  * specific language governing permissions and limitations
  * under the License.
  */
-
+package org.apache.maven.plugins.assembly.io;
 
 /**
  * Message Sink interface.
  *
  */
-interface MessageSink
-{
+interface MessageSink {
 
     /**
      * @param message the message
      */
-    void debug( String message );
+    void debug(String message);
 
     /**
      * @param message the message
      */
-    void info( String message );
+    void info(String message);
 
     /**
      * @param message the message
      */
-    void warning( String message );
+    void warning(String message);
 
     /**
      * @param message the message
      */
-    void error( String message );
+    void error(String message);
 
     /**
      * @param message the message
      */
-    void severe( String message );
-
+    void severe(String message);
 }

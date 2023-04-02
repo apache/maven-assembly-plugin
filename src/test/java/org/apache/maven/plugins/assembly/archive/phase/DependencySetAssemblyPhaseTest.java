@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.archive.phase;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,13 +16,7 @@ package org.apache.maven.plugins.assembly.archive.phase;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+package org.apache.maven.plugins.assembly.archive.phase;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -47,88 +39,83 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
-@RunWith( MockitoJUnitRunner.class )
-public class DependencySetAssemblyPhaseTest
-{
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@RunWith(MockitoJUnitRunner.class)
+public class DependencySetAssemblyPhaseTest {
     private DependencySetAssemblyPhase phase;
-    
+
     private DependencyResolver dependencyResolver;
-    
+
     @Before
-    public void setUp()
-    {
-        this.dependencyResolver = mock( DependencyResolver.class );
-        
-        this.phase = new DependencySetAssemblyPhase( mock( ProjectBuilder.class ), dependencyResolver );
+    public void setUp() {
+        this.dependencyResolver = mock(DependencyResolver.class);
+
+        this.phase = new DependencySetAssemblyPhase(mock(ProjectBuilder.class), dependencyResolver);
     }
 
     @Test
     public void testExecute_ShouldAddOneDependencyFromProject()
-        throws AssemblyFormattingException, ArchiveCreationException, IOException,
-        InvalidAssemblerConfigurationException, DependencyResolutionException
-    {
+            throws AssemblyFormattingException, ArchiveCreationException, IOException,
+                    InvalidAssemblerConfigurationException, DependencyResolutionException {
         final String outputLocation = "/out";
 
-        final MavenProject project = newMavenProject( "group", "project", "0" );
+        final MavenProject project = newMavenProject("group", "project", "0");
 
-        Artifact artifact = mock( Artifact.class );
-        project.setArtifact( artifact );
+        Artifact artifact = mock(Artifact.class);
+        project.setArtifact(artifact);
 
         final DependencySet ds = new DependencySet();
-        ds.setUseProjectArtifact( false );
-        ds.setOutputDirectory( outputLocation );
-        ds.setOutputFileNameMapping( "${artifact.artifactId}" );
-        ds.setUnpack( false );
-        ds.setScope( Artifact.SCOPE_COMPILE );
-        ds.setFileMode( Integer.toString( 10, 8 ) );
+        ds.setUseProjectArtifact(false);
+        ds.setOutputDirectory(outputLocation);
+        ds.setOutputFileNameMapping("${artifact.artifactId}");
+        ds.setUnpack(false);
+        ds.setScope(Artifact.SCOPE_COMPILE);
+        ds.setFileMode(Integer.toString(10, 8));
 
         final Assembly assembly = new Assembly();
 
-        assembly.setId( "test" );
-        assembly.setIncludeBaseDirectory( false );
-        assembly.addDependencySet( ds );
+        assembly.setId("test");
+        assembly.setIncludeBaseDirectory(false);
+        assembly.addDependencySet(ds);
 
-        project.setArtifacts( Collections.singleton( artifact ) );
+        project.setArtifacts(Collections.singleton(artifact));
 
-        when( dependencyResolver.resolveDependencySets( eq( assembly ),
-                                                        isNull(),
-                                                        anyList() ) ).thenReturn( new LinkedHashMap<DependencySet, Set<Artifact>>() );
-        
-        this.phase.execute( assembly, null, null );
+        when(dependencyResolver.resolveDependencySets(eq(assembly), isNull(), anyList()))
+                .thenReturn(new LinkedHashMap<DependencySet, Set<Artifact>>());
+
+        this.phase.execute(assembly, null, null);
 
         // result of easymock migration, should be assert of expected result instead of verifying methodcalls
-        verify( dependencyResolver ).resolveDependencySets( eq( assembly ),
-                                                            isNull(),
-                                                            anyList() );
+        verify(dependencyResolver).resolveDependencySets(eq(assembly), isNull(), anyList());
     }
 
     @Test
-    public void testExecute_ShouldNotAddDependenciesWhenProjectHasNone()
-        throws Exception
-    {
+    public void testExecute_ShouldNotAddDependenciesWhenProjectHasNone() throws Exception {
         final Assembly assembly = new Assembly();
-        assembly.setId( "test" );
-        assembly.setIncludeBaseDirectory( false );
-        
-        when( dependencyResolver.resolveDependencySets( eq( assembly ), 
-                                                        isNull(),
-                                                        anyList() ) ).thenReturn( new LinkedHashMap<DependencySet, Set<Artifact>>() );
+        assembly.setId("test");
+        assembly.setIncludeBaseDirectory(false);
 
-        this.phase.execute( assembly, null, null );
+        when(dependencyResolver.resolveDependencySets(eq(assembly), isNull(), anyList()))
+                .thenReturn(new LinkedHashMap<DependencySet, Set<Artifact>>());
+
+        this.phase.execute(assembly, null, null);
 
         // result of easymock migration, should be assert of expected result instead of verifying methodcalls
-        verify( dependencyResolver ).resolveDependencySets( eq( assembly ),
-                                                            isNull(),
-                                                            anyList() );
+        verify(dependencyResolver).resolveDependencySets(eq(assembly), isNull(), anyList());
     }
-    
-    private MavenProject newMavenProject( final String groupId, final String artifactId, final String version )
-    {
-        final Model model = new Model();
-        model.setGroupId( groupId );
-        model.setArtifactId( artifactId );
-        model.setVersion( version );
 
-        return new MavenProject( model );
+    private MavenProject newMavenProject(final String groupId, final String artifactId, final String version) {
+        final Model model = new Model();
+        model.setGroupId(groupId);
+        model.setArtifactId(artifactId);
+        model.setVersion(version);
+
+        return new MavenProject(model);
     }
 }

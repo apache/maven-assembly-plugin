@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.archive.archiver;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,21 +16,20 @@ package org.apache.maven.plugins.assembly.archive.archiver;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import org.codehaus.plexus.archiver.FileSet;
-import org.codehaus.plexus.components.io.fileselectors.FileSelector;
-import org.codehaus.plexus.components.io.functions.InputStreamTransformer;
+package org.apache.maven.plugins.assembly.archive.archiver;
 
 import java.io.File;
+
+import org.codehaus.plexus.archiver.FileSet;
 import org.codehaus.plexus.components.io.filemappers.FileMapper;
+import org.codehaus.plexus.components.io.fileselectors.FileSelector;
+import org.codehaus.plexus.components.io.functions.InputStreamTransformer;
 
 /**
  *
  */
-class PrefixedFileSet
-    implements FileSet
-{
-    private final static FileMapper[] EMPTY_FILE_MAPPERS_ARRAY = new FileMapper[0];
+class PrefixedFileSet implements FileSet {
+    private static final FileMapper[] EMPTY_FILE_MAPPERS_ARRAY = new FileMapper[0];
 
     private final String rootPrefix;
 
@@ -45,17 +42,13 @@ class PrefixedFileSet
      * @param rootPrefix The root prefix
      * @param selectors  The file selectors.
      */
-    PrefixedFileSet( final FileSet fileSet, final String rootPrefix, final FileSelector[] selectors )
-    {
+    PrefixedFileSet(final FileSet fileSet, final String rootPrefix, final FileSelector[] selectors) {
         this.fileSet = fileSet;
         this.selectors = selectors;
 
-        if ( rootPrefix.length() > 0 && !rootPrefix.endsWith( "/" ) )
-        {
+        if (rootPrefix.length() > 0 && !rootPrefix.endsWith("/")) {
             this.rootPrefix = rootPrefix + "/";
-        }
-        else
-        {
+        } else {
             this.rootPrefix = rootPrefix;
         }
     }
@@ -63,19 +56,15 @@ class PrefixedFileSet
     /**
      * {@inheritDoc}
      */
-    static FileSelector[] combineSelectors( FileSelector[] first, FileSelector[] second )
-    {
-        if ( ( first != null ) && ( second != null ) )
-        {
+    static FileSelector[] combineSelectors(FileSelector[] first, FileSelector[] second) {
+        if ((first != null) && (second != null)) {
             final FileSelector[] temp = new FileSelector[first.length + second.length];
 
-            System.arraycopy( first, 0, temp, 0, first.length );
-            System.arraycopy( second, 0, temp, first.length, second.length );
+            System.arraycopy(first, 0, temp, 0, first.length);
+            System.arraycopy(second, 0, temp, first.length, second.length);
 
             first = temp;
-        }
-        else if ( ( first == null ) && ( second != null ) )
-        {
+        } else if ((first == null) && (second != null)) {
             first = second;
         }
 
@@ -86,8 +75,7 @@ class PrefixedFileSet
      * {@inheritDoc}
      */
     @Override
-    public String[] getExcludes()
-    {
+    public String[] getExcludes() {
         return fileSet.getExcludes();
     }
 
@@ -95,19 +83,17 @@ class PrefixedFileSet
      * {@inheritDoc}
      */
     @Override
-    public FileSelector[] getFileSelectors()
-    {
+    public FileSelector[] getFileSelectors() {
         FileSelector[] sel = fileSet.getFileSelectors();
         final FileSelector[] selectors1 = selectors;
-        return combineSelectors( sel, selectors1 );
+        return combineSelectors(sel, selectors1);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String[] getIncludes()
-    {
+    public String[] getIncludes() {
         return fileSet.getIncludes();
     }
 
@@ -115,22 +101,16 @@ class PrefixedFileSet
      * {@inheritDoc}
      */
     @Override
-    public String getPrefix()
-    {
+    public String getPrefix() {
         String prefix = fileSet.getPrefix();
-        if ( prefix == null )
-        {
+        if (prefix == null) {
             return rootPrefix;
         }
 
-        if ( prefix.startsWith( "/" ) )
-        {
-            if ( prefix.length() > 1 )
-            {
-                prefix = prefix.substring( 1 );
-            }
-            else
-            {
+        if (prefix.startsWith("/")) {
+            if (prefix.length() > 1) {
+                prefix = prefix.substring(1);
+            } else {
                 prefix = "";
             }
         }
@@ -142,8 +122,7 @@ class PrefixedFileSet
      * {@inheritDoc}
      */
     @Override
-    public boolean isCaseSensitive()
-    {
+    public boolean isCaseSensitive() {
         return fileSet.isCaseSensitive();
     }
 
@@ -151,8 +130,7 @@ class PrefixedFileSet
      * {@inheritDoc}
      */
     @Override
-    public boolean isIncludingEmptyDirectories()
-    {
+    public boolean isIncludingEmptyDirectories() {
         return fileSet.isIncludingEmptyDirectories();
     }
 
@@ -160,8 +138,7 @@ class PrefixedFileSet
      * {@inheritDoc}
      */
     @Override
-    public boolean isUsingDefaultExcludes()
-    {
+    public boolean isUsingDefaultExcludes() {
         return fileSet.isUsingDefaultExcludes();
     }
 
@@ -169,20 +146,17 @@ class PrefixedFileSet
      * {@inheritDoc}
      */
     @Override
-    public File getDirectory()
-    {
+    public File getDirectory() {
         return fileSet.getDirectory();
     }
 
     @Override
-    public InputStreamTransformer getStreamTransformer()
-    {
+    public InputStreamTransformer getStreamTransformer() {
         return fileSet.getStreamTransformer();
     }
 
     @Override
-    public FileMapper[] getFileMappers()
-    {
+    public FileMapper[] getFileMappers() {
         return EMPTY_FILE_MAPPERS_ARRAY;
     }
 }

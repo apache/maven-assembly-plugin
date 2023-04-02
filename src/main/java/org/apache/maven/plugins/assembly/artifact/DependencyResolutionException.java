@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.artifact;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,19 +16,16 @@ package org.apache.maven.plugins.assembly.artifact;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.artifact;
 
 /**
  *
  */
-public class DependencyResolutionException
-    extends Exception
-{
+public class DependencyResolutionException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
-    public DependencyResolutionException( final String message, final Throwable error )
-    {
-        super( message, error );
+    public DependencyResolutionException(final String message, final Throwable error) {
+        super(message, error);
     }
-
 }

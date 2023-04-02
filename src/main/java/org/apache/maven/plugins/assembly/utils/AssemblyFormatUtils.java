@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.utils;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,7 @@ package org.apache.maven.plugins.assembly.utils;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,12 +43,9 @@ import org.slf4j.Logger;
 /**
  *
  */
-public final class AssemblyFormatUtils
-{
+public final class AssemblyFormatUtils {
 
-    private AssemblyFormatUtils()
-    {
-    }
+    private AssemblyFormatUtils() {}
 
     /**
      * Get the full name of the distribution artifact
@@ -57,129 +53,101 @@ public final class AssemblyFormatUtils
      * @param assembly the assembly
      * @return the distribution name
      */
-    public static String getDistributionName( final Assembly assembly, final AssemblerConfigurationSource configSource )
-    {
+    public static String getDistributionName(final Assembly assembly, final AssemblerConfigurationSource configSource) {
         final String finalName = configSource.getFinalName();
         final boolean appendAssemblyId = configSource.isAssemblyIdAppended();
 
         String distributionName = finalName;
-        if ( appendAssemblyId )
-        {
+        if (appendAssemblyId) {
             distributionName = finalName + "-" + assembly.getId();
         }
 
         return distributionName;
     }
 
-
-    public static FixedStringSearchInterpolator finalNameInterpolator( String finalName )
-    {
+    public static FixedStringSearchInterpolator finalNameInterpolator(String finalName) {
         final Properties specialExpressionOverrides = new Properties();
 
-        if ( finalName != null )
-        {
-            specialExpressionOverrides.setProperty( "finalName", finalName );
-            specialExpressionOverrides.setProperty( "build.finalName", finalName );
-        }
-        else
-        {
+        if (finalName != null) {
+            specialExpressionOverrides.setProperty("finalName", finalName);
+            specialExpressionOverrides.setProperty("build.finalName", finalName);
+        } else {
             return FixedStringSearchInterpolator.empty();
         }
 
-        return FixedStringSearchInterpolator.create( new PropertiesBasedValueSource( specialExpressionOverrides ) );
+        return FixedStringSearchInterpolator.create(new PropertiesBasedValueSource(specialExpressionOverrides));
     }
 
-    public static FixedStringSearchInterpolator moduleProjectInterpolator( final MavenProject moduleProject )
-    {
-        if ( moduleProject != null )
-        {
+    public static FixedStringSearchInterpolator moduleProjectInterpolator(final MavenProject moduleProject) {
+        if (moduleProject != null) {
             return FixedStringSearchInterpolator.createWithPermittedNulls(
-                new PrefixedObjectValueSource( "module.", moduleProject ),
-                new PrefixedPropertiesValueSource( "module.properties.", moduleProject.getProperties() ),
-                moduleProject.getArtifact() != null
-                    ? new PrefixedObjectValueSource( "module.", moduleProject.getArtifact() )
-                    : null );
-        }
-        else
-        {
+                    new PrefixedObjectValueSource("module.", moduleProject),
+                    new PrefixedPropertiesValueSource("module.properties.", moduleProject.getProperties()),
+                    moduleProject.getArtifact() != null
+                            ? new PrefixedObjectValueSource("module.", moduleProject.getArtifact())
+                            : null);
+        } else {
             return FixedStringSearchInterpolator.empty();
         }
-
     }
 
-    public static FixedStringSearchInterpolator moduleArtifactInterpolator( Artifact moduleArtifact )
-    {
-        if ( moduleArtifact != null )
-        {
-            final String groupIdPath = moduleArtifact.getGroupId().replace( '.', '/' );
+    public static FixedStringSearchInterpolator moduleArtifactInterpolator(Artifact moduleArtifact) {
+        if (moduleArtifact != null) {
+            final String groupIdPath = moduleArtifact.getGroupId().replace('.', '/');
 
             return FixedStringSearchInterpolator.create(
-                     new MapBasedValueSource( Collections.singletonMap( "module.groupIdPath", groupIdPath ) ),
-                     new PrefixedObjectValueSource( "module.", moduleArtifact ),
-                     new PrefixedObjectValueSource( "module.", moduleArtifact.getArtifactHandler() ),
-                     new PrefixedObjectValueSource( "module.handler.", moduleArtifact.getArtifactHandler() ) );
-        }
-        else
-        {
+                    new MapBasedValueSource(Collections.singletonMap("module.groupIdPath", groupIdPath)),
+                    new PrefixedObjectValueSource("module.", moduleArtifact),
+                    new PrefixedObjectValueSource("module.", moduleArtifact.getArtifactHandler()),
+                    new PrefixedObjectValueSource("module.handler.", moduleArtifact.getArtifactHandler()));
+        } else {
             return FixedStringSearchInterpolator.empty();
         }
-
     }
 
-    public static FixedStringSearchInterpolator artifactProjectInterpolator( final MavenProject artifactProject )
-    {
-        if ( artifactProject != null )
-        {
+    public static FixedStringSearchInterpolator artifactProjectInterpolator(final MavenProject artifactProject) {
+        if (artifactProject != null) {
             PrefixedObjectValueSource vs = null;
-            if ( artifactProject.getArtifact() != null )
-            {
-                vs = new PrefixedObjectValueSource( "artifact.", artifactProject.getArtifact() );
+            if (artifactProject.getArtifact() != null) {
+                vs = new PrefixedObjectValueSource("artifact.", artifactProject.getArtifact());
             }
 
-            final String groupIdPath = artifactProject.getGroupId().replace( '.', '/' );
+            final String groupIdPath = artifactProject.getGroupId().replace('.', '/');
 
             return FixedStringSearchInterpolator.createWithPermittedNulls(
-                new MapBasedValueSource( Collections.singletonMap( "artifact.groupIdPath", groupIdPath ) ),
-                new PrefixedObjectValueSource( "artifact.", artifactProject ),
-                new PrefixedPropertiesValueSource( "artifact.properties.", artifactProject.getProperties() ), vs );
-        }
-        else
-        {
+                    new MapBasedValueSource(Collections.singletonMap("artifact.groupIdPath", groupIdPath)),
+                    new PrefixedObjectValueSource("artifact.", artifactProject),
+                    new PrefixedPropertiesValueSource("artifact.properties.", artifactProject.getProperties()),
+                    vs);
+        } else {
             return FixedStringSearchInterpolator.empty();
         }
     }
 
-    public static FixedStringSearchInterpolator artifactInterpolator( final Artifact artifact )
-    {
-        final String groupIdPath = artifact.getGroupId().replace( '.', '/' );
+    public static FixedStringSearchInterpolator artifactInterpolator(final Artifact artifact) {
+        final String groupIdPath = artifact.getGroupId().replace('.', '/');
 
-        return FixedStringSearchInterpolator.create( 
-                         new MapBasedValueSource( Collections.singletonMap( "artifact.groupIdPath", groupIdPath ) ),
-                         new PrefixedObjectValueSource( "artifact.", artifact ),
-                         new PrefixedObjectValueSource( "artifact.", artifact.getArtifactHandler() ),
-                         new PrefixedObjectValueSource( "artifact.handler.", artifact.getArtifactHandler() ) );
+        return FixedStringSearchInterpolator.create(
+                new MapBasedValueSource(Collections.singletonMap("artifact.groupIdPath", groupIdPath)),
+                new PrefixedObjectValueSource("artifact.", artifact),
+                new PrefixedObjectValueSource("artifact.", artifact.getArtifactHandler()),
+                new PrefixedObjectValueSource("artifact.handler.", artifact.getArtifactHandler()));
     }
 
-
-    public static FixedStringSearchInterpolator classifierRules( final Artifact artifact )
-    {
+    public static FixedStringSearchInterpolator classifierRules(final Artifact artifact) {
         final Properties specialRules = new Properties();
 
-        final String classifier = ProjectUtils.getClassifier( artifact );
-        if ( classifier != null )
-        {
-            specialRules.setProperty( "dashClassifier?", "-" + classifier );
-            specialRules.setProperty( "dashClassifier", "-" + classifier );
-        }
-        else
-        {
-            specialRules.setProperty( "dashClassifier?", "" );
-            specialRules.setProperty( "dashClassifier", "" );
+        final String classifier = ProjectUtils.getClassifier(artifact);
+        if (classifier != null) {
+            specialRules.setProperty("dashClassifier?", "-" + classifier);
+            specialRules.setProperty("dashClassifier", "-" + classifier);
+        } else {
+            specialRules.setProperty("dashClassifier?", "");
+            specialRules.setProperty("dashClassifier", "");
         }
 
-        return FixedStringSearchInterpolator.create( new PropertiesBasedValueSource( specialRules ) );
+        return FixedStringSearchInterpolator.create(new PropertiesBasedValueSource(specialRules));
     }
-
 
     /**
      * ORDER OF INTERPOLATION PRECEDENCE:
@@ -207,52 +175,48 @@ public final class AssemblyFormatUtils
      * <li>environment variables.</li>
      * </ol>
      */
-    public static String getOutputDirectory( final String output, final MavenProject artifactProject,
-                                             final String finalName, final AssemblerConfigurationSource configSource )
-        throws AssemblyFormattingException
-    {
-        return getOutputDirectory( output, finalName, configSource, moduleProjectInterpolator( null ),
-                                   artifactProjectInterpolator( artifactProject ) );
+    public static String getOutputDirectory(
+            final String output,
+            final MavenProject artifactProject,
+            final String finalName,
+            final AssemblerConfigurationSource configSource)
+            throws AssemblyFormattingException {
+        return getOutputDirectory(
+                output,
+                finalName,
+                configSource,
+                moduleProjectInterpolator(null),
+                artifactProjectInterpolator(artifactProject));
     }
 
-
     private static FixedStringSearchInterpolator executionPropertiesInterpolator(
-        AssemblerConfigurationSource configSource )
-    {
+            AssemblerConfigurationSource configSource) {
         MavenSession session;
 
-        if ( configSource != null )
-        {
+        if (configSource != null) {
             session = configSource.getMavenSession();
 
-            if ( session != null )
-            {
+            if (session != null) {
                 Properties userProperties = session.getExecutionProperties(); // this is added twice....
 
-                if ( userProperties != null )
-                {
-                    return FixedStringSearchInterpolator.create( new PropertiesBasedValueSource( userProperties ) );
+                if (userProperties != null) {
+                    return FixedStringSearchInterpolator.create(new PropertiesBasedValueSource(userProperties));
                 }
             }
         }
         return FixedStringSearchInterpolator.empty();
     }
 
-    private static FixedStringSearchInterpolator mainProjectOnlyInterpolator( MavenProject mainProject )
-    {
-        if ( mainProject != null )
-        {
+    private static FixedStringSearchInterpolator mainProjectOnlyInterpolator(MavenProject mainProject) {
+        if (mainProject != null) {
             // 5
             return FixedStringSearchInterpolator.create(
-                new org.codehaus.plexus.interpolation.fixed.PrefixedObjectValueSource(
-                    InterpolationConstants.PROJECT_PREFIXES, mainProject, true ) );
-        }
-        else
-        {
+                    new org.codehaus.plexus.interpolation.fixed.PrefixedObjectValueSource(
+                            InterpolationConstants.PROJECT_PREFIXES, mainProject, true));
+        } else {
             return FixedStringSearchInterpolator.empty();
         }
     }
-
 
     /**
      * ORDER OF INTERPOLATION PRECEDENCE:
@@ -288,57 +252,44 @@ public final class AssemblyFormatUtils
      * <li>environment variables.</li>
      * </ol>
      */
-
-
-    public static String fixRelativeRefs( String src )
-    {
+    public static String fixRelativeRefs(String src) {
         String value = src;
 
-        String[] separators = { "/", "\\" };
+        String[] separators = {"/", "\\"};
 
         String finalSep = null;
-        for ( String sep : separators )
-        {
-            if ( value.endsWith( sep ) )
-            {
+        for (String sep : separators) {
+            if (value.endsWith(sep)) {
                 finalSep = sep;
             }
 
-            if ( value.contains( "." + sep ) )
-            {
+            if (value.contains("." + sep)) {
                 List<String> parts = new ArrayList<>();
-                parts.addAll( Arrays.asList( value.split( sep.replace( "\\", "\\\\" ) ) ) );
+                parts.addAll(Arrays.asList(value.split(sep.replace("\\", "\\\\"))));
 
-                for ( ListIterator<String> it = parts.listIterator(); it.hasNext(); )
-                {
+                for (ListIterator<String> it = parts.listIterator(); it.hasNext(); ) {
                     String part = it.next();
-                    if ( ".".equals( part ) )
-                    {
+                    if (".".equals(part)) {
                         it.remove();
-                    }
-                    else if ( "..".equals( part ) )
-                    {
+                    } else if ("..".equals(part)) {
                         it.remove();
-                        if ( it.hasPrevious() )
-                        {
+                        if (it.hasPrevious()) {
                             it.previous();
                             it.remove();
                         }
                     }
                 }
 
-                value = StringUtils.join( parts.iterator(), sep );
+                value = StringUtils.join(parts.iterator(), sep);
             }
         }
 
-        if ( finalSep != null && value.length() > 0 && !value.endsWith( finalSep ) )
-        {
+        if (finalSep != null && value.length() > 0 && !value.endsWith(finalSep)) {
             value += finalSep;
         }
 
         return value;
     }
-
 
     /**
      * ORDER OF INTERPOLATION PRECEDENCE:
@@ -374,31 +325,33 @@ public final class AssemblyFormatUtils
      * <li>environment variables.</li>
      * </ol>
      */
-    public static String evaluateFileNameMapping( final String expression, final Artifact artifact,
-                                                  /* nullable */ final MavenProject mainProject,
-                                                  /* nullable */  final Artifact moduleArtifact,
-                                                  final AssemblerConfigurationSource configSource,
-                                                  FixedStringSearchInterpolator moduleProjectInterpolator,
-                                                  FixedStringSearchInterpolator artifactProjectInterpolator )
-    {
+    public static String evaluateFileNameMapping(
+            final String expression,
+            final Artifact artifact,
+            /* nullable */ final MavenProject mainProject,
+            /* nullable */ final Artifact moduleArtifact,
+            final AssemblerConfigurationSource configSource,
+            FixedStringSearchInterpolator moduleProjectInterpolator,
+            FixedStringSearchInterpolator artifactProjectInterpolator) {
         String value = expression;
 
-        final FixedStringSearchInterpolator interpolator =
-            FixedStringSearchInterpolator.create( moduleArtifactInterpolator( moduleArtifact ),
-                                                  moduleProjectInterpolator, artifactInterpolator( artifact ),
-                                                  artifactProjectInterpolator,
-                                                  mainProjectOnlyInterpolator( mainProject ),
-                                                  classifierRules( artifact ),
-                                                  executionPropertiesInterpolator( configSource ),
-                                                  configSource.getMainProjectInterpolator(),
-                                                  configSource.getCommandLinePropsInterpolator(),
-                                                  configSource.getEnvInterpolator() );
+        final FixedStringSearchInterpolator interpolator = FixedStringSearchInterpolator.create(
+                moduleArtifactInterpolator(moduleArtifact),
+                moduleProjectInterpolator,
+                artifactInterpolator(artifact),
+                artifactProjectInterpolator,
+                mainProjectOnlyInterpolator(mainProject),
+                classifierRules(artifact),
+                executionPropertiesInterpolator(configSource),
+                configSource.getMainProjectInterpolator(),
+                configSource.getCommandLinePropsInterpolator(),
+                configSource.getEnvInterpolator());
 
-        value = interpolator.interpolate( value );
+        value = interpolator.interpolate(value);
 
-        value = StringUtils.replace( value, "//", "/" );
-        value = StringUtils.replace( value, "\\\\", "\\" );
-        value = fixRelativeRefs( value );
+        value = StringUtils.replace(value, "//", "/");
+        value = StringUtils.replace(value, "\\\\", "\\");
+        value = fixRelativeRefs(value);
 
         return value;
     }
@@ -429,87 +382,72 @@ public final class AssemblyFormatUtils
      * <li>environment variables.</li>
      * </ol>
      */
-    public static String getOutputDirectory( final String output, final String finalName,
-                                             final AssemblerConfigurationSource configSource,
-                                             FixedStringSearchInterpolator moduleProjectIntrpolator,
-                                             FixedStringSearchInterpolator artifactProjectInterpolator )
-        throws AssemblyFormattingException
-    {
+    public static String getOutputDirectory(
+            final String output,
+            final String finalName,
+            final AssemblerConfigurationSource configSource,
+            FixedStringSearchInterpolator moduleProjectIntrpolator,
+            FixedStringSearchInterpolator artifactProjectInterpolator)
+            throws AssemblyFormattingException {
         String value = output;
-        if ( value == null )
-        {
+        if (value == null) {
             value = "";
         }
 
-        final FixedStringSearchInterpolator interpolator =
-            FixedStringSearchInterpolator.create( finalNameInterpolator( finalName ), moduleProjectIntrpolator,
-                                                  artifactProjectInterpolator,
-                                                  executionPropertiesInterpolator( configSource ),
-                                                  configSource.getMainProjectInterpolator(),
-                                                  configSource.getCommandLinePropsInterpolator(),
-                                                  configSource.getEnvInterpolator() );
+        final FixedStringSearchInterpolator interpolator = FixedStringSearchInterpolator.create(
+                finalNameInterpolator(finalName),
+                moduleProjectIntrpolator,
+                artifactProjectInterpolator,
+                executionPropertiesInterpolator(configSource),
+                configSource.getMainProjectInterpolator(),
+                configSource.getCommandLinePropsInterpolator(),
+                configSource.getEnvInterpolator());
 
-        value = interpolator.interpolate( value );
+        value = interpolator.interpolate(value);
 
-        if ( ( value.length() > 0 ) && !value.endsWith( "/" ) && !value.endsWith( "\\" ) )
-        {
+        if ((value.length() > 0) && !value.endsWith("/") && !value.endsWith("\\")) {
             value += "/";
         }
 
-        if ( ( value.length() > 0 ) && ( value.startsWith( "/" ) || value.startsWith( "\\" ) ) )
-        {
-            value = value.substring( 1 );
+        if ((value.length() > 0) && (value.startsWith("/") || value.startsWith("\\"))) {
+            value = value.substring(1);
         }
 
-        value = StringUtils.replace( value, "//", "/" );
-        value = StringUtils.replace( value, "\\\\", "\\" );
-        value = fixRelativeRefs( value );
+        value = StringUtils.replace(value, "//", "/");
+        value = StringUtils.replace(value, "\\\\", "\\");
+        value = fixRelativeRefs(value);
 
         return value;
     }
 
-    public static void warnForPlatformSpecifics( Logger logger, String destDirectory )
-    {
-        if ( Os.isFamily( Os.FAMILY_WINDOWS ) )
-        {
-            if ( isUnixRootReference( destDirectory ) )
-            {
-                logger.error( "OS=Windows and the assembly descriptor contains a *nix-specific root-relative reference"
-                                  + " (starting with slash): " + destDirectory );
+    public static void warnForPlatformSpecifics(Logger logger, String destDirectory) {
+        if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+            if (isUnixRootReference(destDirectory)) {
+                logger.error("OS=Windows and the assembly descriptor contains a *nix-specific root-relative reference"
+                        + " (starting with slash): " + destDirectory);
+            } else if (isWindowsPath(destDirectory)) {
+                logger.warn("The assembly descriptor contains a Windows-specific directory reference"
+                        + " (with a drive letter). This is not portable and will fail on non-Windows: "
+                        + destDirectory);
             }
-            else if ( isWindowsPath( destDirectory ) )
-            {
-                logger.warn( "The assembly descriptor contains a Windows-specific directory reference"
-                                 + " (with a drive letter). This is not portable and will fail on non-Windows: "
-                                 + destDirectory );
-            }
-        }
-        else
-        {
-            if ( isWindowsPath( destDirectory ) )
-            {
+        } else {
+            if (isWindowsPath(destDirectory)) {
                 logger.error(
-                    "OS=Non-Windows and the assembly descriptor contains a Windows-specific directory reference"
-                        + " (with a drive letter): " + destDirectory );
-            }
-            else if ( isUnixRootReference( destDirectory ) )
-            {
-                logger.warn( "The assembly descriptor contains a *nix-specific root-relative reference"
-                                 + " (starting with slash). This is not portable and might fail on Windows: "
-                                 + destDirectory );
+                        "OS=Non-Windows and the assembly descriptor contains a Windows-specific directory reference"
+                                + " (with a drive letter): " + destDirectory);
+            } else if (isUnixRootReference(destDirectory)) {
+                logger.warn("The assembly descriptor contains a *nix-specific root-relative reference"
+                        + " (starting with slash). This is not portable and might fail on Windows: "
+                        + destDirectory);
             }
         }
     }
 
-    static boolean isWindowsPath( String destDirectory )
-    {
-        return ( destDirectory != null && destDirectory.length() >= 2 && destDirectory.charAt( 1 ) == ':' );
+    static boolean isWindowsPath(String destDirectory) {
+        return (destDirectory != null && destDirectory.length() >= 2 && destDirectory.charAt(1) == ':');
     }
 
-    static boolean isUnixRootReference( String destDirectory )
-    {
-        return ( destDirectory != null && destDirectory.startsWith( "/" ) );
+    static boolean isUnixRootReference(String destDirectory) {
+        return (destDirectory != null && destDirectory.startsWith("/"));
     }
-
-
 }

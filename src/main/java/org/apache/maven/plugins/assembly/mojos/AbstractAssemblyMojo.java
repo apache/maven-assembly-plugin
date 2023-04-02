@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.mojos;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,7 @@ package org.apache.maven.plugins.assembly.mojos;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.mojos;
 
 import java.io.File;
 import java.util.Collections;
@@ -58,8 +57,7 @@ import org.codehaus.plexus.util.cli.CommandLineUtils;
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
  * @author <a href="mailto:vincent.siveton@gmail.com">Vincent Siveton</a>
  */
-public abstract class AbstractAssemblyMojo extends AbstractMojo implements AssemblerConfigurationSource
-{
+public abstract class AbstractAssemblyMojo extends AbstractMojo implements AssemblerConfigurationSource {
 
     protected FixedStringSearchInterpolator commandLinePropertiesInterpolator;
 
@@ -74,13 +72,13 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
      * artifacts without classifier. As such, an assembly artifact having the same format as the packaging of the
      * current Maven project will replace the file for this main project artifact.
      */
-    @Parameter( property = "assembly.appendAssemblyId", defaultValue = "true" )
+    @Parameter(property = "assembly.appendAssemblyId", defaultValue = "true")
     boolean appendAssemblyId;
 
     /**
      * The character encoding scheme to be applied when filtering resources.
      */
-    @Parameter( property = "encoding", defaultValue = "${project.build.sourceEncoding}" )
+    @Parameter(property = "encoding", defaultValue = "${project.build.sourceEncoding}")
     private String encoding;
 
     /**
@@ -89,20 +87,20 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
      *
      * @since 2.4
      */
-    @Parameter( property = "assembly.escapeString" )
+    @Parameter(property = "assembly.escapeString")
     private String escapeString;
 
     /**
      * Flag allowing one or more executions of the assembly plugin to be configured as skipped for a particular build.
      * This makes the assembly plugin more controllable from profiles.
      */
-    @Parameter( property = "assembly.skipAssembly", defaultValue = "false" )
+    @Parameter(property = "assembly.skipAssembly", defaultValue = "false")
     private boolean skipAssembly;
 
     /**
      * If this flag is set, everything up to the call to Archiver.createArchive() will be executed.
      */
-    @Parameter( property = "assembly.dryRun", defaultValue = "false" )
+    @Parameter(property = "assembly.dryRun", defaultValue = "false")
     private boolean dryRun;
 
     /**
@@ -110,37 +108,37 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
      * == 'dir' and other formats that begin with 'dir'. <br/>
      * <b>NOTE:</b> Since 2.2-beta-3, the default-value for this is true, NOT false as it used to be.
      */
-    @Parameter( defaultValue = "true" )
+    @Parameter(defaultValue = "true")
     private boolean ignoreDirFormatExtensions;
 
     /**
      *
      */
-    @Parameter( defaultValue = "${project.remoteArtifactRepositories}", required = true, readonly = true )
+    @Parameter(defaultValue = "${project.remoteArtifactRepositories}", required = true, readonly = true)
     private List<ArtifactRepository> remoteRepositories;
 
     /**
      * Contains the full list of projects in the reactor.
      */
-    @Parameter( defaultValue = "${reactorProjects}", required = true, readonly = true )
+    @Parameter(defaultValue = "${reactorProjects}", required = true, readonly = true)
     private List<MavenProject> reactorProjects;
 
     /**
      * The output directory of the assembled distribution file.
      */
-    @Parameter( defaultValue = "${project.build.directory}", required = true )
+    @Parameter(defaultValue = "${project.build.directory}", required = true)
     private File outputDirectory;
 
     /**
      * The filename of the assembled distribution file.
      */
-    @Parameter( defaultValue = "${project.build.finalName}", required = true, readonly = true )
+    @Parameter(defaultValue = "${project.build.finalName}", required = true, readonly = true)
     private String finalName;
 
     /**
      * Directory to unpack JARs into if needed
      */
-    @Parameter( defaultValue = "${project.build.directory}/assembly/work", required = true )
+    @Parameter(defaultValue = "${project.build.directory}/assembly/work", required = true)
     private File workDirectory;
 
     /**
@@ -193,13 +191,13 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
      * Sets the TarArchiver behavior on file paths with more than 100 characters length. Valid values are: "warn"
      * (default), "fail", "truncate", "gnu", "posix", "posix_warn" or "omit".
      */
-    @Parameter( property = "assembly.tarLongFileMode", defaultValue = "warn" )
+    @Parameter(property = "assembly.tarLongFileMode", defaultValue = "warn")
     private String tarLongFileMode;
 
     /**
      * Base directory of the project.
      */
-    @Parameter( defaultValue = "${project.basedir}", required = true, readonly = true )
+    @Parameter(defaultValue = "${project.basedir}", required = true, readonly = true)
     private File basedir;
 
     /**
@@ -217,25 +215,25 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     /**
      * The Maven Session Object
      */
-    @Parameter( defaultValue = "${session}", readonly = true, required = true )
+    @Parameter(defaultValue = "${session}", readonly = true, required = true)
     private MavenSession mavenSession;
 
     /**
      * Temporary directory that contain the files to be assembled.
      */
-    @Parameter( defaultValue = "${project.build.directory}/archive-tmp", required = true, readonly = true )
+    @Parameter(defaultValue = "${project.build.directory}/archive-tmp", required = true, readonly = true)
     private File tempRoot;
 
     /**
      * Directory for site generated.
      */
-    @Parameter( defaultValue = "${project.reporting.outputDirectory}", readonly = true )
+    @Parameter(defaultValue = "${project.reporting.outputDirectory}", readonly = true)
     private File siteDirectory;
 
     /**
      * Set to true in order to not fail when a descriptor is missing.
      */
-    @Parameter( property = "assembly.ignoreMissingDescriptor", defaultValue = "false" )
+    @Parameter(property = "assembly.ignoreMissingDescriptor", defaultValue = "false")
     private boolean ignoreMissingDescriptor;
 
     /**
@@ -254,10 +252,10 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
      */
     @Parameter
     private List<String> filters;
-    
+
     /**
      * A set of additional properties to use for filtering
-     * 
+     *
      * @since 3.3.0
      */
     @Parameter
@@ -269,7 +267,7 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
      *
      * @since 2.4.2
      */
-    @Parameter( property = "assembly.includeProjectBuildFilters", defaultValue = "true" )
+    @Parameter(property = "assembly.includeProjectBuildFilters", defaultValue = "true")
     private boolean includeProjectBuildFilters;
 
     /**
@@ -277,7 +275,7 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
      *
      * @since 2.2-beta-1
      */
-    @Parameter( property = "assembly.attach", defaultValue = "true" )
+    @Parameter(property = "assembly.attach", defaultValue = "true")
     private boolean attach;
 
     /**
@@ -286,7 +284,7 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
      *
      * @since 2.4
      */
-    @Parameter( defaultValue = "true" )
+    @Parameter(defaultValue = "true")
     private boolean recompressZippedFiles;
 
     /**
@@ -335,7 +333,7 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
      *
      * @since 2.2-beta-4
      */
-    @Parameter( property = "assembly.runOnlyAtExecutionRoot", defaultValue = "false" )
+    @Parameter(property = "assembly.runOnlyAtExecutionRoot", defaultValue = "false")
     private boolean runOnlyAtExecutionRoot;
 
     /**
@@ -347,14 +345,14 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
      *
      * @since 2.2
      */
-    @Parameter( property = "assembly.updateOnly", defaultValue = "false" )
+    @Parameter(property = "assembly.updateOnly", defaultValue = "false")
     private boolean updateOnly;
 
     /**
      * @since 2.2
      * @deprecated Not used anymore and will be removed in future version
      */
-    @Parameter( property = "assembly.useJvmChmod", defaultValue = "false" )
+    @Parameter(property = "assembly.useJvmChmod", defaultValue = "false")
     private boolean useJvmChmod;
 
     /**
@@ -369,7 +367,7 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
      *
      * @since 2.2
      */
-    @Parameter( property = "assembly.ignorePermissions", defaultValue = "false" )
+    @Parameter(property = "assembly.ignorePermissions", defaultValue = "false")
     private boolean ignorePermissions;
 
     /**
@@ -403,7 +401,7 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
      *
      * @since 3.2.0
      */
-    @Parameter( defaultValue = "${project.build.outputTimestamp}" )
+    @Parameter(defaultValue = "${project.build.outputTimestamp}")
     private String outputTimestamp;
 
     /**
@@ -418,7 +416,6 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     @Parameter
     private String overrideUserName;
 
-
     /**
      * Override of group ID in archive type which can store it.
      */
@@ -431,22 +428,17 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     @Parameter
     private String overrideGroupName;
 
-
-    public static FixedStringSearchInterpolator mainProjectInterpolator( MavenProject mainProject )
-    {
-        if ( mainProject != null )
-        {
+    public static FixedStringSearchInterpolator mainProjectInterpolator(MavenProject mainProject) {
+        if (mainProject != null) {
             // 5
             return FixedStringSearchInterpolator.create(
                     new org.codehaus.plexus.interpolation.fixed.PrefixedObjectValueSource(
-                            InterpolationConstants.PROJECT_PREFIXES, mainProject, true ),
+                            InterpolationConstants.PROJECT_PREFIXES, mainProject, true),
 
                     // 6
                     new org.codehaus.plexus.interpolation.fixed.PrefixedPropertiesValueSource(
-                            InterpolationConstants.PROJECT_PROPERTIES_PREFIXES, mainProject.getProperties(), true ) );
-        }
-        else
-        {
+                            InterpolationConstants.PROJECT_PROPERTIES_PREFIXES, mainProject.getProperties(), true));
+        } else {
             return FixedStringSearchInterpolator.empty();
         }
     }
@@ -455,166 +447,140 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
      * Create the binary distribution.
      */
     @Override
-    public void execute() throws MojoExecutionException, MojoFailureException
-    {
+    public void execute() throws MojoExecutionException, MojoFailureException {
 
-        if ( skipAssembly )
-        {
-            getLog().info( "Assemblies have been skipped per configuration of the skipAssembly parameter." );
+        if (skipAssembly) {
+            getLog().info("Assemblies have been skipped per configuration of the skipAssembly parameter.");
             return;
         }
 
         // run only at the execution root.
-        if ( runOnlyAtExecutionRoot && !isThisTheExecutionRoot() )
-        {
-            getLog().info( "Skipping the assembly in this project because it's not the Execution Root" );
+        if (runOnlyAtExecutionRoot && !isThisTheExecutionRoot()) {
+            getLog().info("Skipping the assembly in this project because it's not the Execution Root");
             return;
         }
 
         List<Assembly> assemblies;
-        try
-        {
-            assemblies = assemblyReader.readAssemblies( this );
-        }
-        catch ( final AssemblyReadException e )
-        {
-            throw new MojoExecutionException( "Error reading assemblies: " + e.getMessage(), e );
-        }
-        catch ( final InvalidAssemblerConfigurationException e )
-        {
-            throw new MojoFailureException( assemblyReader, e.getMessage(),
-                    "Mojo configuration is invalid: " + e.getMessage() );
+        try {
+            assemblies = assemblyReader.readAssemblies(this);
+        } catch (final AssemblyReadException e) {
+            throw new MojoExecutionException("Error reading assemblies: " + e.getMessage(), e);
+        } catch (final InvalidAssemblerConfigurationException e) {
+            throw new MojoFailureException(
+                    assemblyReader, e.getMessage(), "Mojo configuration is invalid: " + e.getMessage());
         }
 
         // TODO: include dependencies marked for distribution under certain formats
         // TODO: how, might we plug this into an installer, such as NSIS?
 
         MavenArchiver mavenArchiver = new MavenArchiver();
-        Date outputDate = mavenArchiver.parseOutputTimestamp( outputTimestamp );
+        Date outputDate = mavenArchiver.parseOutputTimestamp(outputTimestamp);
 
         boolean warnedAboutMainProjectArtifact = false;
-        for ( final Assembly assembly : assemblies )
-        {
-            try
-            {
-                final String fullName = AssemblyFormatUtils.getDistributionName( assembly, this );
+        for (final Assembly assembly : assemblies) {
+            try {
+                final String fullName = AssemblyFormatUtils.getDistributionName(assembly, this);
 
                 List<String> effectiveFormats = formats;
-                if ( effectiveFormats == null || effectiveFormats.size() == 0 )
-                {
+                if (effectiveFormats == null || effectiveFormats.size() == 0) {
                     effectiveFormats = assembly.getFormats();
                 }
-                if ( effectiveFormats == null || effectiveFormats.size() == 0 )
-                {
+                if (effectiveFormats == null || effectiveFormats.size() == 0) {
                     throw new MojoFailureException(
-                            "No formats specified in the execution parameters or the assembly descriptor." );
+                            "No formats specified in the execution parameters or the assembly descriptor.");
                 }
 
-                for ( final String format : effectiveFormats )
-                {
-                    final File destFile = assemblyArchiver.createArchive( assembly, fullName, format, this,
-                            isRecompressZippedFiles(), getMergeManifestMode(), outputDate );
+                for (final String format : effectiveFormats) {
+                    final File destFile = assemblyArchiver.createArchive(
+                            assembly,
+                            fullName,
+                            format,
+                            this,
+                            isRecompressZippedFiles(),
+                            getMergeManifestMode(),
+                            outputDate);
 
                     final MavenProject project = getProject();
                     final String type = project.getArtifact().getType();
 
-                    if ( attach && destFile.isFile() )
-                    {
-                        if ( isAssemblyIdAppended() )
-                        {
-                            projectHelper.attachArtifact( project, format, assembly.getId(), destFile );
-                        }
-                        else if ( !"pom".equals( type ) && format.equals( type ) )
-                        {
-                            if ( !warnedAboutMainProjectArtifact )
-                            {
+                    if (attach && destFile.isFile()) {
+                        if (isAssemblyIdAppended()) {
+                            projectHelper.attachArtifact(project, format, assembly.getId(), destFile);
+                        } else if (!"pom".equals(type) && format.equals(type)) {
+                            if (!warnedAboutMainProjectArtifact) {
                                 final StringBuilder message = new StringBuilder();
 
-                                message.append( "Configuration option 'appendAssemblyId' is set to false." );
-                                message.append( "\nInstead of attaching the assembly file: " ).append( destFile );
-                                message.append( ", it will become the file for main project artifact." );
-                                message.append(
-                                        "\nNOTE: If multiple descriptors or descriptor-formats are provided "
-                                                + "for this project, the value of this file will be "
-                                                + "non-deterministic!" );
+                                message.append("Configuration option 'appendAssemblyId' is set to false.");
+                                message.append("\nInstead of attaching the assembly file: ")
+                                        .append(destFile);
+                                message.append(", it will become the file for main project artifact.");
+                                message.append("\nNOTE: If multiple descriptors or descriptor-formats are provided "
+                                        + "for this project, the value of this file will be "
+                                        + "non-deterministic!");
 
-                                getLog().warn( message );
+                                getLog().warn(message);
                                 warnedAboutMainProjectArtifact = true;
                             }
 
                             final File existingFile = project.getArtifact().getFile();
-                            if ( ( existingFile != null ) && existingFile.exists() )
-                            {
-                                getLog().warn(
-                                        "Replacing pre-existing project main-artifact file: "
-                                                + existingFile + "\nwith assembly file: " + destFile );
+                            if ((existingFile != null) && existingFile.exists()) {
+                                getLog().warn("Replacing pre-existing project main-artifact file: " + existingFile
+                                        + "\nwith assembly file: " + destFile);
                             }
 
-                            project.getArtifact().setFile( destFile );
+                            project.getArtifact().setFile(destFile);
+                        } else {
+                            projectHelper.attachArtifact(project, format, null, destFile);
                         }
-                        else
-                        {
-                            projectHelper.attachArtifact( project, format, null, destFile );
-                        }
-                    }
-                    else if ( attach )
-                    {
-                        getLog().warn(
-                                "Assembly file: " + destFile + " is not a regular file (it may be a directory). "
-                                        + "It cannot be attached to the project build for installation or "
-                                        + "deployment." );
+                    } else if (attach) {
+                        getLog().warn("Assembly file: " + destFile + " is not a regular file (it may be a directory). "
+                                + "It cannot be attached to the project build for installation or "
+                                + "deployment.");
                     }
                 }
-            }
-            catch ( final ArchiveCreationException | AssemblyFormattingException e )
-            {
-                throw new MojoExecutionException( "Failed to create assembly: " + e.getMessage(), e );
-            }
-            catch ( final InvalidAssemblerConfigurationException e )
-            {
-                throw new MojoFailureException( assembly, "Assembly is incorrectly configured: " + assembly.getId(),
-                        "Assembly: " + assembly.getId() + " is not configured correctly: " + e.getMessage() );
+            } catch (final ArchiveCreationException | AssemblyFormattingException e) {
+                throw new MojoExecutionException("Failed to create assembly: " + e.getMessage(), e);
+            } catch (final InvalidAssemblerConfigurationException e) {
+                throw new MojoFailureException(
+                        assembly,
+                        "Assembly is incorrectly configured: " + assembly.getId(),
+                        "Assembly: " + assembly.getId() + " is not configured correctly: " + e.getMessage());
             }
         }
     }
 
-    private FixedStringSearchInterpolator createRepositoryInterpolator()
-    {
+    private FixedStringSearchInterpolator createRepositoryInterpolator() {
         final Properties settingsProperties = new Properties();
         final MavenSession session = getMavenSession();
         final File basedir = session.getRepositorySession()
-                .getLocalRepositoryManager().getRepository().getBasedir();
+                .getLocalRepositoryManager()
+                .getRepository()
+                .getBasedir();
 
-        settingsProperties.setProperty( "localRepository", basedir.toString() );
-        settingsProperties.setProperty( "settings.localRepository", basedir.toString() );
+        settingsProperties.setProperty("localRepository", basedir.toString());
+        settingsProperties.setProperty("settings.localRepository", basedir.toString());
 
-        return FixedStringSearchInterpolator.create( new PropertiesBasedValueSource( settingsProperties ) );
-
+        return FixedStringSearchInterpolator.create(new PropertiesBasedValueSource(settingsProperties));
     }
 
-    private FixedStringSearchInterpolator createCommandLinePropertiesInterpolator()
-    {
+    private FixedStringSearchInterpolator createCommandLinePropertiesInterpolator() {
         Properties commandLineProperties = System.getProperties();
         final MavenSession session = getMavenSession();
 
-        if ( session != null )
-        {
+        if (session != null) {
             commandLineProperties = new Properties();
-            commandLineProperties.putAll( session.getSystemProperties() );
-            commandLineProperties.putAll( session.getUserProperties() );
+            commandLineProperties.putAll(session.getSystemProperties());
+            commandLineProperties.putAll(session.getUserProperties());
         }
 
-        PropertiesBasedValueSource cliProps = new PropertiesBasedValueSource( commandLineProperties );
-        return FixedStringSearchInterpolator.create( cliProps );
-
+        PropertiesBasedValueSource cliProps = new PropertiesBasedValueSource(commandLineProperties);
+        return FixedStringSearchInterpolator.create(cliProps);
     }
 
-    private FixedStringSearchInterpolator createEnvInterpolator()
-    {
-        PrefixedPropertiesValueSource envProps =
-                new PrefixedPropertiesValueSource( Collections.singletonList( "env." ),
-                        CommandLineUtils.getSystemEnvVars( false ), true );
-        return FixedStringSearchInterpolator.create( envProps );
+    private FixedStringSearchInterpolator createEnvInterpolator() {
+        PrefixedPropertiesValueSource envProps = new PrefixedPropertiesValueSource(
+                Collections.singletonList("env."), CommandLineUtils.getSystemEnvVars(false), true);
+        return FixedStringSearchInterpolator.create(envProps);
     }
 
     /**
@@ -622,55 +588,45 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
      *
      * @return if this is the execution root
      */
-    boolean isThisTheExecutionRoot()
-    {
+    boolean isThisTheExecutionRoot() {
         final Log log = getLog();
-        log.debug( "Root Folder:" + mavenSession.getExecutionRootDirectory() );
-        log.debug( "Current Folder:" + basedir );
-        final boolean result = mavenSession.getExecutionRootDirectory().equalsIgnoreCase( basedir.toString() );
-        if ( result )
-        {
-            log.debug( "This is the execution root." );
-        }
-        else
-        {
-            log.debug( "This is NOT the execution root." );
+        log.debug("Root Folder:" + mavenSession.getExecutionRootDirectory());
+        log.debug("Current Folder:" + basedir);
+        final boolean result = mavenSession.getExecutionRootDirectory().equalsIgnoreCase(basedir.toString());
+        if (result) {
+            log.debug("This is the execution root.");
+        } else {
+            log.debug("This is NOT the execution root.");
         }
 
         return result;
     }
 
     @Override
-    public File getBasedir()
-    {
+    public File getBasedir() {
         return basedir;
     }
 
-    public void setBasedir( final File basedir )
-    {
+    public void setBasedir(final File basedir) {
         this.basedir = basedir;
     }
 
     @Override
-    public String[] getDescriptorReferences()
-    {
+    public String[] getDescriptorReferences() {
         return descriptorRefs;
     }
 
     @Override
-    public File getDescriptorSourceDirectory()
-    {
+    public File getDescriptorSourceDirectory() {
         return descriptorSourceDirectory;
     }
 
     @Override
-    public String[] getDescriptors()
-    {
+    public String[] getDescriptors() {
         return descriptors;
     }
 
-    public void setDescriptors( final String[] descriptors )
-    {
+    public void setDescriptors(final String[] descriptors) {
         this.descriptors = descriptors;
     }
 
@@ -678,300 +634,246 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     public abstract MavenProject getProject();
 
     @Override
-    public File getSiteDirectory()
-    {
+    public File getSiteDirectory() {
         return siteDirectory;
     }
 
-    public void setSiteDirectory( final File siteDirectory )
-    {
+    public void setSiteDirectory(final File siteDirectory) {
         this.siteDirectory = siteDirectory;
     }
 
     @Override
-    public String getFinalName()
-    {
+    public String getFinalName() {
         return finalName;
     }
 
-    public void setFinalName( final String finalName )
-    {
+    public void setFinalName(final String finalName) {
         this.finalName = finalName;
     }
 
     @Override
-    public boolean isAssemblyIdAppended()
-    {
+    public boolean isAssemblyIdAppended() {
         return appendAssemblyId;
     }
 
     @Override
-    public String getTarLongFileMode()
-    {
+    public String getTarLongFileMode() {
         return tarLongFileMode;
     }
 
-    public void setTarLongFileMode( final String tarLongFileMode )
-    {
+    public void setTarLongFileMode(final String tarLongFileMode) {
         this.tarLongFileMode = tarLongFileMode;
     }
 
     @Override
-    public File getOutputDirectory()
-    {
+    public File getOutputDirectory() {
         return outputDirectory;
     }
 
-    public void setOutputDirectory( final File outputDirectory )
-    {
+    public void setOutputDirectory(final File outputDirectory) {
         this.outputDirectory = outputDirectory;
     }
 
     @Override
-    public MavenArchiveConfiguration getJarArchiveConfiguration()
-    {
+    public MavenArchiveConfiguration getJarArchiveConfiguration() {
         return archive;
     }
 
     @Override
-    public File getWorkingDirectory()
-    {
+    public File getWorkingDirectory() {
         return workDirectory;
     }
 
     @Override
-    public File getTemporaryRootDirectory()
-    {
+    public File getTemporaryRootDirectory() {
         return tempRoot;
     }
 
     @Override
-    public File getArchiveBaseDirectory()
-    {
+    public File getArchiveBaseDirectory() {
         return archiveBaseDirectory;
     }
 
     @Override
-    public List<String> getFilters()
-    {
-        if ( filters == null )
-        {
+    public List<String> getFilters() {
+        if (filters == null) {
             filters = getProject().getBuild().getFilters();
-            if ( filters == null )
-            {
+            if (filters == null) {
                 filters = Collections.emptyList();
             }
         }
         return filters;
     }
 
-    public void setFilters( final List<String> filters )
-    {
+    public void setFilters(final List<String> filters) {
         this.filters = filters;
     }
-    
-    public Properties getAdditionalProperties()
-    {
+
+    public Properties getAdditionalProperties() {
         return additionalProperties;
     }
 
     @Override
-    public boolean isIncludeProjectBuildFilters()
-    {
+    public boolean isIncludeProjectBuildFilters() {
         return includeProjectBuildFilters;
     }
 
     @Override
-    public List<MavenProject> getReactorProjects()
-    {
+    public List<MavenProject> getReactorProjects() {
         return reactorProjects;
     }
 
-    public void setReactorProjects( final List<MavenProject> reactorProjects )
-    {
+    public void setReactorProjects(final List<MavenProject> reactorProjects) {
         this.reactorProjects = reactorProjects;
     }
 
-    public void setAppendAssemblyId( final boolean appendAssemblyId )
-    {
+    public void setAppendAssemblyId(final boolean appendAssemblyId) {
         this.appendAssemblyId = appendAssemblyId;
     }
 
-    public void setArchive( final MavenArchiveConfiguration archive )
-    {
+    public void setArchive(final MavenArchiveConfiguration archive) {
         this.archive = archive;
     }
 
-    public void setDescriptorRefs( final String[] descriptorRefs )
-    {
+    public void setDescriptorRefs(final String[] descriptorRefs) {
         this.descriptorRefs = descriptorRefs;
     }
 
-    public void setTempRoot( final File tempRoot )
-    {
+    public void setTempRoot(final File tempRoot) {
         this.tempRoot = tempRoot;
     }
 
-    public void setWorkDirectory( final File workDirectory )
-    {
+    public void setWorkDirectory(final File workDirectory) {
         this.workDirectory = workDirectory;
     }
 
     @Override
-    public List<ArtifactRepository> getRemoteRepositories()
-    {
+    public List<ArtifactRepository> getRemoteRepositories() {
         return remoteRepositories;
     }
 
     @Override
-    public boolean isDryRun()
-    {
+    public boolean isDryRun() {
         return dryRun;
     }
 
     @Override
-    public boolean isIgnoreDirFormatExtensions()
-    {
+    public boolean isIgnoreDirFormatExtensions() {
         return ignoreDirFormatExtensions;
     }
 
     @Override
-    public boolean isIgnoreMissingDescriptor()
-    {
+    public boolean isIgnoreMissingDescriptor() {
         return ignoreMissingDescriptor;
     }
 
     @Override
-    public MavenSession getMavenSession()
-    {
+    public MavenSession getMavenSession() {
         return mavenSession;
     }
 
     @Override
-    public String getArchiverConfig()
-    {
+    public String getArchiverConfig() {
         return archiverConfig == null ? null : archiverConfig.toString();
     }
 
     @Override
-    public MavenReaderFilter getMavenReaderFilter()
-    {
+    public MavenReaderFilter getMavenReaderFilter() {
         return mavenReaderFilter;
     }
 
     @Override
-    public boolean isUpdateOnly()
-    {
+    public boolean isUpdateOnly() {
         return updateOnly;
     }
 
     @Override
     @Deprecated
-    public boolean isUseJvmChmod()
-    {
+    public boolean isUseJvmChmod() {
         return useJvmChmod;
     }
 
     @Override
-    public boolean isIgnorePermissions()
-    {
+    public boolean isIgnorePermissions() {
         return ignorePermissions;
     }
 
     @Override
-    public String getEncoding()
-    {
+    public String getEncoding() {
         return encoding;
     }
 
-    boolean isRecompressZippedFiles()
-    {
+    boolean isRecompressZippedFiles() {
         return recompressZippedFiles;
     }
 
-    public String getMergeManifestMode()
-    {
+    public String getMergeManifestMode() {
         return mergeManifestMode;
     }
 
     @Override
-    public String getEscapeString()
-    {
+    public String getEscapeString() {
         return escapeString;
     }
 
     @Override
-    public List<String> getDelimiters()
-    {
+    public List<String> getDelimiters() {
         return delimiters;
     }
 
-    public void setDelimiters( List<String> delimiters )
-    {
+    public void setDelimiters(List<String> delimiters) {
         this.delimiters = delimiters;
     }
 
     @Override
-    public synchronized FixedStringSearchInterpolator getCommandLinePropsInterpolator()
-    {
-        if ( commandLinePropertiesInterpolator == null )
-        {
+    public synchronized FixedStringSearchInterpolator getCommandLinePropsInterpolator() {
+        if (commandLinePropertiesInterpolator == null) {
             this.commandLinePropertiesInterpolator = createCommandLinePropertiesInterpolator();
         }
         return commandLinePropertiesInterpolator;
     }
 
     @Override
-    public synchronized FixedStringSearchInterpolator getEnvInterpolator()
-    {
-        if ( envInterpolator == null )
-        {
+    public synchronized FixedStringSearchInterpolator getEnvInterpolator() {
+        if (envInterpolator == null) {
             this.envInterpolator = createEnvInterpolator();
         }
         return envInterpolator;
     }
 
     @Override
-    public synchronized FixedStringSearchInterpolator getRepositoryInterpolator()
-    {
-        if ( rootInterpolator == null )
-        {
+    public synchronized FixedStringSearchInterpolator getRepositoryInterpolator() {
+        if (rootInterpolator == null) {
             this.rootInterpolator = createRepositoryInterpolator();
         }
         return rootInterpolator;
     }
 
     @Override
-    public synchronized FixedStringSearchInterpolator getMainProjectInterpolator()
-    {
-        if ( mainProjectInterpolator == null )
-        {
-            this.mainProjectInterpolator = mainProjectInterpolator( getProject() );
+    public synchronized FixedStringSearchInterpolator getMainProjectInterpolator() {
+        if (mainProjectInterpolator == null) {
+            this.mainProjectInterpolator = mainProjectInterpolator(getProject());
         }
         return mainProjectInterpolator;
     }
 
     @Override
-    public Integer getOverrideUid()
-    {
+    public Integer getOverrideUid() {
         return this.overrideUid;
     }
 
     @Override
-    public String getOverrideUserName()
-    {
+    public String getOverrideUserName() {
         return this.overrideUserName;
     }
 
     @Override
-    public Integer getOverrideGid()
-    {
+    public Integer getOverrideGid() {
         return this.overrideGid;
     }
 
     @Override
-    public String getOverrideGroupName()
-    {
+    public String getOverrideGroupName() {
         return this.overrideGroupName;
     }
 }

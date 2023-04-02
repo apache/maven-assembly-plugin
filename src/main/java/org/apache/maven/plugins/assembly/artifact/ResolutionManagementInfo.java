@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.artifact;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,11 +16,12 @@ package org.apache.maven.plugins.assembly.artifact;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import org.apache.maven.artifact.Artifact;
+package org.apache.maven.plugins.assembly.artifact;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+
+import org.apache.maven.artifact.Artifact;
 
 /**
  * Helper class used to accumulate scopes and modules (with binaries included) that are used in an assembly, for the
@@ -30,68 +29,48 @@ import java.util.Set;
  *
  * @author jdcasey
  */
-class ResolutionManagementInfo
-{
+class ResolutionManagementInfo {
     private final LinkedHashSet<Artifact> artifacts = new LinkedHashSet<>();
 
-    Set<Artifact> getArtifacts()
-    {
+    Set<Artifact> getArtifacts() {
         return artifacts;
     }
 
-    void addArtifacts( final Set<Artifact> a )
-    {
-        for ( Artifact artifact : a )
-        {
-            addOneArtifact( artifact );
+    void addArtifacts(final Set<Artifact> a) {
+        for (Artifact artifact : a) {
+            addOneArtifact(artifact);
         }
-        artifacts.addAll( a );
+        artifacts.addAll(a);
     }
 
-    private void addOneArtifact( Artifact artifact )
-    {
-        for ( Artifact existing : artifacts )
-        {
-            if ( existing.equals( artifact ) )
-            {
-                if ( isScopeUpgrade( artifact, existing ) )
-                {
-                    artifacts.remove( existing );
-                    artifacts.add( artifact );
+    private void addOneArtifact(Artifact artifact) {
+        for (Artifact existing : artifacts) {
+            if (existing.equals(artifact)) {
+                if (isScopeUpgrade(artifact, existing)) {
+                    artifacts.remove(existing);
+                    artifacts.add(artifact);
                     return;
                 }
             }
         }
     }
 
-    private boolean isScopeUpgrade( Artifact a, Artifact existing )
-    {
-        return scopeValue( a.getScope() ) > scopeValue( existing.getScope() );
+    private boolean isScopeUpgrade(Artifact a, Artifact existing) {
+        return scopeValue(a.getScope()) > scopeValue(existing.getScope());
     }
 
-    private int scopeValue( final String scope )
-    {
-        if ( Artifact.SCOPE_COMPILE.equals( scope ) )
-        {
+    private int scopeValue(final String scope) {
+        if (Artifact.SCOPE_COMPILE.equals(scope)) {
             return 5;
-        }
-        else if ( Artifact.SCOPE_PROVIDED.equals( scope ) )
-        {
+        } else if (Artifact.SCOPE_PROVIDED.equals(scope)) {
             return 4;
-        }
-        else if ( Artifact.SCOPE_RUNTIME.equals( scope ) )
-        {
+        } else if (Artifact.SCOPE_RUNTIME.equals(scope)) {
             return 3;
-        }
-        else if ( Artifact.SCOPE_SYSTEM.equals( scope ) )
-        {
+        } else if (Artifact.SCOPE_SYSTEM.equals(scope)) {
             return 2;
-        }
-        else if ( Artifact.SCOPE_TEST.equals( scope ) )
-        {
+        } else if (Artifact.SCOPE_TEST.equals(scope)) {
             return 1;
         }
         return 0;
     }
-
 }

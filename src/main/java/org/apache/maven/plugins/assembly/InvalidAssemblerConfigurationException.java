@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,13 +16,12 @@ package org.apache.maven.plugins.assembly;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly;
 
 /**
  *
  */
-public class InvalidAssemblerConfigurationException
-    extends Exception
-{
+public class InvalidAssemblerConfigurationException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
@@ -32,17 +29,14 @@ public class InvalidAssemblerConfigurationException
      * @param message The message.
      * @param error   The error
      */
-    public InvalidAssemblerConfigurationException( final String message, final Throwable error )
-    {
-        super( message, error );
+    public InvalidAssemblerConfigurationException(final String message, final Throwable error) {
+        super(message, error);
     }
 
     /**
      * @param message The message.
      */
-    public InvalidAssemblerConfigurationException( final String message )
-    {
-        super( message );
+    public InvalidAssemblerConfigurationException(final String message) {
+        super(message);
     }
-
 }

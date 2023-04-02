@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.assembly.io;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,7 @@ package org.apache.maven.plugins.assembly.io;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.assembly.io;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,14 +25,11 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
-
 /**
  * file location implementation.
  *
  */
-class FileLocation
-    implements Location
-{
+class FileLocation implements Location {
 
     private File file;
     private FileChannel channel;
@@ -44,8 +40,7 @@ class FileLocation
      * @param file {@link File}
      * @param specification spec
      */
-    FileLocation( File file, String specification )
-    {
+    FileLocation(File file, String specification) {
         this.file = file;
         this.specification = specification;
     }
@@ -53,43 +48,31 @@ class FileLocation
     /**
      * @param specification spec
      */
-    FileLocation( String specification )
-    {
+    FileLocation(String specification) {
         this.specification = specification;
     }
 
     @Override
-    public void close()
-    {
-        if ( ( channel != null ) && channel.isOpen() )
-        {
-            try
-            {
+    public void close() {
+        if ((channel != null) && channel.isOpen()) {
+            try {
                 channel.close();
-            }
-            catch ( IOException e )
-            {
-                //swallow it.
+            } catch (IOException e) {
+                // swallow it.
             }
         }
 
-        if ( stream != null )
-        {
-            try
-            {
+        if (stream != null) {
+            try {
                 stream.close();
-            }
-            catch ( IOException e )
-            {
+            } catch (IOException e) {
                 // swallow it.
             }
         }
     }
 
     @Override
-    public File getFile()
-        throws IOException
-    {
+    public File getFile() throws IOException {
         initFile();
 
         return unsafeGetFile();
@@ -98,8 +81,7 @@ class FileLocation
     /**
      * @return {@link File}
      */
-    File unsafeGetFile()
-    {
+    File unsafeGetFile() {
         return file;
     }
 
@@ -107,69 +89,53 @@ class FileLocation
      * initialize file.
      * @throws IOException in case of error
      */
-    protected void initFile()
-        throws IOException
-    {
-        if ( file == null )
-        {
-            file = new File( specification );
+    protected void initFile() throws IOException {
+        if (file == null) {
+            file = new File(specification);
         }
     }
 
     /**
      * @param file {@link File}
      */
-    protected void setFile( File file )
-    {
-        if ( channel != null )
-        {
-            throw new IllegalStateException( "Location is already open; cannot setFile(..)." );
+    protected void setFile(File file) {
+        if (channel != null) {
+            throw new IllegalStateException("Location is already open; cannot setFile(..).");
         }
 
         this.file = file;
     }
 
     @Override
-    public String getSpecification()
-    {
+    public String getSpecification() {
         return specification;
     }
 
     @Override
-    public void open()
-        throws IOException
-    {
-        if ( stream == null )
-        {
+    public void open() throws IOException {
+        if (stream == null) {
             initFile();
 
-            stream = new FileInputStream( file );
+            stream = new FileInputStream(file);
             channel = stream.getChannel();
         }
     }
 
     @Override
-    public int read( ByteBuffer buffer )
-        throws IOException
-    {
+    public int read(ByteBuffer buffer) throws IOException {
         open();
-        return channel.read( buffer );
+        return channel.read(buffer);
     }
 
     @Override
-    public int read( byte[] buffer )
-        throws IOException
-    {
+    public int read(byte[] buffer) throws IOException {
         open();
-        return channel.read( ByteBuffer.wrap( buffer ) );
+        return channel.read(ByteBuffer.wrap(buffer));
     }
 
     @Override
-    public InputStream getInputStream()
-        throws IOException
-    {
+    public InputStream getInputStream() throws IOException {
         open();
         return stream;
     }
-
 }
