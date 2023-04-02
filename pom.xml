@@ -25,7 +25,7 @@ under the License.
   <parent>
     <artifactId>maven-plugins</artifactId>
     <groupId>org.apache.maven.plugins</groupId>
-    <version>36</version>
+    <version>39</version>
     <relativePath />
   </parent>
 
@@ -69,9 +69,8 @@ under the License.
     <mavenFilteringVersion>3.3.0</mavenFilteringVersion>
     <mavenArchiverVersion>3.6.0</mavenArchiverVersion>
 
-    <surefire.version>3.0.0-M6</surefire.version>
+    <surefire.version>3.0.0</surefire.version>
     <testOutputToFile>true</testOutputToFile>
-    <checkstyle.violation.ignore>RedundantThrows,NewlineAtEndOfFile,ParameterNumber,MethodLength,FileLength,ModifierOrder,JavadocMethod</checkstyle.violation.ignore>
     <project.build.outputTimestamp>2023-02-19T15:09:17Z</project.build.outputTimestamp>
   </properties>
 
@@ -352,8 +351,6 @@ under the License.
             <configuration>
               <properties>
                 <testVersion>${testVersion}</testVersion>
-                <!-- e.g. ensure that Java7 picks up TLSv1.2 when connecting with Central -->
-                <https.protocols>${https.protocols}</https.protocols>
               </properties>
               <showVersion>true</showVersion>
             </configuration>
@@ -381,7 +378,7 @@ under the License.
               <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-compress</artifactId>
-                <version>1.21</version>
+                <version>1.23.0</version>
               </dependency>
               <dependency>
                 <groupId>com.github.luben</groupId>
