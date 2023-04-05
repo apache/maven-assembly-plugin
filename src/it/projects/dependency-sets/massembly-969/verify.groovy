@@ -19,17 +19,17 @@
 
 import java.io.*;
 
-def expectedFilenames = [ "javafx-base-18.0.1.jar",
-  "javafx-controls-18.0.1-linux.jar",
-  "javafx-media-18.0.1-linux.jar",
-  "javafx-web-18.0.1.jar",
-  "javafx-base-18.0.1-linux.jar",
-  "javafx-graphics-18.0.1-linux.jar",
-  "javafx-swing-18.0.1.jar",
-  "javafx-web-18.0.1-linux.jar",
-  "javafx-controls-18.0.1.jar",
-  "javafx-media-18.0.1.jar",
-  "javafx-swing-18.0.1-linux.jar"
+def expectedFilenames = [ "javafx-base-20.jar",
+  "javafx-controls-20-linux.jar",
+  "javafx-media-20-linux.jar",
+  "javafx-web-20.jar",
+  "javafx-base-20-linux.jar",
+  "javafx-graphics-20-linux.jar",
+  "javafx-swing-20.jar",
+  "javafx-web-20-linux.jar",
+  "javafx-controls-20.jar",
+  "javafx-media-20.jar",
+  "javafx-swing-20-linux.jar"
 ]
 
 File assemblyBasedir = new File( basedir, "target/massembly-969-1-bin/" )
