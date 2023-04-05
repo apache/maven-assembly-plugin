@@ -38,14 +38,19 @@ under the License.
       </includes>
       <excludes>
         <exclude>org.openjfx:javafx-base:jar:mac</exclude>
+        <exclude>org.openjfx:javafx-base:jar:mac-aarch64</exclude>
         <exclude>org.openjfx:javafx-base:jar:win</exclude>
         <exclude>org.openjfx:javafx-controls:jar:mac</exclude>
+        <exclude>org.openjfx:javafx-controls:jar:mac-aarch64</exclude>
         <exclude>org.openjfx:javafx-controls:jar:win</exclude>
         <exclude>org.openjfx:javafx-media:jar:mac</exclude>
+        <exclude>org.openjfx:javafx-media:jar:mac-aarch64</exclude>
         <exclude>org.openjfx:javafx-media:jar:win</exclude>
         <exclude>org.openjfx:javafx-web:jar:mac</exclude>
+        <exclude>org.openjfx:javafx-web:jar:mac-aarch64</exclude>
         <exclude>org.openjfx:javafx-web:jar:win</exclude>
         <exclude>org.openjfx:javafx-swing:jar:mac</exclude>
+        <exclude>org.openjfx:javafx-swing:jar:mac-aarch64</exclude>
         <exclude>org.openjfx:javafx-swing:jar:win</exclude>
       </excludes>
     </dependencySet>
