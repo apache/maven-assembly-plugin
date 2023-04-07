@@ -19,8 +19,12 @@
 package org.apache.maven.plugins.assembly.io;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 
 import org.apache.commons.io.IOUtils;
@@ -29,24 +33,24 @@ import org.apache.commons.io.IOUtils;
  * The URL Location, storing the URL content to a temporary local file.
  *
  */
-class URLLocation extends FileLocation {
+/*class URLLocation extends FileLocation {
 
-    private final URL url;
+private final URL url;
 
-    private final String tempFilePrefix;
+private final String tempFilePrefix;
 
-    private final String tempFileSuffix;
+private final String tempFileSuffix;
 
-    private final boolean tempFileDeleteOnExit;
+private final boolean tempFileDeleteOnExit;
 
-    /**
-     * @param url the URL
-     * @param specification the spec
-     * @param tempFilePrefix the prefix
-     * @param tempFileSuffix the suffix
-     * @param tempFileDeleteOnExit delete on exit
-     */
-    URLLocation(
+/**
+ * @param url the URL
+ * @param specification the spec
+ * @param tempFilePrefix the prefix
+ * @param tempFileSuffix the suffix
+ * @param tempFileDeleteOnExit delete on exit
+ */
+/*  URLLocation(
             URL url, String specification, String tempFilePrefix, String tempFileSuffix, boolean tempFileDeleteOnExit) {
         super(specification);
 
@@ -69,5 +73,114 @@ class URLLocation extends FileLocation {
 
             setFile(tempFile);
         }
+    }
+}*/
+
+// -------Refactored code using Push Down method------
+
+class URLLocation implements Location {
+
+    private final URL url;
+    private final String tempFilePrefix;
+    private final String tempFileSuffix;
+    private final boolean tempFileDeleteOnExit;
+    private File file;
+    private FileInputStream stream;
+    private FileChannel channel;
+    private final String specification;
+
+    URLLocation(
+            URL url, String specification, String tempFilePrefix, String tempFileSuffix, boolean tempFileDeleteOnExit) {
+        this.url = url;
+        this.specification = specification;
+        this.tempFilePrefix = tempFilePrefix;
+        this.tempFileSuffix = tempFileSuffix;
+        this.tempFileDeleteOnExit = tempFileDeleteOnExit;
+    }
+
+    @Override
+    public void close() {
+        if ((channel != null) && channel.isOpen()) {
+            try {
+                channel.close();
+            } catch (IOException e) {
+                // swallow it.
+            }
+        }
+
+        if (stream != null) {
+            try {
+                stream.close();
+            } catch (IOException e) {
+                // swallow it.
+            }
+        }
+    }
+
+    @Override
+    public File getFile() throws IOException {
+        initFile();
+
+        return unsafeGetFile();
+    }
+
+    @Override
+    public String getSpecification() {
+        return specification;
+    }
+
+    @Override
+    public void open() throws IOException {
+        if (stream == null) {
+            initFile();
+
+            stream = new FileInputStream(file);
+            channel = stream.getChannel();
+        }
+    }
+
+    @Override
+    public int read(ByteBuffer buffer) throws IOException {
+        open();
+        return channel.read(buffer);
+    }
+
+    @Override
+    public int read(byte[] buffer) throws IOException {
+        open();
+        return channel.read(ByteBuffer.wrap(buffer));
+    }
+
+    @Override
+    public InputStream getInputStream() throws IOException {
+        open();
+        return stream;
+    }
+
+    protected void initFile() throws IOException {
+
+        if (file == null) {
+            File tempFile = Files.createTempFile(tempFilePrefix, tempFileSuffix).toFile();
+
+            if (tempFileDeleteOnExit) {
+                tempFile.deleteOnExit();
+            }
+
+            IOUtils.copy(url, tempFile);
+
+            file = tempFile;
+        }
+    }
+
+    protected void setFile(File file) {
+        if (channel != null) {
+            throw new IllegalStateException("Location is already open; cannot setFile(..).");
+        }
+
+        this.file = file;
+    }
+
+    File unsafeGetFile() {
+        return file;
     }
 }

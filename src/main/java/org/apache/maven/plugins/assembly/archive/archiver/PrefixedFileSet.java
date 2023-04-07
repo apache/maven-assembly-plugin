@@ -32,11 +32,8 @@ class PrefixedFileSet implements FileSet {
     private static final FileMapper[] EMPTY_FILE_MAPPERS_ARRAY = new FileMapper[0];
 
     private final String rootPrefix;
-
     private final FileSet fileSet;
-
     private final FileSelector[] selectors;
-
     /**
      * @param fileSet    The file set.
      * @param rootPrefix The root prefix
@@ -45,32 +42,9 @@ class PrefixedFileSet implements FileSet {
     PrefixedFileSet(final FileSet fileSet, final String rootPrefix, final FileSelector[] selectors) {
         this.fileSet = fileSet;
         this.selectors = selectors;
-
-        if (rootPrefix.length() > 0 && !rootPrefix.endsWith("/")) {
-            this.rootPrefix = rootPrefix + "/";
-        } else {
-            this.rootPrefix = rootPrefix;
-        }
+        // Refactored using extract class. created new class RootPrefix
+        this.rootPrefix = new RootPrefix(rootPrefix).getValue();
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    static FileSelector[] combineSelectors(FileSelector[] first, FileSelector[] second) {
-        if ((first != null) && (second != null)) {
-            final FileSelector[] temp = new FileSelector[first.length + second.length];
-
-            System.arraycopy(first, 0, temp, 0, first.length);
-            System.arraycopy(second, 0, temp, first.length, second.length);
-
-            first = temp;
-        } else if ((first == null) && (second != null)) {
-            first = second;
-        }
-
-        return first;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -88,7 +62,6 @@ class PrefixedFileSet implements FileSet {
         final FileSelector[] selectors1 = selectors;
         return combineSelectors(sel, selectors1);
     }
-
     /**
      * {@inheritDoc}
      */
@@ -96,7 +69,6 @@ class PrefixedFileSet implements FileSet {
     public String[] getIncludes() {
         return fileSet.getIncludes();
     }
-
     /**
      * {@inheritDoc}
      */
@@ -106,16 +78,8 @@ class PrefixedFileSet implements FileSet {
         if (prefix == null) {
             return rootPrefix;
         }
-
-        if (prefix.startsWith("/")) {
-            if (prefix.length() > 1) {
-                prefix = prefix.substring(1);
-            } else {
-                prefix = "";
-            }
-        }
-
-        return rootPrefix + prefix;
+        // Refactored using extract class. created new class PrefixedPrefix
+        return new PrefixedPrefix(rootPrefix, prefix).getValue();
     }
 
     /**
@@ -158,5 +122,20 @@ class PrefixedFileSet implements FileSet {
     @Override
     public FileMapper[] getFileMappers() {
         return EMPTY_FILE_MAPPERS_ARRAY;
+    }
+
+    static FileSelector[] combineSelectors(FileSelector[] first, FileSelector[] second) {
+        if ((first != null) && (second != null)) {
+            final FileSelector[] temp = new FileSelector[first.length + second.length];
+
+            System.arraycopy(first, 0, temp, 0, first.length);
+            System.arraycopy(second, 0, temp, first.length, second.length);
+
+            first = temp;
+        } else if ((first == null) && (second != null)) {
+            first = second;
+        }
+
+        return first;
     }
 }

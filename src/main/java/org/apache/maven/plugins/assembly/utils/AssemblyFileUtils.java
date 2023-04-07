@@ -32,7 +32,7 @@ public final class AssemblyFileUtils {
         // no op
     }
 
-    public static String makePathRelativeTo(String path, final File basedir) {
+    /*public static String makePathRelativeTo(String path, final File basedir) {
         if (basedir == null) {
             return path;
         }
@@ -62,7 +62,45 @@ public final class AssemblyFileUtils {
         }
 
         return path;
+    }*/
+
+    // refactored using extract method
+
+    public static String makePathRelativeTo(String path, final File basedir) {
+        if (basedir == null) {
+            return path;
+        }
+
+        if (path == null) {
+            return null;
+        }
+
+        path = path.trim();
+
+        if (path.startsWith(basedir.getAbsolutePath())) {
+            path = removeBaseDirectory(path, basedir);
+        }
+
+        if (!new File(path).isAbsolute()) {
+            path = path.replace('\\', '/');
+        }
+
+        return path;
     }
+
+    private static String removeBaseDirectory(String path, final File basedir) {
+        path = path.substring(basedir.getAbsolutePath().length());
+        if (path.length() > 0 && (path.startsWith("/") || path.startsWith("\\"))) {
+            path = path.substring(1);
+        }
+
+        if (path.length() == 0) {
+            path = ".";
+        }
+
+        return path;
+    }
+    // ----------refactoring ends-------
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void verifyTempDirectoryAvailability(final File tempDir) {

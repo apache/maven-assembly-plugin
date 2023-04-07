@@ -54,12 +54,27 @@ public class SingleAssemblyMojo extends AbstractAssemblyMojo {
         super.execute();
     }
 
-    private void verifyRemovedParameter(String paramName) {
+    /*private void verifyRemovedParameter(String paramName) {
         Object pluginConfiguration = plugin.getPlugin().getConfiguration();
         if (pluginConfiguration instanceof Xpp3Dom) {
             Xpp3Dom configDom = (Xpp3Dom) pluginConfiguration;
 
             if (configDom.getChild(paramName) != null) {
+                throw new IllegalArgumentException(
+                        "parameter '" + paramName + "' has been removed from the plugin, please verify documentation.");
+            }
+        }
+    }*/
+
+    // refactored using explaining variable
+
+    private void verifyRemovedParameter(String paramName) {
+        Object pluginConfiguration = plugin.getPlugin().getConfiguration();
+        if (pluginConfiguration instanceof Xpp3Dom) {
+            Xpp3Dom configDom = (Xpp3Dom) pluginConfiguration;
+            Xpp3Dom removedParam = configDom.getChild(paramName);
+
+            if (removedParam != null) {
                 throw new IllegalArgumentException(
                         "parameter '" + paramName + "' has been removed from the plugin, please verify documentation.");
             }

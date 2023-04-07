@@ -485,7 +485,8 @@ class DefaultMessageHolder implements MessageHolder {
      * @param message {@link Message}
      * @param sink {@link MessageSink}
      */
-    protected void renderTo(Message message, MessageSink sink) {
+    // original
+    /*protected void renderTo(Message message, MessageSink sink) {
         switch (message.getMessageLevel()) {
             case (MessageLevels.LEVEL_SEVERE):
                 sink.severe(message.render().toString());
@@ -506,5 +507,98 @@ class DefaultMessageHolder implements MessageHolder {
             default:
                 sink.debug(message.render().toString());
         }
+    }*/
+
+    // refactored using replaced conditional with polymorphism.
+
+    public abstract class MessageRenderer {
+        protected Message message;
+
+        MessageRenderer(Message message) {
+            this.message = message;
+        }
+
+        public abstract void render(MessageSink sink);
     }
+
+    public class SevereMessageRenderer extends MessageRenderer {
+        SevereMessageRenderer(Message message) {
+            super(message);
+        }
+
+        @Override
+        public void render(MessageSink sink) {
+            sink.severe(message.render().toString());
+        }
+    }
+
+    public class ErrorMessageRenderer extends MessageRenderer {
+        ErrorMessageRenderer(Message message) {
+            super(message);
+        }
+
+        @Override
+        public void render(MessageSink sink) {
+            sink.error(message.render().toString());
+        }
+    }
+
+    public class WarningMessageRenderer extends MessageRenderer {
+        WarningMessageRenderer(Message message) {
+            super(message);
+        }
+
+        @Override
+        public void render(MessageSink sink) {
+            sink.warning(message.render().toString());
+        }
+    }
+
+    public class InfoMessageRenderer extends MessageRenderer {
+        InfoMessageRenderer(Message message) {
+            super(message);
+        }
+
+        @Override
+        public void render(MessageSink sink) {
+            sink.info(message.render().toString());
+        }
+    }
+
+    public class DebugMessageRenderer extends MessageRenderer {
+        DebugMessageRenderer(Message message) {
+            super(message);
+        }
+
+        @Override
+        public void render(MessageSink sink) {
+            sink.debug(message.render().toString());
+        }
+    }
+
+    protected void renderTo(Message message, MessageSink sink) {
+        MessageRenderer renderer;
+        switch (message.getMessageLevel()) {
+            case MessageLevels.LEVEL_SEVERE:
+                renderer = new SevereMessageRenderer(message);
+                break;
+
+            case MessageLevels.LEVEL_ERROR:
+                renderer = new ErrorMessageRenderer(message);
+                break;
+
+            case MessageLevels.LEVEL_WARNING:
+                renderer = new WarningMessageRenderer(message);
+                break;
+
+            case MessageLevels.LEVEL_INFO:
+                renderer = new InfoMessageRenderer(message);
+                break;
+
+            default:
+                renderer = new DebugMessageRenderer(message);
+        }
+        renderer.render(sink);
+    }
+    // -----refactoring ends-------
 }
