@@ -41,8 +41,6 @@ Examples
 
     * {{{./single/using-components.html}Using Component Descriptors}}
 
-    * {{{./single/using-repositories.html}Using Repositories}}
-
     * {{{./single/using-container-descriptor-handlers.html}Using Container Descriptor Handlers}}
 
     []

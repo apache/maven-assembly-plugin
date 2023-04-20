@@ -41,7 +41,7 @@ Advanced Assembly-Descriptor Topics
   add the file to the archive "wins". The filtering is done solely based
   on name inside the archive, so the same source file can be added under
   different output names. The order of the phases is as follows:
-  1) FileItem 2) FileSets 3) ModuleSet 4) DepenedencySet and 5) Repository elements.
+  1) FileItem 2) FileSets 3) ModuleSet 4) DepenedencySet.
 
   Elements of the same type will be processed in the order they appear in the
   descriptors. If you need to "overwrite" a file included by a previous set,
