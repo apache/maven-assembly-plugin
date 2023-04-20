@@ -28,5 +28,5 @@ github:
     squash: true
     merge: false
     rebase: true
-    autolink_jira:
-      - MASSEMBLY
+  autolink_jira:
+    - MASSEMBLY
