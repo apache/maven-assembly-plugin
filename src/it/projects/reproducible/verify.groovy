@@ -18,12 +18,19 @@
  * under the License.
  */
 
-//import java.util.zip.*
+import java.util.jar.*;
 import org.apache.commons.compress.archivers.zip.*
 
 File deployDir = new File( basedir, 'target/repo/org/apache/maven/its/reproducible/1.0' )
 
 assert deployDir.exists()
+
+// Minimal Manifest was created
+JarFile jarFile = new JarFile( new File( deployDir, "reproducible-1.0-src.jar" ) )
+Manifest mf = jarFile.getManifest()
+Attributes attrs = mf.getMainAttributes()
+assert attrs.size() == 1
+assert attrs.containsKey(Attributes.Name.MANIFEST_VERSION)
 
 ZipFile zip = new ZipFile( new File( deployDir, "reproducible-1.0-src.zip" ) )
 StringBuilder sb = new StringBuilder()

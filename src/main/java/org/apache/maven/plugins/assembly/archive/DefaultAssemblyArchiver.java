@@ -32,6 +32,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.maven.archiver.MavenArchiveConfiguration;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
 import org.apache.maven.plugins.assembly.archive.archiver.AssemblyProxyArchiver;
@@ -293,10 +294,7 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver {
         final List<FileSelector> extraSelectors = new ArrayList<>();
         final List<ArchiveFinalizer> extraFinalizers = new ArrayList<>();
         if (archiver instanceof JarArchiver) {
-            if (mergeManifestMode != null) {
-                ((JarArchiver) archiver)
-                        .setFilesetmanifest(JarArchiver.FilesetManifestConfig.valueOf(mergeManifestMode));
-            }
+            configureJarArchiver((JarArchiver) archiver, mergeManifestMode, configSource.getJarArchiveConfiguration());
 
             extraSelectors.add(new JarSecurityFileSelector());
 
@@ -349,6 +347,23 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver {
         }
 
         return archiver;
+    }
+
+    private void configureJarArchiver(
+            JarArchiver archiver, String mergeManifestMode, MavenArchiveConfiguration configuration) {
+
+        if (mergeManifestMode != null) {
+            archiver.setFilesetmanifest(JarArchiver.FilesetManifestConfig.valueOf(mergeManifestMode));
+        }
+
+        archiver.setMinimalDefaultManifest(true);
+
+        if (configuration != null) {
+            archiver.setCompress(configuration.isCompress());
+            archiver.setForced(configuration.isForced());
+            archiver.setIndex(configuration.isIndex());
+            archiver.setRecompressAddedZips(configuration.isRecompressAddedZips());
+        }
     }
 
     private void configureContainerDescriptorHandler(
