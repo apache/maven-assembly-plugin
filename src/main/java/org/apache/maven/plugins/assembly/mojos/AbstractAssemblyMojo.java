@@ -130,9 +130,11 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     private File outputDirectory;
 
     /**
-     * The filename of the assembled distribution file.
+     * The filename of the assembled distribution file.<br/>
+     * <b>NOTE:</b> This parameter has only impact on name in project target directory,
+     * installed/deployed artifacts will follow convention for artifact names.
      */
-    @Parameter(defaultValue = "${project.build.finalName}", required = true, readonly = true)
+    @Parameter(defaultValue = "${project.build.finalName}", required = true)
     private String finalName;
 
     /**
