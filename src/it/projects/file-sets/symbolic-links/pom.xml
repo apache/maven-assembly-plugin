@@ -29,6 +29,8 @@ under the License.
   </parent>
   
   <artifactId>symbolic-links</artifactId>
+  <packaging>pom</packaging>
+  <description>Test for MASSEMBLY-965 - Symbolic links get copied with absolute path</description>
 
   <build>
     <plugins>
@@ -38,6 +40,7 @@ under the License.
           <descriptors>
             <descriptor>src/main/assembly/src.xml</descriptor>
           </descriptors>
+          <attach>false</attach>
         </configuration>
         <executions>
           <execution>
