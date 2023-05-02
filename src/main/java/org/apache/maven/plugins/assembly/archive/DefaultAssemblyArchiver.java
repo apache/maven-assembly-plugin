@@ -32,7 +32,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.maven.archiver.MavenArchiveConfiguration;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
 import org.apache.maven.plugins.assembly.archive.archiver.AssemblyProxyArchiver;
@@ -294,7 +293,7 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver {
         final List<FileSelector> extraSelectors = new ArrayList<>();
         final List<ArchiveFinalizer> extraFinalizers = new ArrayList<>();
         if (archiver instanceof JarArchiver) {
-            configureJarArchiver((JarArchiver) archiver, mergeManifestMode, configSource.getJarArchiveConfiguration());
+            configureJarArchiver((JarArchiver) archiver, mergeManifestMode);
 
             extraSelectors.add(new JarSecurityFileSelector());
 
@@ -349,8 +348,7 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver {
         return archiver;
     }
 
-    private void configureJarArchiver(
-            JarArchiver archiver, String mergeManifestMode, MavenArchiveConfiguration configuration) {
+    private void configureJarArchiver(JarArchiver archiver, String mergeManifestMode) {
 
         if (mergeManifestMode != null) {
             archiver.setFilesetmanifest(JarArchiver.FilesetManifestConfig.valueOf(mergeManifestMode));
