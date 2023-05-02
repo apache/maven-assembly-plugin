@@ -357,13 +357,6 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver {
         }
 
         archiver.setMinimalDefaultManifest(true);
-
-        if (configuration != null) {
-            archiver.setCompress(configuration.isCompress());
-            archiver.setForced(configuration.isForced());
-            archiver.setIndex(configuration.isIndex());
-            archiver.setRecompressAddedZips(configuration.isRecompressAddedZips());
-        }
     }
 
     private void configureContainerDescriptorHandler(
