@@ -293,10 +293,7 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver {
         final List<FileSelector> extraSelectors = new ArrayList<>();
         final List<ArchiveFinalizer> extraFinalizers = new ArrayList<>();
         if (archiver instanceof JarArchiver) {
-            if (mergeManifestMode != null) {
-                ((JarArchiver) archiver)
-                        .setFilesetmanifest(JarArchiver.FilesetManifestConfig.valueOf(mergeManifestMode));
-            }
+            configureJarArchiver((JarArchiver) archiver, mergeManifestMode);
 
             extraSelectors.add(new JarSecurityFileSelector());
 
@@ -349,6 +346,15 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver {
         }
 
         return archiver;
+    }
+
+    private void configureJarArchiver(JarArchiver archiver, String mergeManifestMode) {
+
+        if (mergeManifestMode != null) {
+            archiver.setFilesetmanifest(JarArchiver.FilesetManifestConfig.valueOf(mergeManifestMode));
+        }
+
+        archiver.setMinimalDefaultManifest(true);
     }
 
     private void configureContainerDescriptorHandler(

@@ -50,7 +50,7 @@
           </descriptors>
           <archive>
             <manifest>
-              <!-- remove default entries since it contains "Created-By: Maven Source Plugin <current plugin version>"
+              <!-- remove default entries since it contains "Created-By: Maven Assembly Plugin <current plugin version>"
                    which varies over time in this IT -->
               <addDefaultEntries>false</addDefaultEntries>
             </manifest>
