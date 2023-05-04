@@ -910,6 +910,16 @@ public class AssemblyProxyArchiver implements Archiver {
     }
 
     @Override
+    public void setUmask(int umask) {
+        delegate.setUmask(umask);
+    }
+
+    @Override
+    public int getUmask() {
+        return delegate.getUmask();
+    }
+
+    @Override
     public void configureReproducibleBuild(FileTime fileTime) {
         delegate.configureReproducibleBuild(fileTime);
     }

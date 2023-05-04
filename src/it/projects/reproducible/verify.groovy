@@ -73,14 +73,20 @@ effective = sb.toString()
 // 2. on *nix, based on umask system configuration, group write mode differs:
 //    - umask == 002: many Linux distro and MacOS create group writable files/directories:
 //      => reference result is zip-content-775.txt: directory=40775, file=100664, executable=100775
-//    - umask == 022: some Linux distros like Fedora is create group read-only files/directories:
+//    - umask == 022: some Linux distros like recent Fedora create group read-only files/directories:
 //      => reference result is zip-content-755.txt: directory=40755, file=100644, executable=100755
+// with MASSEMBLY-989, umask 022 is forced: 775 is not happening any more, even if the IT check could detect it...
 reference = "zip-content-" + ( effective.contains( "644 executable" ) ? "win" : effective.contains( "0775" ) ? "775" : "755" ) + ".txt"
 content = new File( basedir, reference ).text.replace( "\r\n", "\n" )
 
 println( 'effective content:' )
 println( effective )
 println( 'comparing against reference ' + reference )
+if ( reference.contains( "775" ) )
+{
+    println( '775 reference is not supposed to happen since MASSEMBLY-989' )
+    return -1
+}
 
 index = content.indexOf( 'resulting sha1:' )
 contentMode = content.substring( 0, index )
