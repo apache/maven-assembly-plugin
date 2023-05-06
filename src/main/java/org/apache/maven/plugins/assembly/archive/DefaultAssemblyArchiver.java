@@ -26,9 +26,9 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -128,7 +128,7 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver {
             final AssemblerConfigurationSource configSource,
             boolean recompressZippedFiles,
             String mergeManifestMode,
-            Date outputTimestamp)
+            FileTime outputTimestamp)
             throws ArchiveCreationException, AssemblyFormattingException, InvalidAssemblerConfigurationException {
         validate(assembly);
 
@@ -271,19 +271,23 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver {
             final List<ContainerDescriptorHandler> containerHandlers,
             boolean recompressZippedFiles,
             String mergeManifestMode,
-            Date outputTimestamp)
+            FileTime outputTimestamp)
             throws NoSuchArchiverException {
         Archiver archiver;
-        if ("txz".equals(format)
-                || "tgz".equals(format)
-                || "tbz2".equals(format)
-                || "tzst".equals(format)
-                || format.startsWith("tar")) {
-            archiver = createTarArchiver(format, TarLongFileMode.valueOf(configSource.getTarLongFileMode()));
-        } else if ("war".equals(format)) {
-            archiver = createWarArchiver();
+
+        // one missing alias in plexus-archiver
+        if ("tzst".equals(format)) {
+            archiver = createTarZstArchiver();
         } else {
             archiver = archiverManager.getArchiver(format);
+        }
+
+        if (archiver instanceof TarArchiver) {
+            ((TarArchiver) archiver).setLongfile(TarLongFileMode.valueOf(configSource.getTarLongFileMode()));
+        }
+
+        if (archiver instanceof WarArchiver) {
+            ((WarArchiver) archiver).setExpectWebXml(false);
         }
 
         if (archiver instanceof AbstractZipArchiver) {
@@ -323,13 +327,12 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver {
             archiver = new DryRunArchiver(archiver, LOGGER);
         }
 
-        archiver.setUseJvmChmod(configSource.isUpdateOnly());
         archiver.setIgnorePermissions(configSource.isIgnorePermissions());
         archiver.setForced(!configSource.isUpdateOnly());
 
         // configure for Reproducible Builds based on outputTimestamp value
         if (outputTimestamp != null) {
-            archiver.configureReproducible(outputTimestamp);
+            archiver.configureReproducibleBuild(outputTimestamp);
         }
 
         if (configSource.getOverrideUid() != null) {
@@ -460,49 +463,9 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver {
         }
     }
 
-    protected Archiver createWarArchiver() throws NoSuchArchiverException {
-        final WarArchiver warArchiver = (WarArchiver) archiverManager.getArchiver("war");
-        warArchiver.setIgnoreWebxml(false); // See MNG-1274
-
-        return warArchiver;
-    }
-
-    protected Archiver createTarArchiver(final String format, final TarLongFileMode tarLongFileMode)
-            throws NoSuchArchiverException {
+    protected Archiver createTarZstArchiver() throws NoSuchArchiverException {
         final TarArchiver tarArchiver = (TarArchiver) archiverManager.getArchiver("tar");
-        final int index = format.indexOf('.');
-        if (index >= 0) {
-            TarArchiver.TarCompressionMethod tarCompressionMethod;
-            // TODO: this should accept gz and bz2 as well so we can skip
-            // TODO: over the switch
-            final String compression = format.substring(index + 1);
-            if ("gz".equals(compression)) {
-                tarCompressionMethod = TarArchiver.TarCompressionMethod.gzip;
-            } else if ("bz2".equals(compression)) {
-                tarCompressionMethod = TarArchiver.TarCompressionMethod.bzip2;
-            } else if ("xz".equals(compression)) {
-                tarCompressionMethod = TarArchiver.TarCompressionMethod.xz;
-            } else if ("snappy".equals(compression)) {
-                tarCompressionMethod = TarArchiver.TarCompressionMethod.snappy;
-            } else if ("zst".equals(compression)) {
-                tarCompressionMethod = TarArchiver.TarCompressionMethod.zstd;
-            } else {
-                // TODO: better handling
-                throw new IllegalArgumentException("Unknown compression format: " + compression);
-            }
-            tarArchiver.setCompression(tarCompressionMethod);
-        } else if ("tgz".equals(format)) {
-            tarArchiver.setCompression(TarArchiver.TarCompressionMethod.gzip);
-        } else if ("tbz2".equals(format)) {
-            tarArchiver.setCompression(TarArchiver.TarCompressionMethod.bzip2);
-        } else if ("txz".equals(format)) {
-            tarArchiver.setCompression(TarArchiver.TarCompressionMethod.xz);
-        } else if ("tzst".equals(format)) {
-            tarArchiver.setCompression(TarArchiver.TarCompressionMethod.zstd);
-        }
-
-        tarArchiver.setLongfile(tarLongFileMode);
-
+        tarArchiver.setCompression(TarArchiver.TarCompressionMethod.zstd);
         return tarArchiver;
     }
 }

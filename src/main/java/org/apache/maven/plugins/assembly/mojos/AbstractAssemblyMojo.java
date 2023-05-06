@@ -19,8 +19,8 @@
 package org.apache.maven.plugins.assembly.mojos;
 
 import java.io.File;
+import java.nio.file.attribute.FileTime;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -475,8 +475,9 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
         // TODO: include dependencies marked for distribution under certain formats
         // TODO: how, might we plug this into an installer, such as NSIS?
 
-        MavenArchiver mavenArchiver = new MavenArchiver();
-        Date outputDate = mavenArchiver.parseOutputTimestamp(outputTimestamp);
+        FileTime outputDate = MavenArchiver.parseBuildOutputTimestamp(outputTimestamp)
+                .map(FileTime::from)
+                .orElse(null);
 
         boolean warnedAboutMainProjectArtifact = false;
         for (final Assembly assembly : assemblies) {
@@ -484,10 +485,10 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
                 final String fullName = AssemblyFormatUtils.getDistributionName(assembly, this);
 
                 List<String> effectiveFormats = formats;
-                if (effectiveFormats == null || effectiveFormats.size() == 0) {
+                if (effectiveFormats == null || effectiveFormats.isEmpty()) {
                     effectiveFormats = assembly.getFormats();
                 }
-                if (effectiveFormats == null || effectiveFormats.size() == 0) {
+                if (effectiveFormats == null || effectiveFormats.isEmpty()) {
                     throw new MojoFailureException(
                             "No formats specified in the execution parameters or the assembly descriptor.");
                 }

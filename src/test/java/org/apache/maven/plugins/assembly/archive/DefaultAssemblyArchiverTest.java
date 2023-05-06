@@ -31,6 +31,7 @@ import org.apache.maven.plugins.assembly.archive.phase.AssemblyArchiverPhase;
 import org.apache.maven.plugins.assembly.filter.ContainerDescriptorHandler;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.mojos.AbstractAssemblyMojo;
+import org.apache.maven.plugins.assembly.testutils.PojoConfigSource;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.DefaultPlexusContainer;
 import org.codehaus.plexus.PlexusContainer;
@@ -39,6 +40,7 @@ import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.diags.NoOpArchiver;
 import org.codehaus.plexus.archiver.manager.ArchiverManager;
+import org.codehaus.plexus.archiver.manager.NoSuchArchiverException;
 import org.codehaus.plexus.archiver.tar.TarArchiver;
 import org.codehaus.plexus.archiver.tar.TarLongFileMode;
 import org.codehaus.plexus.archiver.war.WarArchiver;
@@ -53,6 +55,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
@@ -137,7 +140,7 @@ public class DefaultAssemblyArchiverTest {
         verify(configSource).isDryRun();
         verify(configSource).isIgnoreDirFormatExtensions();
         verify(configSource).isIgnorePermissions();
-        verify(configSource, times(2)).isUpdateOnly();
+        verify(configSource).isUpdateOnly();
 
         verify(phase).execute(eq(assembly), any(Archiver.class), eq(configSource));
 
@@ -179,7 +182,7 @@ public class DefaultAssemblyArchiverTest {
         when(configSource.getOverrideGid()).thenReturn(0);
         when(configSource.getOverrideGroupName()).thenReturn("root");
 
-        final DefaultAssemblyArchiver subject = createSubject(new ArrayList<AssemblyArchiverPhase>());
+        final DefaultAssemblyArchiver subject = createSubject(new ArrayList<>());
 
         subject.createArchiver("dummy", false, "finalName", configSource, null, false, null, null);
 
@@ -204,7 +207,7 @@ public class DefaultAssemblyArchiverTest {
         when(configSource.getOverrideGid()).thenReturn(0);
         when(configSource.getOverrideGroupName()).thenReturn("root");
 
-        final DefaultAssemblyArchiver subject = createSubject(new ArrayList<AssemblyArchiverPhase>());
+        final DefaultAssemblyArchiver subject = createSubject(new ArrayList<>());
 
         subject.createArchiver("tar", false, "finalName", configSource, null, false, null, null);
 
@@ -221,13 +224,13 @@ public class DefaultAssemblyArchiverTest {
         verify(configSource).getWorkingDirectory();
         verify(configSource).isDryRun();
         verify(configSource).isIgnorePermissions();
-        verify(configSource, times(2)).isUpdateOnly();
+        verify(configSource).isUpdateOnly();
 
         verify(archiverManager).getArchiver("tar");
     }
 
     @Test
-    public void testCreateArchiver_ShouldCreateWarArchiverWithIgnoreWebxmlSetToFalse() throws Exception {
+    public void testCreateArchiver_ShouldCreateWarArchiverWitEexpectWebXmlSetToFalse() throws Exception {
         final TestWarArchiver twArchiver = new TestWarArchiver();
 
         when(archiverManager.getArchiver("war")).thenReturn(twArchiver);
@@ -241,11 +244,12 @@ public class DefaultAssemblyArchiverTest {
         when(configSource.getWorkingDirectory()).thenReturn(new File("."));
         when(configSource.isIgnorePermissions()).thenReturn(true);
 
-        final DefaultAssemblyArchiver subject = createSubject(new ArrayList<AssemblyArchiverPhase>());
+        final DefaultAssemblyArchiver subject = createSubject(new ArrayList<>());
 
         subject.createArchiver("war", false, null, configSource, null, false, null, null);
 
-        assertFalse(twArchiver.ignoreWebxml);
+        assertNotNull(twArchiver.expectWebXml);
+        assertFalse(twArchiver.expectWebXml);
 
         // result of easymock migration, should be assert of expected result instead of verifying methodcalls
         verify(configSource).getArchiverConfig();
@@ -259,7 +263,7 @@ public class DefaultAssemblyArchiverTest {
         verify(configSource).getWorkingDirectory();
         verify(configSource).isDryRun();
         verify(configSource).isIgnorePermissions();
-        verify(configSource, times(2)).isUpdateOnly();
+        verify(configSource).isUpdateOnly();
 
         verify(archiverManager).getArchiver("war");
     }
@@ -278,7 +282,7 @@ public class DefaultAssemblyArchiverTest {
         when(configSource.getWorkingDirectory()).thenReturn(new File("."));
         when(configSource.isIgnorePermissions()).thenReturn(true);
 
-        final DefaultAssemblyArchiver subject = createSubject(new ArrayList<AssemblyArchiverPhase>());
+        final DefaultAssemblyArchiver subject = createSubject(new ArrayList<>());
 
         subject.createArchiver("zip", false, null, configSource, null, false, null, null);
 
@@ -291,25 +295,9 @@ public class DefaultAssemblyArchiverTest {
         verify(configSource).getWorkingDirectory();
         verify(configSource).isDryRun();
         verify(configSource).isIgnorePermissions();
-        verify(configSource, times(2)).isUpdateOnly();
+        verify(configSource).isUpdateOnly();
 
         verify(archiverManager).getArchiver("zip");
-    }
-
-    @Test
-    public void testCreateWarArchiver_ShouldDisableIgnoreWebxmlOption() throws Exception {
-        final TestWarArchiver twArchiver = new TestWarArchiver();
-
-        when(archiverManager.getArchiver("war")).thenReturn(twArchiver);
-
-        final DefaultAssemblyArchiver subject = createSubject(new ArrayList<AssemblyArchiverPhase>());
-
-        subject.createWarArchiver();
-
-        assertFalse(twArchiver.ignoreWebxml);
-
-        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
-        verify(archiverManager).getArchiver("war");
     }
 
     @Test
@@ -318,130 +306,15 @@ public class DefaultAssemblyArchiverTest {
 
         when(archiverManager.getArchiver("tar")).thenReturn(archiver);
 
-        final DefaultAssemblyArchiver subject = createSubject(new ArrayList<AssemblyArchiverPhase>());
+        final DefaultAssemblyArchiver subject = createSubject(new ArrayList<>());
 
-        subject.createTarArchiver("tar", TarLongFileMode.fail);
+        PojoConfigSource configSource = new PojoConfigSource();
+        configSource.setTarLongFileMode(TarLongFileMode.fail.name());
+        configSource.setWorkingDirectory(new File(""));
+
+        subject.createArchiver("tar", true, "", configSource, null, false, null, null);
 
         assertNull(new TestTarArchiver().compressionMethod);
-        assertEquals(TarLongFileMode.fail, archiver.longFileMode);
-
-        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
-        verify(archiverManager).getArchiver("tar");
-    }
-
-    @Test
-    public void testCreateTarArchiver_TarGzFormat_ShouldInitializeGZipCompression() throws Exception {
-        final TestTarArchiver archiver = new TestTarArchiver();
-
-        when(archiverManager.getArchiver("tar")).thenReturn(archiver);
-
-        final DefaultAssemblyArchiver subject = createSubject(new ArrayList<AssemblyArchiverPhase>());
-
-        subject.createTarArchiver("tar.gz", TarLongFileMode.fail);
-
-        assertEquals(TarArchiver.TarCompressionMethod.gzip, archiver.compressionMethod);
-        assertEquals(TarLongFileMode.fail, archiver.longFileMode);
-
-        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
-        verify(archiverManager).getArchiver("tar");
-    }
-
-    @Test
-    public void testCreateTarArchiver_TgzFormat_ShouldInitializeGZipCompression() throws Exception {
-        final TestTarArchiver archiver = new TestTarArchiver();
-
-        when(archiverManager.getArchiver("tar")).thenReturn(archiver);
-
-        final DefaultAssemblyArchiver subject = createSubject(new ArrayList<AssemblyArchiverPhase>());
-
-        subject.createTarArchiver("tgz", TarLongFileMode.fail);
-
-        assertEquals(TarArchiver.TarCompressionMethod.gzip, archiver.compressionMethod);
-        assertEquals(TarLongFileMode.fail, archiver.longFileMode);
-
-        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
-        verify(archiverManager).getArchiver("tar");
-    }
-
-    @Test
-    public void testCreateTarArchiver_TarBz2Format_ShouldInitializeBZipCompression() throws Exception {
-        final TestTarArchiver archiver = new TestTarArchiver();
-
-        when(archiverManager.getArchiver("tar")).thenReturn(archiver);
-
-        final DefaultAssemblyArchiver subject = createSubject(new ArrayList<AssemblyArchiverPhase>());
-
-        subject.createTarArchiver("tar.bz2", TarLongFileMode.fail);
-
-        assertEquals(TarArchiver.TarCompressionMethod.bzip2, archiver.compressionMethod);
-        assertEquals(TarLongFileMode.fail, archiver.longFileMode);
-
-        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
-        verify(archiverManager).getArchiver("tar");
-    }
-
-    @Test
-    public void testCreateTarArchiver_Tbz2Format_ShouldInitializeBZipCompression() throws Exception {
-        final TestTarArchiver archiver = new TestTarArchiver();
-
-        when(archiverManager.getArchiver("tar")).thenReturn(archiver);
-
-        final DefaultAssemblyArchiver subject = createSubject(new ArrayList<AssemblyArchiverPhase>());
-
-        subject.createTarArchiver("tbz2", TarLongFileMode.fail);
-
-        assertEquals(TarArchiver.TarCompressionMethod.bzip2, archiver.compressionMethod);
-        assertEquals(TarLongFileMode.fail, archiver.longFileMode);
-
-        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
-        verify(archiverManager).getArchiver("tar");
-    }
-
-    @Test
-    public void testCreateTarArchiver_TarXzFormat_ShouldInitializeXzCompression() throws Exception {
-        final TestTarArchiver archiver = new TestTarArchiver();
-
-        when(archiverManager.getArchiver("tar")).thenReturn(archiver);
-
-        final DefaultAssemblyArchiver subject = createSubject(new ArrayList<AssemblyArchiverPhase>());
-
-        subject.createTarArchiver("tar.xz", TarLongFileMode.fail);
-
-        assertEquals(TarArchiver.TarCompressionMethod.xz, archiver.compressionMethod);
-        assertEquals(TarLongFileMode.fail, archiver.longFileMode);
-
-        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
-        verify(archiverManager).getArchiver("tar");
-    }
-
-    @Test
-    public void testCreateTarArchiver_TXzFormat_ShouldInitializeXzCompression() throws Exception {
-        final TestTarArchiver archiver = new TestTarArchiver();
-
-        when(archiverManager.getArchiver("tar")).thenReturn(archiver);
-
-        final DefaultAssemblyArchiver subject = createSubject(new ArrayList<AssemblyArchiverPhase>());
-
-        subject.createTarArchiver("txz", TarLongFileMode.fail);
-
-        assertEquals(TarArchiver.TarCompressionMethod.xz, archiver.compressionMethod);
-        assertEquals(TarLongFileMode.fail, archiver.longFileMode);
-
-        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
-        verify(archiverManager).getArchiver("tar");
-    }
-
-    @Test
-    public void testCreateTarArchiver_TarZstFormat_ShouldInitializeZstCompression() throws Exception {
-        final TestTarArchiver archiver = new TestTarArchiver();
-
-        when(archiverManager.getArchiver("tar")).thenReturn(archiver);
-
-        final DefaultAssemblyArchiver subject = createSubject(new ArrayList<AssemblyArchiverPhase>());
-
-        subject.createTarArchiver("tar.zst", TarLongFileMode.fail);
-
-        assertEquals(TarArchiver.TarCompressionMethod.zstd, archiver.compressionMethod);
         assertEquals(TarLongFileMode.fail, archiver.longFileMode);
 
         // result of easymock migration, should be assert of expected result instead of verifying methodcalls
@@ -454,9 +327,13 @@ public class DefaultAssemblyArchiverTest {
 
         when(archiverManager.getArchiver("tar")).thenReturn(archiver);
 
-        final DefaultAssemblyArchiver subject = createSubject(new ArrayList<AssemblyArchiverPhase>());
+        final DefaultAssemblyArchiver subject = createSubject(new ArrayList<>());
 
-        subject.createTarArchiver("tzst", TarLongFileMode.fail);
+        PojoConfigSource configSource = new PojoConfigSource();
+        configSource.setTarLongFileMode(TarLongFileMode.fail.name());
+        configSource.setWorkingDirectory(new File(""));
+
+        subject.createArchiver("tzst", true, "", configSource, null, false, null, null);
 
         assertEquals(TarArchiver.TarCompressionMethod.zstd, archiver.compressionMethod);
         assertEquals(TarLongFileMode.fail, archiver.longFileMode);
@@ -469,20 +346,20 @@ public class DefaultAssemblyArchiverTest {
     public void testCreateTarArchiver_InvalidFormat_ShouldFailWithInvalidCompression() throws Exception {
         final TestTarArchiver ttArchiver = new TestTarArchiver();
 
-        when(archiverManager.getArchiver("tar")).thenReturn(ttArchiver);
+        when(archiverManager.getArchiver("tar.ZZZ")).thenThrow(new NoSuchArchiverException("no archiver"));
 
-        final DefaultAssemblyArchiver subject = createSubject(new ArrayList<AssemblyArchiverPhase>());
+        final DefaultAssemblyArchiver subject = createSubject(new ArrayList<>());
 
         try {
-            subject.createTarArchiver("tar.Z", null);
+            subject.createArchiver("tar.ZZZ", true, "", null, null, false, null, null);
 
             fail("Invalid compression formats should throw an error.");
-        } catch (final IllegalArgumentException e) {
+        } catch (final NoSuchArchiverException e) {
             // expected.
         }
 
         // result of easymock migration, should be assert of expected result instead of verifying methodcalls
-        verify(archiverManager).getArchiver("tar");
+        verify(archiverManager).getArchiver("tar.ZZZ");
     }
 
     private DefaultAssemblyArchiver createSubject(final List<AssemblyArchiverPhase> phases) {
@@ -516,12 +393,12 @@ public class DefaultAssemblyArchiverTest {
 
     private static final class TestWarArchiver extends WarArchiver {
 
-        boolean ignoreWebxml;
+        Boolean expectWebXml;
 
         @Override
-        public void setIgnoreWebxml(final boolean ignore) {
-            ignoreWebxml = ignore;
-            super.setIgnoreWebxml(ignore);
+        public void setExpectWebXml(boolean expectWebXml) {
+            this.expectWebXml = expectWebXml;
+            super.setExpectWebXml(expectWebXml);
         }
     }
 

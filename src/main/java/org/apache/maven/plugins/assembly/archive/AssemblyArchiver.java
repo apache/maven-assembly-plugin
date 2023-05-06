@@ -19,7 +19,7 @@
 package org.apache.maven.plugins.assembly.archive;
 
 import java.io.File;
-import java.util.Date;
+import java.nio.file.attribute.FileTime;
 
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
@@ -65,6 +65,6 @@ public interface AssemblyArchiver {
             AssemblerConfigurationSource configSource,
             boolean recompressZippedFiles,
             String mergeManifestMode,
-            Date sourceDateEpoch)
+            FileTime sourceDateEpoch)
             throws ArchiveCreationException, AssemblyFormattingException, InvalidAssemblerConfigurationException;
 }
