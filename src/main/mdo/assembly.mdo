@@ -1122,48 +1122,6 @@
     </class>
 
     <class>
-      <name>GroupVersionAlignment</name>
-      <version>1.0.0+</version>
-      <description>
-        Allows a group of artifacts to be aligned to a specified version.
-      </description>
-      <fields>
-        <field>
-          <name>id</name>
-          <version>1.0.0+</version>
-          <type>String</type>
-          <description>
-            The groupId of the artifacts for which you want to align the
-            versions.
-          </description>
-        </field>
-        <field>
-          <name>version</name>
-          <version>1.0.0+</version>
-          <type>String</type>
-          <description>
-            The version you want to align this group to.
-          </description>
-        </field>
-        <field>
-          <name>excludes</name>
-          <version>1.0.0+</version>
-          <description>
-            <![CDATA[
-            When &lt;exclude&gt; subelements are present, they define the
-            artifactIds of the artifacts to exclude. If none is present, then
-            &lt;excludes&gt; represents no exclusions. An exclude is specified
-            by providing one or more of &lt;exclude&gt; subelements.
-            ]]>
-          </description>
-          <association>
-            <type>String</type>
-            <multiplicity>*</multiplicity>
-          </association>
-        </field>
-      </fields>
-    </class>
-    <class>
       <name>UnpackOptions</name>
       <version>1.1.0+</version>
       <description>
