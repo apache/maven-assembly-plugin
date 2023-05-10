@@ -407,7 +407,6 @@ under the License.
                     <pomInclude>projects/reproducible/pom.xml</pomInclude>
                   </pomIncludes>
                   <pomExcludes>
-                    <pomExclude>projects/repositories/repo-with-snapshot-parents/pom.xml</pomExclude>
                     <pomExclude>projects/dependency-sets/depSet-transFromProfile/pom.xml</pomExclude>
                   </pomExcludes>
                 </configuration>
