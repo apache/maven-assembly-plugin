@@ -28,7 +28,7 @@ under the License.
   </parent>
 
   <artifactId>maven-assembly-plugin</artifactId>
-  <version>3.6.0</version>
+  <version>3.6.1-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>Apache Maven Assembly Plugin</name>
@@ -50,7 +50,7 @@ under the License.
   <scm>
     <connection>scm:git:https://gitbox.apache.org/repos/asf/maven-assembly-plugin.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/maven-assembly-plugin.git</developerConnection>
-    <tag>maven-assembly-plugin-3.6.0</tag>
+    <tag>HEAD</tag>
     <url>https://github.com/apache/maven-assembly-plugin/tree/${project.scm.tag}</url>
   </scm>
   <issueManagement>
@@ -78,7 +78,7 @@ under the License.
 
     <surefire.version>3.0.0</surefire.version>
     <testOutputToFile>true</testOutputToFile>
-    <project.build.outputTimestamp>2023-05-11T20:35:37Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2023-05-11T20:36:09Z</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
