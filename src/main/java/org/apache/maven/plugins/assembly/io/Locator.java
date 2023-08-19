@@ -37,7 +37,7 @@ final class Locator {
      */
     Locator(List<LocatorStrategy> strategies, MessageHolder messageHolder) {
         this.messageHolder = messageHolder;
-        this.strategies = new ArrayList<LocatorStrategy>(strategies);
+        this.strategies = new ArrayList<>(strategies);
     }
 
     /**
@@ -45,7 +45,7 @@ final class Locator {
      */
     Locator() {
         this.messageHolder = new DefaultMessageHolder();
-        this.strategies = new ArrayList<LocatorStrategy>();
+        this.strategies = new ArrayList<>();
     }
 
     /**

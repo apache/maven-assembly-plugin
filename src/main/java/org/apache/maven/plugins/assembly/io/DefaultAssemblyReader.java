@@ -155,13 +155,13 @@ public class DefaultAssemblyReader implements AssemblyReader {
     @Override
     public Assembly getAssemblyForDescriptorReference(final String ref, final AssemblerConfigurationSource configSource)
             throws AssemblyReadException, InvalidAssemblerConfigurationException {
-        return addAssemblyForDescriptorReference(ref, configSource, new ArrayList<Assembly>(1));
+        return addAssemblyForDescriptorReference(ref, configSource, new ArrayList<>(1));
     }
 
     @Override
     public Assembly getAssemblyFromDescriptorFile(final File file, final AssemblerConfigurationSource configSource)
             throws AssemblyReadException, InvalidAssemblerConfigurationException {
-        return addAssemblyFromDescriptorFile(file, configSource, new ArrayList<Assembly>(1));
+        return addAssemblyFromDescriptorFile(file, configSource, new ArrayList<>(1));
     }
 
     private Assembly addAssemblyForDescriptorReference(

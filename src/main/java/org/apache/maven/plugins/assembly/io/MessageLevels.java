@@ -56,7 +56,7 @@ final class MessageLevels {
     private static final List<String> LEVEL_NAMES;
 
     static {
-        List<String> names = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
         names.add("DEBUG");
         names.add("INFO");
         names.add("WARN");

@@ -21,7 +21,6 @@ package org.apache.maven.plugins.assembly.archive.phase;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Model;
@@ -87,7 +86,7 @@ public class DependencySetAssemblyPhaseTest {
         project.setArtifacts(Collections.singleton(artifact));
 
         when(dependencyResolver.resolveDependencySets(eq(assembly), isNull(), anyList()))
-                .thenReturn(new LinkedHashMap<DependencySet, Set<Artifact>>());
+                .thenReturn(new LinkedHashMap<>());
 
         this.phase.execute(assembly, null, null);
 
@@ -102,7 +101,7 @@ public class DependencySetAssemblyPhaseTest {
         assembly.setIncludeBaseDirectory(false);
 
         when(dependencyResolver.resolveDependencySets(eq(assembly), isNull(), anyList()))
-                .thenReturn(new LinkedHashMap<DependencySet, Set<Artifact>>());
+                .thenReturn(new LinkedHashMap<>());
 
         this.phase.execute(assembly, null, null);
 
