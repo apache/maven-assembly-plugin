@@ -167,8 +167,8 @@ public class DefaultDependencyResolverTest extends PlexusTestCase {
 
         final Artifact pomArtifact = newArtifact(groupId, artifactId, version);
         project.setArtifact(pomArtifact);
-        project.setArtifacts(new HashSet<Artifact>());
-        project.setDependencyArtifacts(new HashSet<Artifact>());
+        project.setArtifacts(new HashSet<>());
+        project.setDependencyArtifacts(new HashSet<>());
 
         project.setFile(new File(basedir, "pom.xml"));
 

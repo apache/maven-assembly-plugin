@@ -35,7 +35,6 @@ import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
 import org.apache.maven.plugins.assembly.archive.DefaultAssemblyArchiverTest;
 import org.apache.maven.plugins.assembly.artifact.DependencyResolver;
 import org.apache.maven.plugins.assembly.model.Assembly;
-import org.apache.maven.plugins.assembly.model.DependencySet;
 import org.apache.maven.plugins.assembly.model.FileSet;
 import org.apache.maven.plugins.assembly.model.ModuleBinaries;
 import org.apache.maven.plugins.assembly.model.ModuleSet;
@@ -284,7 +283,7 @@ public class ModuleSetAssemblyPhaseTest {
         assembly.addModuleSet(ms);
 
         when(dependencyResolver.resolveDependencySets(eq(assembly), eq(ms), eq(configSource), anyList()))
-                .thenReturn(new LinkedHashMap<DependencySet, Set<Artifact>>());
+                .thenReturn(new LinkedHashMap<>());
         DefaultAssemblyArchiverTest.setupInterpolators(configSource, module);
 
         this.phase.execute(assembly, archiver, configSource);
@@ -360,7 +359,7 @@ public class ModuleSetAssemblyPhaseTest {
         final Set<MavenProject> projects = singleton(project);
 
         when(dependencyResolver.resolveDependencySets(isNull(), isNull(), eq(configSource), anyList()))
-                .thenReturn(new LinkedHashMap<DependencySet, Set<Artifact>>());
+                .thenReturn(new LinkedHashMap<>());
         DefaultAssemblyArchiverTest.setupInterpolators(configSource, project);
 
         this.phase.addModuleBinaries(null, null, binaries, projects, archiver, configSource);
@@ -442,7 +441,7 @@ public class ModuleSetAssemblyPhaseTest {
 
         when(dependencyResolver.resolveDependencySets(
                         isNull(), isNull(), any(AssemblerConfigurationSource.class), anyList()))
-                .thenReturn(new LinkedHashMap<DependencySet, Set<Artifact>>());
+                .thenReturn(new LinkedHashMap<>());
         DefaultAssemblyArchiverTest.setupInterpolators(configSource, project);
 
         this.phase.addModuleBinaries(null, null, binaries, projects, archiver, configSource);
