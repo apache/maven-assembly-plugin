@@ -40,7 +40,7 @@ under the License.
             <directory>src/main/files</directory>
             <outputDirectory>files</outputDirectory>
             <includes>
-              <include>${pom.artifactId}2.file</include>
+              <include>${project.artifactId}2.file</include>
             </includes>
         </fileSet>
         <fileSet>
