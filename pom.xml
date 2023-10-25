@@ -23,7 +23,7 @@ under the License.
   <parent>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-plugins</artifactId>
-    <version>39</version>
+    <version>40</version>
     <relativePath />
   </parent>
 
@@ -76,7 +76,6 @@ under the License.
     <mavenFilteringVersion>3.3.1</mavenFilteringVersion>
     <mavenArchiverVersion>3.6.0</mavenArchiverVersion>
 
-    <surefire.version>3.0.0</surefire.version>
     <testOutputToFile>true</testOutputToFile>
     <project.build.outputTimestamp>2023-05-11T20:36:09Z</project.build.outputTimestamp>
   </properties>
@@ -374,7 +373,6 @@ under the License.
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-invoker-plugin</artifactId>
-            <version>3.5.1</version>
             <configuration>
               <properties>
                 <testVersion>${testVersion}</testVersion>
