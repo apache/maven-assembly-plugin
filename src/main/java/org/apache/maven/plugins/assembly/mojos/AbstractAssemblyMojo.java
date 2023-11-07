@@ -344,13 +344,6 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     private boolean updateOnly;
 
     /**
-     * @since 2.2
-     * @deprecated Not used anymore and will be removed in future version
-     */
-    @Parameter(property = "assembly.useJvmChmod", defaultValue = "false")
-    private boolean useJvmChmod;
-
-    /**
      * <p>
      * Set to <code>true</code> in order to avoid all chmod calls.
      * </p>
@@ -776,12 +769,6 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     @Override
     public boolean isUpdateOnly() {
         return updateOnly;
-    }
-
-    @Override
-    @Deprecated
-    public boolean isUseJvmChmod() {
-        return useJvmChmod;
     }
 
     @Override

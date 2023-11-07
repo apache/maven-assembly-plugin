@@ -160,11 +160,6 @@ public interface AssemblerConfigurationSource {
     boolean isUpdateOnly();
 
     /**
-     * @return Use JVM chmod yes/no.
-     */
-    boolean isUseJvmChmod();
-
-    /**
      * @return Ignore permissions yes/no.
      */
     boolean isIgnorePermissions();
