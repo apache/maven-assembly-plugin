@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.maven.archiver.MavenArchiveConfiguration;
-import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.filtering.MavenReaderFilter;
@@ -122,11 +121,6 @@ public interface AssemblerConfigurationSource {
      * @return The list of reactor projects.
      */
     List<MavenProject> getReactorProjects();
-
-    /**
-     * @return The remote repositories.
-     */
-    List<ArtifactRepository> getRemoteRepositories();
 
     /**
      * @return Is this a test run.

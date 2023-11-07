@@ -26,7 +26,6 @@ import java.util.Properties;
 
 import org.apache.maven.archiver.MavenArchiveConfiguration;
 import org.apache.maven.archiver.MavenArchiver;
-import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -110,12 +109,6 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
      */
     @Parameter(defaultValue = "true")
     private boolean ignoreDirFormatExtensions;
-
-    /**
-     *
-     */
-    @Parameter(defaultValue = "${project.remoteArtifactRepositories}", required = true, readonly = true)
-    private List<ArtifactRepository> remoteRepositories;
 
     /**
      * Contains the full list of projects in the reactor.
@@ -748,11 +741,6 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
 
     public void setWorkDirectory(final File workDirectory) {
         this.workDirectory = workDirectory;
-    }
-
-    @Override
-    public List<ArtifactRepository> getRemoteRepositories() {
-        return remoteRepositories;
     }
 
     @Override
