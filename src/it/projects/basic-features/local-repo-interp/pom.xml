@@ -29,7 +29,11 @@ under the License.
   <groupId>test</groupId>
   <artifactId>test</artifactId>
   <version>1</version>
-  
+
+  <properties>
+    <testVersion>@project.version@</testVersion>
+  </properties>
+
   <build>
     <plugins>
       <plugin>
