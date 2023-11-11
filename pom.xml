@@ -365,7 +365,6 @@ under the License.
       <id>run-its</id>
       <properties>
         <test.remote.repo.url>file://${project.build.testOutputDirectory}/remote-repository</test.remote.repo.url>
-        <testVersion>${project.version}</testVersion>
       </properties>
 
       <build>
@@ -374,9 +373,6 @@ under the License.
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-invoker-plugin</artifactId>
             <configuration>
-              <properties>
-                <testVersion>${testVersion}</testVersion>
-              </properties>
               <showVersion>true</showVersion>
             </configuration>
             <dependencies>

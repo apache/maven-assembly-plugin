@@ -49,7 +49,6 @@ under the License.
         <plugins>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>${testVersion}</version>
                 <executions>
                     <execution>
                         <id>assembly</id>

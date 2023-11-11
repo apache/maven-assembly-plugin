@@ -41,7 +41,6 @@ under the License.
 				<inherited>true</inherited>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>${testVersion}</version>
 				<!-- The configuration of the plugin -->
 				<configuration>
 					<!-- Specifies the configuration file of the assembly plugin -->
