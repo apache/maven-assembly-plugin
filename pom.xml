@@ -44,7 +44,7 @@ under the License.
   </contributors>
 
   <prerequisites>
-    <maven>${mavenVersion}</maven>
+    <maven>3.2.5</maven>
   </prerequisites>
 
   <scm>
@@ -71,8 +71,8 @@ under the License.
   <properties>
     <javaVersion>8</javaVersion>
     <mdoVersion>2.2.0</mdoVersion>
-    <mavenVersion>3.2.5</mavenVersion>
-    <slf4jVersion>1.7.5</slf4jVersion>
+    <mavenVersion>3.9.5</mavenVersion>
+    <slf4jVersion>1.7.36</slf4jVersion>
     <mavenFilteringVersion>3.3.1</mavenFilteringVersion>
     <mavenArchiverVersion>3.6.1</mavenArchiverVersion>
     <commonsIoVersion>2.15.1</commonsIoVersion>
@@ -104,13 +104,6 @@ under the License.
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-model</artifactId>
       <version>${mavenVersion}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.aether</groupId>
-      <artifactId>aether-api</artifactId>
-      <!-- the same version as in Maven 3.2.5 -->
-      <version>1.0.0.v20140518</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
