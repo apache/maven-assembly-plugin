@@ -109,7 +109,7 @@ under the License.
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>2.7</version>
+			<version>@commonsIoVersion@</version>
 			<scope>test</scope>
 		</dependency>
 
