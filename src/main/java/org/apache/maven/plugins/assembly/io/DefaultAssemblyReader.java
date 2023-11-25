@@ -58,7 +58,6 @@ import org.codehaus.plexus.interpolation.fixed.InterpolationState;
 import org.codehaus.plexus.interpolation.fixed.PrefixedObjectValueSource;
 import org.codehaus.plexus.interpolation.fixed.PrefixedPropertiesValueSource;
 import org.codehaus.plexus.util.DirectoryScanner;
-import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -278,13 +277,9 @@ public class DefaultAssemblyReader implements AssemblyReader {
 
             AssemblyInterpolator.checkErrors(AssemblyId.createAssemblyId(assembly), is, LOGGER);
 
-            reader.close();
-            reader = null;
         } catch (final IOException | XmlPullParserException e) {
             throw new AssemblyReadException(
                     "Error reading descriptor: " + locationDescription + ": " + e.getMessage(), e);
-        } finally {
-            IOUtil.close(reader);
         }
 
         if (assembly.isIncludeSiteDirectory()) {

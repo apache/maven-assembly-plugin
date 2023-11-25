@@ -36,12 +36,12 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugins.assembly.utils.AssemblyFileUtils;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.UnArchiver;
 import org.codehaus.plexus.components.io.fileselectors.FileInfo;
-import org.codehaus.plexus.util.IOUtil;
 
 /**
  * <code>file-aggregator</code>: Generic aggregating handler, configured with filePattern and outputPath.
@@ -163,7 +163,7 @@ public class SimpleAggregatingDescriptorHandler implements ContainerDescriptorHa
                         ? new InputStreamReader(fileInfo.getContents(), StandardCharsets.ISO_8859_1)
                         : new InputStreamReader(fileInfo.getContents())) // platform encoding
         {
-            IOUtil.copy(reader, writer);
+            IOUtils.copy(reader, writer);
             final String content = writer.toString();
             aggregateWriter.write("\n");
             aggregateWriter.write(content);

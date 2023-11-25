@@ -30,12 +30,12 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.maven.archiver.MavenArchiveConfiguration;
 import org.apache.maven.model.Model;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.archiver.ArchiveFinalizer;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
-import org.codehaus.plexus.util.IOUtil;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -93,7 +93,7 @@ public class ManifestCreationFinalizerTest {
 
         StringWriter writer = new StringWriter();
 
-        IOUtil.copy(reader, writer);
+        IOUtils.copy(reader, writer);
 
         assertTrue(writer.toString().contains("Main-Class: Stuff"));
 
@@ -128,7 +128,7 @@ public class ManifestCreationFinalizerTest {
 
         StringWriter writer = new StringWriter();
 
-        IOUtil.copy(reader, writer);
+        IOUtils.copy(reader, writer);
 
         assertTrue(writer.toString().contains(testKey + ": " + testValue));
 
