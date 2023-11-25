@@ -26,8 +26,8 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.file.Files;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
-import org.codehaus.plexus.util.IOUtil;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -222,38 +222,18 @@ public class LineEndingsUtilsTest {
         File dest = Files.createTempFile("line-conversion-test-out.", "").toFile();
         dest.deleteOnExit();
 
-        FileWriter sourceWriter = null;
-        StringReader sourceReader = new StringReader(test);
-        try {
-            sourceWriter = new FileWriter(source);
-
-            IOUtil.copy(sourceReader, sourceWriter);
-
-            sourceWriter.close();
-            sourceWriter = null;
-        } finally {
-            IOUtil.close(sourceWriter);
+        try (StringReader sourceReader = new StringReader(test);
+                FileWriter sourceWriter = new FileWriter(source)) {
+            IOUtils.copy(sourceReader, sourceWriter);
         }
 
         // Using platform encoding for the conversion tests in this class is OK
         LineEndingsUtils.convertLineEndings(source, dest, lineEndingChars, eof, null);
 
-        FileReader destReader = null;
-        StringWriter destWriter = new StringWriter();
-        try {
-            destReader = new FileReader(dest);
-
-            IOUtil.copy(destReader, destWriter);
-
+        try (FileReader destReader = new FileReader(dest);
+                StringWriter destWriter = new StringWriter()) {
+            IOUtils.copy(destReader, destWriter);
             assertEquals(check, destWriter.toString());
-
-            destWriter.close();
-            destWriter = null;
-            destReader.close();
-            destReader = null;
-        } finally {
-            IOUtil.close(destWriter);
-            IOUtil.close(destReader);
         }
     }
 }

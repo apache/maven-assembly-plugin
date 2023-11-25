@@ -21,7 +21,6 @@ package org.apache.maven.plugins.assembly.utils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import org.codehaus.plexus.util.IOUtil;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -71,17 +70,10 @@ public class LinuxLineFeedInputStreamTest {
     private String roundtrip(String msg, boolean ensure) throws IOException {
         ByteArrayInputStream baos = new ByteArrayInputStream(msg.getBytes());
 
-        LinuxLineFeedInputStream lf = null;
-        try {
-            lf = new LinuxLineFeedInputStream(baos, ensure);
+        try (LinuxLineFeedInputStream lf = new LinuxLineFeedInputStream(baos, ensure)) {
             byte[] buf = new byte[100];
             final int read = lf.read(buf);
-            final String string = new String(buf, 0, read);
-            lf.close();
-            lf = null;
-            return string;
-        } finally {
-            IOUtil.close(lf);
+            return new String(buf, 0, read);
         }
     }
 }
