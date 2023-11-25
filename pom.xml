@@ -75,6 +75,7 @@ under the License.
     <slf4jVersion>1.7.5</slf4jVersion>
     <mavenFilteringVersion>3.3.1</mavenFilteringVersion>
     <mavenArchiverVersion>3.6.0</mavenArchiverVersion>
+    <commonsIoVersion>2.15.0</commonsIoVersion>
 
     <testOutputToFile>true</testOutputToFile>
     <project.build.outputTimestamp>2023-05-11T20:36:09Z</project.build.outputTimestamp>
@@ -152,7 +153,7 @@ under the License.
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
-      <version>2.13.0</version>
+      <version>${commonsIoVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.shared</groupId>
