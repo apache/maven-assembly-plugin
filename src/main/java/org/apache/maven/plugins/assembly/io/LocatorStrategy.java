@@ -29,4 +29,11 @@ interface LocatorStrategy {
      * @return {@link Location}
      */
     Location resolve(String locationSpecification, MessageHolder messageHolder);
+    public static String formatLocation(String location, String prefix) {
+        if (location.startsWith("/")) {
+            location = location.substring(1);
+        }
+
+        return prefix + location;
+    }
 }

@@ -69,21 +69,8 @@ public class ManifestCreationFinalizer extends AbstractArchiveFinalizer {
     public void finalizeArchiveCreation(final Archiver archiver) {
         if (archiveConfiguration != null) {
             try {
-                Manifest manifest;
-                final File manifestFile = archiveConfiguration.getManifestFile();
-
-                if (manifestFile != null) {
-                    try (InputStream in = new FileInputStream(manifestFile)) {
-                        manifest = new Manifest(in);
-                    } catch (final FileNotFoundException e) {
-                        throw new ArchiverException("Manifest not found: " + e.getMessage(), e);
-                    } catch (final IOException e) {
-                        throw new ArchiverException("Error processing manifest: " + e.getMessage(), e);
-                    }
-                } else {
-                    manifest = mavenArchiver.getManifest(session, project, archiveConfiguration);
-                }
-
+                // Changed: Invoking createManifest method to handle manifest creation
+                Manifest manifest = createManifest();
                 if ((manifest != null) && (archiver instanceof JarArchiver)) {
                     final JarArchiver jarArchiver = (JarArchiver) archiver;
                     jarArchiver.addConfiguredManifest(manifest);
@@ -97,7 +84,42 @@ public class ManifestCreationFinalizer extends AbstractArchiveFinalizer {
     }
 
     @Override
-    public List<String> getVirtualFiles() {
+    public List getVirtualFiles() {
+        return null;
+    }
+
+    private Manifest createManifest() throws ManifestException, DependencyResolutionRequiredException {
+        if (archiveConfiguration.getManifestFile() != null) {
+            // Changed: Invoking readManifestFromFile method to read manifest from file
+            return readManifestFromFile(archiveConfiguration.getManifestFile());
+        } else {
+            // Changed: Invoking createManifestFromMavenArchiver method to create manifest from MavenArchiver
+            return createManifestFromMavenArchiver();
+        }
+    }
+
+    private Manifest readManifestFromFile(File manifestFile) {
+        try (InputStream in = new FileInputStream(manifestFile)) {
+            return new Manifest(in);
+        } catch (final FileNotFoundException e) {
+            throw new ArchiverException("Manifest not found: " + e.getMessage(), e);
+        } catch (final IOException e) {
+            throw new ArchiverException("Error processing manifest: " + e.getMessage(), e);
+        }
+    }
+
+    private Manifest createManifestFromMavenArchiver() throws ManifestException, DependencyResolutionRequiredException {
+        // Changed: Replaced mavenArchiver field with a local variable
+        MavenArchiver localMavenArchiver = new MavenArchiver();
+        return localMavenArchiver.getManifest(session, project, archiveConfiguration);
+    }
+
+}
+// New class for getVirtualFiles method
+class VirtualFilesProvider extends AbstractArchiveFinalizer {
+
+    public List<String> getVirtualFiles(MavenArchiveConfiguration archiveConfiguration, MavenArchiver mavenArchiver,
+                                        MavenProject project, MavenSession session) {
         if (archiveConfiguration != null) {
             try {
                 if (mavenArchiver.getManifest(project, archiveConfiguration.getManifest()) != null) {
@@ -108,6 +130,11 @@ public class ManifestCreationFinalizer extends AbstractArchiveFinalizer {
             }
         }
 
+        return null;
+    }
+
+    @Override
+    public List getVirtualFiles() {
         return null;
     }
 }

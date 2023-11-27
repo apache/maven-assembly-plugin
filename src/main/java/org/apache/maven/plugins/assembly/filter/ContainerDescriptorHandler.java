@@ -18,10 +18,20 @@
  */
 package org.apache.maven.plugins.assembly.filter;
 
+import org.apache.commons.compress.archivers.examples.Archiver;
 import org.codehaus.plexus.archiver.ArchiveFinalizer;
 import org.codehaus.plexus.components.io.fileselectors.FileSelector;
+
+import java.util.List;
 
 /**
  *
  */
-public interface ContainerDescriptorHandler extends ArchiveFinalizer, FileSelector {}
+public interface ContainerDescriptorHandler extends ArchiveFinalizer, FileSelector {
+
+    // Additional methods specific to ContainerDescriptorHandler
+        void addToArchive(Archiver archiver);
+        List<String> getVirtualFiles();
+        // ...
+    }
+

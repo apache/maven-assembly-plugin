@@ -43,16 +43,8 @@ class PrefixedClasspathLocatorStrategy extends ClasspathResourceLocatorStrategy 
 
     @Override
     public Location resolve(String locationSpecification, MessageHolder messageHolder) {
-        String spec = formatLocation(locationSpecification);
-
+        String spec = LocatorStrategy.formatLocation(locationSpecification,prefix);
         return super.resolve(spec, messageHolder);
     }
 
-    private String formatLocation(String location) {
-        if (location.startsWith("/")) {
-            location = location.substring(1);
-        }
-
-        return prefix + location;
-    }
 }

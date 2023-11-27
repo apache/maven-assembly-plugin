@@ -379,6 +379,13 @@ public class ModuleSetAssemblyPhaseTest {
         verify(dependencyResolver).resolveDependencySets(isNull(), isNull(), eq(configSource), anyList());
     }
 
+
+//    /**
+//     * Test the addition of module binaries, ensuring failure when one module lacks an attachment with a matching classifier.
+//     *
+//     * @throws Exception If an error occurs during the test.
+//     */
+
     @Test
     public void testAddModuleBinaries_ShouldFailWhenOneModuleDoesntHaveAttachmentWithMatchingClassifier()
             throws Exception {
@@ -672,8 +679,10 @@ public class ModuleSetAssemblyPhaseTest {
         verify(configSource, atLeastOnce()).getProject();
     }
 
-    @Test
-    public void testGetModuleProjects_ShouldExcludeModuleAndDescendentsTransitively() throws Exception {
+
+      @Test
+      public void testAddModuleBinaries() throws Exception{
+
         final MavenProject project = createProject("group", "artifact", "version", null);
 
         Artifact artifact1 = mock(Artifact.class);

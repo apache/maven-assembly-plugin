@@ -22,6 +22,7 @@ import javax.inject.Named;
 
 import java.nio.file.Paths;
 
+import org.apache.commons.compress.archivers.examples.Archiver;
 import org.codehaus.plexus.components.io.fileselectors.FileInfo;
 
 /**
@@ -49,5 +50,10 @@ public class MetaInfServicesHandler extends AbstractLineAggregatingHandler {
         }
 
         return leftover != null && leftover.length() > 0;
+    }
+
+    @Override
+    public void addToArchive(Archiver archiver) {
+
     }
 }

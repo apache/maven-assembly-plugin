@@ -42,8 +42,18 @@ import org.slf4j.Logger;
 /**
  *
  */
-public final class FilterUtils {
 
+
+public final class FilterUtils {
+    public static class ArtifactFilterConfig{
+        public Set<Artifact> artifacts;
+        public List<String> includes;
+        public List<String> excludes;
+        public boolean strictFiltering;
+        public boolean actTransitively;
+        public Logger logger;
+        public ArtifactFilter[] additionalFilters;
+    }
     private FilterUtils() {}
 
     public static Set<MavenProject> filterProjects(
@@ -88,17 +98,16 @@ public final class FilterUtils {
         return result;
     }
 
-    public static void filterArtifacts(
-            final Set<Artifact> artifacts,
-            final List<String> includes,
-            final List<String> excludes,
-            final boolean strictFiltering,
-            final boolean actTransitively,
-            final Logger logger,
-            final ArtifactFilter... additionalFilters)
-            throws InvalidAssemblerConfigurationException {
-        final List<ArtifactFilter> allFilters = new ArrayList<>();
+    public static void filterArtifacts(ArtifactFilterConfig config) throws InvalidAssemblerConfigurationException{
 
+        final Set<Artifact> artifacts = config.artifacts;
+        final List<String> includes = config.includes;
+        final List<String> excludes = config.excludes;
+        final boolean strictFiltering = config.strictFiltering;
+        final boolean actTransitively = config.actTransitively;
+        final Logger logger = config.logger;
+        final ArtifactFilter[] additionalFilters = config.additionalFilters;
+        final List<ArtifactFilter> allFilters = new ArrayList<>();
         final AndArtifactFilter filter = new AndArtifactFilter();
 
         if (additionalFilters != null && additionalFilters.length > 0) {
@@ -212,3 +221,4 @@ public final class FilterUtils {
         return ScopeFilter.including(scopes);
     }
 }
+

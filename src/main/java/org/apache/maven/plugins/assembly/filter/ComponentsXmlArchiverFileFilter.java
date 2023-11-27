@@ -1,3 +1,6 @@
+
+
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -60,7 +63,7 @@ public class ComponentsXmlArchiverFileFilter implements ContainerDescriptorHandl
 
     private boolean excludeOverride = false;
 
-    void addComponentsXml(final Reader componentsReader) throws XmlPullParserException, IOException {
+    public void addComponentsXml(final Reader componentsReader) throws XmlPullParserException, IOException {
         Xpp3Dom newDom = Xpp3DomBuilder.build(componentsReader);
 
         if (newDom != null) {
@@ -128,6 +131,11 @@ public class ComponentsXmlArchiverFileFilter implements ContainerDescriptorHandl
         } catch (final IOException e) {
             throw new ArchiverException("Error finalizing component-set for archive. Reason: " + e.getMessage(), e);
         }
+    }
+
+    @Override
+    public void addToArchive(org.apache.commons.compress.archivers.examples.Archiver archiver) {
+
     }
 
     @Override

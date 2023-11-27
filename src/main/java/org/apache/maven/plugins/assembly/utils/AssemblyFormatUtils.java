@@ -382,6 +382,7 @@ public final class AssemblyFormatUtils {
      * <li>environment variables.</li>
      * </ol>
      */
+
     public static String getOutputDirectory(
             final String output,
             final String finalName,
@@ -389,10 +390,7 @@ public final class AssemblyFormatUtils {
             FixedStringSearchInterpolator moduleProjectIntrpolator,
             FixedStringSearchInterpolator artifactProjectInterpolator)
             throws AssemblyFormattingException {
-        String value = output;
-        if (value == null) {
-            value = "";
-        }
+        String value = (output == null) ? "" : output;
 
         final FixedStringSearchInterpolator interpolator = FixedStringSearchInterpolator.create(
                 finalNameInterpolator(finalName),
@@ -405,11 +403,11 @@ public final class AssemblyFormatUtils {
 
         value = interpolator.interpolate(value);
 
-        if ((value.length() > 0) && !value.endsWith("/") && !value.endsWith("\\")) {
+        if (appendSlash(value)) {
             value += "/";
         }
 
-        if ((value.length() > 0) && (value.startsWith("/") || value.startsWith("\\"))) {
+        if (startsWithSlashOrBackslash(value)) {
             value = value.substring(1);
         }
 
@@ -419,6 +417,15 @@ public final class AssemblyFormatUtils {
 
         return value;
     }
+
+    private static boolean appendSlash(String value) {
+        return (value.length() > 0) && !value.endsWith("/") && !value.endsWith("\\");
+    }
+
+    private static boolean startsWithSlashOrBackslash(String value) {
+        return (value.length() > 0) && (value.startsWith("/") || value.startsWith("\\"));
+    }
+
 
     public static void warnForPlatformSpecifics(Logger logger, String destDirectory) {
         if (Os.isFamily(Os.FAMILY_WINDOWS)) {

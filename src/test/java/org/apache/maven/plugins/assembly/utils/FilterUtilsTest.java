@@ -29,6 +29,7 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.shared.artifact.filter.collection.FilterArtifacts;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,8 +63,18 @@ public class FilterUtilsTest {
         artifacts.add(artifact);
 
         try {
-            FilterUtils.filterArtifacts(
-                    artifacts, includes, excludes, true, false, LoggerFactory.getLogger(getClass()));
+
+            FilterUtils.ArtifactFilterConfig filterConfig = new FilterUtils.ArtifactFilterConfig();
+            filterConfig.artifacts = artifacts;
+            filterConfig.includes = includes;
+            filterConfig.excludes = excludes;
+            filterConfig.strictFiltering = true;
+            filterConfig.actTransitively = false;
+            filterConfig.logger = LoggerFactory.getLogger(getClass());
+            FilterUtils.filterArtifacts(filterConfig);
+
+//            FilterUtils.filterArtifacts(
+//                    artifacts, includes, excludes, true, false, LoggerFactory.getLogger(getClass()));
 
             fail("Should fail because of unmatched include.");
         } catch (final InvalidAssemblerConfigurationException e) {
@@ -240,15 +251,16 @@ public class FilterUtilsTest {
         }
 
         final Set<Artifact> artifacts = new HashSet<>(Collections.singleton(artifact));
+        FilterUtils.ArtifactFilterConfig filterConfig = new FilterUtils.ArtifactFilterConfig();
+        filterConfig.artifacts = artifacts;
+        filterConfig.includes = inclusions;
+        filterConfig.excludes = exclusions;
+        filterConfig.strictFiltering = false;
+        filterConfig.actTransitively = depTrail != null;
+        filterConfig.logger = LoggerFactory.getLogger(getClass());
+        filterConfig.additionalFilters = new ArtifactFilter[]{additionalFilter};
+        FilterUtils.filterArtifacts(filterConfig);
 
-        FilterUtils.filterArtifacts(
-                artifacts,
-                inclusions,
-                exclusions,
-                false,
-                depTrail != null,
-                LoggerFactory.getLogger(getClass()),
-                additionalFilter);
 
         if (verifyInclusion) {
             assertEquals(1, artifacts.size());

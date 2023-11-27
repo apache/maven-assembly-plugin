@@ -44,7 +44,6 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class AddArtifactTask {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AddArtifactTask.class);
 
     public static final String[] DEFAULT_INCLUDES_ARRAY = {"**/*"};
 
@@ -75,6 +74,9 @@ public class AddArtifactTask {
     private String outputDirectory;
 
     private String outputFileNameMapping;
+    private final ArtifactLogger artifactLogger = new ArtifactLogger(AddArtifactTask.class);
+
+
 
     public AddArtifactTask(final Artifact artifact, InputStreamTransformer transformer, Charset encoding) {
         this.artifact = artifact;
@@ -148,7 +150,7 @@ public class AddArtifactTask {
         try {
             final File artifactFile = artifact.getFile();
 
-            LOGGER.debug("Adding artifact: " + artifact.getId() + " with file: " + artifactFile
+            artifactLogger.getLogger().debug("Adding artifact: " + artifact.getId() + " with file: " + artifactFile
                     + " to assembly location: " + outputLocation + ".");
 
             if (fileMode != -1) {
@@ -179,10 +181,10 @@ public class AddArtifactTask {
 
             final File artifactFile = artifact.getFile();
             if (artifactFile == null) {
-                LOGGER.warn("Skipping artifact: " + artifact.getId()
+                artifactLogger.getLogger().warn("Skipping artifact: " + artifact.getId()
                         + "; it does not have an associated file or directory.");
             } else if (artifactFile.isDirectory()) {
-                LOGGER.debug("Adding artifact directory contents for: " + artifact + " to: " + outputLocation);
+                artifactLogger.getLogger().debug("Adding artifact directory contents for: " + artifact + " to: " + outputLocation);
 
                 DefaultFileSet fs = DefaultFileSet.fileSet(artifactFile);
                 fs.setIncludes(includesArray);
@@ -192,9 +194,9 @@ public class AddArtifactTask {
                 fs.setUsingDefaultExcludes(usingDefaultExcludes);
                 archiver.addFileSet(fs);
             } else {
-                LOGGER.debug("Unpacking artifact contents for: " + artifact + " to: " + outputLocation);
-                LOGGER.debug("includes:\n" + StringUtils.join(includesArray, "\n") + "\n");
-                LOGGER.debug("excludes:\n" + (excludesArray == null ? "none" : StringUtils.join(excludesArray, "\n"))
+                artifactLogger.getLogger().info("Unpacking artifact contents for: " + artifact + " to: " + outputLocation);
+                artifactLogger.getLogger().info("includes:\n" + StringUtils.join(includesArray, "\n") + "\n");
+                artifactLogger.getLogger().info("excludes:\n" + (excludesArray == null ? "none" : StringUtils.join(excludesArray, "\n"))
                         + "\n");
                 DefaultArchivedFileSet afs = DefaultArchivedFileSet.archivedFileSet(artifactFile);
                 afs.setIncludes(includesArray);
@@ -214,7 +216,7 @@ public class AddArtifactTask {
         final File tempRoot = configSource.getTemporaryRootDirectory();
         final File tempArtifactFile = new File(tempRoot, artifact.getFile().getName());
 
-        LOGGER.warn("Artifact: " + artifact.getId() + " references the same file as the assembly destination file. "
+        artifactLogger.getLogger().warn("Artifact: " + artifact.getId() + " references the same file as the assembly destination file. "
                 + "Moving it to a temporary location for inclusion.");
         try {
             FileUtils.copyFile(artifact.getFile(), tempArtifactFile);

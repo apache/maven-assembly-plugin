@@ -124,6 +124,11 @@ public class SimpleAggregatingDescriptorHandler implements ContainerDescriptorHa
     public void finalizeArchiveExtraction(final UnArchiver unarchiver) {}
 
     @Override
+    public void addToArchive(org.apache.commons.compress.archivers.examples.Archiver archiver) {
+
+    }
+
+    @Override
     public List<String> getVirtualFiles() {
         checkConfig();
 

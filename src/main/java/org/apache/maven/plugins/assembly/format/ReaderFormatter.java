@@ -40,8 +40,9 @@ import org.codehaus.plexus.components.io.resources.PlexusIoResource;
 /**
  *
  */
-public class ReaderFormatter {
-    private static Reader createReaderFilter(
+public class ReaderFormatter extends FilterableReader {
+
+    public static Reader createReaderFilter(
             Reader source,
             String escapeString,
             List<String> delimiters,
@@ -50,7 +51,6 @@ public class ReaderFormatter {
             Properties additionalProperties)
             throws IOException {
         try {
-
             MavenReaderFilterRequest filterRequest = new MavenReaderFilterRequest(
                     source,
                     true,
@@ -62,18 +62,15 @@ public class ReaderFormatter {
 
             filterRequest.setEscapeString(escapeString);
 
-            // if these are NOT set, just use the defaults, which are '${*}' and '@'.
             if (delimiters != null && !delimiters.isEmpty()) {
                 LinkedHashSet<String> delims = new LinkedHashSet<>();
                 for (String delim : delimiters) {
                     if (delim == null) {
-                        // FIXME: ${filter:*} could also trigger this condition. Need a better long-term solution.
                         delims.add("${*}");
                     } else {
                         delims.add(delim);
                     }
                 }
-
                 filterRequest.setDelimiters(delims);
             } else {
                 filterRequest.setDelimiters(filterRequest.getDelimiters());

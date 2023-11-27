@@ -38,9 +38,10 @@ import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.format.ReaderFormatter;
 import org.apache.maven.plugins.assembly.model.DependencySet;
 import org.apache.maven.plugins.assembly.model.UnpackOptions;
-import org.apache.maven.plugins.assembly.utils.AssemblyFormatUtils;
 import org.apache.maven.plugins.assembly.utils.FilterUtils;
+import org.apache.maven.plugins.assembly.utils.FilterUtils.ArtifactFilterConfig;
 import org.apache.maven.plugins.assembly.utils.TypeConversionUtils;
+import org.apache.maven.plugins.assembly.utils.AssemblyFormatUtils;
 import org.apache.maven.project.DefaultProjectBuildingRequest;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
@@ -60,6 +61,14 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class AddDependencySetsTask {
+
+
+    private MavenProject project;
+
+
+
+
+
     private static final Logger LOGGER = LoggerFactory.getLogger(AddDependencySetsTask.class);
 
     private static final List<String> NON_ARCHIVE_DEPENDENCY_TYPES;
@@ -73,8 +82,6 @@ public class AddDependencySetsTask {
     }
 
     private final List<DependencySet> dependencySets;
-
-    private final MavenProject project;
 
     private final ProjectBuilder projectBuilder1;
 
@@ -300,14 +307,15 @@ public class AddDependencySetsTask {
 
         final ArtifactFilter filter = new ArtifactIncludeFilterTransformer().transform(scopeFilter);
 
-        FilterUtils.filterArtifacts(
-                dependencyArtifacts,
-                dependencySet.getIncludes(),
-                dependencySet.getExcludes(),
-                dependencySet.isUseStrictFiltering(),
-                dependencySet.isUseTransitiveFiltering(),
-                LOGGER,
-                filter);
+        ArtifactFilterConfig filterConfig = new ArtifactFilterConfig();
+        filterConfig.artifacts = dependencyArtifacts;
+        filterConfig.includes = dependencySet.getIncludes();
+        filterConfig.excludes = dependencySet.getExcludes();
+        filterConfig.strictFiltering = dependencySet.isUseStrictFiltering();
+        filterConfig.actTransitively = dependencySet.isUseTransitiveFiltering();
+        filterConfig.logger = LOGGER;
+        filterConfig.additionalFilters = new ArtifactFilter[]{filter};
+        FilterUtils.filterArtifacts(filterConfig);
 
         return dependencyArtifacts;
     }

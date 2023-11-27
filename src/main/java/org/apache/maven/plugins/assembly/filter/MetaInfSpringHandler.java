@@ -20,6 +20,7 @@ package org.apache.maven.plugins.assembly.filter;
 
 import javax.inject.Named;
 
+import org.apache.commons.compress.archivers.examples.Archiver;
 import org.codehaus.plexus.components.io.fileselectors.FileInfo;
 
 /**
@@ -47,5 +48,10 @@ public class MetaInfSpringHandler extends AbstractLineAggregatingHandler {
         }
 
         return leftover != null && leftover.length() > 0;
+    }
+
+    @Override
+    public void addToArchive(Archiver archiver) {
+
     }
 }

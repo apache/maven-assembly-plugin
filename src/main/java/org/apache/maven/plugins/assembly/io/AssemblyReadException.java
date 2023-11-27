@@ -21,7 +21,7 @@ package org.apache.maven.plugins.assembly.io;
 /**
  *
  */
-public class AssemblyReadException extends Exception {
+public class AssemblyReadException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 

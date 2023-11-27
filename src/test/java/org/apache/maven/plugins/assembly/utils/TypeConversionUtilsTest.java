@@ -66,8 +66,8 @@ public class TypeConversionUtilsTest {
     @Test
     public void testVerifyModeSanity_WarnOnNonsensicalOctalValue_002() {
         final List<String> messages = new ArrayList<>(2);
-        messages.add("World has write access, but user does not.");
-        messages.add("World has write access, but group does not.");
+        messages.add("World has write access, but User does not.");
+        messages.add("World has write access, but Group does not.");
 
         checkFileModeSanity("002", false, messages);
     }
@@ -75,7 +75,7 @@ public class TypeConversionUtilsTest {
     @Test
     public void testVerifyModeSanity_WarnOnNonsensicalOctalValue_020() {
         final List<String> messages = new ArrayList<>(1);
-        messages.add("Group has write access, but user does not.");
+        messages.add("Group has write access, but User does not.");
 
         checkFileModeSanity("020", false, messages);
     }
@@ -85,7 +85,7 @@ public class TypeConversionUtilsTest {
         checkFileModeSanity("775", true, null);
     }
 
-    private void checkFileModeSanity(
+    public void checkFileModeSanity(
             final String mode, final boolean isSane, final List<String> messagesToCheckIfInsane) {
         Logger logger = mock(Logger.class);
         assertEquals(
@@ -100,7 +100,8 @@ public class TypeConversionUtilsTest {
             final String message = warnings.getAllValues().toString();
 
             for (final String checkMessage : messagesToCheckIfInsane) {
-                assertTrue("\'" + checkMessage + "\' is not present in output.", message.contains(checkMessage));
+
+                assertTrue("\'" + checkMessage + "\' is not present in output.",message.contains(checkMessage.replace("\n", " ")));
             }
         }
     }
