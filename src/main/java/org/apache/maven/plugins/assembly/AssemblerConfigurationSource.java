@@ -212,4 +212,12 @@ public interface AssemblerConfigurationSource {
      * @return Override group name.
      */
     String getOverrideGroupName();
+
+    /**
+     * @return mask which is applied to permissions of files/directories before they are put into the assembly.
+     * If {@code null} then the mask is not explicitly configured and remains implementation-specific.
+     */
+    default Integer getUmask() {
+        return null;
+    }
 }

@@ -1,0 +1,6 @@
+40777 dir-a/
+100666 dir-a/a1.txt
+100666 dir-a/a2.txt
+40755 dir-b/
+100644 dir-b/b.txt
+40777 dir-c/

@@ -416,6 +416,15 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     @Parameter
     private String overrideGroupName;
 
+    /**
+     * Mask which is applied to permissions of files/directories before they are put into assembly.
+     * If {@code null} then the mask is not explicitly configured and remains implementation-specific.
+     * If an invalid value is specified, such as a negative value, then the behaviour is implementation specific.
+     * That is, it depends on the underlying library which is used for building the assembly.
+     */
+    @Parameter
+    private Integer umask;
+
     public static FixedStringSearchInterpolator mainProjectInterpolator(MavenProject mainProject) {
         if (mainProject != null) {
             // 5
@@ -853,5 +862,10 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     @Override
     public String getOverrideGroupName() {
         return this.overrideGroupName;
+    }
+
+    @Override
+    public Integer getUmask() {
+        return this.umask;
     }
 }
