@@ -92,7 +92,7 @@ final class Locator {
         Location location = null;
 
         for (Iterator<LocatorStrategy> it = strategies.iterator(); location == null && it.hasNext(); ) {
-            LocatorStrategy strategy = (LocatorStrategy) it.next();
+            LocatorStrategy strategy = it.next();
 
             location = strategy.resolve(locationSpecification, messageHolder);
         }

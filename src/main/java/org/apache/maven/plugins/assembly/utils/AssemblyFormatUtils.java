@@ -264,8 +264,7 @@ public final class AssemblyFormatUtils {
             }
 
             if (value.contains("." + sep)) {
-                List<String> parts = new ArrayList<>();
-                parts.addAll(Arrays.asList(value.split(sep.replace("\\", "\\\\"))));
+                List<String> parts = new ArrayList<>(Arrays.asList(value.split(sep.replace("\\", "\\\\"))));
 
                 for (ListIterator<String> it = parts.listIterator(); it.hasNext(); ) {
                     String part = it.next();

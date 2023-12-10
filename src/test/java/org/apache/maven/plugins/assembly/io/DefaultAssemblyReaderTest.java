@@ -19,7 +19,6 @@
 package org.apache.maven.plugins.assembly.io;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
@@ -28,7 +27,6 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -277,7 +275,8 @@ public class DefaultAssemblyReaderTest {
 
         final File componentFile = temporaryFolder.newFile();
 
-        try (Writer writer = new OutputStreamWriter(new FileOutputStream(componentFile), "UTF-8")) {
+        try (Writer writer =
+                new OutputStreamWriter(Files.newOutputStream(componentFile.toPath()), StandardCharsets.UTF_8)) {
             final ComponentXpp3Writer componentWriter = new ComponentXpp3Writer();
 
             componentWriter.write(writer, component);
@@ -376,7 +375,8 @@ public class DefaultAssemblyReaderTest {
 
         component.addFileSet(fs);
 
-        try (Writer fw = new OutputStreamWriter(new FileOutputStream(componentsFile), "UTF-8")) {
+        try (Writer fw =
+                new OutputStreamWriter(Files.newOutputStream(componentsFile.toPath()), StandardCharsets.UTF_8)) {
             new ComponentXpp3Writer().write(fw, component);
         }
 
@@ -426,7 +426,8 @@ public class DefaultAssemblyReaderTest {
 
         component.addFileSet(fs);
 
-        try (Writer fw = new OutputStreamWriter(new FileOutputStream(componentsFile), "UTF-8")) {
+        try (Writer fw =
+                new OutputStreamWriter(Files.newOutputStream(componentsFile.toPath()), StandardCharsets.UTF_8)) {
             new ComponentXpp3Writer().write(fw, component);
         }
 
@@ -514,7 +515,8 @@ public class DefaultAssemblyReaderTest {
 
         DefaultAssemblyArchiverTest.setupInterpolators(configSource);
 
-        try (Writer writer = new OutputStreamWriter(new FileOutputStream(assemblyFile), "UTF-8")) {
+        try (Writer writer =
+                new OutputStreamWriter(Files.newOutputStream(assemblyFile.toPath()), StandardCharsets.UTF_8)) {
             new AssemblyXpp3Writer().write(writer, assembly);
         }
 
@@ -685,7 +687,7 @@ public class DefaultAssemblyReaderTest {
 
         Files.write(
                 basedir.toPath().resolve("readme.txt"),
-                Arrays.asList("This is just a readme file, not a descriptor."),
+                Collections.singletonList("This is just a readme file, not a descriptor."),
                 StandardCharsets.UTF_8);
 
         final List<Assembly> results = performReadAssemblies(basedir, null, null, basedir);
@@ -708,7 +710,8 @@ public class DefaultAssemblyReaderTest {
         for (final Assembly assembly : assemblies) {
             final File assemblyFile = new File(dir, assembly.getId() + ".xml");
 
-            try (Writer writer = new OutputStreamWriter(new FileOutputStream(assemblyFile), "UTF-8")) {
+            try (Writer writer =
+                    new OutputStreamWriter(Files.newOutputStream(assemblyFile.toPath()), StandardCharsets.UTF_8)) {
                 new AssemblyXpp3Writer().write(writer, assembly);
             }
 

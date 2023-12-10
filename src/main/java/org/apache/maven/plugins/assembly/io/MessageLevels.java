@@ -100,7 +100,7 @@ final class MessageLevels {
      */
     static String getLevelLabel(int messageLevel) {
         if (messageLevel > -1 && LEVEL_NAMES.size() > messageLevel) {
-            return (String) LEVEL_NAMES.get(messageLevel);
+            return LEVEL_NAMES.get(messageLevel);
         }
 
         throw new IllegalArgumentException("Invalid message level: " + messageLevel);

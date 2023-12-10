@@ -101,7 +101,7 @@ public final class FilterUtils {
 
         final AndArtifactFilter filter = new AndArtifactFilter();
 
-        if (additionalFilters != null && additionalFilters.length > 0) {
+        if (additionalFilters != null) {
             for (final ArtifactFilter additionalFilter : additionalFilters) {
                 if (additionalFilter != null) {
                     filter.add(additionalFilter);

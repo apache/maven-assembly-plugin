@@ -54,7 +54,7 @@ public class ReaderFormatterTest {
     public void lineDosFeed() throws IOException, AssemblyFormattingException {
         final PojoConfigSource cfg = getPojoConfigSource();
         InputStreamTransformer fileSetTransformers =
-                ReaderFormatter.getFileSetTransformers(cfg, true, Collections.<String>emptySet(), "dos");
+                ReaderFormatter.getFileSetTransformers(cfg, true, Collections.emptySet(), "dos");
         InputStream fud = fileSetTransformers.transform(dummyResource(), payload("This is a\ntest."));
         assertEquals("This is a\r\ntest.", readResultStream(fud));
     }
@@ -63,7 +63,7 @@ public class ReaderFormatterTest {
     public void lineDosFeed_withoutFiltering() throws IOException, AssemblyFormattingException {
         final PojoConfigSource cfg = getPojoConfigSource();
         InputStreamTransformer fileSetTransformers =
-                ReaderFormatter.getFileSetTransformers(cfg, false, Collections.<String>emptySet(), "dos");
+                ReaderFormatter.getFileSetTransformers(cfg, false, Collections.emptySet(), "dos");
         InputStream fud = fileSetTransformers.transform(dummyResource(), payload("This is a\ntest."));
         assertEquals("This is a\r\ntest.", readResultStream(fud));
     }
@@ -72,7 +72,7 @@ public class ReaderFormatterTest {
     public void lineUnixFeedWithInterpolation() throws IOException, AssemblyFormattingException {
         final PojoConfigSource cfg = getPojoConfigSource();
         InputStreamTransformer fileSetTransformers =
-                ReaderFormatter.getFileSetTransformers(cfg, true, Collections.<String>emptySet(), "unix");
+                ReaderFormatter.getFileSetTransformers(cfg, true, Collections.emptySet(), "unix");
         InputStream fud = fileSetTransformers.transform(
                 dummyResource(), payload("This is a test for project: ${artifactId} @artifactId@."));
         assertEquals("This is a test for project: anArtifact anArtifact.", readResultStream(fud));
@@ -107,7 +107,7 @@ public class ReaderFormatterTest {
         cfg.setAdditionalProperties(additionalProperties);
 
         InputStreamTransformer transformer =
-                ReaderFormatter.getFileSetTransformers(cfg, true, Collections.<String>emptySet(), "unix");
+                ReaderFormatter.getFileSetTransformers(cfg, true, Collections.emptySet(), "unix");
 
         final InputStream inputStream = new ByteArrayInputStream(new byte[0]);
         PlexusIoResource resource = mock(PlexusIoResource.class);

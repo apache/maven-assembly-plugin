@@ -69,11 +69,9 @@ public class ModuleSetAssemblyPhaseTest {
 
     private DependencyResolver dependencyResolver;
 
-    private ProjectBuilder projectBuilder;
-
     @Before
     public void setUp() {
-        this.projectBuilder = mock(ProjectBuilder.class);
+        ProjectBuilder projectBuilder = mock(ProjectBuilder.class);
         this.dependencyResolver = mock(DependencyResolver.class);
 
         this.phase = new ModuleSetAssemblyPhase(projectBuilder, dependencyResolver);
@@ -724,7 +722,7 @@ public class ModuleSetAssemblyPhaseTest {
         boolean failed = false;
 
         final Set<MavenProject> checkTooMany = new HashSet<>(moduleProjects);
-        checkTooMany.removeAll(check);
+        check.forEach(checkTooMany::remove);
 
         if (!checkTooMany.isEmpty()) {
             failed = true;

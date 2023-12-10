@@ -34,7 +34,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.codehaus.plexus.archiver.ArchiveEntry;
-import org.codehaus.plexus.archiver.ArchiveFinalizer;
 import org.codehaus.plexus.archiver.ArchivedFileSet;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
@@ -246,7 +245,7 @@ public class ComponentsXmlArchiverFileFilterTest {
 
         final File descriptorFile = new File(temporaryFolder.getRoot(), "descriptor.xml");
 
-        archiver.setArchiveFinalizers(Collections.<ArchiveFinalizer>singletonList(filter));
+        archiver.setArchiveFinalizers(Collections.singletonList(filter));
 
         archiver.createArchive();
 

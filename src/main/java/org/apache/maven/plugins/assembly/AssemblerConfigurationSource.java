@@ -29,7 +29,7 @@ import org.apache.maven.shared.filtering.MavenReaderFilter;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
 
 /**
- *
+ * Assembly configuration
  */
 public interface AssemblerConfigurationSource {
     /**
@@ -212,4 +212,15 @@ public interface AssemblerConfigurationSource {
      * @return Override group name.
      */
     String getOverrideGroupName();
+
+    /**
+     * @return Indicates if zip archives being added to the assembly should be compressed again.
+     */
+    boolean isRecompressZippedFiles();
+
+    /**
+     *
+     * @return the merge manifest mode in the JarArchiver
+     */
+    String getMergeManifestMode();
 }

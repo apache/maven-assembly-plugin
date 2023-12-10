@@ -27,14 +27,12 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.Collections;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.archiver.MavenArchiveConfiguration;
 import org.apache.maven.model.Model;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.archiver.ArchiveFinalizer;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
 import org.junit.Rule;
 import org.junit.Test;
@@ -72,14 +70,13 @@ public class ManifestCreationFinalizerTest {
 
         Path manifestFile = tempDir.toPath().resolve("MANIFEST.MF");
 
-        Files.write(manifestFile, Arrays.asList("Main-Class: Stuff\n"), StandardCharsets.UTF_8);
+        Files.write(manifestFile, Collections.singletonList("Main-Class: Stuff\n"), StandardCharsets.UTF_8);
 
         config.setManifestFile(manifestFile.toFile());
 
         JarArchiver archiver = new JarArchiver();
 
-        archiver.setArchiveFinalizers(
-                Collections.<ArchiveFinalizer>singletonList(new ManifestCreationFinalizer(null, project, config)));
+        archiver.setArchiveFinalizers(Collections.singletonList(new ManifestCreationFinalizer(null, project, config)));
 
         File file = temporaryFolder.newFile();
 
@@ -113,8 +110,7 @@ public class ManifestCreationFinalizerTest {
 
         JarArchiver archiver = new JarArchiver();
 
-        archiver.setArchiveFinalizers(
-                Collections.<ArchiveFinalizer>singletonList(new ManifestCreationFinalizer(null, project, config)));
+        archiver.setArchiveFinalizers(Collections.singletonList(new ManifestCreationFinalizer(null, project, config)));
 
         File file = temporaryFolder.newFile();
 

@@ -113,10 +113,8 @@ public class DefaultAssemblyReader implements AssemblyReader {
         }
 
         if ((descriptorSourceDirectory != null) && descriptorSourceDirectory.isDirectory()) {
-            // CHECKSTYLE_OFF: LineLength
-            locator.setStrategies(Collections.<LocatorStrategy>singletonList(
-                    new RelativeFileLocatorStrategy(descriptorSourceDirectory)));
-            // CHECKSTYLE_ON: LineLength
+            locator.setStrategies(
+                    Collections.singletonList(new RelativeFileLocatorStrategy(descriptorSourceDirectory)));
 
             final DirectoryScanner scanner = new DirectoryScanner();
             scanner.setBasedir(descriptorSourceDirectory);
@@ -297,7 +295,7 @@ public class DefaultAssemblyReader implements AssemblyReader {
             LOGGER.debug("Failed to print debug message with assembly descriptor listing, and message: " + message, e);
         }
 
-        LOGGER.debug(message + "\n\n" + sWriter.toString() + "\n\n");
+        LOGGER.debug(message + "\n\n" + sWriter + "\n\n");
     }
 
     /**

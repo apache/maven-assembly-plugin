@@ -21,7 +21,7 @@ package org.apache.maven.plugins.assembly.archive.phase;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.Arrays;
+import java.util.Collections;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
@@ -76,7 +76,7 @@ public class FileItemAssemblyPhaseTest {
         final File basedir = temporaryFolder.getRoot();
 
         final File file = temporaryFolder.newFile("file.txt");
-        Files.write(file.toPath(), Arrays.asList("This is a test file."), StandardCharsets.UTF_8);
+        Files.write(file.toPath(), Collections.singletonList("This is a test file."), StandardCharsets.UTF_8);
 
         when(macCS.getBasedir()).thenReturn(basedir);
         when(macCS.getProject()).thenReturn(new MavenProject(new Model()));
@@ -110,7 +110,7 @@ public class FileItemAssemblyPhaseTest {
         final File basedir = temporaryFolder.getRoot();
 
         final File file = temporaryFolder.newFile("file.txt");
-        Files.write(file.toPath(), Arrays.asList("This is a test file."), StandardCharsets.UTF_8);
+        Files.write(file.toPath(), Collections.singletonList("This is a test file."), StandardCharsets.UTF_8);
 
         when(macCS.getBasedir()).thenReturn(basedir);
         when(macCS.getProject()).thenReturn(new MavenProject(new Model()));
@@ -144,16 +144,21 @@ public class FileItemAssemblyPhaseTest {
         final File basedir = temporaryFolder.getRoot();
 
         final File readmeFile = temporaryFolder.newFile("README.txt");
-        Files.write(readmeFile.toPath(), Arrays.asList("This is a test file for README.txt."), StandardCharsets.UTF_8);
+        Files.write(
+                readmeFile.toPath(),
+                Collections.singletonList("This is a test file for README.txt."),
+                StandardCharsets.UTF_8);
 
         final File licenseFile = temporaryFolder.newFile("LICENSE.txt");
         Files.write(
-                licenseFile.toPath(), Arrays.asList("This is a test file for LICENSE.txt."), StandardCharsets.UTF_8);
+                licenseFile.toPath(),
+                Collections.singletonList("This is a test file for LICENSE.txt."),
+                StandardCharsets.UTF_8);
 
         final File configFile = new File(temporaryFolder.newFolder("config"), "config.txt");
         Files.write(
                 configFile.toPath(),
-                Arrays.asList("This is a test file for config/config.txt"),
+                Collections.singletonList("This is a test file for config/config.txt"),
                 StandardCharsets.UTF_8);
 
         when(macCS.getBasedir()).thenReturn(basedir);
@@ -218,16 +223,21 @@ public class FileItemAssemblyPhaseTest {
         final File basedir = temporaryFolder.getRoot();
 
         final File readmeFile = temporaryFolder.newFile("README.txt");
-        Files.write(readmeFile.toPath(), Arrays.asList("This is a test file for README.txt."), StandardCharsets.UTF_8);
+        Files.write(
+                readmeFile.toPath(),
+                Collections.singletonList("This is a test file for README.txt."),
+                StandardCharsets.UTF_8);
 
         final File licenseFile = temporaryFolder.newFile("LICENSE.txt");
         Files.write(
-                licenseFile.toPath(), Arrays.asList("This is a test file for LICENSE.txt."), StandardCharsets.UTF_8);
+                licenseFile.toPath(),
+                Collections.singletonList("This is a test file for LICENSE.txt."),
+                StandardCharsets.UTF_8);
 
         final File configFile = new File(temporaryFolder.newFolder("config"), "config.txt");
         Files.write(
                 configFile.toPath(),
-                Arrays.asList("This is a test file for config/config.txt"),
+                Collections.singletonList("This is a test file for config/config.txt"),
                 StandardCharsets.UTF_8);
 
         when(macCS.getBasedir()).thenReturn(basedir);
@@ -295,16 +305,21 @@ public class FileItemAssemblyPhaseTest {
         final File basedir = temporaryFolder.getRoot();
 
         final File readmeFile = temporaryFolder.newFile("README.txt");
-        Files.write(readmeFile.toPath(), Arrays.asList("This is a test file for README.txt."), StandardCharsets.UTF_8);
+        Files.write(
+                readmeFile.toPath(),
+                Collections.singletonList("This is a test file for README.txt."),
+                StandardCharsets.UTF_8);
 
         final File licenseFile = temporaryFolder.newFile("LICENSE.txt");
         Files.write(
-                licenseFile.toPath(), Arrays.asList("This is a test file for LICENSE.txt."), StandardCharsets.UTF_8);
+                licenseFile.toPath(),
+                Collections.singletonList("This is a test file for LICENSE.txt."),
+                StandardCharsets.UTF_8);
 
         final File configFile = new File(temporaryFolder.newFolder("config"), "config.txt");
         Files.write(
                 configFile.toPath(),
-                Arrays.asList("This is a test file for config/config.txt"),
+                Collections.singletonList("This is a test file for config/config.txt"),
                 StandardCharsets.UTF_8);
 
         when(macCS.getBasedir()).thenReturn(basedir);

@@ -19,7 +19,6 @@
 package org.apache.maven.plugins.assembly.archive.phase;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
@@ -46,32 +45,32 @@ public class AssemblyArchiverPhaseComparatorTest {
         items.add(o1);
         Unordered1 u1 = new Unordered1();
         items.add(u1);
-        Collections.sort(items, new AssemblyArchiverPhaseComparator());
+        items.sort(new AssemblyArchiverPhaseComparator());
         assertSame(u1, items.get(0));
         assertSame(u2, items.get(1));
         assertSame(o1, items.get(2));
         assertSame(o2, items.get(3));
     }
 
-    class Basic implements AssemblyArchiverPhase {
+    static class Basic implements AssemblyArchiverPhase {
         public void execute(Assembly assembly, Archiver archiver, AssemblerConfigurationSource configSource)
                 throws ArchiveCreationException, AssemblyFormattingException, InvalidAssemblerConfigurationException,
                         DependencyResolutionException {}
     }
 
-    class Ordered1 extends Basic implements PhaseOrder {
+    static class Ordered1 extends Basic implements PhaseOrder {
         public int order() {
             return 20;
         }
     }
 
-    class Ordered2 extends Basic implements PhaseOrder {
+    static class Ordered2 extends Basic implements PhaseOrder {
         public int order() {
             return 30;
         }
     }
 
-    class Unordered1 extends Basic {}
+    static class Unordered1 extends Basic {}
 
-    class Unordered2 extends Basic {}
+    static class Unordered2 extends Basic {}
 }

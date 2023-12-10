@@ -22,10 +22,10 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -127,7 +127,7 @@ public class FileItemAssemblyPhase implements AssemblyArchiverPhase, PhaseOrder 
 
             try {
                 final InputStreamTransformer fileSetTransformers = ReaderFormatter.getFileSetTransformers(
-                        configSource, fileItem.isFiltered(), Collections.<String>emptySet(), fileItem.getLineEnding());
+                        configSource, fileItem.isFiltered(), Collections.emptySet(), fileItem.getLineEnding());
 
                 final PlexusIoResource restoUse;
                 if (!fileItem.getSources().isEmpty()) {
@@ -138,7 +138,7 @@ public class FileItemAssemblyPhase implements AssemblyArchiverPhase, PhaseOrder 
                         if (!AssemblyFileUtils.isAbsolutePath(contentSource)) {
                             contentSource = new File(basedir, contentSourcePath);
                         }
-                        content.add(new FileInputStream(contentSource));
+                        content.add(Files.newInputStream(contentSource.toPath()));
                     }
 
                     String name = PlexusIoFileResource.getName(source);
