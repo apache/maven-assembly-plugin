@@ -480,14 +480,7 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
                 }
 
                 for (final String format : effectiveFormats) {
-                    final File destFile = assemblyArchiver.createArchive(
-                            assembly,
-                            fullName,
-                            format,
-                            this,
-                            isRecompressZippedFiles(),
-                            getMergeManifestMode(),
-                            outputDate);
+                    final File destFile = assemblyArchiver.createArchive(assembly, fullName, format, this, outputDate);
 
                     final MavenProject project = getProject();
                     final String type = project.getArtifact().getType();
@@ -618,9 +611,6 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     public void setDescriptors(final String[] descriptors) {
         this.descriptors = descriptors;
     }
-
-    @Override
-    public abstract MavenProject getProject();
 
     @Override
     public File getSiteDirectory() {
@@ -781,10 +771,12 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
         return encoding;
     }
 
-    boolean isRecompressZippedFiles() {
+    @Override
+    public boolean isRecompressZippedFiles() {
         return recompressZippedFiles;
     }
 
+    @Override
     public String getMergeManifestMode() {
         return mergeManifestMode;
     }

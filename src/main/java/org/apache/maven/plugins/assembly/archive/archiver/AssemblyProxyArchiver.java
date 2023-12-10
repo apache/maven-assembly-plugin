@@ -19,10 +19,10 @@
 package org.apache.maven.plugins.assembly.archive.archiver;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -815,7 +815,7 @@ public class AssemblyProxyArchiver implements Archiver {
 
         @Override
         public InputStream getContents() throws IOException {
-            return new FileInputStream(inputFile);
+            return Files.newInputStream(inputFile.toPath());
         }
 
         @Override

@@ -85,8 +85,7 @@ class PrefixedFileSet implements FileSet {
     @Override
     public FileSelector[] getFileSelectors() {
         FileSelector[] sel = fileSet.getFileSelectors();
-        final FileSelector[] selectors1 = selectors;
-        return combineSelectors(sel, selectors1);
+        return combineSelectors(sel, selectors);
     }
 
     /**

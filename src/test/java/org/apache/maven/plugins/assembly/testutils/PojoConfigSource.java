@@ -111,6 +111,10 @@ public class PojoConfigSource implements AssemblerConfigurationSource {
 
     private FixedStringSearchInterpolator mainProjectInterpolator;
 
+    private boolean recompressZippedFiles;
+
+    private String mergeManifestMode;
+
     public String getDescriptor() {
         return descriptor;
     }
@@ -450,5 +454,23 @@ public class PojoConfigSource implements AssemblerConfigurationSource {
     @Override
     public String getOverrideGroupName() {
         return "root";
+    }
+
+    @Override
+    public boolean isRecompressZippedFiles() {
+        return recompressZippedFiles;
+    }
+
+    public void setRecompressZippedFiles(boolean recompressZippedFiles) {
+        this.recompressZippedFiles = recompressZippedFiles;
+    }
+
+    @Override
+    public String getMergeManifestMode() {
+        return mergeManifestMode;
+    }
+
+    public void setMergeManifestMode(String mergeManifestMode) {
+        this.mergeManifestMode = mergeManifestMode;
     }
 }

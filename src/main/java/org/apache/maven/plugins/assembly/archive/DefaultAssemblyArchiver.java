@@ -28,7 +28,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -113,7 +112,7 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver {
 
     private List<AssemblyArchiverPhase> sortedPhases() {
         List<AssemblyArchiverPhase> sorted = new ArrayList<>(assemblyPhases);
-        Collections.sort(sorted, new AssemblyArchiverPhaseComparator());
+        sorted.sort(new AssemblyArchiverPhaseComparator());
         return sorted;
     }
 
@@ -126,8 +125,6 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver {
             final String fullName,
             final String format,
             final AssemblerConfigurationSource configSource,
-            boolean recompressZippedFiles,
-            String mergeManifestMode,
             FileTime outputTimestamp)
             throws ArchiveCreationException, AssemblyFormattingException, InvalidAssemblerConfigurationException {
         validate(assembly);
@@ -167,8 +164,6 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver {
                     basedir,
                     configSource,
                     containerHandlers,
-                    recompressZippedFiles,
-                    mergeManifestMode,
                     outputTimestamp);
 
             archiver.setDestFile(destFile);
@@ -257,8 +252,6 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver {
      * @param finalName             The final name.
      * @param configSource          {@link AssemblerConfigurationSource}
      * @param containerHandlers     The list of {@link ContainerDescriptorHandler}
-     * @param recompressZippedFiles recompress zipped files.
-     * @param mergeManifestMode     how to handle already existing Manifest files
      * @return archiver Archiver generated
      * @throws org.codehaus.plexus.archiver.ArchiverException
      * @throws org.codehaus.plexus.archiver.manager.NoSuchArchiverException
@@ -269,18 +262,10 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver {
             final String finalName,
             final AssemblerConfigurationSource configSource,
             final List<ContainerDescriptorHandler> containerHandlers,
-            boolean recompressZippedFiles,
-            String mergeManifestMode,
             FileTime outputTimestamp)
             throws NoSuchArchiverException {
-        Archiver archiver;
 
-        // one missing alias in plexus-archiver
-        if ("tzst".equals(format)) {
-            archiver = createTarZstArchiver();
-        } else {
-            archiver = archiverManager.getArchiver(format);
-        }
+        Archiver archiver = archiverManager.getArchiver(format);
 
         if (archiver instanceof TarArchiver) {
             ((TarArchiver) archiver).setLongfile(TarLongFileMode.valueOf(configSource.getTarLongFileMode()));
@@ -291,13 +276,13 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver {
         }
 
         if (archiver instanceof AbstractZipArchiver) {
-            ((AbstractZipArchiver) archiver).setRecompressAddedZips(recompressZippedFiles);
+            ((AbstractZipArchiver) archiver).setRecompressAddedZips(configSource.isRecompressZippedFiles());
         }
 
         final List<FileSelector> extraSelectors = new ArrayList<>();
         final List<ArchiveFinalizer> extraFinalizers = new ArrayList<>();
         if (archiver instanceof JarArchiver) {
-            configureJarArchiver((JarArchiver) archiver, mergeManifestMode);
+            configureJarArchiver((JarArchiver) archiver, configSource.getMergeManifestMode());
 
             extraSelectors.add(new JarSecurityFileSelector());
 
@@ -461,11 +446,5 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver {
         } catch (final InvocationTargetException e) {
             throw new RuntimeException(e.getCause());
         }
-    }
-
-    protected Archiver createTarZstArchiver() throws NoSuchArchiverException {
-        final TarArchiver tarArchiver = (TarArchiver) archiverManager.getArchiver("tar");
-        tarArchiver.setCompression(TarArchiver.TarCompressionMethod.zstd);
-        return tarArchiver;
     }
 }

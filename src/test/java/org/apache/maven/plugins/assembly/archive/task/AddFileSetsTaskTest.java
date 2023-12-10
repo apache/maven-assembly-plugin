@@ -56,7 +56,7 @@ public class AddFileSetsTaskTest {
 
         fs.setDirectory(dir.getAbsolutePath());
 
-        final File result = new AddFileSetsTask(new ArrayList<FileSet>()).getFileSetDirectory(fs, null, null);
+        final File result = new AddFileSetsTask(new ArrayList<>()).getFileSetDirectory(fs, null, null);
 
         assertEquals(dir.getAbsolutePath(), result.getAbsolutePath());
     }
@@ -67,7 +67,7 @@ public class AddFileSetsTaskTest {
 
         final FileSet fs = new FileSet();
 
-        final File result = new AddFileSetsTask(new ArrayList<FileSet>()).getFileSetDirectory(fs, dir, null);
+        final File result = new AddFileSetsTask(new ArrayList<>()).getFileSetDirectory(fs, dir, null);
 
         assertEquals(dir.getAbsolutePath(), result.getAbsolutePath());
     }
@@ -84,7 +84,7 @@ public class AddFileSetsTaskTest {
 
         fs.setDirectory(srcPath);
 
-        final File result = new AddFileSetsTask(new ArrayList<FileSet>()).getFileSetDirectory(fs, dir, null);
+        final File result = new AddFileSetsTask(new ArrayList<>()).getFileSetDirectory(fs, dir, null);
 
         assertEquals(srcDir.getAbsolutePath(), result.getAbsolutePath());
     }
@@ -101,7 +101,7 @@ public class AddFileSetsTaskTest {
 
         fs.setDirectory(srcPath);
 
-        final File result = new AddFileSetsTask(new ArrayList<FileSet>()).getFileSetDirectory(fs, null, dir);
+        final File result = new AddFileSetsTask(new ArrayList<>()).getFileSetDirectory(fs, null, dir);
 
         assertEquals(srcDir.getAbsolutePath(), result.getAbsolutePath());
     }
@@ -127,7 +127,7 @@ public class AddFileSetsTaskTest {
 
         DefaultAssemblyArchiverTest.setupInterpolators(configSource, project);
 
-        final AddFileSetsTask task = new AddFileSetsTask(new ArrayList<FileSet>());
+        final AddFileSetsTask task = new AddFileSetsTask(new ArrayList<>());
 
         task.setProject(project);
 
@@ -165,7 +165,7 @@ public class AddFileSetsTaskTest {
         project.setGroupId("GROUPID");
         DefaultAssemblyArchiverTest.setupInterpolators(configSource, project);
 
-        final AddFileSetsTask task = new AddFileSetsTask(new ArrayList<FileSet>());
+        final AddFileSetsTask task = new AddFileSetsTask(new ArrayList<>());
         task.setProject(project);
 
         task.addFileSet(fs, archiver, configSource, archiveBaseDir);
@@ -198,7 +198,7 @@ public class AddFileSetsTaskTest {
 
         DefaultAssemblyArchiverTest.setupInterpolators(configSource, project);
 
-        final AddFileSetsTask task = new AddFileSetsTask(new ArrayList<FileSet>());
+        final AddFileSetsTask task = new AddFileSetsTask(new ArrayList<>());
         task.setProject(project);
 
         task.addFileSet(fs, archiver, configSource, archiveBaseDir);
@@ -217,7 +217,7 @@ public class AddFileSetsTaskTest {
         final AssemblerConfigurationSource configSource = mock(AssemblerConfigurationSource.class);
         when(configSource.getArchiveBaseDirectory()).thenReturn(archiveBaseDir);
 
-        final AddFileSetsTask task = new AddFileSetsTask(new ArrayList<FileSet>());
+        final AddFileSetsTask task = new AddFileSetsTask(new ArrayList<>());
 
         try {
             task.execute(null, configSource);
@@ -237,7 +237,7 @@ public class AddFileSetsTaskTest {
         final AssemblerConfigurationSource configSource = mock(AssemblerConfigurationSource.class);
         when(configSource.getArchiveBaseDirectory()).thenReturn(archiveBaseDir);
 
-        final AddFileSetsTask task = new AddFileSetsTask(new ArrayList<FileSet>());
+        final AddFileSetsTask task = new AddFileSetsTask(new ArrayList<>());
 
         try {
             task.execute(null, configSource);

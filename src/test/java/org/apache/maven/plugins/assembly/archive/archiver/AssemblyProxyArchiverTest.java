@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.codehaus.plexus.archiver.Archiver;
@@ -84,11 +84,11 @@ public class AssemblyProxyArchiverTest {
 
         Files.write(
                 sources.toPath().resolve("test-included.txt"),
-                Arrays.asList("This is included"),
+                Collections.singletonList("This is included"),
                 StandardCharsets.UTF_8);
         Files.write(
                 workdir.toPath().resolve("test-excluded.txt"),
-                Arrays.asList("This is excluded"),
+                Collections.singletonList("This is excluded"),
                 StandardCharsets.UTF_8);
 
         final TrackingArchiver tracker = new TrackingArchiver();
@@ -147,7 +147,8 @@ public class AssemblyProxyArchiverTest {
         archiver.setForced(true);
 
         final File dir = temporaryFolder.newFolder();
-        Files.write(dir.toPath().resolve("file.txt"), Arrays.asList("This is a test."), StandardCharsets.UTF_8);
+        Files.write(
+                dir.toPath().resolve("file.txt"), Collections.singletonList("This is a test."), StandardCharsets.UTF_8);
 
         archiver.addDirectory(dir);
 

@@ -28,7 +28,6 @@ import org.apache.maven.model.Model;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
 import org.apache.maven.plugins.assembly.archive.phase.AssemblyArchiverPhase;
-import org.apache.maven.plugins.assembly.filter.ContainerDescriptorHandler;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.mojos.AbstractAssemblyMojo;
 import org.apache.maven.plugins.assembly.testutils.PojoConfigSource;
@@ -96,8 +95,8 @@ public class DefaultAssemblyArchiverTest {
 
     @Test(expected = InvalidAssemblerConfigurationException.class)
     public void failWhenAssemblyIdIsNull() throws Exception {
-        final DefaultAssemblyArchiver archiver = createSubject(Collections.<AssemblyArchiverPhase>emptyList());
-        archiver.createArchive(new Assembly(), "full-name", "zip", null, false, null, null);
+        final DefaultAssemblyArchiver archiver = createSubject(Collections.emptyList());
+        archiver.createArchive(new Assembly(), "full-name", "zip", null, null);
     }
 
     @Test
@@ -125,7 +124,7 @@ public class DefaultAssemblyArchiverTest {
 
         final DefaultAssemblyArchiver subject = createSubject(Collections.singletonList(phase));
 
-        subject.createArchive(assembly, "full-name", "zip", configSource, false, null, null);
+        subject.createArchive(assembly, "full-name", "zip", configSource, null);
 
         // result of easymock migration, should be assert of expected result instead of verifying methodcalls
         verify(configSource).getArchiverConfig();
@@ -184,7 +183,7 @@ public class DefaultAssemblyArchiverTest {
 
         final DefaultAssemblyArchiver subject = createSubject(new ArrayList<>());
 
-        subject.createArchiver("dummy", false, "finalName", configSource, null, false, null, null);
+        subject.createArchiver("dummy", false, "finalName", configSource, null, null);
 
         assertEquals(simpleConfig, archiver.getSimpleConfig());
 
@@ -209,7 +208,7 @@ public class DefaultAssemblyArchiverTest {
 
         final DefaultAssemblyArchiver subject = createSubject(new ArrayList<>());
 
-        subject.createArchiver("tar", false, "finalName", configSource, null, false, null, null);
+        subject.createArchiver("tar", false, "finalName", configSource, null, null);
 
         assertNull(ttArchiver.compressionMethod);
         assertEquals(TarLongFileMode.fail, ttArchiver.longFileMode);
@@ -243,10 +242,11 @@ public class DefaultAssemblyArchiverTest {
         when(configSource.getProject()).thenReturn(new MavenProject(new Model()));
         when(configSource.getWorkingDirectory()).thenReturn(new File("."));
         when(configSource.isIgnorePermissions()).thenReturn(true);
+        when(configSource.isRecompressZippedFiles()).thenReturn(false);
 
         final DefaultAssemblyArchiver subject = createSubject(new ArrayList<>());
 
-        subject.createArchiver("war", false, null, configSource, null, false, null, null);
+        subject.createArchiver("war", false, null, configSource, null, null);
 
         assertNotNull(twArchiver.expectWebXml);
         assertFalse(twArchiver.expectWebXml);
@@ -281,10 +281,11 @@ public class DefaultAssemblyArchiverTest {
         when(configSource.getOverrideUserName()).thenReturn("root");
         when(configSource.getWorkingDirectory()).thenReturn(new File("."));
         when(configSource.isIgnorePermissions()).thenReturn(true);
+        when(configSource.isRecompressZippedFiles()).thenReturn(false);
 
         final DefaultAssemblyArchiver subject = createSubject(new ArrayList<>());
 
-        subject.createArchiver("zip", false, null, configSource, null, false, null, null);
+        subject.createArchiver("zip", false, null, configSource, null, null);
 
         // result of easymock migration, should be assert of expected result instead of verifying methodcalls
         verify(configSource).getArchiverConfig();
@@ -311,8 +312,9 @@ public class DefaultAssemblyArchiverTest {
         PojoConfigSource configSource = new PojoConfigSource();
         configSource.setTarLongFileMode(TarLongFileMode.fail.name());
         configSource.setWorkingDirectory(new File(""));
+        configSource.setRecompressZippedFiles(false);
 
-        subject.createArchiver("tar", true, "", configSource, null, false, null, null);
+        subject.createArchiver("tar", true, "", configSource, null, null);
 
         assertNull(new TestTarArchiver().compressionMethod);
         assertEquals(TarLongFileMode.fail, archiver.longFileMode);
@@ -322,36 +324,14 @@ public class DefaultAssemblyArchiverTest {
     }
 
     @Test
-    public void testCreateTarArchiver_TZstFormat_ShouldInitializeZstCompression() throws Exception {
-        final TestTarArchiver archiver = new TestTarArchiver();
-
-        when(archiverManager.getArchiver("tar")).thenReturn(archiver);
-
-        final DefaultAssemblyArchiver subject = createSubject(new ArrayList<>());
-
-        PojoConfigSource configSource = new PojoConfigSource();
-        configSource.setTarLongFileMode(TarLongFileMode.fail.name());
-        configSource.setWorkingDirectory(new File(""));
-
-        subject.createArchiver("tzst", true, "", configSource, null, false, null, null);
-
-        assertEquals(TarArchiver.TarCompressionMethod.zstd, archiver.compressionMethod);
-        assertEquals(TarLongFileMode.fail, archiver.longFileMode);
-
-        // result of easymock migration, should be assert of expected result instead of verifying methodcalls
-        verify(archiverManager).getArchiver("tar");
-    }
-
-    @Test
     public void testCreateTarArchiver_InvalidFormat_ShouldFailWithInvalidCompression() throws Exception {
-        final TestTarArchiver ttArchiver = new TestTarArchiver();
 
         when(archiverManager.getArchiver("tar.ZZZ")).thenThrow(new NoSuchArchiverException("no archiver"));
 
         final DefaultAssemblyArchiver subject = createSubject(new ArrayList<>());
 
         try {
-            subject.createArchiver("tar.ZZZ", true, "", null, null, false, null, null);
+            subject.createArchiver("tar.ZZZ", true, "", null, null, null);
 
             fail("Invalid compression formats should throw an error.");
         } catch (final NoSuchArchiverException e) {
@@ -363,8 +343,7 @@ public class DefaultAssemblyArchiverTest {
     }
 
     private DefaultAssemblyArchiver createSubject(final List<AssemblyArchiverPhase> phases) {
-        return new DefaultAssemblyArchiver(
-                archiverManager, phases, Collections.<String, ContainerDescriptorHandler>emptyMap(), container);
+        return new DefaultAssemblyArchiver(archiverManager, phases, Collections.emptyMap(), container);
     }
 
     private static final class TestTarArchiver extends TarArchiver {

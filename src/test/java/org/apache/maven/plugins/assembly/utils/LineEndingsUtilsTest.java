@@ -60,7 +60,7 @@ public class LineEndingsUtilsTest {
 
     @Test
     public void shouldReturnNullAsLineEndingForKeep() {
-        assertEquals(null, LineEndings.keep.getLineEndingCharacters());
+        assertNull(LineEndings.keep.getLineEndingCharacters());
     }
 
     @Test

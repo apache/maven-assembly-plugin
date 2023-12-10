@@ -21,8 +21,6 @@ package org.apache.maven.plugins.assembly.filter;
 import javax.inject.Named;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -112,11 +110,11 @@ public class SimpleAggregatingDescriptorHandler implements ContainerDescriptorHa
         return f;
     }
 
-    private Writer getWriter(File f) throws FileNotFoundException {
+    private Writer getWriter(File f) throws IOException {
         Writer writer;
         writer = AssemblyFileUtils.isPropertyFile(f)
-                ? new OutputStreamWriter(new FileOutputStream(f), StandardCharsets.ISO_8859_1)
-                : new OutputStreamWriter(new FileOutputStream(f)); // Still platform encoding
+                ? new OutputStreamWriter(Files.newOutputStream(f.toPath()), StandardCharsets.ISO_8859_1)
+                : new OutputStreamWriter(Files.newOutputStream(f.toPath())); // Still platform encoding
         return writer;
     }
 

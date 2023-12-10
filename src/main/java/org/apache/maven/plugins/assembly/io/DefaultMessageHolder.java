@@ -148,11 +148,11 @@ class DefaultMessageHolder implements MessageHolder {
 
     /** {@inheritDoc} */
     public String render() {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
 
         int counter = 1;
         for (Iterator<Message> it = messages.iterator(); it.hasNext(); ) {
-            Message message = (Message) it.next();
+            Message message = it.next();
 
             int ml = message.getMessageLevel();
 
@@ -169,7 +169,7 @@ class DefaultMessageHolder implements MessageHolder {
 
             if (content.length() > label.length() + 3) {
                 buffer.append('[').append(counter++).append("] ");
-                buffer.append(content.toString());
+                buffer.append(content);
 
                 if (it.hasNext()) {
                     buffer.append("\n\n");
@@ -243,7 +243,7 @@ class DefaultMessageHolder implements MessageHolder {
                 PrintWriter pw = new PrintWriter(sw);
                 error.printStackTrace(pw);
 
-                buffer.append(sw.toString());
+                buffer.append(sw);
             }
 
             return buffer;

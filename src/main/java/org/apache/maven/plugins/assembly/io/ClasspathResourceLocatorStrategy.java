@@ -25,12 +25,6 @@ import java.net.URL;
  */
 class ClasspathResourceLocatorStrategy implements LocatorStrategy {
 
-    private String tempFilePrefix = "location.";
-
-    private String tempFileSuffix = ".cpurl";
-
-    private boolean tempFileDeleteOnExit = true;
-
     /**
      * Create instance.
      */
@@ -45,8 +39,7 @@ class ClasspathResourceLocatorStrategy implements LocatorStrategy {
         Location location = null;
 
         if (resource != null) {
-            location = new URLLocation(
-                    resource, locationSpecification, tempFilePrefix, tempFileSuffix, tempFileDeleteOnExit);
+            location = new URLLocation(resource, locationSpecification, "location.", ".cpurl", true);
         } else {
             messageHolder.addMessage(
                     "Failed to resolve classpath resource: " + locationSpecification + " from classloader: " + cloader);

@@ -92,7 +92,9 @@ public class ComponentsXmlArchiverFileFilter implements ContainerDescriptorHandl
             final File f = Files.createTempFile("maven-assembly-plugin", "tmp").toFile();
             f.deleteOnExit();
 
-            try (Writer fileWriter = new XmlStreamWriter(Files.newOutputStream(f.toPath()))) {
+            try (Writer fileWriter = XmlStreamWriter.builder()
+                    .setOutputStream(Files.newOutputStream(f.toPath()))
+                    .get()) {
                 final Xpp3Dom dom = new Xpp3Dom("component-set");
                 final Xpp3Dom componentDom = new Xpp3Dom("components");
                 dom.addChild(componentDom);
@@ -153,13 +155,12 @@ public class ComponentsXmlArchiverFileFilter implements ContainerDescriptorHandl
             }
 
             if (ComponentsXmlArchiverFileFilter.COMPONENTS_XML_PATH.equals(entry)) {
-                try (Reader reader = new BufferedReader(new XmlStreamReader(fileInfo.getContents()))) {
+                try (Reader reader = new BufferedReader(XmlStreamReader.builder()
+                        .setInputStream(fileInfo.getContents())
+                        .get())) {
                     addComponentsXml(reader);
                 } catch (final XmlPullParserException e) {
-                    final IOException error =
-                            new IOException("Error finalizing component-set for archive. Reason: " + e.getMessage(), e);
-
-                    throw error;
+                    throw new IOException("Error finalizing component-set for archive. Reason: " + e.getMessage(), e);
                 }
                 return false;
             } else {

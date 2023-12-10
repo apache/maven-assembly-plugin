@@ -20,7 +20,6 @@ package org.apache.maven.plugins.assembly.filter;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -77,7 +76,7 @@ abstract class AbstractLineAggregatingHandler implements ContainerDescriptorHand
                 f.deleteOnExit();
 
                 try (PrintWriter writer =
-                        new PrintWriter(new OutputStreamWriter(new FileOutputStream(f), getEncoding()))) {
+                        new PrintWriter(new OutputStreamWriter(Files.newOutputStream(f.toPath()), getEncoding()))) {
                     for (final String line : entry.getValue()) {
                         writer.println(line);
                     }
@@ -113,15 +112,8 @@ abstract class AbstractLineAggregatingHandler implements ContainerDescriptorHand
 
         if (fileInfo.isFile() && fileMatches(fileInfo)) {
             name = getOutputPathPrefix(fileInfo) + new File(name).getName();
-
-            List<String> lines = catalog.get(name);
-            if (lines == null) {
-                lines = new ArrayList<>();
-                catalog.put(name, lines);
-            }
-
+            List<String> lines = catalog.computeIfAbsent(name, k -> new ArrayList<>());
             readLines(fileInfo, lines);
-
             return false;
         }
 

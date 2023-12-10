@@ -82,8 +82,7 @@ public class ReaderFormatter {
             filterRequest.setInjectProjectBuildFilters(configSource.isIncludeProjectBuildFilters());
             return configSource.getMavenReaderFilter().filter(filterRequest);
         } catch (MavenFilteringException e) {
-            IOException ioe = new IOException("Error filtering file '" + source + "': " + e.getMessage(), e);
-            throw ioe;
+            throw new IOException("Error filtering file '" + source + "': " + e.getMessage(), e);
         }
     }
 

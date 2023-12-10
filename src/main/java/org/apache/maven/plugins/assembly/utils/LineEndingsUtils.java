@@ -21,13 +21,12 @@ package org.apache.maven.plugins.assembly.utils;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.RandomAccessFile;
+import java.nio.file.Files;
 
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 
@@ -94,20 +93,20 @@ public final class LineEndingsUtils {
     private static BufferedReader getBufferedReader(File source, String encoding) throws IOException {
         if (encoding == null) {
             // platform encoding
-            return new BufferedReader(new InputStreamReader(new FileInputStream(source)));
+            return new BufferedReader(new InputStreamReader(Files.newInputStream(source.toPath())));
         } else {
             // MASSEMBLY-371
-            return new BufferedReader(new InputStreamReader(new FileInputStream(source), encoding));
+            return new BufferedReader(new InputStreamReader(Files.newInputStream(source.toPath()), encoding));
         }
     }
 
     private static BufferedWriter getBufferedWriter(File dest, String encoding) throws IOException {
         if (encoding == null) {
             // platform encoding
-            return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dest)));
+            return new BufferedWriter(new OutputStreamWriter(Files.newOutputStream(dest.toPath())));
         } else {
             // MASSEMBLY-371
-            return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dest), encoding));
+            return new BufferedWriter(new OutputStreamWriter(Files.newOutputStream(dest.toPath()), encoding));
         }
     }
 
