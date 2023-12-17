@@ -96,6 +96,7 @@ public class DefaultAssemblyReader implements AssemblyReader {
         final String[] descriptors = configSource.getDescriptors();
         final String[] descriptorRefs = configSource.getDescriptorReferences();
         final File descriptorSourceDirectory = configSource.getDescriptorSourceDirectory();
+        final List<Assembly> inlineDescriptors = configSource.getInlineDescriptors();
 
         if ((descriptors != null) && (descriptors.length > 0)) {
             locator.setStrategies(strategies);
@@ -128,6 +129,10 @@ public class DefaultAssemblyReader implements AssemblyReader {
             for (String path : paths) {
                 addAssemblyFromDescriptor(path, locator, configSource, assemblies);
             }
+        }
+
+        if (inlineDescriptors != null) {
+            assemblies.addAll(inlineDescriptors);
         }
 
         if (assemblies.isEmpty()) {

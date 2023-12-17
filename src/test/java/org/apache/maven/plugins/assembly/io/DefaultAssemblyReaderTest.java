@@ -49,25 +49,27 @@ import org.apache.maven.plugins.assembly.model.io.xpp3.ComponentXpp3Writer;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
 import org.codehaus.plexus.interpolation.fixed.InterpolationState;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultAssemblyReaderTest {
+
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
+    @Mock
     private AssemblerConfigurationSource configSource;
 
     public static StringReader writeToStringReader(Assembly assembly) throws IOException {
@@ -77,11 +79,6 @@ public class DefaultAssemblyReaderTest {
         assemblyWriter.write(sw, assembly);
 
         return new StringReader(sw.toString());
-    }
-
-    @Before
-    public void setUp() {
-        configSource = mock(AssemblerConfigurationSource.class);
     }
 
     @Test
@@ -702,6 +699,21 @@ public class DefaultAssemblyReaderTest {
         final Assembly result2 = assemblies.get(1);
 
         assertEquals(assembly2.getId(), result2.getId());
+    }
+
+    @Test
+    public void inlineAssemblyShouldBeReturned() throws Exception {
+        // given
+        Assembly assemby = new Assembly();
+        assemby.setId("test-id");
+        when(configSource.getInlineDescriptors()).thenReturn(Collections.singletonList(assemby));
+
+        // when
+        List<Assembly> assemblies = new DefaultAssemblyReader().readAssemblies(configSource);
+
+        // then
+        assertEquals(1, assemblies.size());
+        assertSame(assemby, assemblies.get(0));
     }
 
     private List<String> writeAssembliesToFile(final List<Assembly> assemblies, final File dir) throws IOException {

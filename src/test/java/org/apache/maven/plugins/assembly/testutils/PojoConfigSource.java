@@ -26,6 +26,7 @@ import org.apache.maven.archiver.MavenArchiveConfiguration;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
+import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.filtering.MavenReaderFilter;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
@@ -114,6 +115,8 @@ public class PojoConfigSource implements AssemblerConfigurationSource {
     private boolean recompressZippedFiles;
 
     private String mergeManifestMode;
+
+    private List<Assembly> inlineDescriptors;
 
     public String getDescriptor() {
         return descriptor;
@@ -472,5 +475,14 @@ public class PojoConfigSource implements AssemblerConfigurationSource {
 
     public void setMergeManifestMode(String mergeManifestMode) {
         this.mergeManifestMode = mergeManifestMode;
+    }
+
+    @Override
+    public List<Assembly> getInlineDescriptors() {
+        return inlineDescriptors;
+    }
+
+    public void setInlineDescriptors(List<Assembly> inlineDescriptors) {
+        this.inlineDescriptors = inlineDescriptors;
     }
 }

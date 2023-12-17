@@ -170,6 +170,16 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     private String[] descriptorRefs;
 
     /**
+     * An inline list of descriptor to generate from.
+     * <p/>
+     * Each element of list must follow <a href="./assembly.html">Assembly Descriptor</a> format.
+     *
+     * @since 3.7.0
+     */
+    @Parameter
+    private List<Assembly> inlineDescriptors;
+
+    /**
      * Directory to scan for descriptor files in. <b>NOTE:</b> This may not work correctly with assembly components.
      */
     @Parameter
@@ -596,6 +606,10 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     @Override
     public String[] getDescriptorReferences() {
         return descriptorRefs;
+    }
+
+    public List<Assembly> getInlineDescriptors() {
+        return inlineDescriptors;
     }
 
     @Override
