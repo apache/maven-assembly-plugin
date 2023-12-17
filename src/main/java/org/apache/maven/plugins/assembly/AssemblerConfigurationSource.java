@@ -24,6 +24,7 @@ import java.util.Properties;
 
 import org.apache.maven.archiver.MavenArchiveConfiguration;
 import org.apache.maven.execution.MavenSession;
+import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.filtering.MavenReaderFilter;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
@@ -41,6 +42,11 @@ public interface AssemblerConfigurationSource {
      * @return The descriptor references.
      */
     String[] getDescriptorReferences();
+
+    /**
+     * @return a list of inline descriptors.
+     */
+    List<Assembly> getInlineDescriptors();
 
     /**
      * @return The descriptor source directory.

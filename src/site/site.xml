@@ -62,6 +62,7 @@ under the License.
         <item name="Include Module Sources" href="./examples/multimodule/module-source-inclusion-simple.html"/>
       </item>
       <item name="Sharing Assembly Descriptors" href="./examples/sharing-descriptors.html"/>
+      <item name="Using Inline Assembly Descriptors" href="./examples/using-inline-descriptors.html"/>
     </menu>
   </body>
 </project>
