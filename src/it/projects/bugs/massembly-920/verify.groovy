@@ -22,5 +22,9 @@ import java.util.jar.*
 
 def jarWithDeps = new JarFile(new File( basedir, 'target/massembly-920-0.0.1-SNAPSHOT-jar.jar'))
 
-assert jarWithDeps.getEntry('META-INF/services/org/apache/camel/TypeConverter') != null
-assert jarWithDeps.getEntry('META-INF/services/TypeConverter') == null
+
+def entry = jarWithDeps.getEntry('META-INF/services/org/apache/camel/TypeConverterLoader')
+assert entry != null
+
+// check if services are merged
+assert entry.getSize() > 800
