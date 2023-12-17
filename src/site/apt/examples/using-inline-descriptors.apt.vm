@@ -30,10 +30,10 @@ Using Inline Assembly Descriptors
 
 * Introduction
 
-  For simple usage we can inline Assembly descriptor into project configuration.
-  We don't need to create additional file with Assembly descriptor.
+  For simple usage we can inline Assembly descriptor into the project configuration.
+  We don't need to create an additional file with Assembly descriptor.
 
-  It can allow simplify configuration in case of inherited,
+  It can simplify configuration in case of the parent project inherited,
   we don't need to use a {{{./sharing-descriptors.html}Shared Assembly Descriptors}}
 
 * The POM
