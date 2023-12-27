@@ -28,6 +28,9 @@ under the License.
     <groupId>test</groupId>
     <artifactId>massembly-1008</artifactId>
     <version>1</version>
+
+    <url>https://issues.apache.org/jira/browse/MASSEMBLY-1008</url>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
