@@ -261,8 +261,8 @@ public class DefaultDependencyResolver implements DependencyResolver {
             @Override
             public boolean visitLeave(DependencyNode node) {
                 if (node.getDependency() != null) {
-                    Artifact artifact =
-                            etherToMavenArtifacts.computeIfAbsent(node.getDependency().getArtifact(), RepositoryUtils::toArtifact);
+                    Artifact artifact = etherToMavenArtifacts.computeIfAbsent(
+                            node.getDependency().getArtifact(), RepositoryUtils::toArtifact);
                     List<String> depTrail = new ArrayList<>();
                     stack.descendingIterator().forEachRemaining(depTrail::add);
                     stack.pop();
