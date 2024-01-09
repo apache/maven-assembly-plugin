@@ -240,7 +240,7 @@ public class DefaultDependencyResolver implements DependencyResolver {
         DependencyResult dependencyResult = repositorySystem.resolveDependencies(repositorySession, request);
 
         // cache for artifact mapping
-        Map<org.eclipse.aether.artifact.Artifact, Artifact> etherToMavenArtifacts = new HashMap<>();
+        Map<org.eclipse.aether.artifact.Artifact, Artifact> aetherToMavenArtifacts = new HashMap<>();
         Deque<String> stack = new ArrayDeque<>();
         stack.push(project.getArtifact().getId());
 
@@ -251,7 +251,7 @@ public class DefaultDependencyResolver implements DependencyResolver {
             @Override
             public boolean visitEnter(DependencyNode node) {
                 if (node.getDependency() != null) {
-                    stack.push(etherToMavenArtifacts
+                    stack.push(aetherToMavenArtifacts
                             .computeIfAbsent(node.getDependency().getArtifact(), RepositoryUtils::toArtifact)
                             .getId());
                 }
@@ -261,7 +261,7 @@ public class DefaultDependencyResolver implements DependencyResolver {
             @Override
             public boolean visitLeave(DependencyNode node) {
                 if (node.getDependency() != null) {
-                    Artifact artifact = etherToMavenArtifacts.computeIfAbsent(
+                    Artifact artifact = aetherToMavenArtifacts.computeIfAbsent(
                             node.getDependency().getArtifact(), RepositoryUtils::toArtifact);
                     List<String> depTrail = new ArrayList<>();
                     stack.descendingIterator().forEachRemaining(depTrail::add);
