@@ -108,10 +108,9 @@ under the License.
     </dependency>
     <dependency>
       <groupId>org.eclipse.aether</groupId>
-      <artifactId>aether-api</artifactId>
+      <artifactId>aether-util</artifactId>
       <!-- the same version as in Maven 3.2.5 -->
       <version>1.0.0.v20140518</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>

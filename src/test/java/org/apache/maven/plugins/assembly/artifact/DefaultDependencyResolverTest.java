@@ -27,55 +27,84 @@ import java.util.Set;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.artifact.handler.DefaultArtifactHandler;
+import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import org.apache.maven.artifact.versioning.VersionRange;
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Model;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.model.DependencySet;
 import org.apache.maven.plugins.assembly.model.ModuleBinaries;
 import org.apache.maven.plugins.assembly.model.ModuleSet;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.ContainerConfiguration;
-import org.codehaus.plexus.PlexusConstants;
-import org.codehaus.plexus.PlexusTestCase;
+import org.eclipse.aether.RepositorySystem;
+import org.eclipse.aether.RepositorySystemSession;
+import org.eclipse.aether.graph.DefaultDependencyNode;
+import org.eclipse.aether.graph.Dependency;
+import org.eclipse.aether.resolution.DependencyRequest;
+import org.eclipse.aether.resolution.DependencyResult;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class DefaultDependencyResolverTest extends PlexusTestCase {
+@RunWith(MockitoJUnitRunner.class)
+public class DefaultDependencyResolverTest {
 
+    @Mock
+    private ArtifactHandlerManager artifactHandlerManager;
+
+    @Mock
+    private RepositorySystem repositorySystem;
+
+    @Mock
+    private RepositorySystemSession systemSession;
+
+    @InjectMocks
     private DefaultDependencyResolver resolver;
 
-    protected void customizeContainerConfiguration(ContainerConfiguration configuration) {
-        configuration.setClassPathScanning(PlexusConstants.SCANNING_CACHE).setAutoWiring(true);
-    }
-
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-
-        resolver = (DefaultDependencyResolver) lookup(DependencyResolver.class);
-    }
-
     @Test
-    public void test_getDependencySetResolutionRequirements_transitive() throws DependencyResolutionException {
+    public void test_getDependencySetResolutionRequirements_transitive() throws Exception {
         final DependencySet ds = new DependencySet();
         ds.setScope(Artifact.SCOPE_SYSTEM);
         ds.setUseTransitiveDependencies(true);
 
         final MavenProject project = createMavenProject("main-group", "main-artifact", "1", null);
 
-        Set<Artifact> dependencyArtifacts = new HashSet<>();
-        dependencyArtifacts.add(newArtifact("g.id", "a-id", "1"));
-        Set<Artifact> artifacts = new HashSet<>(dependencyArtifacts);
+        Set<Artifact> artifacts = new HashSet<>();
+        artifacts.add(newArtifact("g.id", "a-id", "1"));
         artifacts.add(newArtifact("g.id", "a-id-2", "2"));
-        project.setArtifacts(artifacts);
-        project.setDependencyArtifacts(dependencyArtifacts);
+
+        DefaultDependencyNode node1 = new DefaultDependencyNode(
+                new Dependency(new org.eclipse.aether.artifact.DefaultArtifact("g.id:a-id:1"), "runtime"));
+        DefaultDependencyNode node2 = new DefaultDependencyNode(
+                new Dependency(new org.eclipse.aether.artifact.DefaultArtifact("g.id:a-id-2:2"), "runtime"));
+
+        DependencyResult dependencyResult = new DependencyResult(new DependencyRequest());
+        DefaultDependencyNode rootDependencyNode = new DefaultDependencyNode((Dependency) null);
+        rootDependencyNode.setChildren(Arrays.asList(node1, node2));
+        dependencyResult.setRoot(rootDependencyNode);
+
+        when(repositorySystem.resolveDependencies(eq(systemSession), any())).thenReturn(dependencyResult);
 
         final ResolutionManagementInfo info = new ResolutionManagementInfo();
-        resolver.updateDependencySetResolutionRequirements(ds, info, project);
+        resolver.updateDependencySetResolutionRequirements(systemSession, ds, info, project);
         assertEquals(artifacts, info.getArtifacts());
+        // dependencyTrail is set
+        info.getArtifacts().forEach(artifact -> {
+            assertEquals(2, artifact.getDependencyTrail().size());
+            assertEquals(
+                    project.getArtifact().getId(), artifact.getDependencyTrail().get(0));
+            assertEquals(artifact.getId(), artifact.getDependencyTrail().get(1));
+        });
     }
 
     @Test
@@ -94,7 +123,7 @@ public class DefaultDependencyResolverTest extends PlexusTestCase {
         project.setDependencyArtifacts(dependencyArtifacts);
 
         final ResolutionManagementInfo info = new ResolutionManagementInfo();
-        resolver.updateDependencySetResolutionRequirements(ds, info, project);
+        resolver.updateDependencySetResolutionRequirements(systemSession, ds, info, project);
         assertEquals(dependencyArtifacts, info.getArtifacts());
     }
 
@@ -118,7 +147,7 @@ public class DefaultDependencyResolverTest extends PlexusTestCase {
     }
 
     @Test
-    public void test_getModuleSetResolutionRequirements_includeDeps() throws DependencyResolutionException {
+    public void test_getModuleSetResolutionRequirements_includeDeps() throws Exception {
         final File rootDir = new File("root");
         final MavenProject project = createMavenProject("main-group", "main-artifact", "1", rootDir);
         final MavenProject module1 = createMavenProject("main-group", "module-1", "1", new File(rootDir, "module-1"));
@@ -135,6 +164,9 @@ public class DefaultDependencyResolverTest extends PlexusTestCase {
         final AssemblerConfigurationSource cs = mock(AssemblerConfigurationSource.class);
         when(cs.getReactorProjects()).thenReturn(Arrays.asList(project, module1, module2));
         when(cs.getProject()).thenReturn(project);
+        MavenSession mavenSession = mock(MavenSession.class);
+        when(cs.getMavenSession()).thenReturn(mavenSession);
+        when(mavenSession.getRepositorySession()).thenReturn(systemSession);
 
         final ResolutionManagementInfo info = new ResolutionManagementInfo();
 
@@ -142,7 +174,18 @@ public class DefaultDependencyResolverTest extends PlexusTestCase {
         final ModuleBinaries mb = new ModuleBinaries();
         mb.setIncludeDependencies(true);
         ms.setBinaries(mb);
+        // FIXME - this is not checked - because ms.UseAllReactorProjects is false
         ms.addInclude("*:module-1");
+
+        DefaultDependencyNode node1 = new DefaultDependencyNode(
+                new Dependency(new org.eclipse.aether.artifact.DefaultArtifact("group.id:module-1-dep:1"), "runtime"));
+
+        DependencyResult dependencyResult = new DependencyResult(new DependencyRequest());
+        DefaultDependencyNode rootDependencyNode = new DefaultDependencyNode((Dependency) null);
+        rootDependencyNode.setChildren(Collections.singletonList(node1));
+        dependencyResult.setRoot(rootDependencyNode);
+
+        when(repositorySystem.resolveDependencies(eq(systemSession), any())).thenReturn(dependencyResult);
 
         resolver.updateModuleSetResolutionRequirements(ms, new DependencySet(), info, cs);
         assertEquals(module1Artifacts, info.getArtifacts());
