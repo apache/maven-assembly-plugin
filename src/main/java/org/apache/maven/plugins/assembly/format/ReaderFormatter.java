@@ -140,9 +140,10 @@ public class ReaderFormatter {
                                 configSource,
                                 isPropertyFile,
                                 configSource.getAdditionalProperties());
-                        result = encoding != null
-                                ? new ReaderInputStream(filtered, encoding)
-                                : new ReaderInputStream(filtered);
+                        result = ReaderInputStream.builder()
+                                .setReader(filtered)
+                                .setCharset(encoding)
+                                .get();
                     }
                     if (transformLineEndings) {
                         checkifFileTypeIsAppropriateForLineEndingTransformation(plexusIoResource);

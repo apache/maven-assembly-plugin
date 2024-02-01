@@ -180,7 +180,8 @@ public class DefaultAssemblyReader implements AssemblyReader {
             }
         }
 
-        try (Reader reader = new XmlStreamReader(resourceAsStream)) {
+        try (Reader reader =
+                XmlStreamReader.builder().setInputStream(resourceAsStream).get()) {
             final Assembly assembly = readAssembly(reader, ref, null, configSource);
             assemblies.add(assembly);
             return assembly;
@@ -201,7 +202,7 @@ public class DefaultAssemblyReader implements AssemblyReader {
             }
         }
 
-        try (Reader r = new XmlStreamReader(descriptor)) {
+        try (Reader r = XmlStreamReader.builder().setFile(descriptor).get()) {
             final Assembly assembly =
                     readAssembly(r, descriptor.getAbsolutePath(), descriptor.getParentFile(), configSource);
 
@@ -233,7 +234,9 @@ public class DefaultAssemblyReader implements AssemblyReader {
             }
         }
 
-        try (Reader r = new XmlStreamReader(location.getInputStream())) {
+        try (Reader r = XmlStreamReader.builder()
+                .setInputStream(location.getInputStream())
+                .get()) {
             File dir = null;
             if (location.getFile() != null) {
                 dir = location.getFile().getParentFile();

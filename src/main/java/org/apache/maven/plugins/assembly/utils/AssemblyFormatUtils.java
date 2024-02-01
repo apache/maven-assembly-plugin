@@ -197,11 +197,9 @@ public final class AssemblyFormatUtils {
             session = configSource.getMavenSession();
 
             if (session != null) {
-                Properties userProperties = session.getExecutionProperties(); // this is added twice....
-
-                if (userProperties != null) {
-                    return FixedStringSearchInterpolator.create(new PropertiesBasedValueSource(userProperties));
-                }
+                return FixedStringSearchInterpolator.create(
+                        new PropertiesBasedValueSource(session.getUserProperties()),
+                        new PropertiesBasedValueSource(session.getSystemProperties()));
             }
         }
         return FixedStringSearchInterpolator.empty();
