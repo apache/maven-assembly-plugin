@@ -129,6 +129,7 @@ public class AssemblyProxyArchiver implements Archiver {
      * {@inheritDoc}
      */
     @Override
+    @Deprecated
     public void addArchivedFileSet(
             final File archiveFile, final String prefix, final String[] includes, final String[] excludes) {
         inPublicApi.set(Boolean.TRUE);
@@ -158,6 +159,7 @@ public class AssemblyProxyArchiver implements Archiver {
      * {@inheritDoc}
      */
     @Override
+    @Deprecated
     public void addArchivedFileSet(final File archiveFile, final String prefix) {
         inPublicApi.set(Boolean.TRUE);
         try {
@@ -178,6 +180,7 @@ public class AssemblyProxyArchiver implements Archiver {
      * {@inheritDoc}
      */
     @Override
+    @Deprecated
     public void addArchivedFileSet(final File archiveFile, final String[] includes, final String[] excludes) {
         inPublicApi.set(Boolean.TRUE);
         try {
@@ -200,6 +203,7 @@ public class AssemblyProxyArchiver implements Archiver {
      * {@inheritDoc}
      */
     @Override
+    @Deprecated
     public void addArchivedFileSet(final File archiveFile) {
         inPublicApi.set(Boolean.TRUE);
         try {
@@ -220,6 +224,7 @@ public class AssemblyProxyArchiver implements Archiver {
      * {@inheritDoc}
      */
     @Override
+    @Deprecated
     public void addDirectory(
             final File directory, final String prefix, final String[] includes, final String[] excludes) {
         inPublicApi.set(Boolean.TRUE);
@@ -270,6 +275,7 @@ public class AssemblyProxyArchiver implements Archiver {
      * {@inheritDoc}
      */
     @Override
+    @Deprecated
     public void addDirectory(final File directory, final String prefix) {
         inPublicApi.set(Boolean.TRUE);
         try {
@@ -291,6 +297,7 @@ public class AssemblyProxyArchiver implements Archiver {
      * {@inheritDoc}
      */
     @Override
+    @Deprecated
     public void addDirectory(final File directory, final String[] includes, final String[] excludes) {
         inPublicApi.set(Boolean.TRUE);
         try {
@@ -314,6 +321,7 @@ public class AssemblyProxyArchiver implements Archiver {
      * {@inheritDoc}
      */
     @Override
+    @Deprecated
     public void addDirectory(final File directory) {
         inPublicApi.set(Boolean.TRUE);
         try {
@@ -777,6 +785,7 @@ public class AssemblyProxyArchiver implements Archiver {
      * {@inheritDoc}
      */
     @Override
+    @Deprecated
     public boolean isUseJvmChmod() {
         return useJvmChmod;
     }
@@ -785,6 +794,7 @@ public class AssemblyProxyArchiver implements Archiver {
      * {@inheritDoc}
      */
     @Override
+    @Deprecated
     public void setUseJvmChmod(final boolean useJvmChmod) {
         this.useJvmChmod = useJvmChmod;
     }
@@ -840,11 +850,13 @@ public class AssemblyProxyArchiver implements Archiver {
     }
 
     @Override
+    @Deprecated
     public void setLastModifiedDate(Date lastModifiedDate) {
         delegate.setLastModifiedDate(lastModifiedDate);
     }
 
     @Override
+    @Deprecated
     public Date getLastModifiedDate() {
         return delegate.getLastModifiedDate();
     }
@@ -855,6 +867,7 @@ public class AssemblyProxyArchiver implements Archiver {
     }
 
     @Override
+    @Deprecated
     public void configureReproducible(Date outputTimestamp) {
         delegate.configureReproducible(outputTimestamp);
     }

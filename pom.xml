@@ -69,6 +69,8 @@ under the License.
   </distributionManagement>
 
   <properties>
+    <maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
+
     <javaVersion>8</javaVersion>
     <mdoVersion>2.2.0</mdoVersion>
     <mavenVersion>3.2.5</mavenVersion>

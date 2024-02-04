@@ -22,6 +22,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -45,6 +46,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -100,6 +102,7 @@ public class ReaderFormatterTest {
     @Test
     public void additionalProperties() throws Exception {
         final MavenReaderFilter mavenReaderFilter = mock(MavenReaderFilter.class);
+        when(mavenReaderFilter.filter(any())).thenReturn(mock(Reader.class));
 
         final PojoConfigSource cfg = getPojoConfigSource();
         cfg.setMavenReaderFilter(mavenReaderFilter);

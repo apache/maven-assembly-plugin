@@ -47,8 +47,11 @@ import org.codehaus.plexus.util.xml.PrettyPrintXMLWriter;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.jdom2.Document;
 import org.jdom2.Text;
+import org.jdom2.filter.Filters;
 import org.jdom2.input.SAXBuilder;
-import org.jdom2.xpath.XPath;
+import org.jdom2.input.sax.XMLReaders;
+import org.jdom2.xpath.XPathExpression;
+import org.jdom2.xpath.XPathFactory;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -147,17 +150,19 @@ public class ComponentsXmlArchiverFileFilterTest {
 
         assertEquals(ComponentsXmlArchiverFileFilter.COMPONENTS_XML_PATH, fca.getDestFileName());
 
-        final SAXBuilder builder = new SAXBuilder(false);
+        final SAXBuilder builder = new SAXBuilder(XMLReaders.NONVALIDATING);
 
         final Document doc = builder.build(fca.getFile());
+        XPathFactory xPathFactory = XPathFactory.instance();
 
-        final XPath role = XPath.newInstance("//component[position()=1]/role/text()");
-        final XPath hint = XPath.newInstance("//component[position()=1]/role-hint/text()");
-        final XPath implementation = XPath.newInstance("//component[position()=1]/implementation/text()");
+        XPathExpression<Text> role = xPathFactory.compile("//component[position()=1]/role/text()", Filters.text());
+        XPathExpression<Text> hint = xPathFactory.compile("//component[position()=1]/role-hint/text()", Filters.text());
+        XPathExpression<Text> implementation =
+                xPathFactory.compile("//component[position()=1]/implementation/text()", Filters.text());
 
-        assertEquals("role", ((Text) role.selectSingleNode(doc)).getText());
-        assertNull(hint.selectSingleNode(doc));
-        assertEquals("impl", ((Text) implementation.selectSingleNode(doc)).getText());
+        assertEquals("role", role.evaluateFirst(doc).getText());
+        assertNull(hint.evaluateFirst(doc));
+        assertEquals("impl", implementation.evaluateFirst(doc).getText());
     }
 
     @Test
@@ -173,17 +178,19 @@ public class ComponentsXmlArchiverFileFilterTest {
 
         assertEquals(ComponentsXmlArchiverFileFilter.COMPONENTS_XML_PATH, fca.getDestFileName());
 
-        final SAXBuilder builder = new SAXBuilder(false);
+        final SAXBuilder builder = new SAXBuilder(XMLReaders.NONVALIDATING);
 
         final Document doc = builder.build(fca.getFile());
+        XPathFactory xPathFactory = XPathFactory.instance();
 
-        final XPath role = XPath.newInstance("//component[position()=1]/role/text()");
-        final XPath hint = XPath.newInstance("//component[position()=1]/role-hint/text()");
-        final XPath implementation = XPath.newInstance("//component[position()=1]/implementation/text()");
+        XPathExpression<Text> role = xPathFactory.compile("//component[position()=1]/role/text()", Filters.text());
+        XPathExpression<Text> hint = xPathFactory.compile("//component[position()=1]/role-hint/text()", Filters.text());
+        XPathExpression<Text> implementation =
+                xPathFactory.compile("//component[position()=1]/implementation/text()", Filters.text());
 
-        assertEquals("role", ((Text) role.selectSingleNode(doc)).getText());
-        assertEquals("hint", ((Text) hint.selectSingleNode(doc)).getText());
-        assertEquals("impl", ((Text) implementation.selectSingleNode(doc)).getText());
+        assertEquals("role", role.evaluateFirst(doc).getText());
+        assertEquals("hint", hint.evaluateFirst(doc).getText());
+        assertEquals("impl", implementation.evaluateFirst(doc).getText());
     }
 
     @Test
@@ -204,25 +211,29 @@ public class ComponentsXmlArchiverFileFilterTest {
 
         assertEquals(ComponentsXmlArchiverFileFilter.COMPONENTS_XML_PATH, fca.getDestFileName());
 
-        final SAXBuilder builder = new SAXBuilder(false);
+        final SAXBuilder builder = new SAXBuilder(XMLReaders.NONVALIDATING);
 
         final Document doc = builder.build(fca.getFile());
+        XPathFactory xPathFactory = XPathFactory.instance();
 
-        final XPath role = XPath.newInstance("//component[position()=1]/role/text()");
-        final XPath hint = XPath.newInstance("//component[position()=1]/role-hint/text()");
-        final XPath implementation = XPath.newInstance("//component[position()=1]/implementation/text()");
+        XPathExpression<Text> role = xPathFactory.compile("//component[position()=1]/role/text()", Filters.text());
+        XPathExpression<Text> hint = xPathFactory.compile("//component[position()=1]/role-hint/text()", Filters.text());
+        XPathExpression<Text> implementation =
+                xPathFactory.compile("//component[position()=1]/implementation/text()", Filters.text());
 
-        assertEquals("role", ((Text) role.selectSingleNode(doc)).getText());
-        assertEquals("hint", ((Text) hint.selectSingleNode(doc)).getText());
-        assertEquals("impl", ((Text) implementation.selectSingleNode(doc)).getText());
+        assertEquals("role", role.evaluateFirst(doc).getText());
+        assertEquals("hint", hint.evaluateFirst(doc).getText());
+        assertEquals("impl", implementation.evaluateFirst(doc).getText());
 
-        final XPath role2 = XPath.newInstance("//component[position()=2]/role/text()");
-        final XPath hint2 = XPath.newInstance("//component[position()=2]/role-hint/text()");
-        final XPath implementation2 = XPath.newInstance("//component[position()=2]/implementation/text()");
+        XPathExpression<Text> role2 = xPathFactory.compile("//component[position()=2]/role/text()", Filters.text());
+        XPathExpression<Text> hint2 =
+                xPathFactory.compile("//component[position()=2]/role-hint/text()", Filters.text());
+        XPathExpression<Text> implementation2 =
+                xPathFactory.compile("//component[position()=2]/implementation/text()", Filters.text());
 
-        assertEquals("role", ((Text) role2.selectSingleNode(doc)).getText());
-        assertEquals("hint2", ((Text) hint2.selectSingleNode(doc)).getText());
-        assertEquals("impl", ((Text) implementation2.selectSingleNode(doc)).getText());
+        assertEquals("role", role2.evaluateFirst(doc).getText());
+        assertEquals("hint2", hint2.evaluateFirst(doc).getText());
+        assertEquals("impl", implementation2.evaluateFirst(doc).getText());
     }
 
     @Test
@@ -257,25 +268,29 @@ public class ComponentsXmlArchiverFileFilterTest {
             Files.copy(zf.getInputStream(ze), descriptorFile.toPath());
         }
 
-        final SAXBuilder builder = new SAXBuilder(false);
+        final SAXBuilder builder = new SAXBuilder(XMLReaders.NONVALIDATING);
 
         final Document doc = builder.build(descriptorFile);
 
-        final XPath role = XPath.newInstance("//component[position()=1]/role/text()");
-        final XPath hint = XPath.newInstance("//component[position()=1]/role-hint/text()");
-        final XPath implementation = XPath.newInstance("//component[position()=1]/implementation/text()");
+        XPathFactory xPathFactory = XPathFactory.instance();
+        XPathExpression<Text> role = xPathFactory.compile("//component[position()=1]/role/text()", Filters.text());
+        XPathExpression<Text> hint = xPathFactory.compile("//component[position()=1]/role-hint/text()", Filters.text());
+        XPathExpression<Text> implementation =
+                xPathFactory.compile("//component[position()=1]/implementation/text()", Filters.text());
 
-        assertEquals("role", ((Text) role.selectSingleNode(doc)).getText());
-        assertEquals("hint", ((Text) hint.selectSingleNode(doc)).getText());
-        assertEquals("impl", ((Text) implementation.selectSingleNode(doc)).getText());
+        assertEquals("role", role.evaluateFirst(doc).getText());
+        assertEquals("hint", hint.evaluateFirst(doc).getText());
+        assertEquals("impl", implementation.evaluateFirst(doc).getText());
 
-        final XPath role2 = XPath.newInstance("//component[position()=2]/role/text()");
-        final XPath hint2 = XPath.newInstance("//component[position()=2]/role-hint/text()");
-        final XPath implementation2 = XPath.newInstance("//component[position()=2]/implementation/text()");
+        XPathExpression<Text> role2 = xPathFactory.compile("//component[position()=2]/role/text()", Filters.text());
+        XPathExpression<Text> hint2 =
+                xPathFactory.compile("//component[position()=2]/role-hint/text()", Filters.text());
+        XPathExpression<Text> implementation2 =
+                xPathFactory.compile("//component[position()=2]/implementation/text()", Filters.text());
 
-        assertEquals("role", ((Text) role2.selectSingleNode(doc)).getText());
-        assertEquals("hint2", ((Text) hint2.selectSingleNode(doc)).getText());
-        assertEquals("impl", ((Text) implementation2.selectSingleNode(doc)).getText());
+        assertEquals("role", role2.evaluateFirst(doc).getText());
+        assertEquals("hint2", hint2.evaluateFirst(doc).getText());
+        assertEquals("impl", implementation2.evaluateFirst(doc).getText());
     }
 
     private Xpp3Dom createComponentDom(final ComponentDef def) {

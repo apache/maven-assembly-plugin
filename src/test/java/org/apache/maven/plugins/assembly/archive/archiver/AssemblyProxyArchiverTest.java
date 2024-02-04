@@ -130,6 +130,7 @@ public class AssemblyProxyArchiverTest {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void addDirectory_NoPerms_CallAcceptFilesOnlyOnce() throws IOException, ArchiverException {
         final Archiver delegate = new JarArchiver();
 
