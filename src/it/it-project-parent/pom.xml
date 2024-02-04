@@ -18,12 +18,23 @@ under the License.
 -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.maven.plugin.assembly.test</groupId>
   <artifactId>it-project-parent</artifactId>
   <packaging>pom</packaging>
   <version>1</version>
+
+  <!-- define versions of dependencies used in ITs -->
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>@commonsIoVersion@</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <build>
     <pluginManagement>
@@ -71,14 +82,14 @@ under the License.
       </plugins>
     </pluginManagement>
   </build>
-  
+
   <profiles>
     <profile>
       <id>testing</id>
       <activation>
         <activeByDefault>true</activeByDefault>
       </activation>
-      
+
       <repositories>
         <!--
         <repository>
@@ -115,7 +126,7 @@ under the License.
     </profile>
     <profile>
       <id>live</id>
-      
+
       <!-- just avoids the information injected by the testing profile, above. -->
     </profile>
   </profiles>
