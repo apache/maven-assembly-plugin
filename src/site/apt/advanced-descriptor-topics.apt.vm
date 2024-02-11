@@ -229,7 +229,7 @@ Advanced Assembly-Descriptor Topics
   [...]
   <fileSets>
     <fileSet>
-      <directory>${project.basedir}</directory>
+      <directory>\${project.basedir}</directory>
       <outputDirectory></outputDirectory>
       <excludes>
         <exclude>%regex[(?!.*src/).*target.*]</exclude>
@@ -252,44 +252,38 @@ Advanced Assembly-Descriptor Topics
   At times, you want to build in a set of sanity checks when creating your
   assembly, to ensure that what goes into the assembly artifact is what you
   intended. One way you can do this is by enabling <<<useStrictFiltering>>> on
-  your <<<dependencySets>>>, <<<moduleSets>>>, and <<<fileSets>>>.
+  your <<<dependencySets>>>.
 
   <<<useStrictFiltering>>> is a flag that tells the assembly plugin to track
   each include/exclude pattern to make sure it's used during creation of the
   assembly. This way, if the assembly-descriptor author intended for a particular
-  file or artifact to be present, he can add an include/exclude pattern to the
-  descriptor to ensure that file/artifact is present, and then set the
+  artifact to be present, he can add an include/exclude pattern to the
+  descriptor to ensure that artifact is present, and then set the
   <<<useStrictFiltering>>> flag. If the pattern isn't used to match at least one
-  file during assembly creation, the build will fail and the user will receive a
+  artifact during assembly creation, the build will fail and the user will receive a
   message notifying him of the unused patterns.
 
-** Example: Ensuring the LICENSE.txt file is included in a jar
-
-  In this example, we want to make sure that our project jar contains the
-  project's open source license language, in order to be compliant with our
-  software foundation's policies.
+** Example:
 
 +---
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
   [...]
-  <fileSets>
-    <fileSet>
-      <useStrictFiltering>true</useStrictFiltering>
-      <outputDirectory>META-INF</outputDirectory>
+  <dependencySets>
+    <dependencySet>
       <includes>
-        <include>LICENSE.txt</include>
+        <include>commons-logging:commons-logging</include>
       </includes>
-    </fileSet>
-    [...]
-  </fileSets>
+      <useStrictFiltering>true</useStrictFiltering>
+    </dependencySet>
+  </dependencySets>
   [...]
 </assembly>
 +---
 
-  If a developer inadvertently removes the LICENSE.txt from the project
-  directory, the assembly plugin should refuse to build this assembly.
+  If <<commons-logging>> artifact will not present on the project dependencies list,
+  the assembly plugin should refuse to build this assembly.
 
 * Using an Alternative Assembly Base Directory
 
