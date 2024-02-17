@@ -37,6 +37,7 @@ import org.apache.maven.plugins.assembly.archive.DefaultAssemblyArchiverTest;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.model.DependencySet;
 import org.apache.maven.plugins.assembly.model.UnpackOptions;
+import org.apache.maven.project.DefaultProjectBuildingRequest;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
 import org.apache.maven.project.ProjectBuildingException;
@@ -123,7 +124,7 @@ public class AddDependencySetsTaskTest {
                 .thenReturn(pbr);
 
         final MavenSession session = mock(MavenSession.class);
-        when(session.getProjectBuildingRequest()).thenReturn(mock(ProjectBuildingRequest.class));
+        when(session.getProjectBuildingRequest()).thenReturn(new DefaultProjectBuildingRequest());
         when(session.getUserProperties()).thenReturn(new Properties());
         when(session.getSystemProperties()).thenReturn(new Properties());
 
@@ -212,7 +213,7 @@ public class AddDependencySetsTaskTest {
                 .thenThrow(pbe);
 
         final MavenSession session = mock(MavenSession.class);
-        when(session.getProjectBuildingRequest()).thenReturn(mock(ProjectBuildingRequest.class));
+        when(session.getProjectBuildingRequest()).thenReturn(new DefaultProjectBuildingRequest());
         when(session.getUserProperties()).thenReturn(new Properties());
         when(session.getSystemProperties()).thenReturn(new Properties());
 
@@ -272,7 +273,7 @@ public class AddDependencySetsTaskTest {
         ds.setFileMode(Integer.toString(10, 8));
 
         final MavenSession session = mock(MavenSession.class);
-        when(session.getProjectBuildingRequest()).thenReturn(mock(ProjectBuildingRequest.class));
+        when(session.getProjectBuildingRequest()).thenReturn(new DefaultProjectBuildingRequest());
         when(session.getUserProperties()).thenReturn(new Properties());
         when(session.getSystemProperties()).thenReturn(new Properties());
 
@@ -447,7 +448,7 @@ public class AddDependencySetsTaskTest {
         final MavenProject project = new MavenProject(new Model());
         project.setGroupId("GROUPID");
 
-        ProjectBuildingRequest pbReq = mock(ProjectBuildingRequest.class);
+        ProjectBuildingRequest pbReq = new DefaultProjectBuildingRequest();
         ProjectBuildingResult pbRes = mock(ProjectBuildingResult.class);
         when(pbRes.getProject()).thenReturn(project);
 
