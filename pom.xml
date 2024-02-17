@@ -28,7 +28,7 @@ under the License.
   </parent>
 
   <artifactId>maven-assembly-plugin</artifactId>
-  <version>3.6.1-SNAPSHOT</version>
+  <version>3.7.0-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>Apache Maven Assembly Plugin</name>
@@ -73,14 +73,14 @@ under the License.
 
     <javaVersion>8</javaVersion>
     <mdoVersion>2.2.0</mdoVersion>
-    <mavenVersion>3.2.5</mavenVersion>
+    <mavenVersion>3.6.3</mavenVersion>
     <slf4jVersion>1.7.5</slf4jVersion>
     <mavenFilteringVersion>3.3.1</mavenFilteringVersion>
     <mavenArchiverVersion>3.6.1</mavenArchiverVersion>
     <commonsIoVersion>2.15.1</commonsIoVersion>
 
     <testOutputToFile>true</testOutputToFile>
-    <project.build.outputTimestamp>2023-05-11T20:36:09Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2024-02-17T22:53:24Z</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
@@ -109,11 +109,12 @@ under the License.
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.aether</groupId>
-      <artifactId>aether-util</artifactId>
-      <!-- the same version as in Maven 3.2.5 -->
-      <version>1.0.0.v20140518</version>
+      <groupId>org.apache.maven.resolver</groupId>
+      <artifactId>maven-resolver-util</artifactId>
+      <!-- the same version as in Maven 3.6.3 -->
+      <version>1.4.1</version>
     </dependency>
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
@@ -296,7 +297,12 @@ under the License.
           <configuration>
             <requirementsHistories>
               <requirementsHistory>
-                <version>from 3.4.0</version>
+                <version>from 3.7.0</version>
+                <maven>3.6.3</maven>
+                <jdk>8</jdk>
+              </requirementsHistory>
+              <requirementsHistory>
+                <version>from 3.4.0 to 3.6.0</version>
                 <maven>3.2.5</maven>
                 <jdk>8</jdk>
               </requirementsHistory>
