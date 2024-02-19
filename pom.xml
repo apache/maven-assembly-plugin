@@ -112,7 +112,7 @@ under the License.
       <groupId>org.apache.maven.resolver</groupId>
       <artifactId>maven-resolver-util</artifactId>
       <!-- the same version as in Maven 3.6.3 -->
-      <version>1.4.1</version>
+      <version>1.9.18</version>
     </dependency>
 
     <dependency>
