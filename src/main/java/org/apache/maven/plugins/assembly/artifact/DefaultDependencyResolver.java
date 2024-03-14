@@ -260,14 +260,19 @@ public class DefaultDependencyResolver implements DependencyResolver {
 
             @Override
             public boolean visitLeave(DependencyNode node) {
-                if (node.getDependency() != null) {
+                Dependency dependency = node.getDependency();
+                if (dependency != null) {
                     Artifact artifact = aetherToMavenArtifacts.computeIfAbsent(
-                            node.getDependency().getArtifact(), RepositoryUtils::toArtifact);
-                    List<String> depTrail = new ArrayList<>();
-                    stack.descendingIterator().forEachRemaining(depTrail::add);
+                            dependency.getArtifact(), RepositoryUtils::toArtifact);
+                    if (artifact.isResolved() && artifact.getFile() != null) {
+                        List<String> depTrail = new ArrayList<>();
+                        stack.descendingIterator().forEachRemaining(depTrail::add);
+                        artifact.setDependencyTrail(depTrail);
+                        artifact.setOptional(dependency.isOptional());
+                        artifact.setScope(dependency.getScope());
+                        artifacts.add(artifact);
+                    }
                     stack.pop();
-                    artifact.setDependencyTrail(depTrail);
-                    artifacts.add(artifact);
                 }
                 return true;
             }

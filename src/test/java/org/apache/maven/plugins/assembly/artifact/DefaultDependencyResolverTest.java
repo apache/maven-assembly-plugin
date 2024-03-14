@@ -83,10 +83,10 @@ public class DefaultDependencyResolverTest {
         artifacts.add(newArtifact("g.id", "a-id", "1"));
         artifacts.add(newArtifact("g.id", "a-id-2", "2"));
 
-        DefaultDependencyNode node1 = new DefaultDependencyNode(
-                new Dependency(new org.eclipse.aether.artifact.DefaultArtifact("g.id:a-id:1"), "runtime"));
-        DefaultDependencyNode node2 = new DefaultDependencyNode(
-                new Dependency(new org.eclipse.aether.artifact.DefaultArtifact("g.id:a-id-2:2"), "runtime"));
+        DefaultDependencyNode node1 = new DefaultDependencyNode(new Dependency(
+                new org.eclipse.aether.artifact.DefaultArtifact("g.id:a-id:1").setFile(new File(".")), "runtime"));
+        DefaultDependencyNode node2 = new DefaultDependencyNode(new Dependency(
+                new org.eclipse.aether.artifact.DefaultArtifact("g.id:a-id-2:2").setFile(new File(".")), "runtime"));
 
         DependencyResult dependencyResult = new DependencyResult(new DependencyRequest());
         DefaultDependencyNode rootDependencyNode = new DefaultDependencyNode((Dependency) null);
@@ -177,8 +177,9 @@ public class DefaultDependencyResolverTest {
         // FIXME - this is not checked - because ms.UseAllReactorProjects is false
         ms.addInclude("*:module-1");
 
-        DefaultDependencyNode node1 = new DefaultDependencyNode(
-                new Dependency(new org.eclipse.aether.artifact.DefaultArtifact("group.id:module-1-dep:1"), "runtime"));
+        DefaultDependencyNode node1 = new DefaultDependencyNode(new Dependency(
+                new org.eclipse.aether.artifact.DefaultArtifact("group.id:module-1-dep:1").setFile(new File(".")),
+                "runtime"));
 
         DependencyResult dependencyResult = new DependencyResult(new DependencyRequest());
         DefaultDependencyNode rootDependencyNode = new DefaultDependencyNode((Dependency) null);
