@@ -28,7 +28,7 @@ under the License.
   </parent>
 
   <artifactId>maven-assembly-plugin</artifactId>
-  <version>3.7.1-SNAPSHOT</version>
+  <version>3.7.1</version>
   <packaging>maven-plugin</packaging>
 
   <name>Apache Maven Assembly Plugin</name>
@@ -50,7 +50,7 @@ under the License.
   <scm>
     <connection>scm:git:https://gitbox.apache.org/repos/asf/maven-assembly-plugin.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/maven-assembly-plugin.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>maven-assembly-plugin-3.7.1</tag>
     <url>https://github.com/apache/maven-assembly-plugin/tree/${project.scm.tag}</url>
   </scm>
   <issueManagement>
@@ -80,7 +80,7 @@ under the License.
     <commonsIoVersion>2.15.1</commonsIoVersion>
 
     <testOutputToFile>true</testOutputToFile>
-    <project.build.outputTimestamp>2024-03-07T18:18:26Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2024-03-15T07:53:27Z</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
