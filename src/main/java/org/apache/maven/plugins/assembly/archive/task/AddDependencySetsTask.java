@@ -31,6 +31,7 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
+import org.apache.maven.model.building.ModelBuildingRequest;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
 import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
@@ -166,6 +167,7 @@ public class AddDependencySetsTask {
 
     private ProjectBuildingRequest getProjectBuildingRequest(AssemblerConfigurationSource configSource) {
         return new DefaultProjectBuildingRequest(configSource.getMavenSession().getProjectBuildingRequest())
+                .setValidationLevel(ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL)
                 .setProcessPlugins(false);
     }
 
