@@ -79,6 +79,11 @@ under the License.
           <artifactId>maven-surefire-plugin</artifactId>
           <version>@version.maven-surefire@</version>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>3.4.0</version>
+        </plugin>
       </plugins>
     </pluginManagement>
   </build>

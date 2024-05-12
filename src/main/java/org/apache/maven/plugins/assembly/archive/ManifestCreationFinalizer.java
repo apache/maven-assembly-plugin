@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.maven.archiver.MavenArchiveConfiguration;
 import org.apache.maven.archiver.MavenArchiver;
@@ -82,6 +83,15 @@ public class ManifestCreationFinalizer extends AbstractArchiveFinalizer {
                     }
                 } else {
                     manifest = mavenArchiver.getManifest(session, project, archiveConfiguration);
+                }
+
+                if (manifest != null
+                        && !archiveConfiguration.getManifestEntries().isEmpty()) {
+                    for (Map.Entry<String, String> entry :
+                            archiveConfiguration.getManifestEntries().entrySet()) {
+                        manifest.getMainSection()
+                                .addConfiguredAttribute(new Manifest.Attribute(entry.getKey(), entry.getValue()));
+                    }
                 }
 
                 if ((manifest != null) && (archiver instanceof JarArchiver)) {
