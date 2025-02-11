@@ -33,7 +33,7 @@ under the License.
 
     <menu name="Overview">
       <item name="Introduction" href="./index.html"/>
-      <item name="Goals" href="plugin-info.html" collapse="true">
+      <item name="Plugin Documentation" href="plugin-info.html" collapse="true">
         <item name="assembly:single" href="single-mojo.html"/>
         <item name="assembly:help" href="help-mojo.html"/>
       </item>
