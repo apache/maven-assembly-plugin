@@ -140,6 +140,11 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver {
 
         final File destFile = new File(outputDirectory, filename);
 
+        if (!shouldRecreateArchive(assembly, configSource, destFile)) {
+            LOGGER.info("Skipping archive creation - no source files have been modified since last archive creation");
+            return destFile;
+        }
+
         try {
             final String finalName = configSource.getFinalName();
             final String specifiedBasedir = assembly.getBaseDirectory();
@@ -187,6 +192,40 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver {
         }
 
         return destFile;
+    }
+
+    private boolean shouldRecreateArchive(Assembly assembly, AssemblerConfigurationSource configSource, File destFile) {
+        if (!destFile.exists()) {
+            return true;
+        }
+
+        long lastModified = destFile.lastModified();
+        File workingDir = configSource.getWorkingDirectory();
+
+        return checkDirectoryModified(workingDir, lastModified);
+    }
+
+    private boolean checkDirectoryModified(File directory, long lastModified) {
+        if (!directory.exists() || !directory.isDirectory()) {
+            return false;
+        }
+
+        File[] files = directory.listFiles();
+        if (files == null) {
+            return false;
+        }
+
+        for (File file : files) {
+            if (file.isDirectory()) {
+                if (checkDirectoryModified(file, lastModified)) {
+                    return true;
+                }
+            } else if (file.lastModified() > lastModified) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void validate(final Assembly assembly) throws InvalidAssemblerConfigurationException {
