@@ -342,6 +342,70 @@ public class DefaultAssemblyArchiverTest {
         verify(archiverManager).getArchiver("tar.ZZZ");
     }
 
+    @Test
+    public void testCreateArchive_WhenNoPreviousArchiveExists() throws Exception {
+        Archiver archiver = mock(Archiver.class);
+        when(archiverManager.getArchiver("zip")).thenReturn(archiver);
+
+        final AssemblyArchiverPhase phase = mock(AssemblyArchiverPhase.class);
+        final File outDir = temporaryFolder.newFolder("out");
+        final File workingDir = temporaryFolder.newFolder("work");
+
+        final AssemblerConfigurationSource configSource = mock(AssemblerConfigurationSource.class);
+        when(configSource.getTemporaryRootDirectory()).thenReturn(new File(temporaryFolder.getRoot(), "temp"));
+        when(configSource.getOutputDirectory()).thenReturn(outDir);
+        when(configSource.getWorkingDirectory()).thenReturn(workingDir);
+        when(configSource.getFinalName()).thenReturn("finalName");
+
+        final Assembly assembly = new Assembly();
+        assembly.setId("id");
+
+        final DefaultAssemblyArchiver subject = createSubject(Collections.singletonList(phase));
+
+        subject.createArchive(assembly, "full-name", "zip", configSource, null);
+
+        // Verify that archive was created since no previous archive exists
+        verify(archiver).createArchive();
+        verify(phase).execute(eq(assembly), any(Archiver.class), eq(configSource));
+    }
+
+    @Test
+    public void testCreateArchive_WhenSourceFilesChanged() throws Exception {
+        Archiver archiver = mock(Archiver.class);
+        when(archiverManager.getArchiver("zip")).thenReturn(archiver);
+
+        final AssemblyArchiverPhase phase = mock(AssemblyArchiverPhase.class);
+        final File outDir = temporaryFolder.newFolder("out");
+        final File workingDir = temporaryFolder.newFolder("work");
+
+        // Create a previous archive
+        final File destFile = new File(outDir, "full-name.zip");
+        destFile.createNewFile();
+        destFile.setLastModified(System.currentTimeMillis() - 1000); // Set to 1 second ago
+
+        // Create source files with newer timestamps
+        final File sourceFile = new File(workingDir, "source.txt");
+        sourceFile.createNewFile();
+        sourceFile.setLastModified(System.currentTimeMillis()); // Set to current time
+
+        final AssemblerConfigurationSource configSource = mock(AssemblerConfigurationSource.class);
+        when(configSource.getTemporaryRootDirectory()).thenReturn(new File(temporaryFolder.getRoot(), "temp"));
+        when(configSource.getOutputDirectory()).thenReturn(outDir);
+        when(configSource.getWorkingDirectory()).thenReturn(workingDir);
+        when(configSource.getFinalName()).thenReturn("finalName");
+
+        final Assembly assembly = new Assembly();
+        assembly.setId("id");
+
+        final DefaultAssemblyArchiver subject = createSubject(Collections.singletonList(phase));
+
+        subject.createArchive(assembly, "full-name", "zip", configSource, null);
+
+        // Verify that archive was recreated since source files are newer
+        verify(archiver).createArchive();
+        verify(phase).execute(eq(assembly), any(Archiver.class), eq(configSource));
+    }
+
     private DefaultAssemblyArchiver createSubject(final List<AssemblyArchiverPhase> phases) {
         return new DefaultAssemblyArchiver(archiverManager, phases, Collections.emptyMap(), container);
     }
