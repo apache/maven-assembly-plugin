@@ -390,7 +390,7 @@ under the License.
               <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-compress</artifactId>
-                <version>1.27.0</version>
+                <version>1.27.1</version>
               </dependency>
               <dependency>
                 <!-- newer version needed by commons-compress -->
