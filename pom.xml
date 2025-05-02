@@ -76,7 +76,7 @@ under the License.
     <mavenVersion>3.6.3</mavenVersion>
     <slf4jVersion>1.7.5</slf4jVersion>
     <mavenFilteringVersion>3.4.0</mavenFilteringVersion>
-    <mavenArchiverVersion>3.6.2</mavenArchiverVersion>
+    <mavenArchiverVersion>3.6.3</mavenArchiverVersion>
     <commonsIoVersion>2.16.1</commonsIoVersion>
 
     <testOutputToFile>true</testOutputToFile>
