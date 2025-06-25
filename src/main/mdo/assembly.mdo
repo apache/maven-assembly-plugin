@@ -672,6 +672,15 @@
           ]]></description>
         </field>
         <field>
+          <name>useOptionalDependencies</name>
+          <version>2.3.0+</version>
+          <type>boolean</type>
+          <defaultValue>true</defaultValue>
+          <description>
+          Determines whether optional dependencies should be included in this dependency set. 
+          </description>
+        </field>
+        <field>
           <name>useTransitiveDependencies</name>
           <version>1.1.0+</version>
           <type>boolean</type>

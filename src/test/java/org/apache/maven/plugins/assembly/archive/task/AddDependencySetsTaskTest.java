@@ -26,8 +26,11 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableSet;
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.artifact.handler.ArtifactHandler;
+import org.apache.maven.artifact.handler.DefaultArtifactHandler;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Model;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
@@ -385,6 +388,62 @@ public class AddDependencySetsTaskTest {
         assertNotNull(result);
         assertEquals(1, result.size());
         assertSame(am1, result.iterator().next());
+    }
+
+    @Test
+    public void testGetDependencyArtifacts_ShouldNotFilterOptionalArtifactsByDefault() throws Exception {
+        Artifact artifact1 = artifact(1);
+        artifact1.setOptional(true);
+        Artifact artifact2 = artifact(2);
+        Set<Artifact> resolvedArtifacts =
+                resolveDependencyArtifacts(new DependencySet(), ImmutableSet.of(artifact1, artifact2));
+        assertEquals(2, resolvedArtifacts.size());
+    }
+
+    @Test
+    public void testGetDependencyArtifacts_ShouldFilterOptionalArtifactsExplicitly() throws Exception {
+        Artifact artifact1 = artifact(1);
+        artifact1.setOptional(true);
+        Artifact artifact2 = artifact(2);
+        DependencySet dependencySet = new DependencySet();
+        dependencySet.setUseOptionalDependencies(false);
+
+        Set<Artifact> resolvedArtifacts =
+                resolveDependencyArtifacts(dependencySet, ImmutableSet.of(artifact1, artifact2));
+        assertEquals(1, resolvedArtifacts.size());
+        assertSame(artifact2, resolvedArtifacts.iterator().next());
+    }
+
+    @Test
+    public void testGetDependencyArtifacts_ShouldNotFilterOptionalArtifactsExplicitly() throws Exception {
+        Artifact artifact1 = artifact(1);
+        artifact1.setOptional(true);
+        Artifact artifact2 = artifact(2);
+        DependencySet dependencySet = new DependencySet();
+        dependencySet.setUseOptionalDependencies(true);
+
+        Set<Artifact> resolvedArtifacts =
+                resolveDependencyArtifacts(dependencySet, ImmutableSet.of(artifact1, artifact2));
+        assertEquals(2, resolvedArtifacts.size());
+    }
+
+    private static Artifact artifact(int id) {
+        return new DefaultArtifact(
+                "org.apache.maven.plugins",
+                "artifact" + id,
+                "1.0",
+                Artifact.SCOPE_COMPILE,
+                "jar",
+                null,
+                new DefaultArtifactHandler());
+    }
+
+    private Set<Artifact> resolveDependencyArtifacts(DependencySet dependencySet, Set<Artifact> artifacts)
+            throws Exception {
+        MavenProject project = new MavenProject(new Model());
+        AddDependencySetsTask task =
+                new AddDependencySetsTask(Collections.singletonList(dependencySet), artifacts, project, null);
+        return task.resolveDependencyArtifacts(dependencySet);
     }
 
     @Test
