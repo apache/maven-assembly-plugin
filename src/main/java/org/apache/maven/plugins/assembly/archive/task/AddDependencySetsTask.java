@@ -302,6 +302,9 @@ public class AddDependencySetsTask {
 
         final ArtifactFilter filter = new ArtifactIncludeFilterTransformer().transform(scopeFilter);
 
+        final ArtifactFilter optionalFilter =
+                artifact -> !artifact.isOptional() || dependencySet.isUseOptionalDependencies();
+
         FilterUtils.filterArtifacts(
                 dependencyArtifacts,
                 dependencySet.getIncludes(),
@@ -309,7 +312,8 @@ public class AddDependencySetsTask {
                 dependencySet.isUseStrictFiltering(),
                 dependencySet.isUseTransitiveFiltering(),
                 LOGGER,
-                filter);
+                filter,
+                optionalFilter);
 
         return dependencyArtifacts;
     }
