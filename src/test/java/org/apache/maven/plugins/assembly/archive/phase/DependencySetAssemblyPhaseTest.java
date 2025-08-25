@@ -59,7 +59,7 @@ public class DependencySetAssemblyPhaseTest {
     }
 
     @Test
-    public void testExecute_ShouldAddOneDependencyFromProject()
+    public void testExecuteShouldAddOneDependencyFromProject()
             throws AssemblyFormattingException, ArchiveCreationException, IOException,
                     InvalidAssemblerConfigurationException, DependencyResolutionException {
         final String outputLocation = "/out";
@@ -95,7 +95,7 @@ public class DependencySetAssemblyPhaseTest {
     }
 
     @Test
-    public void testExecute_ShouldNotAddDependenciesWhenProjectHasNone() throws Exception {
+    public void testExecuteShouldNotAddDependenciesWhenProjectHasNone() throws Exception {
         final Assembly assembly = new Assembly();
         assembly.setId("test");
         assembly.setIncludeBaseDirectory(false);

@@ -39,13 +39,15 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FilterUtilsTest {
 
     @Test
-    public void testFilterArtifacts_ShouldThrowExceptionUsingStrictModeWithUnmatchedInclude() {
+    public void testFilterArtifactsShouldThrowExceptionUsingStrictModeWithUnmatchedInclude() {
         final Artifact artifact = mock(Artifact.class);
         when(artifact.getGroupId()).thenReturn("group");
         lenient().when(artifact.getArtifactId()).thenReturn("artifact");
@@ -72,13 +74,13 @@ public class FilterUtilsTest {
     }
 
     @Test
-    public void testFilterArtifacts_ShouldNotRemoveArtifactDirectlyIncluded() throws Exception {
+    public void testFilterArtifactsShouldNotRemoveArtifactDirectlyIncluded() throws Exception {
         verifyArtifactInclusion("group", "artifact", "group:artifact", null, null, null);
         verifyArtifactInclusion("group", "artifact", "group:artifact:jar", null, null, null);
     }
 
     @Test
-    public void testFilterArtifacts_ShouldNotRemoveArtifactTransitivelyIncluded() throws Exception {
+    public void testFilterArtifactsShouldNotRemoveArtifactTransitivelyIncluded() throws Exception {
         verifyArtifactInclusion(
                 "group",
                 "artifact",
@@ -89,7 +91,7 @@ public class FilterUtilsTest {
     }
 
     @Test
-    public void testFilterArtifacts_ShouldRemoveArtifactTransitivelyExcluded() throws Exception {
+    public void testFilterArtifactsShouldRemoveArtifactTransitivelyExcluded() throws Exception {
         verifyArtifactExclusion(
                 "group",
                 "artifact",
@@ -100,19 +102,19 @@ public class FilterUtilsTest {
     }
 
     @Test
-    public void testFilterArtifacts_ShouldRemoveArtifactDirectlyExcluded() throws Exception {
+    public void testFilterArtifactsShouldRemoveArtifactDirectlyExcluded() throws Exception {
         verifyArtifactExclusion("group", "artifact", null, "group:artifact", null, null);
         verifyArtifactExclusion("group", "artifact", null, "group:artifact:jar", null, null);
     }
 
     @Test
-    public void testFilterArtifacts_ShouldNotRemoveArtifactNotIncludedAndNotExcluded() throws Exception {
+    public void testFilterArtifactsShouldNotRemoveArtifactNotIncludedAndNotExcluded() throws Exception {
         verifyArtifactInclusion("group", "artifact", null, null, null, null);
         verifyArtifactInclusion("group", "artifact", null, null, null, null);
     }
 
     @Test
-    public void testFilterArtifacts_ShouldRemoveArtifactExcludedByAdditionalFilter() throws Exception {
+    public void testFilterArtifactsShouldRemoveArtifactExcludedByAdditionalFilter() throws Exception {
         final ArtifactFilter filter = new ArtifactFilter() {
 
             public boolean include(final Artifact artifact) {
@@ -124,13 +126,13 @@ public class FilterUtilsTest {
     }
 
     @Test
-    public void testFilterProjects_ShouldNotRemoveProjectDirectlyIncluded() {
+    public void testFilterProjectsShouldNotRemoveProjectDirectlyIncluded() {
         verifyProjectInclusion("group", "artifact", "group:artifact", null, null);
         verifyProjectInclusion("group", "artifact", "group:artifact:jar", null, null);
     }
 
     @Test
-    public void testFilterProjects_ShouldNotRemoveProjectTransitivelyIncluded() {
+    public void testFilterProjectsShouldNotRemoveProjectTransitivelyIncluded() {
         verifyProjectInclusion(
                 "group",
                 "artifact",
@@ -140,7 +142,7 @@ public class FilterUtilsTest {
     }
 
     @Test
-    public void testFilterProjects_ShouldRemoveProjectTransitivelyExcluded() {
+    public void testFilterProjectsShouldRemoveProjectTransitivelyExcluded() {
         verifyProjectExclusion(
                 "group",
                 "artifact",
@@ -150,13 +152,13 @@ public class FilterUtilsTest {
     }
 
     @Test
-    public void testFilterProjects_ShouldRemoveProjectDirectlyExcluded() {
+    public void testFilterProjectsShouldRemoveProjectDirectlyExcluded() {
         verifyProjectExclusion("group", "artifact", null, "group:artifact", null);
         verifyProjectExclusion("group", "artifact", null, "group:artifact:jar", null);
     }
 
     @Test
-    public void testFilterProjects_ShouldNotRemoveProjectNotIncludedAndNotExcluded() {
+    public void testFilterProjectsShouldNotRemoveProjectNotIncludedAndNotExcluded() {
         verifyProjectInclusion("group", "artifact", null, null, null);
         verifyProjectInclusion("group", "artifact", null, null, null);
     }

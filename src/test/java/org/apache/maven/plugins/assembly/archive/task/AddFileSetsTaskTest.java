@@ -49,7 +49,7 @@ public class AddFileSetsTaskTest {
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     @Test
-    public void testGetFileSetDirectory_ShouldReturnAbsoluteSourceDir() throws Exception {
+    public void testGetFileSetDirectoryShouldReturnAbsoluteSourceDir() throws Exception {
         final File dir = temporaryFolder.newFolder();
 
         final FileSet fs = new FileSet();
@@ -62,7 +62,7 @@ public class AddFileSetsTaskTest {
     }
 
     @Test
-    public void testGetFileSetDirectory_ShouldReturnBasedir() throws Exception {
+    public void testGetFileSetDirectoryShouldReturnBasedir() throws Exception {
         final File dir = temporaryFolder.newFolder();
 
         final FileSet fs = new FileSet();
@@ -73,7 +73,7 @@ public class AddFileSetsTaskTest {
     }
 
     @Test
-    public void testGetFileSetDirectory_ShouldReturnDirFromBasedirAndSourceDir() throws Exception {
+    public void testGetFileSetDirectoryShouldReturnDirFromBasedirAndSourceDir() throws Exception {
         final File dir = temporaryFolder.newFolder();
 
         final String srcPath = "source";
@@ -90,7 +90,7 @@ public class AddFileSetsTaskTest {
     }
 
     @Test
-    public void testGetFileSetDirectory_ShouldReturnDirFromArchiveBasedirAndSourceDir() throws Exception {
+    public void testGetFileSetDirectoryShouldReturnDirFromArchiveBasedirAndSourceDir() throws Exception {
         final File dir = temporaryFolder.newFolder();
 
         final String srcPath = "source";
@@ -107,7 +107,7 @@ public class AddFileSetsTaskTest {
     }
 
     @Test
-    public void testAddFileSet_ShouldAddDirectory() throws Exception {
+    public void testAddFileSetShouldAddDirectory() throws Exception {
         File basedir = temporaryFolder.getRoot();
 
         final FileSet fs = new FileSet();
@@ -143,7 +143,7 @@ public class AddFileSetsTaskTest {
     }
 
     @Test
-    public void testAddFileSet_ShouldAddDirectoryUsingSourceDirNameForDestDir() throws Exception {
+    public void testAddFileSetShouldAddDirectoryUsingSourceDirNameForDestDir() throws Exception {
         final FileSet fs = new FileSet();
         final String dirname = "dir";
         fs.setDirectory(dirname);
@@ -180,7 +180,7 @@ public class AddFileSetsTaskTest {
     }
 
     @Test
-    public void testAddFileSet_ShouldNotAddDirectoryWhenSourceDirNonExistent() throws Exception {
+    public void testAddFileSetShouldNotAddDirectoryWhenSourceDirNonExistent() throws Exception {
         final FileSet fs = new FileSet();
 
         fs.setDirectory("dir");
@@ -212,7 +212,7 @@ public class AddFileSetsTaskTest {
     }
 
     @Test
-    public void testExecute_ShouldThrowExceptionIfArchiveBasedirProvidedIsNonExistent() throws Exception {
+    public void testExecuteShouldThrowExceptionIfArchiveBasedirProvidedIsNonExistent() throws Exception {
         File archiveBaseDir = new File(temporaryFolder.getRoot(), "archive");
         final AssemblerConfigurationSource configSource = mock(AssemblerConfigurationSource.class);
         when(configSource.getArchiveBaseDirectory()).thenReturn(archiveBaseDir);
@@ -232,7 +232,7 @@ public class AddFileSetsTaskTest {
     }
 
     @Test
-    public void testExecute_ShouldThrowExceptionIfArchiveBasedirProvidedIsNotADirectory() throws Exception {
+    public void testExecuteShouldThrowExceptionIfArchiveBasedirProvidedIsNotADirectory() throws Exception {
         File archiveBaseDir = temporaryFolder.newFile();
         final AssemblerConfigurationSource configSource = mock(AssemblerConfigurationSource.class);
         when(configSource.getArchiveBaseDirectory()).thenReturn(archiveBaseDir);
