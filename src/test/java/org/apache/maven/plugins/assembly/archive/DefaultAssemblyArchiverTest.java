@@ -156,7 +156,7 @@ public class DefaultAssemblyArchiverTest {
     }
 
     @Test
-    public void testCreateArchiver_ShouldConfigureArchiver() throws Exception {
+    public void testCreateArchiverShouldConfigureArchiver() throws Exception {
         final TestArchiverWithConfig archiver = new TestArchiverWithConfig();
 
         when(archiverManager.getArchiver("dummy")).thenReturn(archiver);
@@ -192,7 +192,7 @@ public class DefaultAssemblyArchiverTest {
     }
 
     @Test
-    public void testCreateArchiver_ShouldCreateTarArchiverWithNoCompression() throws Exception {
+    public void testCreateArchiverShouldCreateTarArchiverWithNoCompression() throws Exception {
         final TestTarArchiver ttArchiver = new TestTarArchiver();
 
         when(archiverManager.getArchiver("tar")).thenReturn(ttArchiver);
@@ -229,7 +229,7 @@ public class DefaultAssemblyArchiverTest {
     }
 
     @Test
-    public void testCreateArchiver_ShouldCreateWarArchiverWitEexpectWebXmlSetToFalse() throws Exception {
+    public void testCreateArchiverShouldCreateWarArchiverWitExpectWebXmlSetToFalse() throws Exception {
         final TestWarArchiver twArchiver = new TestWarArchiver();
 
         when(archiverManager.getArchiver("war")).thenReturn(twArchiver);
@@ -269,7 +269,7 @@ public class DefaultAssemblyArchiverTest {
     }
 
     @Test
-    public void testCreateArchiver_ShouldCreateZipArchiver() throws Exception {
+    public void testCreateArchiverShouldCreateZipArchiver() throws Exception {
         final ZipArchiver archiver = new ZipArchiver();
 
         when(archiverManager.getArchiver("zip")).thenReturn(archiver);
@@ -302,7 +302,7 @@ public class DefaultAssemblyArchiverTest {
     }
 
     @Test
-    public void testCreateTarArchiver_ShouldNotInitializeCompression() throws Exception {
+    public void testCreateTarArchiverShouldNotInitializeCompression() throws Exception {
         final TestTarArchiver archiver = new TestTarArchiver();
 
         when(archiverManager.getArchiver("tar")).thenReturn(archiver);
@@ -324,7 +324,7 @@ public class DefaultAssemblyArchiverTest {
     }
 
     @Test
-    public void testCreateTarArchiver_InvalidFormat_ShouldFailWithInvalidCompression() throws Exception {
+    public void testCreateTarArchiverInvalidFormatShouldFailWithInvalidCompression() throws Exception {
 
         when(archiverManager.getArchiver("tar.ZZZ")).thenThrow(new NoSuchArchiverException("no archiver"));
 

@@ -37,7 +37,7 @@ public class TypeConversionUtilsTest {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Test
-    public void testModeToInt_InterpretAsOctalWithoutLeadingZero() throws AssemblyFormattingException {
+    public void testModeToIntInterpretAsOctalWithoutLeadingZero() throws AssemblyFormattingException {
         final int check = Integer.decode("0777");
         final int test = TypeConversionUtils.modeToInt("777", logger);
 
@@ -45,7 +45,7 @@ public class TypeConversionUtilsTest {
     }
 
     @Test
-    public void testModeToInt_InterpretValuesWithLeadingZeroAsOctal() throws AssemblyFormattingException {
+    public void testModeToIntInterpretValuesWithLeadingZeroAsOctal() throws AssemblyFormattingException {
         final int check = Integer.decode("0777");
         final int test = TypeConversionUtils.modeToInt("0777", logger);
 
@@ -53,7 +53,7 @@ public class TypeConversionUtilsTest {
     }
 
     @Test
-    public void testModeToInt_FailOnInvalidOctalValue() {
+    public void testModeToIntFailOnInvalidOctalValue() {
         try {
             TypeConversionUtils.modeToInt("493", logger);
 
@@ -64,7 +64,7 @@ public class TypeConversionUtilsTest {
     }
 
     @Test
-    public void testVerifyModeSanity_WarnOnNonsensicalOctalValue_002() {
+    public void testVerifyModeSanityWarnOnNonsensicalOctalValue002() {
         final List<String> messages = new ArrayList<>(2);
         messages.add("World has write access, but user does not.");
         messages.add("World has write access, but group does not.");
@@ -73,7 +73,7 @@ public class TypeConversionUtilsTest {
     }
 
     @Test
-    public void testVerifyModeSanity_WarnOnNonsensicalOctalValue_020() {
+    public void testVerifyModeSanityWarnOnNonsensicalOctalValue020() {
         final List<String> messages = new ArrayList<>(1);
         messages.add("Group has write access, but user does not.");
 
@@ -81,7 +81,7 @@ public class TypeConversionUtilsTest {
     }
 
     @Test
-    public void testVerifyModeSanity_ReturnTrueForValidOctalValue_775() {
+    public void testVerifyModeSanityReturnTrueForValidOctalValue775() {
         checkFileModeSanity("775", true, null);
     }
 

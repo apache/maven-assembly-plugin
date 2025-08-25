@@ -46,197 +46,196 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class AssemblyFormatUtilsTest {
     @Test
-    public void testFixRelativePathRefs_ShouldRemoveRelativeRefToCurrentDir() {
+    public void testFixRelativePathRefsShouldRemoveRelativeRefToCurrentDir() {
         assertEquals("path/", AssemblyFormatUtils.fixRelativeRefs("./path/"));
     }
 
     @Test
-    public void testFixRelativePathRefs_ShouldRemoveEmbeddedSameDirRef() {
+    public void testFixRelativePathRefsShouldRemoveEmbeddedSameDirRef() {
         assertEquals("some/path/", AssemblyFormatUtils.fixRelativeRefs("some/./path/"));
         assertEquals("some\\path\\", AssemblyFormatUtils.fixRelativeRefs("some\\.\\path\\"));
     }
 
     @Test
-    public void testFixRelativePathRefs_ShouldRemoveEmbeddedParentDirRef() {
+    public void testFixRelativePathRefsShouldRemoveEmbeddedParentDirRef() {
         assertEquals("path/", AssemblyFormatUtils.fixRelativeRefs("some/../path/"));
     }
 
     @Test
-    public void testFixRelativePathRefs_ShouldTruncateRelativeRefToParentDir() {
+    public void testFixRelativePathRefsShouldTruncateRelativeRefToParentDir() {
         assertEquals("path/", AssemblyFormatUtils.fixRelativeRefs("../path/"));
     }
 
     @Test
-    public void testGetDistroName_ShouldUseJustFinalNameWithNoAppendAssemblyIdOrClassifier() {
+    public void testGetDistroNameShouldUseJustFinalNameWithNoAppendAssemblyIdOrClassifier() {
         verifyDistroName("assembly", "finalName", false, "finalName");
     }
 
     @Test
-    public void testGetDistroName_ShouldUseFinalNamePlusAssemblyIdIsNull() {
+    public void testGetDistroNameShouldUseFinalNamePlusAssemblyIdIsNull() {
         verifyDistroName("assembly", "finalName", true, "finalName-assembly");
     }
 
     @Test
-    public void testGetOutputDir_ShouldResolveGroupIdInOutDir_UseArtifactInfo() throws Exception {
+    public void testGetOutputDirShouldResolveGroupIdInOutDirUseArtifactInfo() throws Exception {
         verifyOutputDirUsingArtifactProject("${artifact.groupId}", null, "group", null, null, null, null, "group/");
     }
 
     @Test
-    public void testGetOutputDir_ShouldResolveArtifactIdInOutDir_UseArtifactInfo() throws Exception {
+    public void testGetOutputDirShouldResolveArtifactIdInOutDirUseArtifactInfo() throws Exception {
         verifyOutputDirUsingArtifactProject(
                 "${artifact.artifactId}", null, null, "artifact", null, null, null, "artifact/");
     }
 
     @Test
-    public void testGetOutputDir_ShouldResolveVersionInOutDir_UseArtifactInfo() throws Exception {
+    public void testGetOutputDirShouldResolveVersionInOutDirUseArtifactInfo() throws Exception {
         verifyOutputDirUsingArtifactProject("${artifact.version}", null, null, null, "version", null, null, "version/");
     }
 
     @Test
-    public void testGetOutputDir_ShouldResolveBuildFinalNameInOutDir_UseArtifactInfo() throws Exception {
+    public void testGetOutputDirShouldResolveBuildFinalNameInOutDirUseArtifactInfo() throws Exception {
         verifyOutputDirUsingArtifactProject(
                 "${artifact.build.finalName}", null, null, null, null, "finalName", null, "finalName/");
     }
 
     @Test
-    public void testGetOutputDir_ShouldResolveGroupIdInOutDir_UseModuleInfo() throws Exception {
+    public void testGetOutputDirShouldResolveGroupIdInOutDirUseModuleInfo() throws Exception {
         verifyOutputDirUsingModuleProject("${module.groupId}", null, "group", null, null, null, null, "group/");
     }
 
     @Test
-    public void testGetOutputDir_ShouldResolveArtifactIdInOutDir_UseModuleInfo() throws Exception {
+    public void testGetOutputDirShouldResolveArtifactIdInOutDirUseModuleInfo() throws Exception {
         verifyOutputDirUsingModuleProject(
                 "${module.artifactId}", null, null, "artifact", null, null, null, "artifact/");
     }
 
     @Test
-    public void testGetOutputDir_ShouldResolveVersionInOutDir_UseModuleInfo() throws Exception {
+    public void testGetOutputDirShouldResolveVersionInOutDirUseModuleInfo() throws Exception {
         verifyOutputDirUsingModuleProject("${module.version}", null, null, null, "version", null, null, "version/");
     }
 
     @Test
-    public void testGetOutputDir_ShouldResolveBuildFinalNameInOutDir_UseModuleInfo() throws Exception {
+    public void testGetOutputDirShouldResolveBuildFinalNameInOutDirUseModuleInfo() throws Exception {
         verifyOutputDirUsingModuleProject(
                 "${module.build.finalName}", null, null, null, null, "finalName", null, "finalName/");
     }
 
     @Test
-    public void testGetOutputDir_ShouldResolveGroupIdInOutDir_UseExplicitMainProject() throws Exception {
+    public void testGetOutputDirShouldResolveGroupIdInOutDirUseExplicitMainProject() throws Exception {
         verifyOutputDirUsingMainProject("${pom.groupId}", null, "group", null, null, null, null, "group/");
     }
 
     @Test
-    public void testGetOutputDir_ShouldResolveArtifactIdInOutDir_UseExplicitMainProject() throws Exception {
+    public void testGetOutputDirShouldResolveArtifactIdInOutDirUseExplicitMainProject() throws Exception {
         verifyOutputDirUsingMainProject("${pom.artifactId}", null, null, "artifact", null, null, null, "artifact/");
     }
 
     @Test
-    public void testGetOutputDir_ShouldResolveVersionInOutDir_UseExplicitMainProject() throws Exception {
+    public void testGetOutputDirShouldResolveVersionInOutDirUseExplicitMainProject() throws Exception {
         verifyOutputDirUsingMainProject("${pom.version}", null, null, null, "version", null, null, "version/");
     }
 
     @Test
-    public void testGetOutputDir_ShouldResolveBuildFinalNameInOutDir_UseExplicitMainProject() throws Exception {
+    public void testGetOutputDirShouldResolveBuildFinalNameInOutDirUseExplicitMainProject() throws Exception {
         verifyOutputDirUsingMainProject(
                 "${pom.build.finalName}", null, null, null, null, "finalName", null, "finalName/");
     }
 
     @Test
-    public void testGetOutputDir_ShouldResolveGroupIdInOutDir_UseExplicitMainProject_projectRef() throws Exception {
+    public void testGetOutputDirShouldResolveGroupIdInOutDirUseExplicitMainProjectProjectRef() throws Exception {
         verifyOutputDirUsingMainProject("${project.groupId}", null, "group", null, null, null, null, "group/");
     }
 
     @Test
-    public void testGetOutputDir_ShouldResolveArtifactIdInOutDir_UseExplicitMainProject_projectRef() throws Exception {
+    public void testGetOutputDirShouldResolveArtifactIdInOutDirUseExplicitMainProjectProjectRef() throws Exception {
         verifyOutputDirUsingMainProject("${project.artifactId}", null, null, "artifact", null, null, null, "artifact/");
     }
 
     @Test
-    public void testGetOutputDir_ShouldResolveVersionInOutDir_UseExplicitMainProject_projectRef() throws Exception {
+    public void testGetOutputDirShouldResolveVersionInOutDirUseExplicitMainProjectProjectRef() throws Exception {
         verifyOutputDirUsingMainProject("${project.version}", null, null, null, "version", null, null, "version/");
     }
 
     @Test
-    public void testGetOutputDir_ShouldResolveBuildFinalNameInOutDir_UseExplicitMainProject_projectRef()
-            throws Exception {
+    public void testGetOutputDirShouldResolveBuildFinalNameInOutDirUseExplicitMainProjectProjectRef() throws Exception {
         verifyOutputDir("${project.build.finalName}", null, "finalName", "finalName/");
     }
 
     @Test
-    public void testGetOutputDir_ShouldNotAlterOutDirWhenIncludeBaseFalseAndNoExpressions() throws Exception {
+    public void testGetOutputDirShouldNotAlterOutDirWhenIncludeBaseFalseAndNoExpressions() throws Exception {
         verifyOutputDir("dir/", "finalName", null, "dir/");
     }
 
     @Test
-    public void testGetOutputDir_ShouldNotAlterOutDirWhenIncludeBaseFalseAndNoExpressions_CheckWithBackslash()
+    public void testGetOutputDirShouldNotAlterOutDirWhenIncludeBaseFalseAndNoExpressionsCheckWithBackslash()
             throws Exception {
         verifyOutputDir("dir\\", "finalName", null, "dir\\");
     }
 
     @Test
-    public void testGetOutputDir_ShouldAppendSlashToOutDirWhenMissingAndIncludeBaseFalseAndNoExpressions()
+    public void testGetOutputDirShouldAppendSlashToOutDirWhenMissingAndIncludeBaseFalseAndNoExpressions()
             throws Exception {
         verifyOutputDir("dir", "finalName", null, "dir/");
     }
 
     @Test
-    public void testGetOutputDir_ShouldResolveGroupIdInOutDir() throws Exception {
+    public void testGetOutputDirShouldResolveGroupIdInOutDir() throws Exception {
         verifyOutputDirUsingMainProject("${groupId}", "finalName", "group", null, null, null, null, "group/");
     }
 
     @Test
-    public void testGetOutputDir_ShouldResolveArtifactIdInOutDir() throws Exception {
+    public void testGetOutputDirShouldResolveArtifactIdInOutDir() throws Exception {
         verifyOutputDirUsingMainProject("${artifactId}", "finalName", null, "artifact", null, null, null, "artifact/");
     }
 
     @Test
-    public void testGetOutputDir_ShouldResolveVersionInOutDir() throws Exception {
+    public void testGetOutputDirShouldResolveVersionInOutDir() throws Exception {
         verifyOutputDirUsingMainProject("${version}", "finalName", null, null, "version", null, null, "version/");
     }
 
     @Test
-    public void testGetOutputDir_ShouldResolveVersionInLargerOutDirExpr() throws Exception {
+    public void testGetOutputDirShouldResolveVersionInLargerOutDirExpr() throws Exception {
         verifyOutputDirUsingMainProject(
                 "my-special-${version}", "finalName", null, null, "99", null, null, "my-special-99/");
     }
 
     @Test
-    public void testGetOutputDir_ShouldResolveFinalNameInOutDir() throws Exception {
+    public void testGetOutputDirShouldResolveFinalNameInOutDir() throws Exception {
         verifyOutputDir("${finalName}", "finalName", null, "finalName/");
     }
 
     @Test
-    public void testGetOutputDir_ShouldResolveBuildFinalNameInOutDir() throws Exception {
+    public void testGetOutputDirShouldResolveBuildFinalNameInOutDir() throws Exception {
         verifyOutputDir("${build.finalName}", "finalName", null, "finalName/");
     }
 
     @Test
-    public void testGetOutputDir_ShouldReturnEmptyPathWhenAllInputIsEmptyAndIncludeBaseFalse() throws Exception {
+    public void testGetOutputDirShouldReturnEmptyPathWhenAllInputIsEmptyAndIncludeBaseFalse() throws Exception {
         verifyOutputDir(null, null, null, "");
     }
 
     @Test
-    public void testGetOutputDir_ShouldRemoveRelativeRefToCurrentDir() throws Exception {
+    public void testGetOutputDirShouldRemoveRelativeRefToCurrentDir() throws Exception {
         verifyOutputDir("./path/", null, null, "path/");
     }
 
     @Test
-    public void testGetOutputDir_ShouldRemoveEmbeddedSameDirRef() throws Exception {
+    public void testGetOutputDirShouldRemoveEmbeddedSameDirRef() throws Exception {
         verifyOutputDir("some/./path/", null, null, "some/path/");
     }
 
     @Test
-    public void testGetOutputDir_ShouldRemoveEmbeddedParentDirRef() throws Exception {
+    public void testGetOutputDirShouldRemoveEmbeddedParentDirRef() throws Exception {
         verifyOutputDir("some/../path/", null, null, "path/");
     }
 
     @Test
-    public void testGetOutputDir_ShouldTruncateRelativeRefToParentDir() throws Exception {
+    public void testGetOutputDirShouldTruncateRelativeRefToParentDir() throws Exception {
         verifyOutputDir("../path/", null, null, "path/");
     }
 
     @Test
-    public void testGetOutputDir_ShouldResolveProjectProperty() throws Exception {
+    public void testGetOutputDirShouldResolveProjectProperty() throws Exception {
         final Properties props = new Properties();
         props.setProperty("myProperty", "value");
 
@@ -244,7 +243,7 @@ public class AssemblyFormatUtilsTest {
     }
 
     @Test
-    public void testGetOutputDir_ShouldResolveProjectPropertyAltExpr() throws Exception {
+    public void testGetOutputDirShouldResolveProjectPropertyAltExpr() throws Exception {
         final Properties props = new Properties();
         props.setProperty("myProperty", "value");
 
@@ -254,7 +253,7 @@ public class AssemblyFormatUtilsTest {
 
     @Test
     public void
-            testEvalFileNameMapping_ShouldResolveArtifactIdAndBaseVersionInOutDir_UseArtifactInfo_WithValidMainProject() {
+            testEvalFileNameMappingShouldResolveArtifactIdAndBaseVersionInOutDirUseArtifactInfoWithValidMainProject() {
         final MavenProject mainProject = createProject("group", "main", "1", null);
 
         final String artifactVersion = "2-20070807.112233-1";
@@ -289,146 +288,144 @@ public class AssemblyFormatUtilsTest {
     }
 
     @Test
-    public void testEvalFileNameMapping_ShouldResolveGroupIdInOutDir_UseArtifactInfo() {
+    public void testEvalFileNameMappingShouldResolveGroupIdInOutDirUseArtifactInfo() {
         verifyEvalFileNameMappingUsingArtifactProject(
                 "${artifact.groupId}", null, "group", null, null, null, "group", null);
     }
 
     @Test
-    public void testEvalFileNameMapping_ShouldResolveArtifactIdInOutDir_UseArtifactInfo() {
+    public void testEvalFileNameMappingShouldResolveArtifactIdInOutDirUseArtifactInfo() {
         verifyEvalFileNameMappingUsingArtifactProject(
                 "${artifact.artifactId}", null, null, "artifact", null, null, "artifact", null);
     }
 
     @Test
-    public void testEvalFileNameMapping_ShouldResolveVersionInOutDir_UseArtifactInfo() {
+    public void testEvalFileNameMappingShouldResolveVersionInOutDirUseArtifactInfo() {
         verifyEvalFileNameMappingUsingArtifactProject(
                 "${artifact.version}", null, null, null, "version", null, "version", null);
     }
 
     @Test
-    public void testEvalFileNameMapping_ShouldResolveGroupIdInOutDir_UseArtifactInfoAndModulePrefix() {
+    public void testEvalFileNameMappingShouldResolveGroupIdInOutDirUseArtifactInfoAndModulePrefix() {
         verifyEvalFileNameMappingUsingModuleProject(
                 "${module.groupId}", null, "group", null, null, null, "group", null);
     }
 
     @Test
-    public void testEvalFileNameMapping_ShouldResolveArtifactIdInOutDir_UseArtifactInfoAndModulePrefix() {
+    public void testEvalFileNameMappingShouldResolveArtifactIdInOutDirUseArtifactInfoAndModulePrefix() {
         verifyEvalFileNameMappingUsingModuleProject(
                 "${module.artifactId}", null, null, "artifact", null, null, "artifact", null);
     }
 
     @Test
-    public void testEvalFileNameMapping_ShouldResolveVersionInOutDir_UseArtifactInfoAndModulePrefix() {
+    public void testEvalFileNameMappingShouldResolveVersionInOutDirUseArtifactInfoAndModulePrefix() {
         verifyEvalFileNameMappingUsingModuleProject(
                 "${module.version}", null, null, null, "version", null, "version", null);
     }
 
     @Test
-    public void testEvalFileNameMapping_ShouldResolveGroupIdInOutDir_UseExplicitMainProject() throws Exception {
+    public void testEvalFileNameMappingShouldResolveGroupIdInOutDirUseExplicitMainProject() throws Exception {
         verifyEvalFileNameMappingUsingMainProject("${pom.groupId}", null, "group", null, null, null, "group", null);
     }
 
     @Test
-    public void testEvalFileNameMapping_ShouldResolveArtifactIdInOutDir_UseExplicitMainProject() throws Exception {
+    public void testEvalFileNameMappingShouldResolveArtifactIdInOutDirUseExplicitMainProject() throws Exception {
         verifyEvalFileNameMappingUsingMainProject(
                 "${pom.artifactId}", null, null, "artifact", null, null, "artifact", null);
     }
 
     @Test
-    public void testEvalFileNameMapping_ShouldResolveVersionInOutDir_UseExplicitMainProject() throws Exception {
+    public void testEvalFileNameMappingShouldResolveVersionInOutDirUseExplicitMainProject() throws Exception {
         verifyEvalFileNameMappingUsingMainProject("${pom.version}", null, null, null, "version", null, "version", null);
     }
 
     @Test
-    public void testEvalFileNameMapping_ShouldResolveGroupIdInOutDir_UseExplicitMainProject_projectRef()
-            throws Exception {
+    public void testEvalFileNameMappingShouldResolveGroupIdInOutDirUseExplicitMainProjectProjectRef() throws Exception {
         verifyEvalFileNameMappingUsingMainProject("${project.groupId}", null, "group", null, null, null, "group", null);
     }
 
     @Test
-    public void testEvalFileNameMapping_ShouldResolveArtifactIdInOutDir_UseExplicitMainProject_projectRef()
+    public void testEvalFileNameMappingShouldResolveArtifactIdInOutDirUseExplicitMainProjectProjectRef()
             throws Exception {
         verifyEvalFileNameMappingUsingMainProject(
                 "${project.artifactId}", null, null, "artifact", null, null, "artifact", null);
     }
 
     @Test
-    public void testEvalFileNameMapping_ShouldResolveVersionInOutDir_UseExplicitMainProject_projectRef()
-            throws Exception {
+    public void testEvalFileNameMappingShouldResolveVersionInOutDirUseExplicitMainProjectProjectRef() throws Exception {
         verifyEvalFileNameMappingUsingMainProject(
                 "${project.version}", null, null, null, "version", null, "version", null);
     }
 
     @Test
-    public void testEvalFileNameMapping_ShouldRemoveRelativeRefToCurrentDir() throws Exception {
+    public void testEvalFileNameMappingShouldRemoveRelativeRefToCurrentDir() throws Exception {
         verifyEvalFileNameMappingUsingMainProject("./path/", null, null, null, null, null, "path/", null);
     }
 
     @Test
-    public void testEvalFileNameMapping_ShouldRemoveEmbeddedSameDirRef() throws Exception {
+    public void testEvalFileNameMappingShouldRemoveEmbeddedSameDirRef() throws Exception {
         verifyEvalFileNameMappingUsingMainProject("some/./path/", null, null, null, null, null, "some/path/", null);
     }
 
     @Test
-    public void testEvalFileNameMapping_ShouldRemoveEmbeddedParentDirRef() throws Exception {
+    public void testEvalFileNameMappingShouldRemoveEmbeddedParentDirRef() throws Exception {
         verifyEvalFileNameMappingUsingMainProject("some/../path/", null, null, null, null, null, "path/", null);
     }
 
     @Test
-    public void testEvalFileNameMapping_ShouldTruncateRelativeRefToParentDir() throws Exception {
+    public void testEvalFileNameMappingShouldTruncateRelativeRefToParentDir() throws Exception {
         verifyEvalFileNameMappingUsingMainProject("../path/", null, null, null, null, null, "path/", null);
     }
 
     @Test
-    public void testEvalFileNameMapping_ShouldPassExpressionThroughUnchanged() throws Exception {
+    public void testEvalFileNameMappingShouldPassExpressionThroughUnchanged() throws Exception {
         verifyEvalFileNameMapping("filename", null, null, "filename", null);
     }
 
     @Test
-    public void testEvalFileNameMapping_ShouldInsertClassifierAheadOfExtension() throws Exception {
+    public void testEvalFileNameMappingShouldInsertClassifierAheadOfExtension() throws Exception {
         verifyEvalFileNameMapping(
                 "filename-${artifact.classifier}.ext", "classifier", null, "filename-classifier.ext", null);
     }
 
     @Test
-    public void testEvalFileNameMapping_ShouldAppendDashClassifierWhenClassifierPresent() throws Exception {
+    public void testEvalFileNameMappingShouldAppendDashClassifierWhenClassifierPresent() throws Exception {
         verifyEvalFileNameMapping("filename${dashClassifier?}", "classifier", null, "filename-classifier", null);
     }
 
     @Test
-    public void testEvalFileNameMapping_ShouldNotAppendDashClassifierWhenClassifierMissing() throws Exception {
+    public void testEvalFileNameMappingShouldNotAppendDashClassifierWhenClassifierMissing() throws Exception {
         verifyEvalFileNameMapping("filename${dashClassifier?}", null, null, "filename", null);
     }
 
     @Test
-    public void testEvalFileNameMapping_ShouldNotAppendDashClassifierWhenClassifierEmpty() throws Exception {
+    public void testEvalFileNameMappingShouldNotAppendDashClassifierWhenClassifierEmpty() throws Exception {
         verifyEvalFileNameMapping("filename${dashClassifier?}", "", null, "filename", null);
     }
 
     @Test
-    public void testEvalFileNameMapping_ShouldResolveGroupId() throws Exception {
+    public void testEvalFileNameMappingShouldResolveGroupId() throws Exception {
         verifyEvalFileNameMappingUsingMainProject("${groupId}", null, "group", null, null, null, "group", null);
     }
 
     @Test
-    public void testEvalFileNameMapping_ShouldResolveArtifactId() throws Exception {
+    public void testEvalFileNameMappingShouldResolveArtifactId() throws Exception {
         verifyEvalFileNameMappingUsingMainProject(
                 "${artifactId}", null, null, "artifact", null, null, "artifact", null);
     }
 
     @Test
-    public void testEvalFileNameMapping_ShouldResolveVersion() throws Exception {
+    public void testEvalFileNameMappingShouldResolveVersion() throws Exception {
         verifyEvalFileNameMappingUsingMainProject("${version}", null, null, null, "version", null, "version", null);
     }
 
     @Test
-    public void testEvalFileNameMapping_ShouldResolveExtension() throws Exception {
+    public void testEvalFileNameMappingShouldResolveExtension() throws Exception {
         verifyEvalFileNameMapping("file.${artifact.extension}", null, "ext", "file.ext", null);
     }
 
     @Test
-    public void testEvalFileNameMapping_ShouldResolveProjectProperty() throws Exception {
+    public void testEvalFileNameMappingShouldResolveProjectProperty() throws Exception {
         final Properties props = new Properties();
         props.setProperty("myProperty", "value");
 
@@ -436,7 +433,7 @@ public class AssemblyFormatUtilsTest {
     }
 
     @Test
-    public void testEvalFileNameMapping_ShouldResolveProjectPropertyAltExpr() throws Exception {
+    public void testEvalFileNameMappingShouldResolveProjectPropertyAltExpr() throws Exception {
         final Properties props = new Properties();
         props.setProperty("myProperty", "value");
 
@@ -444,7 +441,7 @@ public class AssemblyFormatUtilsTest {
     }
 
     @Test
-    public void testEvalFileNameMapping_ShouldResolveSystemPropertyWithoutMainProjectPresent() throws Exception {
+    public void testEvalFileNameMappingShouldResolveSystemPropertyWithoutMainProjectPresent() throws Exception {
         verifyEvalFileNameMapping(
                 "file.${java.version}", null, null, "file." + System.getProperty("java.version"), null);
     }
@@ -460,6 +457,7 @@ public class AssemblyFormatUtilsTest {
                 expression, classifier, null, null, null, extension, checkValue, projectProperties);
     }
 
+    @SuppressWarnings("checkstyle:parameternumber")
     private void verifyEvalFileNameMappingUsingMainProject(
             final String expression,
             final String classifier,
@@ -470,7 +468,6 @@ public class AssemblyFormatUtilsTest {
             final String checkValue,
             final Properties projectProperties) {
         final MavenProject mainProject = createProject(groupId, artifactId, version, projectProperties);
-
         final MavenProject artifactProject = createProject("unknown", "unknown", "unknown", null);
         final MavenProject moduleProject = createProject("unknown", "unknown", "unknown", null);
 
@@ -478,6 +475,7 @@ public class AssemblyFormatUtilsTest {
                 expression, classifier, extension, mainProject, moduleProject, artifactProject, checkValue);
     }
 
+    @SuppressWarnings("checkstyle:parameternumber")
     private void verifyEvalFileNameMappingUsingArtifactProject(
             final String expression,
             final String classifier,
@@ -496,6 +494,7 @@ public class AssemblyFormatUtilsTest {
                 expression, classifier, extension, mainProject, moduleProject, artifactProject, checkValue);
     }
 
+    @SuppressWarnings("checkstyle:parameternumber")
     private void verifyEvalFileNameMappingUsingModuleProject(
             final String expression,
             final String classifier,
@@ -587,6 +586,7 @@ public class AssemblyFormatUtilsTest {
         verifyOutputDirUsingMainProject(outDir, finalName, null, null, null, projectFinalName, null, checkValue);
     }
 
+    @SuppressWarnings("checkstyle:parameternumber")
     private void verifyOutputDirUsingMainProject(
             final String outDir,
             final String finalName,
@@ -612,6 +612,7 @@ public class AssemblyFormatUtilsTest {
         verifyOutputDir(outDir, finalName, project, moduleProject, artifactProject, checkValue);
     }
 
+    @SuppressWarnings("checkstyle:parameternumber")
     private void verifyOutputDirUsingModuleProject(
             final String outDir,
             final String finalName,
@@ -637,6 +638,7 @@ public class AssemblyFormatUtilsTest {
         verifyOutputDir(outDir, finalName, mainProject, project, artifactProject, checkValue);
     }
 
+    @SuppressWarnings("checkstyle:parameternumber")
     private void verifyOutputDirUsingArtifactProject(
             final String outDir,
             final String finalName,
@@ -721,7 +723,7 @@ public class AssemblyFormatUtilsTest {
     }
 
     @Test
-    public void groupIdPath_artifactProjectInterpolator() {
+    public void groupIdPathArtifactProjectInterpolator() {
         Artifact artifact = mock(Artifact.class);
         when(artifact.getFile()).thenReturn(new File("dir", "artifactId.jar"));
 
@@ -735,7 +737,7 @@ public class AssemblyFormatUtilsTest {
     }
 
     @Test
-    public void groupIdPath_artifactInterpolator() {
+    public void groupIdPathArtifactInterpolator() {
         Artifact artifact = mock(Artifact.class);
         when(artifact.getGroupId()).thenReturn("a.b.c");
         when(artifact.getFile()).thenReturn(new File("dir", "artifactId.jar"));

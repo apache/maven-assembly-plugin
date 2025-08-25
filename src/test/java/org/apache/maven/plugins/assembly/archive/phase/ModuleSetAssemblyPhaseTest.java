@@ -56,7 +56,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ModuleSetAssemblyPhaseTest {
@@ -78,7 +87,7 @@ public class ModuleSetAssemblyPhaseTest {
     }
 
     @Test
-    public void testIsDeprecatedModuleSourcesConfigPresent_ShouldCatchOutputDir() {
+    public void testIsDeprecatedModuleSourcesConfigPresentShouldCatchOutputDir() {
         final ModuleSources sources = new ModuleSources();
         sources.setOutputDirectory("outdir");
 
@@ -86,7 +95,7 @@ public class ModuleSetAssemblyPhaseTest {
     }
 
     @Test
-    public void testIsDeprecatedModuleSourcesConfigPresent_ShouldCatchInclude() {
+    public void testIsDeprecatedModuleSourcesConfigPresentShouldCatchInclude() {
         final ModuleSources sources = new ModuleSources();
         sources.addInclude("**/included.txt");
 
@@ -94,7 +103,7 @@ public class ModuleSetAssemblyPhaseTest {
     }
 
     @Test
-    public void testIsDeprecatedModuleSourcesConfigPresent_ShouldCatchExclude() {
+    public void testIsDeprecatedModuleSourcesConfigPresentShouldCatchExclude() {
         final ModuleSources sources = new ModuleSources();
         sources.addExclude("**/excluded.txt");
 
@@ -102,7 +111,7 @@ public class ModuleSetAssemblyPhaseTest {
     }
 
     @Test
-    public void testIsDeprecatedModuleSourcesConfigPresent_ShouldNotCatchFileMode() {
+    public void testIsDeprecatedModuleSourcesConfigPresentShouldNotCatchFileMode() {
         final ModuleSources sources = new ModuleSources();
         sources.setFileMode("777");
 
@@ -110,7 +119,7 @@ public class ModuleSetAssemblyPhaseTest {
     }
 
     @Test
-    public void testIsDeprecatedModuleSourcesConfigPresent_ShouldNotCatchDirMode() {
+    public void testIsDeprecatedModuleSourcesConfigPresentShouldNotCatchDirMode() {
         final ModuleSources sources = new ModuleSources();
         sources.setDirectoryMode("777");
 
@@ -118,7 +127,7 @@ public class ModuleSetAssemblyPhaseTest {
     }
 
     @Test
-    public void testCreateFileSet_ShouldUseModuleDirOnlyWhenOutDirIsNull() throws Exception {
+    public void testCreateFileSetShouldUseModuleDirOnlyWhenOutDirIsNull() throws Exception {
         final Model model = new Model();
         model.setArtifactId("artifact");
 
@@ -157,7 +166,7 @@ public class ModuleSetAssemblyPhaseTest {
     }
 
     @Test
-    public void testCreateFileSet_ShouldPrependModuleDirWhenOutDirIsProvided() throws Exception {
+    public void testCreateFileSetShouldPrependModuleDirWhenOutDirIsProvided() throws Exception {
         final Model model = new Model();
         model.setArtifactId("artifact");
 
@@ -197,7 +206,7 @@ public class ModuleSetAssemblyPhaseTest {
     }
 
     @Test
-    public void testCreateFileSet_ShouldAddExcludesForSubModulesWhenExcludeSubModDirsIsTrue() throws Exception {
+    public void testCreateFileSetShouldAddExcludesForSubModulesWhenExcludeSubModDirsIsTrue() throws Exception {
         final AssemblerConfigurationSource configSource = mock(AssemblerConfigurationSource.class);
 
         final FileSet fs = new FileSet();
@@ -234,7 +243,7 @@ public class ModuleSetAssemblyPhaseTest {
     }
 
     @Test
-    public void testExecute_ShouldSkipIfNoModuleSetsFound() throws Exception {
+    public void testExecuteShouldSkipIfNoModuleSetsFound() throws Exception {
         final Assembly assembly = new Assembly();
         assembly.setIncludeBaseDirectory(false);
 
@@ -242,7 +251,7 @@ public class ModuleSetAssemblyPhaseTest {
     }
 
     @Test
-    public void testExecute_ShouldAddOneModuleSetWithOneModuleInIt() throws Exception {
+    public void testExecuteShouldAddOneModuleSetWithOneModuleInIt() throws Exception {
         final MavenProject project = createProject("group", "artifact", "version", null);
 
         final MavenProject module = createProject("group", "module", "version", project);
@@ -302,12 +311,12 @@ public class ModuleSetAssemblyPhaseTest {
     }
 
     @Test
-    public void testAddModuleBinaries_ShouldReturnImmediatelyWhenBinariesIsNull() throws Exception {
+    public void testAddModuleBinariesShouldReturnImmediatelyWhenBinariesIsNull() throws Exception {
         this.phase.addModuleBinaries(null, null, null, null, null, null);
     }
 
     @Test
-    public void testAddModuleBinaries_ShouldFilterPomModule() throws Exception {
+    public void testAddModuleBinariesShouldFilterPomModule() throws Exception {
         final ModuleBinaries binaries = new ModuleBinaries();
 
         binaries.setUnpack(false);
@@ -327,7 +336,7 @@ public class ModuleSetAssemblyPhaseTest {
     }
 
     @Test
-    public void testAddModuleBinaries_ShouldAddOneModuleAttachmentArtifactAndNoDeps() throws Exception {
+    public void testAddModuleBinariesShouldAddOneModuleAttachmentArtifactAndNoDeps() throws Exception {
         final AssemblerConfigurationSource configSource = mock(AssemblerConfigurationSource.class);
         when(configSource.getFinalName()).thenReturn("final-name");
 
@@ -378,7 +387,7 @@ public class ModuleSetAssemblyPhaseTest {
     }
 
     @Test
-    public void testAddModuleBinaries_ShouldFailWhenOneModuleDoesntHaveAttachmentWithMatchingClassifier()
+    public void testAddModuleBinariesShouldFailWhenOneModuleDoesntHaveAttachmentWithMatchingClassifier()
             throws Exception {
         Artifact artifact = mock(Artifact.class);
 
@@ -410,7 +419,7 @@ public class ModuleSetAssemblyPhaseTest {
     }
 
     @Test
-    public void testAddModuleBinaries_ShouldAddOneModuleArtifactAndNoDeps() throws Exception {
+    public void testAddModuleBinariesShouldAddOneModuleArtifactAndNoDeps() throws Exception {
         Artifact artifact = mock(Artifact.class);
         final File artifactFile = temporaryFolder.newFile();
         when(artifact.getGroupId()).thenReturn("GROUPID");
@@ -461,7 +470,7 @@ public class ModuleSetAssemblyPhaseTest {
     }
 
     @Test
-    public void testAddModuleArtifact_ShouldThrowExceptionWhenArtifactFileIsNull() throws Exception {
+    public void testAddModuleArtifactShouldThrowExceptionWhenArtifactFileIsNull() throws Exception {
         Artifact artifact = mock(Artifact.class);
         try {
             this.phase.addModuleArtifact(artifact, null, null, null, null);
@@ -473,7 +482,7 @@ public class ModuleSetAssemblyPhaseTest {
     }
 
     @Test
-    public void testAddModuleArtifact_ShouldAddOneArtifact() throws Exception {
+    public void testAddModuleArtifactShouldAddOneArtifact() throws Exception {
         Artifact artifact = mock(Artifact.class);
         when(artifact.getGroupId()).thenReturn("GROUPID");
         final File artifactFile = temporaryFolder.newFile();
@@ -513,12 +522,12 @@ public class ModuleSetAssemblyPhaseTest {
     }
 
     @Test
-    public void testAddModuleSourceFileSets_ShouldReturnImmediatelyIfSourcesIsNull() throws Exception {
+    public void testAddModuleSourceFileSetsShouldReturnImmediatelyIfSourcesIsNull() throws Exception {
         this.phase.addModuleSourceFileSets(null, null, null, null);
     }
 
     @Test
-    public void testAddModuleSourceFileSets_ShouldAddOneSourceDirectory() throws Exception {
+    public void testAddModuleSourceFileSetsShouldAddOneSourceDirectory() throws Exception {
         final MavenProject project = createProject("group", "artifact", "version", null);
 
         final AssemblerConfigurationSource configSource = mock(AssemblerConfigurationSource.class);
@@ -558,7 +567,7 @@ public class ModuleSetAssemblyPhaseTest {
     }
 
     @Test
-    public void testGetModuleProjects_ShouldReturnNothingWhenReactorContainsOnlyCurrentProject() throws Exception {
+    public void testGetModuleProjectsShouldReturnNothingWhenReactorContainsOnlyCurrentProject() throws Exception {
         final MavenProject project = createProject("group", "artifact", "version", null);
 
         final List<MavenProject> projects = Collections.singletonList(project);
@@ -581,7 +590,7 @@ public class ModuleSetAssemblyPhaseTest {
     }
 
     @Test
-    public void testGetModuleProjects_ShouldReturnNothingWhenReactorContainsTwoSiblingProjects() throws Exception {
+    public void testGetModuleProjectsShouldReturnNothingWhenReactorContainsTwoSiblingProjects() throws Exception {
         final MavenProject project = createProject("group", "artifact", "version", null);
         final MavenProject project2 = createProject("group", "artifact2", "version", null);
 
@@ -607,7 +616,7 @@ public class ModuleSetAssemblyPhaseTest {
     }
 
     @Test
-    public void testGetModuleProjects_ShouldReturnModuleOfCurrentProject() throws Exception {
+    public void testGetModuleProjectsShouldReturnModuleOfCurrentProject() throws Exception {
         final MavenProject project = createProject("group", "artifact", "version", null);
         final MavenProject project2 = createProject("group", "artifact2", "version", project);
 
@@ -637,7 +646,7 @@ public class ModuleSetAssemblyPhaseTest {
     }
 
     @Test
-    public void testGetModuleProjects_ShouldReturnDescendentModulesOfCurrentProject() throws Exception {
+    public void testGetModuleProjectsShouldReturnDescendentModulesOfCurrentProject() throws Exception {
         final MavenProject project = createProject("group", "artifact", "version", null);
         final MavenProject project2 = createProject("group", "artifact2", "version", project);
         final MavenProject project3 = createProject("group", "artifact3", "version", project2);
@@ -671,7 +680,7 @@ public class ModuleSetAssemblyPhaseTest {
     }
 
     @Test
-    public void testGetModuleProjects_ShouldExcludeModuleAndDescendentsTransitively() throws Exception {
+    public void testGetModuleProjectsShouldExcludeModuleAndDescendentsTransitively() throws Exception {
         final MavenProject project = createProject("group", "artifact", "version", null);
 
         Artifact artifact1 = mock(Artifact.class);

@@ -62,7 +62,7 @@ public class ReaderFormatterTest {
     }
 
     @Test
-    public void lineDosFeed_withoutFiltering() throws IOException, AssemblyFormattingException {
+    public void lineDosFeedWithoutFiltering() throws IOException, AssemblyFormattingException {
         final PojoConfigSource cfg = getPojoConfigSource();
         InputStreamTransformer fileSetTransformers =
                 ReaderFormatter.getFileSetTransformers(cfg, false, Collections.emptySet(), "dos");

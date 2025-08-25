@@ -57,7 +57,7 @@ public class AssemblyProxyArchiverTest {
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     @Test(timeout = 5000)
-    public void addFileSet_SkipWhenSourceIsAssemblyWorkDir() throws IOException, ArchiverException {
+    public void addFileSetSkipWhenSourceIsAssemblyWorkDir() throws IOException, ArchiverException {
         final File sources = temporaryFolder.getRoot();
 
         final File workdir = new File(sources, "workdir");
@@ -76,7 +76,7 @@ public class AssemblyProxyArchiverTest {
     }
 
     @Test(timeout = 5000)
-    public void addFileSet_addExcludeWhenSourceContainsAssemblyWorkDir() throws IOException, ArchiverException {
+    public void addFileSetAddExcludeWhenSourceContainsAssemblyWorkDir() throws IOException, ArchiverException {
         final File sources = temporaryFolder.getRoot();
 
         final File workdir = new File(sources, "workdir");
@@ -110,7 +110,7 @@ public class AssemblyProxyArchiverTest {
     }
 
     @Test
-    public void addFile_NoPerms_CallAcceptFilesOnlyOnce() throws IOException, ArchiverException {
+    public void addFileNoPermsCallAcceptFilesOnlyOnce() throws IOException, ArchiverException {
         final Archiver delegate = mock(Archiver.class);
 
         final CounterSelector counter = new CounterSelector(true);
@@ -131,7 +131,7 @@ public class AssemblyProxyArchiverTest {
 
     @Test
     @SuppressWarnings("deprecation")
-    public void addDirectory_NoPerms_CallAcceptFilesOnlyOnce() throws IOException, ArchiverException {
+    public void addDirectoryNoPermsCallAcceptFilesOnlyOnce() throws IOException, ArchiverException {
         final Archiver delegate = new JarArchiver();
 
         final File output = temporaryFolder.newFile();
@@ -190,11 +190,11 @@ public class AssemblyProxyArchiverTest {
 
         private boolean answer = false;
 
-        public CounterSelector(final boolean answer) {
+        CounterSelector(final boolean answer) {
             this.answer = answer;
         }
 
-        public int getCount() {
+        int getCount() {
             return count;
         }
 
