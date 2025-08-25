@@ -44,6 +44,7 @@ import org.codehaus.plexus.archiver.tar.TarArchiver;
 import org.codehaus.plexus.archiver.tar.TarLongFileMode;
 import org.codehaus.plexus.archiver.war.WarArchiver;
 import org.codehaus.plexus.archiver.zip.ZipArchiver;
+import org.codehaus.plexus.component.configurator.BasicComponentConfigurator;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
 import org.junit.Before;
 import org.junit.Rule;
@@ -74,6 +75,8 @@ public class DefaultAssemblyArchiverTest {
 
     private PlexusContainer container;
 
+    private BasicComponentConfigurator configurator;
+
     public static void setupInterpolators(AssemblerConfigurationSource configSource) {
         when(configSource.getRepositoryInterpolator()).thenReturn(FixedStringSearchInterpolator.create());
         when(configSource.getCommandLinePropsInterpolator()).thenReturn(FixedStringSearchInterpolator.create());
@@ -91,6 +94,7 @@ public class DefaultAssemblyArchiverTest {
     public void setup() throws PlexusContainerException {
         this.archiverManager = mock(ArchiverManager.class);
         this.container = new DefaultPlexusContainer();
+        this.configurator = new BasicComponentConfigurator();
     }
 
     @Test(expected = InvalidAssemblerConfigurationException.class)
@@ -343,7 +347,7 @@ public class DefaultAssemblyArchiverTest {
     }
 
     private DefaultAssemblyArchiver createSubject(final List<AssemblyArchiverPhase> phases) {
-        return new DefaultAssemblyArchiver(archiverManager, phases, Collections.emptyMap(), container);
+        return new DefaultAssemblyArchiver(archiverManager, phases, Collections.emptyMap(), container, configurator);
     }
 
     private static final class TestTarArchiver extends TarArchiver {
