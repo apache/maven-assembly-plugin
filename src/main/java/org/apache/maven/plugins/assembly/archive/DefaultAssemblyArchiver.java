@@ -24,8 +24,6 @@ import javax.inject.Named;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,13 +57,12 @@ import org.codehaus.plexus.archiver.tar.TarArchiver;
 import org.codehaus.plexus.archiver.tar.TarLongFileMode;
 import org.codehaus.plexus.archiver.war.WarArchiver;
 import org.codehaus.plexus.archiver.zip.AbstractZipArchiver;
+import org.codehaus.plexus.component.configurator.BasicComponentConfigurator;
 import org.codehaus.plexus.component.configurator.ComponentConfigurationException;
-import org.codehaus.plexus.component.configurator.ComponentConfigurator;
 import org.codehaus.plexus.component.configurator.ConfigurationListener;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.components.io.fileselectors.FileSelector;
-import org.codehaus.plexus.configuration.PlexusConfiguration;
 import org.codehaus.plexus.configuration.xml.XmlPlexusConfiguration;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
@@ -98,16 +95,20 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver {
 
     private final PlexusContainer container;
 
+    private final BasicComponentConfigurator configurator;
+
     @Inject
     public DefaultAssemblyArchiver(
             ArchiverManager archiverManager,
             List<AssemblyArchiverPhase> assemblyPhases,
             Map<String, ContainerDescriptorHandler> containerDescriptorHandlers,
-            PlexusContainer container) {
+            PlexusContainer container,
+            BasicComponentConfigurator configurator) {
         this.archiverManager = requireNonNull(archiverManager);
         this.assemblyPhases = requireNonNull(assemblyPhases);
         this.containerDescriptorHandlers = requireNonNull(containerDescriptorHandlers);
         this.container = requireNonNull(container);
+        this.configurator = requireNonNull(configurator);
     }
 
     private List<AssemblyArchiverPhase> sortedPhases() {
@@ -398,7 +399,6 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver {
     private void configureComponent(
             final Object component, final Xpp3Dom config, final AssemblerConfigurationSource configSource)
             throws ComponentLookupException, ComponentConfigurationException {
-        final ComponentConfigurator configurator = container.lookup(ComponentConfigurator.class, "basic");
 
         final ConfigurationListener listener = new DebugConfigurationListener(LOGGER);
 
@@ -406,45 +406,7 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver {
 
         final XmlPlexusConfiguration configuration = new XmlPlexusConfiguration(config);
 
-        final Object[] containerRealm = getContainerRealm();
-
-        /*
-         * NOTE: The signature of configureComponent() has changed in Maven 3.x, the reflection prevents a linkage error
-         * and makes the code work with both Maven 2 and 3.
-         */
-        try {
-            final Method configureComponent = ComponentConfigurator.class.getMethod(
-                    "configureComponent",
-                    Object.class,
-                    PlexusConfiguration.class,
-                    ExpressionEvaluator.class,
-                    (Class<?>) containerRealm[1],
-                    ConfigurationListener.class);
-
-            configureComponent.invoke(
-                    configurator, component, configuration, expressionEvaluator, containerRealm[0], listener);
-        } catch (final NoSuchMethodException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (final InvocationTargetException e) {
-            if (e.getCause() instanceof ComponentConfigurationException) {
-                throw (ComponentConfigurationException) e.getCause();
-            }
-            throw new RuntimeException(e.getCause());
-        }
-    }
-
-    private Object[] getContainerRealm() {
-        /*
-         * NOTE: The return type of getContainerRealm() has changed in Maven 3.x, the reflection prevents a linkage
-         * error and makes the code work with both Maven 2 and 3.
-         */
-        try {
-            final Method getContainerRealm = container.getClass().getMethod("getContainerRealm");
-            return new Object[] {getContainerRealm.invoke(container), getContainerRealm.getReturnType()};
-        } catch (final NoSuchMethodException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (final InvocationTargetException e) {
-            throw new RuntimeException(e.getCause());
-        }
+        configurator.configureComponent(
+                component, configuration, expressionEvaluator, container.getContainerRealm(), listener);
     }
 }
