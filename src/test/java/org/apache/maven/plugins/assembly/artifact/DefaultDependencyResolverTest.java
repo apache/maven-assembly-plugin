@@ -72,7 +72,7 @@ public class DefaultDependencyResolverTest {
     private DefaultDependencyResolver resolver;
 
     @Test
-    public void test_getDependencySetResolutionRequirements_transitive() throws Exception {
+    public void testGetDependencySetResolutionRequirementsTransitive() throws Exception {
         final DependencySet ds = new DependencySet();
         ds.setScope(Artifact.SCOPE_SYSTEM);
         ds.setUseTransitiveDependencies(true);
@@ -108,7 +108,7 @@ public class DefaultDependencyResolverTest {
     }
 
     @Test
-    public void test_getDependencySetResolutionRequirements_nonTransitive() throws DependencyResolutionException {
+    public void testGetDependencySetResolutionRequirementsNonTransitive() throws DependencyResolutionException {
         final DependencySet ds = new DependencySet();
         ds.setScope(Artifact.SCOPE_SYSTEM);
         ds.setUseTransitiveDependencies(false);
@@ -128,7 +128,7 @@ public class DefaultDependencyResolverTest {
     }
 
     @Test
-    public void test_getModuleSetResolutionRequirements_withoutBinaries() throws DependencyResolutionException {
+    public void testGetModuleSetResolutionRequirementsWithoutBinaries() throws DependencyResolutionException {
         final File rootDir = new File("root");
         final MavenProject project = createMavenProject("main-group", "main-artifact", "1", rootDir);
         final MavenProject module1 = createMavenProject("main-group", "module-1", "1", new File(rootDir, "module-1"));
@@ -147,7 +147,7 @@ public class DefaultDependencyResolverTest {
     }
 
     @Test
-    public void test_getModuleSetResolutionRequirements_includeDeps() throws Exception {
+    public void testGetModuleSetResolutionRequirementsIncludeDeps() throws Exception {
         final File rootDir = new File("root");
         final MavenProject project = createMavenProject("main-group", "main-artifact", "1", rootDir);
         final MavenProject module1 = createMavenProject("main-group", "module-1", "1", new File(rootDir, "module-1"));

@@ -48,7 +48,7 @@ public class AddDirectoryTaskTest {
     }
 
     @Test
-    public void testAddDirectory_ShouldNotAddDirectoryIfNonExistent() throws Exception {
+    public void testAddDirectoryShouldNotAddDirectoryIfNonExistent() throws Exception {
         final int defaultDirMode = -1;
         final int defaultFileMode = -1;
 
@@ -65,7 +65,7 @@ public class AddDirectoryTaskTest {
     }
 
     @Test
-    public void testAddDirectory_ShouldAddDirectory() throws Exception {
+    public void testAddDirectoryShouldAddDirectory() throws Exception {
         final int defaultDirMode = -1;
         final int defaultFileMode = -1;
 
@@ -84,7 +84,7 @@ public class AddDirectoryTaskTest {
     }
 
     @Test
-    public void testAddDirectory_ShouldAddDirectoryWithDirMode() throws Exception {
+    public void testAddDirectoryShouldAddDirectoryWithDirMode() throws Exception {
         final int dirMode = Integer.parseInt("777", 8);
         final int fileMode = Integer.parseInt("777", 8);
         final int defaultDirMode = -1;
@@ -111,7 +111,7 @@ public class AddDirectoryTaskTest {
     }
 
     @Test
-    public void testAddDirectory_ShouldAddDirectoryWithIncludesAndExcludes() throws Exception {
+    public void testAddDirectoryShouldAddDirectoryWithIncludesAndExcludes() throws Exception {
         when(archiver.getOverrideDirectoryMode()).thenReturn(-1);
         when(archiver.getOverrideFileMode()).thenReturn(-1);
 

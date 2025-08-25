@@ -50,7 +50,7 @@ public class ProjectUtilsTest {
     }
 
     @Test
-    public void testGetProjectModules_ShouldIncludeDirectModuleOfMasterProject() throws IOException {
+    public void testGetProjectModulesShouldIncludeDirectModuleOfMasterProject() throws IOException {
         final MavenProject master = createTestProject("test", "testGroup", "1.0");
 
         master.setFile(new File("pom.xml"));
@@ -74,7 +74,7 @@ public class ProjectUtilsTest {
     }
 
     @Test
-    public void testGetProjectModules_ShouldNotIncludeMasterProject() throws IOException {
+    public void testGetProjectModulesShouldNotIncludeMasterProject() throws IOException {
         final MavenProject master = createTestProject("test", "testGroup", "1.0");
 
         final Set<MavenProject> result =
@@ -85,7 +85,7 @@ public class ProjectUtilsTest {
     }
 
     @Test
-    public void testGetProjectModules_ShouldIncludeInDirectModuleOfMasterWhenIncludeSubModulesIsTrue()
+    public void testGetProjectModulesShouldIncludeInDirectModuleOfMasterWhenIncludeSubModulesIsTrue()
             throws IOException {
         final MavenProject master = createTestProject("test", "testGroup", "1.0");
 
@@ -121,7 +121,7 @@ public class ProjectUtilsTest {
     }
 
     @Test
-    public void testGetProjectModules_ShouldExcludeInDirectModuleOfMasterWhenIncludeSubModulesIsFalse()
+    public void testGetProjectModulesShouldExcludeInDirectModuleOfMasterWhenIncludeSubModulesIsFalse()
             throws IOException {
         final MavenProject master = createTestProject("test", "testGroup", "1.0");
 
@@ -158,7 +158,7 @@ public class ProjectUtilsTest {
     }
 
     @Test
-    public void testGetProjectModules_ShouldExcludeNonModuleOfMasterProject() throws IOException {
+    public void testGetProjectModulesShouldExcludeNonModuleOfMasterProject() throws IOException {
         final MavenProject master = createTestProject("test", "testGroup", "1.0");
 
         master.setFile(new File("project/pom.xml"));

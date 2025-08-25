@@ -54,7 +54,7 @@ public class FileItemAssemblyPhaseTest {
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     @Test
-    public void testExecute_ShouldAddNothingWhenNoFileItemsArePresent() throws Exception {
+    public void testExecuteShouldAddNothingWhenNoFileItemsArePresent() throws Exception {
         final AssemblerConfigurationSource macCS = mock(AssemblerConfigurationSource.class);
 
         final File basedir = temporaryFolder.getRoot();
@@ -70,7 +70,7 @@ public class FileItemAssemblyPhaseTest {
     }
 
     @Test
-    public void testExecute_ShouldAddAbsoluteFileNoFilterNoLineEndingConversion() throws Exception {
+    public void testExecuteShouldAddAbsoluteFileNoFilterNoLineEndingConversion() throws Exception {
         final AssemblerConfigurationSource macCS = mock(AssemblerConfigurationSource.class);
 
         final File basedir = temporaryFolder.getRoot();
@@ -104,7 +104,7 @@ public class FileItemAssemblyPhaseTest {
     }
 
     @Test
-    public void testExecute_ShouldAddRelativeFileNoFilterNoLineEndingConversion() throws Exception {
+    public void testExecuteShouldAddRelativeFileNoFilterNoLineEndingConversion() throws Exception {
         final AssemblerConfigurationSource macCS = mock(AssemblerConfigurationSource.class);
 
         final File basedir = temporaryFolder.getRoot();
@@ -138,7 +138,7 @@ public class FileItemAssemblyPhaseTest {
     }
 
     @Test
-    public void testExecute_WithOutputDirectory() throws Exception {
+    public void testExecuteWithOutputDirectory() throws Exception {
         final AssemblerConfigurationSource macCS = mock(AssemblerConfigurationSource.class);
 
         final File basedir = temporaryFolder.getRoot();
@@ -217,7 +217,7 @@ public class FileItemAssemblyPhaseTest {
     }
 
     @Test
-    public void testExecute_WithOutputDirectoryAndDestName() throws Exception {
+    public void testExecuteWithOutputDirectoryAndDestName() throws Exception {
         final AssemblerConfigurationSource macCS = mock(AssemblerConfigurationSource.class);
 
         final File basedir = temporaryFolder.getRoot();
@@ -299,7 +299,7 @@ public class FileItemAssemblyPhaseTest {
     }
 
     @Test
-    public void testExecute_WithOutputDirectoryAndDestNameAndIncludeBaseDirectoryFalse() throws Exception {
+    public void testExecuteWithOutputDirectoryAndDestNameAndIncludeBaseDirectoryFalse() throws Exception {
         final AssemblerConfigurationSource macCS = mock(AssemblerConfigurationSource.class);
 
         final File basedir = temporaryFolder.getRoot();

@@ -73,7 +73,7 @@ public class AddDependencySetsTaskTest {
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     @Test
-    public void testAddDependencySet_ShouldInterpolateDefaultOutputFileNameMapping() throws Exception {
+    public void testAddDependencySetShouldInterpolateDefaultOutputFileNameMapping() throws Exception {
         final String outDir = "tmp/";
         final String mainAid = "main";
         final String mainGid = "org.maingrp";
@@ -167,7 +167,7 @@ public class AddDependencySetsTaskTest {
     }
 
     @Test
-    public void testAddDependencySet_ShouldNotAddDependenciesWhenProjectHasNone() throws Exception {
+    public void testAddDependencySetShouldNotAddDependenciesWhenProjectHasNone() throws Exception {
         final MavenProject project = new MavenProject(new Model());
 
         final DependencySet ds = new DependencySet();
@@ -181,7 +181,7 @@ public class AddDependencySetsTaskTest {
 
     // TODO: Find a better way of testing the project-stubbing behavior when a ProjectBuildingException takes place.
     @Test
-    public void testAddDependencySet_ShouldNotAddDependenciesWhenProjectIsStubbed() throws Exception {
+    public void testAddDependencySetShouldNotAddDependenciesWhenProjectIsStubbed() throws Exception {
         final MavenProject project = new MavenProject(new Model());
 
         final ProjectBuildingException pbe = new ProjectBuildingException("test", "Test error.", new Throwable());
@@ -249,12 +249,12 @@ public class AddDependencySetsTaskTest {
     }
 
     @Test
-    public void testAddDependencySet_ShouldAddOneDependencyFromProjectWithoutUnpacking() throws Exception {
+    public void testAddDependencySetShouldAddOneDependencyFromProjectWithoutUnpacking() throws Exception {
         verifyOneDependencyAdded("out", false);
     }
 
     @Test
-    public void testAddDependencySet_ShouldAddOneDependencyFromProjectUnpacked() throws Exception {
+    public void testAddDependencySetShouldAddOneDependencyFromProjectUnpacked() throws Exception {
         verifyOneDependencyAdded("out", true);
     }
 
@@ -338,7 +338,7 @@ public class AddDependencySetsTaskTest {
     }
 
     @Test
-    public void testGetDependencyArtifacts_ShouldGetOneDependencyArtifact() throws Exception {
+    public void testGetDependencyArtifactsShouldGetOneDependencyArtifact() throws Exception {
         final MavenProject project = new MavenProject(new Model());
 
         Artifact artifact = mock(Artifact.class);
@@ -357,7 +357,7 @@ public class AddDependencySetsTaskTest {
     }
 
     @Test
-    public void testGetDependencyArtifacts_ShouldFilterOneDependencyArtifactViaInclude() throws Exception {
+    public void testGetDependencyArtifactsShouldFilterOneDependencyArtifactViaInclude() throws Exception {
         final MavenProject project = new MavenProject(new Model());
 
         final Set<Artifact> artifacts = new HashSet<>();
@@ -388,7 +388,7 @@ public class AddDependencySetsTaskTest {
     }
 
     @Test
-    public void testGetDependencyArtifacts_ShouldIgnoreTransitivePathFilteringWhenIncludeNotTransitive()
+    public void testGetDependencyArtifactsShouldIgnoreTransitivePathFilteringWhenIncludeNotTransitive()
             throws Exception {
         final MavenProject project = new MavenProject(new Model());
 

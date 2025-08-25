@@ -75,7 +75,7 @@ public class ComponentsXmlArchiverFileFilterTest {
     }
 
     @Test
-    public void testAddComponentsXml_ShouldAddComponentWithoutRoleHint() throws Exception {
+    public void testAddComponentsXmlShouldAddComponentWithoutRoleHint() throws Exception {
         final Reader reader =
                 writeComponentsXml(Collections.singletonList(new ComponentDef("role", null, "org.apache.maven.Impl")));
 
@@ -92,7 +92,7 @@ public class ComponentsXmlArchiverFileFilterTest {
     }
 
     @Test
-    public void testAddComponentsXml_ShouldAddComponentWithRoleHint() throws Exception {
+    public void testAddComponentsXmlShouldAddComponentWithRoleHint() throws Exception {
         final Reader reader = writeComponentsXml(
                 Collections.singletonList(new ComponentDef("role", "hint", "org.apache.maven.Impl")));
 
@@ -109,7 +109,7 @@ public class ComponentsXmlArchiverFileFilterTest {
     }
 
     @Test
-    public void testAddComponentsXml_ShouldAddTwoComponentsWithRoleHints() throws Exception {
+    public void testAddComponentsXmlShouldAddTwoComponentsWithRoleHints() throws Exception {
         final List<ComponentDef> defs = new ArrayList<>();
 
         defs.add(new ComponentDef("role", "hint", "org.apache.maven.Impl"));
@@ -138,7 +138,7 @@ public class ComponentsXmlArchiverFileFilterTest {
     }
 
     @Test
-    public void testAddToArchive_ShouldWriteComponentWithoutHintToFile() throws Exception {
+    public void testAddToArchiveShouldWriteComponentWithoutHintToFile() throws Exception {
         final Xpp3Dom dom = createComponentDom(new ComponentDef("role", null, "impl"));
 
         filter.components = new LinkedHashMap<>();
@@ -166,7 +166,7 @@ public class ComponentsXmlArchiverFileFilterTest {
     }
 
     @Test
-    public void testAddToArchive_ShouldWriteComponentWithHintToFile() throws Exception {
+    public void testAddToArchiveShouldWriteComponentWithHintToFile() throws Exception {
         final Xpp3Dom dom = createComponentDom(new ComponentDef("role", "hint", "impl"));
 
         filter.components = new LinkedHashMap<>();
@@ -194,7 +194,7 @@ public class ComponentsXmlArchiverFileFilterTest {
     }
 
     @Test
-    public void testAddToArchive_ShouldWriteTwoComponentToFile() throws Exception {
+    public void testAddToArchiveShouldWriteTwoComponentToFile() throws Exception {
         filter.components = new LinkedHashMap<>();
 
         final Xpp3Dom dom = createComponentDom(new ComponentDef("role", "hint", "impl"));
@@ -237,7 +237,7 @@ public class ComponentsXmlArchiverFileFilterTest {
     }
 
     @Test
-    public void testAddToArchive_ShouldWriteTwoComponentToArchivedFile() throws Exception {
+    public void testAddToArchiveShouldWriteTwoComponentToArchivedFile() throws Exception {
         filter.components = new LinkedHashMap<>();
 
         final Xpp3Dom dom = createComponentDom(new ComponentDef("role", "hint", "impl"));
