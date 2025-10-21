@@ -411,7 +411,7 @@ under the License.
               <dependency>
                 <groupId>com.github.luben</groupId>
                 <artifactId>zstd-jni</artifactId>
-                <version>1.5.7-5</version>
+                <version>1.5.7-6</version>
               </dependency>
             </dependencies>
             <executions>
