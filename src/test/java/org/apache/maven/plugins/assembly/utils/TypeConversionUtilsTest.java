@@ -22,14 +22,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -89,9 +89,9 @@ public class TypeConversionUtilsTest {
             final String mode, final boolean isSane, final List<String> messagesToCheckIfInsane) {
         Logger logger = mock(Logger.class);
         assertEquals(
-                "Mode sanity should be: " + isSane,
                 isSane,
-                TypeConversionUtils.verifyModeSanity(Integer.parseInt(mode, 8), logger));
+                TypeConversionUtils.verifyModeSanity(Integer.parseInt(mode, 8), logger),
+                "Mode sanity should be: " + isSane);
 
         if (!isSane && messagesToCheckIfInsane != null && !messagesToCheckIfInsane.isEmpty()) {
             ArgumentCaptor<String> warnings = ArgumentCaptor.forClass(String.class);
@@ -100,7 +100,7 @@ public class TypeConversionUtilsTest {
             final String message = warnings.getAllValues().toString();
 
             for (final String checkMessage : messagesToCheckIfInsane) {
-                assertTrue("\'" + checkMessage + "\' is not present in output.", message.contains(checkMessage));
+                assertTrue(message.contains(checkMessage), "\'" + checkMessage + "\' is not present in output.");
             }
         }
     }
