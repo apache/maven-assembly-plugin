@@ -46,18 +46,20 @@ import org.codehaus.plexus.archiver.war.WarArchiver;
 import org.codehaus.plexus.archiver.zip.ZipArchiver;
 import org.codehaus.plexus.component.configurator.BasicComponentConfigurator;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.atLeastOnce;
@@ -66,10 +68,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@MockitoSettings(strictness = Strictness.WARN)
+@ExtendWith(MockitoExtension.class)
 public class DefaultAssemblyArchiverTest {
-    @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+    @TempDir
+    private File temporaryFolder;
 
     private ArchiverManager archiverManager;
 
@@ -90,17 +93,19 @@ public class DefaultAssemblyArchiverTest {
                 .thenReturn(AbstractAssemblyMojo.mainProjectInterpolator(mavenProject));
     }
 
-    @Before
+    @BeforeEach
     public void setup() throws PlexusContainerException {
         this.archiverManager = mock(ArchiverManager.class);
         this.container = new DefaultPlexusContainer();
         this.configurator = new BasicComponentConfigurator();
     }
 
-    @Test(expected = InvalidAssemblerConfigurationException.class)
+    @Test
     public void failWhenAssemblyIdIsNull() throws Exception {
-        final DefaultAssemblyArchiver archiver = createSubject(Collections.emptyList());
-        archiver.createArchive(new Assembly(), "full-name", "zip", null, null);
+        assertThrows(InvalidAssemblerConfigurationException.class, () -> {
+            final DefaultAssemblyArchiver archiver = createSubject(Collections.emptyList());
+            archiver.createArchive(new Assembly(), "full-name", "zip", null, null);
+        });
     }
 
     @Test
@@ -111,10 +116,10 @@ public class DefaultAssemblyArchiverTest {
 
         final AssemblyArchiverPhase phase = mock(AssemblyArchiverPhase.class);
 
-        final File outDir = temporaryFolder.newFolder("out");
+        final File outDir = newFolder(temporaryFolder, "out");
 
         final AssemblerConfigurationSource configSource = mock(AssemblerConfigurationSource.class);
-        when(configSource.getTemporaryRootDirectory()).thenReturn(new File(temporaryFolder.getRoot(), "temp"));
+        when(configSource.getTemporaryRootDirectory()).thenReturn(new File(temporaryFolder, "temp"));
         when(configSource.getOverrideUid()).thenReturn(0);
         when(configSource.getOverrideUserName()).thenReturn("root");
         when(configSource.getOverrideGid()).thenReturn(0);
@@ -396,5 +401,14 @@ public class DefaultAssemblyArchiverTest {
         public String getDuplicateBehavior() {
             return Archiver.DUPLICATES_ADD;
         }
+    }
+
+    private static File newFolder(File root, String... subDirs) throws IOException {
+        String subFolder = String.join("/", subDirs);
+        File result = new File(root, subFolder);
+        if (!result.mkdirs()) {
+            throw new IOException("Couldn't create folders " + root);
+        }
+        return result;
     }
 }

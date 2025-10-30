@@ -33,6 +33,11 @@ under the License.
         <artifactId>commons-io</artifactId>
         <version>@commonsIoVersion@</version>
       </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <version>@versions.junit5@</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

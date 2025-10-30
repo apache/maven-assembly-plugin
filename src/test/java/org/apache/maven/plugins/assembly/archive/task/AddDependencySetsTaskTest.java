@@ -47,18 +47,19 @@ import org.codehaus.plexus.archiver.ArchivedFileSet;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.FileSet;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.ArgumentCaptor;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.atLeastOnce;
@@ -67,10 +68,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@MockitoSettings(strictness = Strictness.WARN)
+@ExtendWith(MockitoExtension.class)
 public class AddDependencySetsTaskTest {
-    @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+    @TempDir
+    private File temporaryFolder;
 
     @Test
     public void testAddDependencySetShouldInterpolateDefaultOutputFileNameMapping() throws Exception {
@@ -110,7 +112,7 @@ public class AddDependencySetsTaskTest {
         ArtifactHandler artifactHandler = mock(ArtifactHandler.class);
         when(artifactHandler.getExtension()).thenReturn(depExt);
         when(depArtifact.getArtifactHandler()).thenReturn(artifactHandler);
-        final File newFile = temporaryFolder.newFile();
+        final File newFile = File.createTempFile("junit", null, temporaryFolder);
         when(depArtifact.getFile()).thenReturn(newFile);
         when(depArtifact.getGroupId()).thenReturn("GROUPID");
 
@@ -282,7 +284,7 @@ public class AddDependencySetsTaskTest {
         when(configSource.getFinalName()).thenReturn("final-name");
 
         Artifact artifact = mock(Artifact.class);
-        final File artifactFile = temporaryFolder.newFile();
+        final File artifactFile = File.createTempFile("junit", null, temporaryFolder);
         when(artifact.getFile()).thenReturn(artifactFile);
         when(artifact.getGroupId()).thenReturn("GROUPID");
 
@@ -426,13 +428,13 @@ public class AddDependencySetsTaskTest {
         when(zipArtifact.getGroupId()).thenReturn("some-artifact");
         when(zipArtifact.getArtifactId()).thenReturn("of-type-zip");
         when(zipArtifact.getId()).thenReturn("some-artifact:of-type-zip:1.0:zip");
-        when(zipArtifact.getFile()).thenReturn(temporaryFolder.newFile("of-type-zip.zip"));
+        when(zipArtifact.getFile()).thenReturn(newFile(temporaryFolder, "of-type-zip.zip"));
 
         Artifact dirArtifact = mock(Artifact.class);
         when(dirArtifact.getGroupId()).thenReturn("some-artifact");
         when(dirArtifact.getArtifactId()).thenReturn("of-type-zip");
         when(dirArtifact.getId()).thenReturn("some-artifact:of-type-zip:1.0:dir");
-        when(dirArtifact.getFile()).thenReturn(temporaryFolder.newFolder("of-type-zip"));
+        when(dirArtifact.getFile()).thenReturn(newFolder(temporaryFolder, "of-type-zip"));
 
         final Set<Artifact> artifacts = new HashSet<>(Arrays.asList(zipArtifact, dirArtifact));
 
@@ -477,5 +479,20 @@ public class AddDependencySetsTaskTest {
         ArgumentCaptor<FileSet> fileSet = ArgumentCaptor.forClass(FileSet.class);
         verify(archiver).addFileSet(fileSet.capture());
         assertThat(fileSet.getValue().isUsingDefaultExcludes(), is(false));
+    }
+
+    private static File newFile(File parent, String child) throws IOException {
+        File result = new File(parent, child);
+        result.createNewFile();
+        return result;
+    }
+
+    private static File newFolder(File root, String... subDirs) throws IOException {
+        String subFolder = String.join("/", subDirs);
+        File result = new File(root, subFolder);
+        if (!result.mkdirs()) {
+            throw new IOException("Couldn't create folders " + root);
+        }
+        return result;
     }
 }

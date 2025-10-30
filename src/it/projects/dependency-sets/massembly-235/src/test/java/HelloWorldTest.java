@@ -17,11 +17,14 @@
  * under the License.
  */
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
-public class HelloWorldTest extends TestCase
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class HelloWorldTest
 {
-    public static final void testSayHello()
+    @Test
+    void testSayHello()
     {
         assertEquals("Hello World!", HelloWorld.sayHello("World"));
     }

@@ -52,24 +52,23 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.input.sax.XMLReaders;
 import org.jdom2.xpath.XPathExpression;
 import org.jdom2.xpath.XPathFactory;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class ComponentsXmlArchiverFileFilterTest {
 
-    @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+    @TempDir
+    private File temporaryFolder;
 
     private ComponentsXmlArchiverFileFilter filter;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         filter = new ComponentsXmlArchiverFileFilter();
     }
@@ -250,11 +249,11 @@ public class ComponentsXmlArchiverFileFilterTest {
 
         final ZipArchiver archiver = new ZipArchiver();
 
-        final File archiveFile = temporaryFolder.newFile("archive");
+        final File archiveFile = newFile(temporaryFolder, "archive");
 
         archiver.setDestFile(archiveFile);
 
-        final File descriptorFile = new File(temporaryFolder.getRoot(), "descriptor.xml");
+        final File descriptorFile = new File(temporaryFolder, "descriptor.xml");
 
         archiver.setArchiveFinalizers(Collections.singletonList(filter));
 
@@ -550,5 +549,11 @@ public class ComponentsXmlArchiverFileFilterTest {
         public int getOverrideFileMode() {
             throw new UnsupportedOperationException("not supported");
         }
+    }
+
+    private static File newFile(File parent, String child) throws IOException {
+        File result = new File(parent, child);
+        result.createNewFile();
+        return result;
     }
 }
