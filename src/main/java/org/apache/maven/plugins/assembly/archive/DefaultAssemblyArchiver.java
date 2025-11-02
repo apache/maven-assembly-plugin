@@ -325,13 +325,13 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver {
             archiver.setOverrideUid(configSource.getOverrideUid());
         }
         if (StringUtils.isNotBlank(configSource.getOverrideUserName())) {
-            archiver.setOverrideUserName(StringUtils.trim(configSource.getOverrideUserName()));
+            archiver.setOverrideUserName(configSource.getOverrideUserName() == null ? null : configSource.getOverrideUserName().trim());
         }
         if (configSource.getOverrideGid() != null) {
             archiver.setOverrideGid(configSource.getOverrideGid());
         }
         if (StringUtils.isNotBlank(configSource.getOverrideGroupName())) {
-            archiver.setOverrideGroupName(StringUtils.trim(configSource.getOverrideGroupName()));
+            archiver.setOverrideGroupName(configSource.getOverrideGroupName() == null ? null : configSource.getOverrideGroupName().trim());
         }
 
         return archiver;

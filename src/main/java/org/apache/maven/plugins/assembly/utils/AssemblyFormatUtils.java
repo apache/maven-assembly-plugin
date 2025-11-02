@@ -346,8 +346,8 @@ public final class AssemblyFormatUtils {
 
         value = interpolator.interpolate(value);
 
-        value = StringUtils.replace(value, "//", "/");
-        value = StringUtils.replace(value, "\\\\", "\\");
+        value = value == null || value.isEmpty() ? value : value.replace("//", "/");
+        value = value == null || value.isEmpty() ? value : value.replace("\\\\", "\\");
         value = fixRelativeRefs(value);
 
         return value;
@@ -410,8 +410,8 @@ public final class AssemblyFormatUtils {
             value = value.substring(1);
         }
 
-        value = StringUtils.replace(value, "//", "/");
-        value = StringUtils.replace(value, "\\\\", "\\");
+        value = value == null || value.isEmpty() ? value : value.replace("//", "/");
+        value = value == null || value.isEmpty() ? value : value.replace("\\\\", "\\");
         value = fixRelativeRefs(value);
 
         return value;
