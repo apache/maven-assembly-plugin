@@ -42,10 +42,9 @@ import org.codehaus.plexus.components.io.resources.PlexusIoResource;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -91,12 +90,12 @@ public class ReaderFormatterTest {
         PlexusIoResource resource = mock(PlexusIoResource.class);
 
         when(resource.getName()).thenReturn("file.jpg", "file.tar.gz", "file.txt", "file.nojpg", "file.gz", "file");
-        assertThat(transformer.transform(resource, is), sameInstance(is));
-        assertThat(transformer.transform(resource, is), sameInstance(is));
-        assertThat(transformer.transform(resource, is), not(sameInstance(is)));
-        assertThat(transformer.transform(resource, is), not(sameInstance(is)));
-        assertThat(transformer.transform(resource, is), not(sameInstance(is)));
-        assertThat(transformer.transform(resource, is), not(sameInstance(is)));
+        assertSame(transformer.transform(resource, is), is);
+        assertSame(transformer.transform(resource, is), is);
+        assertNotSame(transformer.transform(resource, is), is);
+        assertNotSame(transformer.transform(resource, is), is);
+        assertNotSame(transformer.transform(resource, is), is);
+        assertNotSame(transformer.transform(resource, is), is);
     }
 
     @Test
@@ -121,7 +120,7 @@ public class ReaderFormatterTest {
         ArgumentCaptor<MavenReaderFilterRequest> filteringRequest =
                 ArgumentCaptor.forClass(MavenReaderFilterRequest.class);
         verify(mavenReaderFilter).filter(filteringRequest.capture());
-        assertThat(filteringRequest.getValue().getAdditionalProperties(), sameInstance(additionalProperties));
+        assertSame(filteringRequest.getValue().getAdditionalProperties(), additionalProperties);
     }
 
     private MavenProject createBasicMavenProject() {
