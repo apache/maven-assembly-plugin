@@ -23,26 +23,28 @@ import java.util.Collections;
 
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.FileSet;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@MockitoSettings(strictness = Strictness.WARN)
+@ExtendWith(MockitoExtension.class)
 public class AddDirectoryTaskTest {
-    @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+    @TempDir
+    public File temporaryFolder;
 
     private Archiver archiver;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         this.archiver = mock(Archiver.class);
     }
@@ -55,7 +57,7 @@ public class AddDirectoryTaskTest {
         when(archiver.getOverrideDirectoryMode()).thenReturn(defaultDirMode);
         when(archiver.getOverrideFileMode()).thenReturn(defaultFileMode);
 
-        AddDirectoryTask task = new AddDirectoryTask(new File(temporaryFolder.getRoot(), "non-existent"));
+        AddDirectoryTask task = new AddDirectoryTask(new File(temporaryFolder, "non-existent"));
 
         task.execute(archiver);
 
@@ -72,7 +74,7 @@ public class AddDirectoryTaskTest {
         when(archiver.getOverrideDirectoryMode()).thenReturn(defaultDirMode);
         when(archiver.getOverrideFileMode()).thenReturn(defaultFileMode);
 
-        AddDirectoryTask task = new AddDirectoryTask(temporaryFolder.getRoot());
+        AddDirectoryTask task = new AddDirectoryTask(temporaryFolder);
         task.setOutputDirectory("dir");
 
         task.execute(archiver);
@@ -93,7 +95,7 @@ public class AddDirectoryTaskTest {
         when(archiver.getOverrideDirectoryMode()).thenReturn(defaultDirMode);
         when(archiver.getOverrideFileMode()).thenReturn(defaultFileMode);
 
-        AddDirectoryTask task = new AddDirectoryTask(temporaryFolder.getRoot());
+        AddDirectoryTask task = new AddDirectoryTask(temporaryFolder);
         task.setDirectoryMode(dirMode);
         task.setFileMode(fileMode);
         task.setOutputDirectory("dir");
@@ -115,7 +117,7 @@ public class AddDirectoryTaskTest {
         when(archiver.getOverrideDirectoryMode()).thenReturn(-1);
         when(archiver.getOverrideFileMode()).thenReturn(-1);
 
-        AddDirectoryTask task = new AddDirectoryTask(temporaryFolder.getRoot());
+        AddDirectoryTask task = new AddDirectoryTask(temporaryFolder);
         task.setIncludes(Collections.singletonList("**/*.txt"));
         task.setExcludes(Collections.singletonList("**/README.txt"));
         task.setOutputDirectory("dir");

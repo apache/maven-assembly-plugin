@@ -34,19 +34,21 @@ import org.apache.maven.archiver.MavenArchiveConfiguration;
 import org.apache.maven.model.Model;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@RunWith(MockitoJUnitRunner.class)
+@MockitoSettings(strictness = Strictness.WARN)
+@ExtendWith(MockitoExtension.class)
 public class ManifestCreationFinalizerTest {
 
-    @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+    @TempDir
+    public File temporaryFolder;
 
     @Test
     public void testShouldDoNothingWhenArchiveConfigIsNull() throws Exception {
@@ -66,7 +68,7 @@ public class ManifestCreationFinalizerTest {
         MavenProject project = new MavenProject(new Model());
         MavenArchiveConfiguration config = new MavenArchiveConfiguration();
 
-        File tempDir = temporaryFolder.getRoot();
+        File tempDir = temporaryFolder;
 
         Path manifestFile = tempDir.toPath().resolve("MANIFEST.MF");
 
@@ -78,7 +80,7 @@ public class ManifestCreationFinalizerTest {
 
         archiver.setArchiveFinalizers(Collections.singletonList(new ManifestCreationFinalizer(null, project, config)));
 
-        File file = temporaryFolder.newFile();
+        File file = File.createTempFile("junit", null, temporaryFolder);
 
         archiver.setDestFile(file);
 
@@ -112,7 +114,7 @@ public class ManifestCreationFinalizerTest {
 
         archiver.setArchiveFinalizers(Collections.singletonList(new ManifestCreationFinalizer(null, project, config)));
 
-        File file = temporaryFolder.newFile();
+        File file = File.createTempFile("junit", null, temporaryFolder);
 
         archiver.setDestFile(file);
 

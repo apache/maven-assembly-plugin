@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
@@ -35,30 +36,34 @@ import org.codehaus.plexus.archiver.util.DefaultFileSet;
 import org.codehaus.plexus.components.io.fileselectors.FileInfo;
 import org.codehaus.plexus.components.io.fileselectors.FileSelector;
 import org.codehaus.plexus.components.io.functions.InputStreamTransformer;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.ArgumentCaptor;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@MockitoSettings(strictness = Strictness.WARN)
+@ExtendWith(MockitoExtension.class)
 public class AssemblyProxyArchiverTest {
-    @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+    @TempDir
+    public File temporaryFolder;
 
-    @Test(timeout = 5000)
+    @Test
+    @Timeout(value = 5000, unit = TimeUnit.MILLISECONDS)
     public void addFileSetSkipWhenSourceIsAssemblyWorkDir() throws IOException, ArchiverException {
-        final File sources = temporaryFolder.getRoot();
+        final File sources = temporaryFolder;
 
         final File workdir = new File(sources, "workdir");
 
@@ -75,9 +80,10 @@ public class AssemblyProxyArchiverTest {
         assertTrue(tracker.added.isEmpty());
     }
 
-    @Test(timeout = 5000)
+    @Test
+    @Timeout(value = 5000, unit = TimeUnit.MILLISECONDS)
     public void addFileSetAddExcludeWhenSourceContainsAssemblyWorkDir() throws IOException, ArchiverException {
-        final File sources = temporaryFolder.getRoot();
+        final File sources = temporaryFolder;
 
         final File workdir = new File(sources, "workdir");
         workdir.mkdir();
@@ -121,7 +127,7 @@ public class AssemblyProxyArchiverTest {
                 new AssemblyProxyArchiver("", delegate, null, selectors, null, new File("."));
         archiver.setForced(true);
 
-        final File inputFile = temporaryFolder.newFile();
+        final File inputFile = File.createTempFile("junit", null, temporaryFolder);
         archiver.addFile(inputFile, "file.txt");
 
         assertEquals(1, counter.getCount());
@@ -134,7 +140,7 @@ public class AssemblyProxyArchiverTest {
     public void addDirectoryNoPermsCallAcceptFilesOnlyOnce() throws IOException, ArchiverException {
         final Archiver delegate = new JarArchiver();
 
-        final File output = temporaryFolder.newFile();
+        final File output = File.createTempFile("junit", null, temporaryFolder);
 
         delegate.setDestFile(output);
 
@@ -147,7 +153,7 @@ public class AssemblyProxyArchiverTest {
 
         archiver.setForced(true);
 
-        final File dir = temporaryFolder.newFolder();
+        final File dir = newFolder(temporaryFolder, "junit");
         Files.write(
                 dir.toPath().resolve("file.txt"), Collections.singletonList("This is a test."), StandardCharsets.UTF_8);
 
@@ -164,10 +170,10 @@ public class AssemblyProxyArchiverTest {
         final List<FileSelector> selectors = new ArrayList<>();
 
         final AssemblyProxyArchiver archiver = new AssemblyProxyArchiver(
-                "prefix", delegate, null, selectors, null, new File(temporaryFolder.getRoot(), "module1"));
+                "prefix", delegate, null, selectors, null, new File(temporaryFolder, "module1"));
 
         FileSet fileSet = mock(FileSet.class);
-        when(fileSet.getDirectory()).thenReturn(temporaryFolder.getRoot());
+        when(fileSet.getDirectory()).thenReturn(temporaryFolder);
         when(fileSet.getStreamTransformer()).thenReturn(mock(InputStreamTransformer.class));
 
         archiver.addFileSet(fileSet);
@@ -176,7 +182,7 @@ public class AssemblyProxyArchiverTest {
         verify(delegate).addFileSet(delFileSet.capture());
 
         assertThat(delFileSet.getValue().getDirectory(), is(fileSet.getDirectory()));
-        assertThat(delFileSet.getValue().getExcludes(), is(new String[] {"module1"}));
+        assertThat(delFileSet.getValue().getExcludes(), is(new String[]{"module1"}));
         assertThat(delFileSet.getValue().getFileMappers(), is(fileSet.getFileMappers()));
         assertThat(delFileSet.getValue().getFileSelectors(), is(fileSet.getFileSelectors()));
         assertThat(delFileSet.getValue().getIncludes(), is(new String[0]));
@@ -206,5 +212,14 @@ public class AssemblyProxyArchiverTest {
 
             return answer;
         }
+    }
+
+    private static File newFolder(File root, String... subDirs) throws IOException {
+        String subFolder = String.join("/", subDirs);
+        File result = new File(root, subFolder);
+        if (!result.mkdirs()) {
+            throw new IOException("Couldn't create folders " + root);
+        }
+        return result;
     }
 }

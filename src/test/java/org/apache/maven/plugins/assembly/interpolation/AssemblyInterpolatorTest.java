@@ -36,20 +36,23 @@ import org.apache.maven.plugins.assembly.testutils.PojoConfigSource;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
 import org.codehaus.plexus.interpolation.fixed.PropertiesBasedValueSource;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@MockitoSettings(strictness = Strictness.WARN)
+@ExtendWith(MockitoExtension.class)
 public class AssemblyInterpolatorTest {
     @Test
     public void testDependencySetOutputFileNameMappingsAreNotInterpolated()
             throws IOException, AssemblyInterpolationException, AssemblyReadException,
-                    InvalidAssemblerConfigurationException {
+            InvalidAssemblerConfigurationException {
         final Model model = new Model();
         model.setArtifactId("artifact-id");
         model.setGroupId("group.id");
@@ -87,7 +90,7 @@ public class AssemblyInterpolatorTest {
     @Test
     public void testDependencySetOutputDirectoryIsNotInterpolated()
             throws IOException, AssemblyInterpolationException, AssemblyReadException,
-                    InvalidAssemblerConfigurationException {
+            InvalidAssemblerConfigurationException {
         final Model model = new Model();
         model.setArtifactId("artifact-id");
         model.setGroupId("group.id");
@@ -129,7 +132,7 @@ public class AssemblyInterpolatorTest {
     @Test
     public void testShouldResolveModelGroupIdInAssemblyId()
             throws AssemblyInterpolationException, InvalidAssemblerConfigurationException, AssemblyReadException,
-                    IOException {
+            IOException {
         final Model model = new Model();
         model.setArtifactId("artifact-id");
         model.setGroupId("group.id");
@@ -153,7 +156,7 @@ public class AssemblyInterpolatorTest {
     @Test
     public void testShouldResolveModelPropertyBeforeModelGroupIdInAssemblyId()
             throws AssemblyInterpolationException, InvalidAssemblerConfigurationException, AssemblyReadException,
-                    IOException {
+            IOException {
         final Model model = new Model();
         model.setArtifactId("artifact-id");
         model.setGroupId("group.id");
@@ -218,7 +221,7 @@ public class AssemblyInterpolatorTest {
     @Test
     public void testShouldNotTouchUnresolvedExpression()
             throws AssemblyInterpolationException, InvalidAssemblerConfigurationException, AssemblyReadException,
-                    IOException {
+            IOException {
         final Model model = new Model();
         model.setArtifactId("artifact-id");
         model.setGroupId("group.id");
@@ -243,7 +246,7 @@ public class AssemblyInterpolatorTest {
     @Test
     public void testShouldInterpolateMultiDotProjectExpression()
             throws AssemblyInterpolationException, InvalidAssemblerConfigurationException, AssemblyReadException,
-                    IOException {
+            IOException {
         final Build build = new Build();
         build.setFinalName("final-name");
 

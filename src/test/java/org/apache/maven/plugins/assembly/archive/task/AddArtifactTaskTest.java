@@ -32,13 +32,14 @@ import org.apache.maven.plugins.assembly.utils.TypeConversionUtils;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.archiver.ArchivedFileSet;
 import org.codehaus.plexus.archiver.Archiver;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,18 +50,19 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@MockitoSettings(strictness = Strictness.WARN)
+@ExtendWith(MockitoExtension.class)
 public class AddArtifactTaskTest {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+    @TempDir
+    public File temporaryFolder;
 
     private MavenProject mainProject;
 
     private AssemblerConfigurationSource configSource;
 
-    @Before
+    @BeforeEach
     public void setUp() throws IOException {
         Model model = new Model();
         model.setGroupId("group");
@@ -73,7 +75,7 @@ public class AddArtifactTaskTest {
         when(configSource.getFinalName()).thenReturn("final-name");
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         // result of easymock migration, should be assert of expected result instead of verifying methodcalls
         verify(configSource, atLeastOnce()).getFinalName();
@@ -86,7 +88,7 @@ public class AddArtifactTaskTest {
 
         Artifact artifact = mock(Artifact.class);
         when(artifact.getGroupId()).thenReturn("GROUPID");
-        File artifactFile = temporaryFolder.newFile();
+        File artifactFile = File.createTempFile("junit", null, temporaryFolder);
         when(artifact.getFile()).thenReturn(artifactFile);
 
         final Archiver archiver = mock(Archiver.class);
@@ -122,7 +124,7 @@ public class AddArtifactTaskTest {
         when(artifact.getGroupId()).thenReturn("GROUPID");
         when(artifactHandler.getExtension()).thenReturn(ext);
         when(artifact.getArtifactHandler()).thenReturn(artifactHandler);
-        File artifactFile = temporaryFolder.newFile();
+        File artifactFile = File.createTempFile("junit", null, temporaryFolder);
         when(artifact.getFile()).thenReturn(artifactFile);
 
         final Archiver archiver = mock(Archiver.class);
@@ -178,7 +180,7 @@ public class AddArtifactTaskTest {
         DefaultAssemblyArchiverTest.setupInterpolators(configSource, mainProject);
 
         Artifact artifact = mock(Artifact.class);
-        when(artifact.getFile()).thenReturn(temporaryFolder.newFile());
+        when(artifact.getFile()).thenReturn(File.createTempFile("junit", null, temporaryFolder));
 
         AddArtifactTask task = createTask(artifact);
         task.setUnpack(true);
@@ -207,7 +209,7 @@ public class AddArtifactTaskTest {
         DefaultAssemblyArchiverTest.setupInterpolators(configSource, mainProject);
 
         Artifact artifact = mock(Artifact.class);
-        when(artifact.getFile()).thenReturn(temporaryFolder.newFile());
+        when(artifact.getFile()).thenReturn(File.createTempFile("junit", null, temporaryFolder));
 
         AddArtifactTask task = createTask(artifact);
         task.setUnpack(true);
@@ -241,7 +243,7 @@ public class AddArtifactTaskTest {
         String[] excludes = {"**/README.txt"};
 
         Artifact artifact = mock(Artifact.class);
-        when(artifact.getFile()).thenReturn(temporaryFolder.newFile());
+        when(artifact.getFile()).thenReturn(File.createTempFile("junit", null, temporaryFolder));
 
         DefaultAssemblyArchiverTest.setupInterpolators(configSource, mainProject);
 

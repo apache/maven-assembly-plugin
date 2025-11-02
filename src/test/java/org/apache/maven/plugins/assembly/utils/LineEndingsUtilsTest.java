@@ -28,10 +28,11 @@ import java.nio.file.Files;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class LineEndingsUtilsTest {
 
@@ -81,10 +82,10 @@ public class LineEndingsUtilsTest {
         assertNull(LineEndingsUtils.getLineEndingCharacters("keep"));
     }
 
-    @Test(expected = AssemblyFormattingException.class)
-    public void testGetLineEndingCharsShouldThrowFormattingExceptionWithInvalidHint()
-            throws AssemblyFormattingException {
-        LineEndingsUtils.getLineEndingCharacters("invalid");
+    @Test
+    public void testGetLineEndingCharsShouldThrowFormattingExceptionWithInvalidHint() {
+        assertThrows(AssemblyFormattingException.class, () ->
+            LineEndingsUtils.getLineEndingCharacters("invalid"));
     }
 
     @Test

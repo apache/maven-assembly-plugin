@@ -49,25 +49,27 @@ import org.apache.maven.plugins.assembly.model.io.xpp3.ComponentXpp3Writer;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
 import org.codehaus.plexus.interpolation.fixed.InterpolationState;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.slf4j.LoggerFactory;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@MockitoSettings(strictness = Strictness.WARN)
+@ExtendWith(MockitoExtension.class)
 public class DefaultAssemblyReaderTest {
 
-    @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+    @TempDir
+    public File temporaryFolder;
 
     @Mock
     private AssemblerConfigurationSource configSource;
@@ -101,7 +103,7 @@ public class DefaultAssemblyReaderTest {
 
     @Test
     public void testIncludeSiteInAssemblyShouldAddSiteDirFileSetWhenDirExists() throws Exception {
-        final File siteDir = temporaryFolder.getRoot();
+        final File siteDir = temporaryFolder;
 
         when(configSource.getSiteDirectory()).thenReturn(siteDir);
 
@@ -270,7 +272,7 @@ public class DefaultAssemblyReaderTest {
 
         component.addFileSet(fileSet);
 
-        final File componentFile = temporaryFolder.newFile();
+        final File componentFile = File.createTempFile("junit", null, temporaryFolder);
 
         try (Writer writer =
                 new OutputStreamWriter(Files.newOutputStream(componentFile.toPath()), StandardCharsets.UTF_8)) {
@@ -327,11 +329,11 @@ public class DefaultAssemblyReaderTest {
 
         final StringReader sr = writeToStringReader(assembly);
 
-        final File siteDir = temporaryFolder.newFolder("site");
+        final File siteDir = newFolder(temporaryFolder, "site");
 
         when(configSource.getSiteDirectory()).thenReturn(siteDir);
 
-        final File basedir = temporaryFolder.getRoot();
+        final File basedir = temporaryFolder;
 
         when(configSource.getBasedir()).thenReturn(basedir);
 
@@ -360,7 +362,7 @@ public class DefaultAssemblyReaderTest {
     @Test
     public void testReadAssemblyShouldReadAssemblyWithComponentWithoutSiteDirInclusionOrInterpolation()
             throws Exception {
-        final File componentsFile = temporaryFolder.newFile();
+        final File componentsFile = File.createTempFile("junit", null, temporaryFolder);
 
         final File basedir = componentsFile.getParentFile();
         final String componentsFilename = componentsFile.getName();
@@ -410,8 +412,8 @@ public class DefaultAssemblyReaderTest {
     @Test
     public void
             testReadAssemblyShouldReadAssemblyWithComponentInterpolationWithoutSiteDirInclusionOrAssemblyInterpolation()
-                    throws Exception {
-        final File componentsFile = temporaryFolder.newFile();
+            throws Exception {
+        final File componentsFile = File.createTempFile("junit", null, temporaryFolder);
 
         final File basedir = componentsFile.getParentFile();
         final String componentsFilename = componentsFile.getName();
@@ -474,7 +476,7 @@ public class DefaultAssemblyReaderTest {
             throws IOException, AssemblyReadException, InvalidAssemblerConfigurationException {
         final StringReader sr = writeToStringReader(assembly);
 
-        final File basedir = temporaryFolder.getRoot();
+        final File basedir = temporaryFolder;
 
         when(configSource.getBasedir()).thenReturn(basedir);
 
@@ -502,7 +504,7 @@ public class DefaultAssemblyReaderTest {
 
         assembly.addFileSet(fs);
 
-        final File assemblyFile = temporaryFolder.newFile();
+        final File assemblyFile = File.createTempFile("junit", null, temporaryFolder);
 
         final File basedir = assemblyFile.getParentFile();
 
@@ -524,7 +526,7 @@ public class DefaultAssemblyReaderTest {
 
     @Test
     public void testGetAssemblyForDescriptorReferenceShouldReadBinaryAssemblyRef() throws Exception {
-        final File basedir = temporaryFolder.getRoot();
+        final File basedir = temporaryFolder;
 
         when(configSource.getBasedir()).thenReturn(basedir);
 
@@ -547,13 +549,13 @@ public class DefaultAssemblyReaderTest {
 
         assembly.addFileSet(fs);
 
-        final File basedir = temporaryFolder.getRoot();
+        final File basedir = temporaryFolder;
 
         final List<String> files = writeAssembliesToFile(Collections.singletonList(assembly), basedir);
 
         final String assemblyFile = files.get(0);
 
-        final List<Assembly> assemblies = performReadAssemblies(basedir, new String[] {assemblyFile}, null, null);
+        final List<Assembly> assemblies = performReadAssemblies(basedir, new String[]{assemblyFile}, null, null);
 
         assertNotNull(assemblies);
         assertEquals(1, assemblies.size());
@@ -565,7 +567,7 @@ public class DefaultAssemblyReaderTest {
 
     @Test
     public void testReadAssembliesShouldFailWhenSingleDescriptorFileMissing() throws Exception {
-        final File basedir = temporaryFolder.getRoot();
+        final File basedir = temporaryFolder;
 
         try {
             performReadAssemblies(basedir, null, null, null, false);
@@ -578,7 +580,7 @@ public class DefaultAssemblyReaderTest {
 
     @Test
     public void testReadAssembliesShouldIgnoreMissingSingleDescriptorFileWhenIgnoreIsConfigured() throws Exception {
-        final File basedir = temporaryFolder.getRoot();
+        final File basedir = temporaryFolder;
 
         try {
             performReadAssemblies(basedir, null, null, null, true);
@@ -600,7 +602,7 @@ public class DefaultAssemblyReaderTest {
         assemblies.add(assembly1);
         assemblies.add(assembly2);
 
-        final File basedir = temporaryFolder.getRoot();
+        final File basedir = temporaryFolder;
 
         final List<String> files = writeAssembliesToFile(assemblies, basedir);
 
@@ -620,9 +622,9 @@ public class DefaultAssemblyReaderTest {
 
     @Test
     public void testReadAssembliesShouldGetAssemblyDescriptorFromMultipleRefs() throws Exception {
-        final File basedir = temporaryFolder.getRoot();
+        final File basedir = temporaryFolder;
 
-        final List<Assembly> assemblies = performReadAssemblies(basedir, null, new String[] {"bin", "src"}, null);
+        final List<Assembly> assemblies = performReadAssemblies(basedir, null, new String[]{"bin", "src"}, null);
 
         assertNotNull(assemblies);
         assertEquals(2, assemblies.size());
@@ -648,7 +650,7 @@ public class DefaultAssemblyReaderTest {
         assemblies.add(assembly1);
         assemblies.add(assembly2);
 
-        final File basedir = temporaryFolder.getRoot();
+        final File basedir = temporaryFolder;
 
         writeAssembliesToFile(assemblies, basedir);
 
@@ -678,7 +680,7 @@ public class DefaultAssemblyReaderTest {
         assemblies.add(assembly1);
         assemblies.add(assembly2);
 
-        final File basedir = temporaryFolder.getRoot();
+        final File basedir = temporaryFolder;
 
         writeAssembliesToFile(assemblies, basedir);
 
@@ -765,5 +767,14 @@ public class DefaultAssemblyReaderTest {
         }
 
         return new DefaultAssemblyReader().readAssemblies(configSource);
+    }
+
+    private static File newFolder(File root, String... subDirs) throws IOException {
+        String subFolder = String.join("/", subDirs);
+        File result = new File(root, subFolder);
+        if (!result.mkdirs()) {
+            throw new IOException("Couldn't create folders " + root);
+        }
+        return result;
     }
 }
