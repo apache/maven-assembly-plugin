@@ -77,7 +77,7 @@ under the License.
     <slf4jVersion>1.7.5</slf4jVersion>
     <mavenFilteringVersion>3.4.0</mavenFilteringVersion>
     <mavenArchiverVersion>3.6.5</mavenArchiverVersion>
-    <commonsIoVersion>2.20.0</commonsIoVersion>
+    <commonsIoVersion>2.21.0</commonsIoVersion>
     <version.maven-invoker-plugin>3.9.1</version.maven-invoker-plugin>
     <testOutputToFile>true</testOutputToFile>
     <project.build.outputTimestamp>2024-03-15T07:53:45Z</project.build.outputTimestamp>
@@ -406,7 +406,7 @@ under the License.
                 <!-- newer version needed by commons-compress -->
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>2.20.0</version>
+                <version>2.21.0</version>
               </dependency>
               <dependency>
                 <groupId>com.github.luben</groupId>
