@@ -19,6 +19,7 @@
 package org.apache.maven.plugins.assembly.archive.task;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.maven.model.Model;
@@ -28,14 +29,15 @@ import org.apache.maven.plugins.assembly.archive.DefaultAssemblyArchiverTest;
 import org.apache.maven.plugins.assembly.model.FileSet;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.archiver.Archiver;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
@@ -43,14 +45,15 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@MockitoSettings(strictness = Strictness.WARN)
+@ExtendWith(MockitoExtension.class)
 public class AddFileSetsTaskTest {
-    @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+    @TempDir
+    private File temporaryFolder;
 
     @Test
     public void testGetFileSetDirectoryShouldReturnAbsoluteSourceDir() throws Exception {
-        final File dir = temporaryFolder.newFolder();
+        final File dir = newFolder(temporaryFolder, "junit");
 
         final FileSet fs = new FileSet();
 
@@ -63,7 +66,7 @@ public class AddFileSetsTaskTest {
 
     @Test
     public void testGetFileSetDirectoryShouldReturnBasedir() throws Exception {
-        final File dir = temporaryFolder.newFolder();
+        final File dir = newFolder(temporaryFolder, "junit");
 
         final FileSet fs = new FileSet();
 
@@ -74,7 +77,7 @@ public class AddFileSetsTaskTest {
 
     @Test
     public void testGetFileSetDirectoryShouldReturnDirFromBasedirAndSourceDir() throws Exception {
-        final File dir = temporaryFolder.newFolder();
+        final File dir = newFolder(temporaryFolder, "junit");
 
         final String srcPath = "source";
 
@@ -91,7 +94,7 @@ public class AddFileSetsTaskTest {
 
     @Test
     public void testGetFileSetDirectoryShouldReturnDirFromArchiveBasedirAndSourceDir() throws Exception {
-        final File dir = temporaryFolder.newFolder();
+        final File dir = newFolder(temporaryFolder, "junit");
 
         final String srcPath = "source";
 
@@ -108,10 +111,10 @@ public class AddFileSetsTaskTest {
 
     @Test
     public void testAddFileSetShouldAddDirectory() throws Exception {
-        File basedir = temporaryFolder.getRoot();
+        File basedir = temporaryFolder;
 
         final FileSet fs = new FileSet();
-        fs.setDirectory(temporaryFolder.newFolder("dir").getName());
+        fs.setDirectory(newFolder(temporaryFolder, "dir").getName());
         fs.setOutputDirectory("dir2");
 
         // the logger sends a debug message with this info inside the addFileSet(..) method..
@@ -148,7 +151,7 @@ public class AddFileSetsTaskTest {
         final String dirname = "dir";
         fs.setDirectory(dirname);
 
-        final File archiveBaseDir = temporaryFolder.newFolder();
+        final File archiveBaseDir = newFolder(temporaryFolder, "junit");
 
         // ensure this exists, so the directory addition will proceed.
         final File srcDir = new File(archiveBaseDir, dirname);
@@ -184,7 +187,7 @@ public class AddFileSetsTaskTest {
         final FileSet fs = new FileSet();
 
         fs.setDirectory("dir");
-        final File archiveBaseDir = temporaryFolder.newFolder();
+        final File archiveBaseDir = newFolder(temporaryFolder, "junit");
 
         final AssemblerConfigurationSource configSource = mock(AssemblerConfigurationSource.class);
         when(configSource.getFinalName()).thenReturn("finalName");
@@ -213,7 +216,7 @@ public class AddFileSetsTaskTest {
 
     @Test
     public void testExecuteShouldThrowExceptionIfArchiveBasedirProvidedIsNonExistent() throws Exception {
-        File archiveBaseDir = new File(temporaryFolder.getRoot(), "archive");
+        File archiveBaseDir = new File(temporaryFolder, "archive");
         final AssemblerConfigurationSource configSource = mock(AssemblerConfigurationSource.class);
         when(configSource.getArchiveBaseDirectory()).thenReturn(archiveBaseDir);
 
@@ -233,7 +236,7 @@ public class AddFileSetsTaskTest {
 
     @Test
     public void testExecuteShouldThrowExceptionIfArchiveBasedirProvidedIsNotADirectory() throws Exception {
-        File archiveBaseDir = temporaryFolder.newFile();
+        File archiveBaseDir = File.createTempFile("junit", null, temporaryFolder);
         final AssemblerConfigurationSource configSource = mock(AssemblerConfigurationSource.class);
         when(configSource.getArchiveBaseDirectory()).thenReturn(archiveBaseDir);
 
@@ -248,5 +251,14 @@ public class AddFileSetsTaskTest {
         }
 
         verify(configSource).getArchiveBaseDirectory();
+    }
+
+    private static File newFolder(File root, String... subDirs) throws IOException {
+        String subFolder = String.join("/", subDirs);
+        File result = new File(root, subFolder);
+        if (!result.mkdirs()) {
+            throw new IOException("Couldn't create folders " + root);
+        }
+        return result;
     }
 }

@@ -33,7 +33,7 @@ under the License.
             <!-- outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping -->
             <useStrictFiltering>true</useStrictFiltering>
             <includes>
-              <include>*:junit</include>
+              <include>*:junit-jupiter-api</include>
             </includes>
           </dependencySet>
         </dependencySets>

@@ -42,20 +42,21 @@ import org.apache.maven.plugins.assembly.model.ModuleSources;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
 import org.codehaus.plexus.archiver.Archiver;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static java.util.Collections.singleton;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
@@ -67,18 +68,19 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@MockitoSettings(strictness = Strictness.WARN)
+@ExtendWith(MockitoExtension.class)
 public class ModuleSetAssemblyPhaseTest {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+    @TempDir
+    private File temporaryFolder;
 
     private ModuleSetAssemblyPhase phase;
 
     private DependencyResolver dependencyResolver;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         ProjectBuilder projectBuilder = mock(ProjectBuilder.class);
         this.dependencyResolver = mock(DependencyResolver.class);
@@ -141,7 +143,7 @@ public class ModuleSetAssemblyPhaseTest {
         final ModuleSources sources = new ModuleSources();
         sources.setIncludeModuleDirectory(true);
 
-        final File basedir = temporaryFolder.getRoot();
+        final File basedir = temporaryFolder;
 
         final MavenProject artifactProject = new MavenProject(new Model());
         artifactProject.setGroupId("GROUPID");
@@ -184,7 +186,7 @@ public class ModuleSetAssemblyPhaseTest {
         final MavenProject artifactProject = new MavenProject(new Model());
         artifactProject.setGroupId("GROUPID");
 
-        final File basedir = temporaryFolder.getRoot();
+        final File basedir = temporaryFolder;
 
         artifactProject.setFile(new File(basedir, "pom.xml"));
 
@@ -221,7 +223,7 @@ public class ModuleSetAssemblyPhaseTest {
 
         final MavenProject project = new MavenProject(model);
 
-        final File basedir = temporaryFolder.getRoot();
+        final File basedir = temporaryFolder;
         project.setGroupId("GROUPID");
         project.setFile(new File(basedir, "pom.xml"));
 
@@ -257,7 +259,7 @@ public class ModuleSetAssemblyPhaseTest {
         final MavenProject module = createProject("group", "module", "version", project);
 
         Artifact artifact = mock(Artifact.class);
-        final File moduleArtifactFile = temporaryFolder.newFile();
+        final File moduleArtifactFile = File.createTempFile("junit", null, temporaryFolder);
         when(artifact.getGroupId()).thenReturn("GROUPID");
         when(artifact.getFile()).thenReturn(moduleArtifactFile);
         module.setArtifact(artifact);
@@ -343,7 +345,7 @@ public class ModuleSetAssemblyPhaseTest {
         Artifact artifact = mock(Artifact.class);
         when(artifact.getGroupId()).thenReturn("GROUPID");
         when(artifact.getClassifier()).thenReturn("test");
-        final File artifactFile = temporaryFolder.newFile();
+        final File artifactFile = File.createTempFile("junit", null, temporaryFolder);
         when(artifact.getFile()).thenReturn(artifactFile);
 
         final Archiver archiver = mock(Archiver.class);
@@ -421,7 +423,7 @@ public class ModuleSetAssemblyPhaseTest {
     @Test
     public void testAddModuleBinariesShouldAddOneModuleArtifactAndNoDeps() throws Exception {
         Artifact artifact = mock(Artifact.class);
-        final File artifactFile = temporaryFolder.newFile();
+        final File artifactFile = File.createTempFile("junit", null, temporaryFolder);
         when(artifact.getGroupId()).thenReturn("GROUPID");
         when(artifact.getFile()).thenReturn(artifactFile);
 
@@ -485,7 +487,7 @@ public class ModuleSetAssemblyPhaseTest {
     public void testAddModuleArtifactShouldAddOneArtifact() throws Exception {
         Artifact artifact = mock(Artifact.class);
         when(artifact.getGroupId()).thenReturn("GROUPID");
-        final File artifactFile = temporaryFolder.newFile();
+        final File artifactFile = File.createTempFile("junit", null, temporaryFolder);
         when(artifact.getFile()).thenReturn(artifactFile);
 
         final MavenProject project = createProject("group", "artifact", "version", null);
@@ -772,7 +774,7 @@ public class ModuleSetAssemblyPhaseTest {
 
         File pomFile;
         if (parentProject == null) {
-            final File basedir = temporaryFolder.getRoot();
+            final File basedir = temporaryFolder;
             pomFile = new File(basedir, "pom.xml");
         } else {
             final File parentBase = parentProject.getBasedir();

@@ -19,4 +19,4 @@
 
 import java.io.File;
 
-return new File( basedir, "target/single-in-one-project-hierarchy-1.0-SNAPSHOT-bin/lib/junit.jar" ).exists();
+return new File( basedir, "target/single-in-one-project-hierarchy-1.0-SNAPSHOT-bin/lib/junit-jupiter-api.jar" ).exists();

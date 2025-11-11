@@ -49,9 +49,9 @@ try
         result = false;
     }
     
-    System.out.println( "Looking for absence of 'lib/junit.jar' jar entry." );
+    System.out.println( "Looking for absence of 'lib/junit-jupiter-api.jar' jar entry." );
     
-    if ( jf.getEntry( "lib/junit.jar" ) != null )
+    if ( jf.getEntry( "lib/junit-jupiter-api.jar" ) != null )
     {
         System.err.println( "junit jar should not be present." );
         result = false;
