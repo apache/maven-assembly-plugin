@@ -44,7 +44,7 @@ under the License.
   </contributors>
 
   <prerequisites>
-    <maven>${mavenVersion}</maven>
+    <maven>3.6.3</maven>
   </prerequisites>
 
   <scm>
@@ -73,8 +73,8 @@ under the License.
 
     <javaVersion>8</javaVersion>
     <mdoVersion>2.2.0</mdoVersion>
-    <mavenVersion>3.6.3</mavenVersion>
-    <slf4jVersion>1.7.5</slf4jVersion>
+    <mavenVersion>3.9.11</mavenVersion>
+    <slf4jVersion>1.7.36</slf4jVersion>
     <mavenFilteringVersion>3.4.0</mavenFilteringVersion>
     <mavenArchiverVersion>3.6.5</mavenArchiverVersion>
     <commonsIoVersion>2.21.0</commonsIoVersion>
