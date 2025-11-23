@@ -415,12 +415,6 @@ under the License.
                 <version>1.28.0</version>
               </dependency>
               <dependency>
-                <!-- newer version needed by commons-compress -->
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>2.21.0</version>
-              </dependency>
-              <dependency>
                 <groupId>com.github.luben</groupId>
                 <artifactId>zstd-jni</artifactId>
                 <version>1.5.7-6</version>
