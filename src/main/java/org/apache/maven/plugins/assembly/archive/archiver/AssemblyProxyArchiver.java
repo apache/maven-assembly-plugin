@@ -145,7 +145,7 @@ public class AssemblyProxyArchiver implements Archiver {
 
             delegate.addArchivedFileSet(fs);
         } finally {
-          inPublicApi.remove();
+            inPublicApi.remove();
         }
     }
 
@@ -172,7 +172,7 @@ public class AssemblyProxyArchiver implements Archiver {
 
             delegate.addArchivedFileSet(fs);
         } finally {
-          inPublicApi.remove();
+            inPublicApi.remove();
         }
     }
 
@@ -195,7 +195,7 @@ public class AssemblyProxyArchiver implements Archiver {
 
             delegate.addArchivedFileSet(fs);
         } finally {
-          inPublicApi.remove();
+            inPublicApi.remove();
         }
     }
 
