@@ -208,5 +208,4 @@ public class ProjectUtilsTest {
             fail("Found unexpected projects in result: " + unexpected);
         }
     }
-
 }
