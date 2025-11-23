@@ -485,7 +485,7 @@ class DefaultMessageHolder implements MessageHolder {
      * @param message {@link Message}
      * @param sink {@link MessageSink}
      */
-    protected void renderTo(Message message, MessageSink sink) {
+    private void renderTo(Message message, MessageSink sink) {
         switch (message.getMessageLevel()) {
             case (MessageLevels.LEVEL_SEVERE):
                 sink.severe(message.render().toString());
