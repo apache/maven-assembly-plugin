@@ -71,7 +71,7 @@ public final class TypeConversionUtils {
 
             return value;
         } catch (final NumberFormatException e) {
-            throw new AssemblyFormattingException("Failed to parse mode as an octal number: \'" + mode + "\'.", e);
+            throw new AssemblyFormattingException("Failed to parse mode as an octal number: '" + mode + "'.", e);
         }
     }
 
