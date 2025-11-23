@@ -44,7 +44,7 @@ public final class LineEndingsUtils {
      *
      * @param source      The source file, not null
      * @param dest        The destination file, not null
-     * @param lineEndings This is the result of the getLineEndingChars(..) method in this utility class; the actual
+     * @param lineEndings This is the result of the getLineEndingChars() method in this utility class; the actual
      *                    line-ending characters, not null.
      * @param atEndOfFile The end-of-file line ending, if true then the resulting file will have a new line at the end
      *                    even if the input didn't have one, if false then the resulting file will have no new line at
@@ -114,7 +114,7 @@ public final class LineEndingsUtils {
      * Converts the line endings of a file, writing a new file. The encoding of reading and writing can be specified.
      *
      * @param in          The source reader
-     * @param lineEndings This is the result of the getLineEndingChars(..) method in this utility class; the actual
+     * @param lineEndings This is the result of the getLineEndingChars() method in this utility class; the actual
      *                    line-ending characters, not null.
      * @return an input stream that enforces a specifi line ending style
      */
