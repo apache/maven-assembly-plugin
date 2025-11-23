@@ -284,7 +284,7 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     private boolean attach;
 
     /**
-     * Indicates if zip archives (jar,zip etc) being added to the assembly should be compressed again. Compressing again
+     * Indicates if zip archives (jar, zip, etc.) being added to the assembly should be compressed again. Compressing again
      * can result in smaller archive size, but gives noticeably longer execution time.
      *
      * @since 2.4
@@ -314,7 +314,7 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
 
     /**
      * Allows additional configuration options that are specific to a particular type of archive format. This is
-     * intended to capture an XML configuration that will be used to reflectively setup the options on the archiver
+     * intended to capture an XML configuration that will be used to reflectively set up the options on the archiver
      * instance. <br/> To see the possible options for archiver configuration visit the
      * <a href="https://codehaus-plexus.github.io/plexus-archiver/apidocs/org/codehaus/plexus/archiver/Archiver.html">
      * Plexus Archiver Documentation</a> <br/> For instance, to direct an assembly with the "ear" format to use a

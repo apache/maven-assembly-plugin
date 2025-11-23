@@ -43,8 +43,7 @@ public interface AssemblyArchiverPhase {
      *                     the assembly process.
      * @throws org.apache.maven.plugins.assembly.archive.ArchiveCreationException       in case of an archive
      *                                                                                  creation error.
-     * @throws org.apache.maven.plugins.assembly.format.AssemblyFormattingException     in case of a assembly
-     *                                                                                  formatting exception.
+     * @throws org.apache.maven.plugins.assembly.format.AssemblyFormattingException     in case of an assembly formatting exception.
      * @throws org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException in case of an invalid
      *                                                                                  assembler configuration.
      */
