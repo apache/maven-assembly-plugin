@@ -208,33 +208,4 @@ public class ProjectUtilsTest {
             fail("Found unexpected projects in result: " + unexpected);
         }
     }
-
-    // private void verifyProjectsNotPresent( List verify, Set result )
-    // {
-    // List verifyCopy = new ArrayList( verify );
-    //
-    // for ( Iterator it = result.iterator(); it.hasNext(); )
-    // {
-    // MavenProject project = (MavenProject) it.next();
-    //
-    // for ( Iterator verifyIterator = verifyCopy.iterator(); verifyIterator.hasNext(); )
-    // {
-    // MavenProject verification = (MavenProject) verifyIterator.next();
-    //
-    // if ( verification.getId().equals( project.getId() ) )
-    // {
-    // verifyIterator.remove();
-    // }
-    // }
-    // }
-    //
-    // if ( verifyCopy.size() != verify.size() )
-    // {
-    // List found = new ArrayList( verify );
-    // found.removeAll( verifyCopy );
-    //
-    // fail( "Failed to verify absence of: " + found );
-    // }
-    // }
-
 }

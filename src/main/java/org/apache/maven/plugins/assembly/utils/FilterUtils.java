@@ -39,9 +39,6 @@ import org.apache.maven.shared.artifact.filter.StatisticsReportingArtifactFilter
 import org.apache.maven.shared.artifact.filter.resolve.ScopeFilter;
 import org.slf4j.Logger;
 
-/**
- *
- */
 public final class FilterUtils {
 
     private FilterUtils() {}
@@ -124,12 +121,6 @@ public final class FilterUtils {
 
             allFilters.add(excludeFilter);
         }
-
-        // FIXME: Why is this added twice??
-        // if ( additionalFilters != null && !additionalFilters.isEmpty() )
-        // {
-        // allFilters.addAll( additionalFilters );
-        // }
 
         for (final Iterator<Artifact> it = artifacts.iterator(); it.hasNext(); ) {
             final Artifact artifact = it.next();
