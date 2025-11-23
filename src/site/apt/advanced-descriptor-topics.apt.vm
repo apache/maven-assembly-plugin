@@ -214,6 +214,8 @@ Advanced Assembly-Descriptor Topics
   of <<<fileSet>>> patterns, including the option to change the default pattern syntax
   someday.
 
+  <Note:> The same syntax is also supported for include patterns.
+
 ** Example: Including directories named <<<target>>> in the <<<src>>> directory
 
   In this example, we want to produce a buildable source distribution of a

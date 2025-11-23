@@ -173,7 +173,9 @@
             <![CDATA[
             When &lt;include&gt; subelements are present, they define a set of
             files and directory to include. If none is present, then
-            &lt;includes&gt; represents all valid values.
+            &lt;includes&gt; represents all valid values. Note that this pattern
+            can be in the from of a regular expression by using the %regex[...]
+            syntax.
             ]]>
           </description>
         </field>
@@ -188,7 +190,9 @@
             <![CDATA[
             When &lt;exclude&gt; subelements are present, they define a set of
             files and directory to exclude. If none is present, then
-            &lt;excludes&gt; represents no exclusions.
+            &lt;excludes&gt; represents no exclusions. Note that this pattern
+            can be in the from of a regular expression by using the %regex[...]
+            syntax.
             ]]>
           </description>
         </field>
