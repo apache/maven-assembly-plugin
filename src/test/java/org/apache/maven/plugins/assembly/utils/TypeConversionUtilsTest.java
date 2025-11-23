@@ -100,7 +100,7 @@ public class TypeConversionUtilsTest {
             final String message = warnings.getAllValues().toString();
 
             for (final String checkMessage : messagesToCheckIfInsane) {
-                assertTrue(message.contains(checkMessage), "\'" + checkMessage + "\' is not present in output.");
+                assertTrue(message.contains(checkMessage), "'" + checkMessage + "' is not present in output.");
             }
         }
     }
