@@ -145,7 +145,7 @@ public class AssemblyProxyArchiver implements Archiver {
 
             delegate.addArchivedFileSet(fs);
         } finally {
-            inPublicApi.set(null);
+          inPublicApi.remove();
         }
     }
 
@@ -172,7 +172,7 @@ public class AssemblyProxyArchiver implements Archiver {
 
             delegate.addArchivedFileSet(fs);
         } finally {
-            inPublicApi.set(null);
+          inPublicApi.remove();
         }
     }
 
@@ -195,7 +195,7 @@ public class AssemblyProxyArchiver implements Archiver {
 
             delegate.addArchivedFileSet(fs);
         } finally {
-            inPublicApi.set(null);
+          inPublicApi.remove();
         }
     }
 
@@ -216,7 +216,7 @@ public class AssemblyProxyArchiver implements Archiver {
 
             delegate.addArchivedFileSet(fs);
         } finally {
-            inPublicApi.set(null);
+            inPublicApi.remove();
         }
     }
 
@@ -241,7 +241,7 @@ public class AssemblyProxyArchiver implements Archiver {
 
             doAddFileSet(fs);
         } finally {
-            inPublicApi.set(null);
+            inPublicApi.remove();
         }
     }
 
@@ -254,7 +254,7 @@ public class AssemblyProxyArchiver implements Archiver {
         try {
             delegate.addSymlink(symlinkName, symlinkDestination);
         } finally {
-            inPublicApi.set(null);
+            inPublicApi.remove();
         }
     }
 
@@ -267,7 +267,7 @@ public class AssemblyProxyArchiver implements Archiver {
         try {
             delegate.addSymlink(symlinkName, permissions, symlinkDestination);
         } finally {
-            inPublicApi.set(null);
+            inPublicApi.remove();
         }
     }
 
@@ -289,7 +289,7 @@ public class AssemblyProxyArchiver implements Archiver {
 
             doAddFileSet(fs);
         } finally {
-            inPublicApi.set(null);
+            inPublicApi.remove();
         }
     }
 
@@ -313,7 +313,7 @@ public class AssemblyProxyArchiver implements Archiver {
 
             doAddFileSet(fs);
         } finally {
-            inPublicApi.set(null);
+            inPublicApi.remove();
         }
     }
 
@@ -335,7 +335,7 @@ public class AssemblyProxyArchiver implements Archiver {
 
             doAddFileSet(fs);
         } finally {
-            inPublicApi.set(null);
+            inPublicApi.remove();
         }
     }
 
@@ -351,7 +351,7 @@ public class AssemblyProxyArchiver implements Archiver {
 
                 delegate.addFile(inputFile, rootPrefix + destFileName, permissions);
             } finally {
-                inPublicApi.set(null);
+                inPublicApi.remove();
             }
         }
     }
@@ -368,7 +368,7 @@ public class AssemblyProxyArchiver implements Archiver {
 
                 delegate.addFile(inputFile, rootPrefix + destFileName);
             } finally {
-                inPublicApi.set(null);
+                inPublicApi.remove();
             }
         }
     }
@@ -383,7 +383,7 @@ public class AssemblyProxyArchiver implements Archiver {
             delegate.setForced(forced);
             delegate.createArchive();
         } finally {
-            inPublicApi.set(null);
+            inPublicApi.remove();
         }
     }
 
@@ -396,7 +396,7 @@ public class AssemblyProxyArchiver implements Archiver {
         try {
             return delegate.getDefaultDirectoryMode();
         } finally {
-            inPublicApi.set(null);
+            inPublicApi.remove();
         }
     }
 
@@ -409,7 +409,7 @@ public class AssemblyProxyArchiver implements Archiver {
         try {
             delegate.setDefaultDirectoryMode(mode);
         } finally {
-            inPublicApi.set(null);
+            inPublicApi.remove();
         }
     }
 
@@ -422,7 +422,7 @@ public class AssemblyProxyArchiver implements Archiver {
         try {
             return delegate.getDefaultFileMode();
         } finally {
-            inPublicApi.set(null);
+            inPublicApi.remove();
         }
     }
 
@@ -435,7 +435,7 @@ public class AssemblyProxyArchiver implements Archiver {
         try {
             delegate.setDefaultFileMode(mode);
         } finally {
-            inPublicApi.set(null);
+            inPublicApi.remove();
         }
     }
 
@@ -448,7 +448,7 @@ public class AssemblyProxyArchiver implements Archiver {
         try {
             return delegate.getDestFile();
         } finally {
-            inPublicApi.set(null);
+            inPublicApi.remove();
         }
     }
 
@@ -461,7 +461,7 @@ public class AssemblyProxyArchiver implements Archiver {
         try {
             delegate.setDestFile(destFile);
         } finally {
-            inPublicApi.set(null);
+            inPublicApi.remove();
         }
     }
 
@@ -472,7 +472,7 @@ public class AssemblyProxyArchiver implements Archiver {
         try {
             return delegate.getFiles();
         } finally {
-            inPublicApi.set(null);
+            inPublicApi.remove();
         }
     }
 
@@ -485,7 +485,7 @@ public class AssemblyProxyArchiver implements Archiver {
         try {
             return delegate.getIncludeEmptyDirs();
         } finally {
-            inPublicApi.set(null);
+            inPublicApi.remove();
         }
     }
 
@@ -498,7 +498,7 @@ public class AssemblyProxyArchiver implements Archiver {
         try {
             delegate.setIncludeEmptyDirs(includeEmptyDirs);
         } finally {
-            inPublicApi.set(null);
+            inPublicApi.remove();
         }
     }
 
@@ -511,7 +511,7 @@ public class AssemblyProxyArchiver implements Archiver {
         try {
             return delegate.isForced();
         } finally {
-            inPublicApi.set(null);
+            inPublicApi.remove();
         }
     }
 
@@ -525,7 +525,7 @@ public class AssemblyProxyArchiver implements Archiver {
             this.forced = forced;
             delegate.setForced(forced);
         } finally {
-            inPublicApi.set(null);
+            inPublicApi.remove();
         }
     }
 
@@ -538,7 +538,7 @@ public class AssemblyProxyArchiver implements Archiver {
         try {
             return delegate.isSupportingForced();
         } finally {
-            inPublicApi.set(null);
+            inPublicApi.remove();
         }
     }
 
@@ -563,7 +563,7 @@ public class AssemblyProxyArchiver implements Archiver {
 
             delegate.addArchivedFileSet(fs);
         } finally {
-            inPublicApi.set(null);
+            inPublicApi.remove();
         }
     }
 
@@ -578,7 +578,7 @@ public class AssemblyProxyArchiver implements Archiver {
 
             delegate.addArchivedFileSet(fs, charset);
         } finally {
-            inPublicApi.set(null);
+            inPublicApi.remove();
         }
     }
 
@@ -595,7 +595,7 @@ public class AssemblyProxyArchiver implements Archiver {
 
             doAddFileSet(fs);
         } finally {
-            inPublicApi.set(null);
+            inPublicApi.remove();
         }
     }
 
@@ -676,7 +676,7 @@ public class AssemblyProxyArchiver implements Archiver {
             try {
                 delegate.addResource(resource, rootPrefix + destFileName, permissions);
             } finally {
-                inPublicApi.set(null);
+                inPublicApi.remove();
             }
         }
     }
@@ -690,7 +690,7 @@ public class AssemblyProxyArchiver implements Archiver {
         try {
             delegate.addResources(resources);
         } finally {
-            inPublicApi.set(null);
+            inPublicApi.remove();
         }
     }
 
@@ -719,7 +719,7 @@ public class AssemblyProxyArchiver implements Archiver {
         try {
             delegate.setDuplicateBehavior(duplicate);
         } finally {
-            inPublicApi.set(null);
+            inPublicApi.remove();
         }
     }
 
@@ -740,7 +740,7 @@ public class AssemblyProxyArchiver implements Archiver {
         try {
             delegate.setDirectoryMode(mode);
         } finally {
-            inPublicApi.set(null);
+            inPublicApi.remove();
         }
     }
 
@@ -761,7 +761,7 @@ public class AssemblyProxyArchiver implements Archiver {
         try {
             delegate.setFileMode(mode);
         } finally {
-            inPublicApi.set(null);
+            inPublicApi.remove();
         }
     }
 
