@@ -39,16 +39,16 @@ import static org.mockito.Mockito.when;
 
 @MockitoSettings(strictness = Strictness.WARN)
 @ExtendWith(MockitoExtension.class)
-public class FileSetAssemblyPhaseTest {
+class FileSetAssemblyPhaseTest {
     private FileSetAssemblyPhase phase;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         this.phase = new FileSetAssemblyPhase();
     }
 
     @Test
-    public void testShouldNotFailWhenNoFileSetsSpecified() throws Exception {
+    void shouldNotFailWhenNoFileSetsSpecified() throws Exception {
         final Assembly assembly = new Assembly();
         assembly.setId("test");
 
@@ -56,7 +56,7 @@ public class FileSetAssemblyPhaseTest {
     }
 
     @Test
-    public void testShouldAddOneFileSet() throws Exception {
+    void shouldAddOneFileSet() throws Exception {
         final Assembly assembly = new Assembly();
 
         assembly.setId("test");

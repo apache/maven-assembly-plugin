@@ -26,12 +26,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 /**
  * @author Benjamin Bentmann
  */
-public class PrefixedClasspathLocatorStrategyTest {
+class PrefixedClasspathLocatorStrategyTest {
 
     private MessageHolder mh = new DefaultMessageHolder();
 
     @Test
-    public void testResolvePrefixWithLeadingSlashAndWithTrailingSlash() {
+    void resolvePrefixWithLeadingSlashAndWithTrailingSlash() {
         LocatorStrategy ls = new PrefixedClasspathLocatorStrategy("/assemblies/");
         Location location = ls.resolve("empty.xml", mh);
 
@@ -40,7 +40,7 @@ public class PrefixedClasspathLocatorStrategyTest {
     }
 
     @Test
-    public void testResolvePrefixWithLeadingSlashAndWithoutTrailingSlash() {
+    void resolvePrefixWithLeadingSlashAndWithoutTrailingSlash() {
         LocatorStrategy ls = new PrefixedClasspathLocatorStrategy("/assemblies");
         Location location = ls.resolve("empty.xml", mh);
 
@@ -49,7 +49,7 @@ public class PrefixedClasspathLocatorStrategyTest {
     }
 
     @Test
-    public void testResolvePrefixWithoutLeadingSlashAndWithTrailingSlash() {
+    void resolvePrefixWithoutLeadingSlashAndWithTrailingSlash() {
         LocatorStrategy ls = new PrefixedClasspathLocatorStrategy("assemblies/");
         Location location = ls.resolve("empty.xml", mh);
 
@@ -58,7 +58,7 @@ public class PrefixedClasspathLocatorStrategyTest {
     }
 
     @Test
-    public void testResolvePrefixWithoutLeadingSlashAndWithoutTrailingSlash() {
+    void resolvePrefixWithoutLeadingSlashAndWithoutTrailingSlash() {
         LocatorStrategy ls = new PrefixedClasspathLocatorStrategy("assemblies");
         Location location = ls.resolve("empty.xml", mh);
 

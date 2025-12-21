@@ -38,19 +38,19 @@ import static org.mockito.Mockito.when;
 
 @MockitoSettings(strictness = Strictness.WARN)
 @ExtendWith(MockitoExtension.class)
-public class AddDirectoryTaskTest {
+class AddDirectoryTaskTest {
     @TempDir
     private File temporaryFolder;
 
     private Archiver archiver;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         this.archiver = mock(Archiver.class);
     }
 
     @Test
-    public void testAddDirectoryShouldNotAddDirectoryIfNonExistent() throws Exception {
+    void addDirectoryShouldNotAddDirectoryIfNonExistent() throws Exception {
         final int defaultDirMode = -1;
         final int defaultFileMode = -1;
 
@@ -67,7 +67,7 @@ public class AddDirectoryTaskTest {
     }
 
     @Test
-    public void testAddDirectoryShouldAddDirectory() throws Exception {
+    void addDirectoryShouldAddDirectory() throws Exception {
         final int defaultDirMode = -1;
         final int defaultFileMode = -1;
 
@@ -86,7 +86,7 @@ public class AddDirectoryTaskTest {
     }
 
     @Test
-    public void testAddDirectoryShouldAddDirectoryWithDirMode() throws Exception {
+    void addDirectoryShouldAddDirectoryWithDirMode() throws Exception {
         final int dirMode = Integer.parseInt("777", 8);
         final int fileMode = Integer.parseInt("777", 8);
         final int defaultDirMode = -1;
@@ -113,7 +113,7 @@ public class AddDirectoryTaskTest {
     }
 
     @Test
-    public void testAddDirectoryShouldAddDirectoryWithIncludesAndExcludes() throws Exception {
+    void addDirectoryShouldAddDirectoryWithIncludesAndExcludes() throws Exception {
         when(archiver.getOverrideDirectoryMode()).thenReturn(-1);
         when(archiver.getOverrideFileMode()).thenReturn(-1);
 

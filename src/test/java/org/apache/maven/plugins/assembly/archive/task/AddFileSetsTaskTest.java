@@ -47,12 +47,12 @@ import static org.mockito.Mockito.when;
 
 @MockitoSettings(strictness = Strictness.WARN)
 @ExtendWith(MockitoExtension.class)
-public class AddFileSetsTaskTest {
+class AddFileSetsTaskTest {
     @TempDir
     private File temporaryFolder;
 
     @Test
-    public void testGetFileSetDirectoryShouldReturnAbsoluteSourceDir() throws Exception {
+    void getFileSetDirectoryShouldReturnAbsoluteSourceDir() throws Exception {
         final File dir = newFolder(temporaryFolder, "junit");
 
         final FileSet fs = new FileSet();
@@ -65,7 +65,7 @@ public class AddFileSetsTaskTest {
     }
 
     @Test
-    public void testGetFileSetDirectoryShouldReturnBasedir() throws Exception {
+    void getFileSetDirectoryShouldReturnBasedir() throws Exception {
         final File dir = newFolder(temporaryFolder, "junit");
 
         final FileSet fs = new FileSet();
@@ -76,7 +76,7 @@ public class AddFileSetsTaskTest {
     }
 
     @Test
-    public void testGetFileSetDirectoryShouldReturnDirFromBasedirAndSourceDir() throws Exception {
+    void getFileSetDirectoryShouldReturnDirFromBasedirAndSourceDir() throws Exception {
         final File dir = newFolder(temporaryFolder, "junit");
 
         final String srcPath = "source";
@@ -93,7 +93,7 @@ public class AddFileSetsTaskTest {
     }
 
     @Test
-    public void testGetFileSetDirectoryShouldReturnDirFromArchiveBasedirAndSourceDir() throws Exception {
+    void getFileSetDirectoryShouldReturnDirFromArchiveBasedirAndSourceDir() throws Exception {
         final File dir = newFolder(temporaryFolder, "junit");
 
         final String srcPath = "source";
@@ -110,7 +110,7 @@ public class AddFileSetsTaskTest {
     }
 
     @Test
-    public void testAddFileSetShouldAddDirectory() throws Exception {
+    void addFileSetShouldAddDirectory() throws Exception {
         File basedir = temporaryFolder;
 
         final FileSet fs = new FileSet();
@@ -146,7 +146,7 @@ public class AddFileSetsTaskTest {
     }
 
     @Test
-    public void testAddFileSetShouldAddDirectoryUsingSourceDirNameForDestDir() throws Exception {
+    void addFileSetShouldAddDirectoryUsingSourceDirNameForDestDir() throws Exception {
         final FileSet fs = new FileSet();
         final String dirname = "dir";
         fs.setDirectory(dirname);
@@ -183,7 +183,7 @@ public class AddFileSetsTaskTest {
     }
 
     @Test
-    public void testAddFileSetShouldNotAddDirectoryWhenSourceDirNonExistent() throws Exception {
+    void addFileSetShouldNotAddDirectoryWhenSourceDirNonExistent() throws Exception {
         final FileSet fs = new FileSet();
 
         fs.setDirectory("dir");
@@ -215,7 +215,7 @@ public class AddFileSetsTaskTest {
     }
 
     @Test
-    public void testExecuteShouldThrowExceptionIfArchiveBasedirProvidedIsNonExistent() throws Exception {
+    void executeShouldThrowExceptionIfArchiveBasedirProvidedIsNonExistent() throws Exception {
         File archiveBaseDir = new File(temporaryFolder, "archive");
         final AssemblerConfigurationSource configSource = mock(AssemblerConfigurationSource.class);
         when(configSource.getArchiveBaseDirectory()).thenReturn(archiveBaseDir);
@@ -235,7 +235,7 @@ public class AddFileSetsTaskTest {
     }
 
     @Test
-    public void testExecuteShouldThrowExceptionIfArchiveBasedirProvidedIsNotADirectory() throws Exception {
+    void executeShouldThrowExceptionIfArchiveBasedirProvidedIsNotADirectory() throws Exception {
         File archiveBaseDir = File.createTempFile("junit", null, temporaryFolder);
         final AssemblerConfigurationSource configSource = mock(AssemblerConfigurationSource.class);
         when(configSource.getArchiveBaseDirectory()).thenReturn(archiveBaseDir);

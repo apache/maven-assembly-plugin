@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.codehaus.plexus.archiver.Archiver;
-import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.FileSet;
 import org.codehaus.plexus.archiver.diags.TrackingArchiver;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
@@ -45,8 +44,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -56,13 +53,13 @@ import static org.mockito.Mockito.when;
 
 @MockitoSettings(strictness = Strictness.WARN)
 @ExtendWith(MockitoExtension.class)
-public class AssemblyProxyArchiverTest {
+class AssemblyProxyArchiverTest {
     @TempDir
     private File temporaryFolder;
 
     @Test
     @Timeout(value = 5000, unit = TimeUnit.MILLISECONDS)
-    public void addFileSetSkipWhenSourceIsAssemblyWorkDir() throws IOException, ArchiverException {
+    void addFileSetSkipWhenSourceIsAssemblyWorkDir() throws Exception {
         final File sources = temporaryFolder;
 
         final File workdir = new File(sources, "workdir");
@@ -82,7 +79,7 @@ public class AssemblyProxyArchiverTest {
 
     @Test
     @Timeout(value = 5000, unit = TimeUnit.MILLISECONDS)
-    public void addFileSetAddExcludeWhenSourceContainsAssemblyWorkDir() throws IOException, ArchiverException {
+    void addFileSetAddExcludeWhenSourceContainsAssemblyWorkDir() throws Exception {
         final File sources = temporaryFolder;
 
         final File workdir = new File(sources, "workdir");
@@ -116,7 +113,7 @@ public class AssemblyProxyArchiverTest {
     }
 
     @Test
-    public void addFileNoPermsCallAcceptFilesOnlyOnce() throws IOException, ArchiverException {
+    void addFileNoPermsCallAcceptFilesOnlyOnce() throws Exception {
         final Archiver delegate = mock(Archiver.class);
 
         final CounterSelector counter = new CounterSelector(true);
@@ -137,7 +134,7 @@ public class AssemblyProxyArchiverTest {
 
     @Test
     @SuppressWarnings("deprecation")
-    public void addDirectoryNoPermsCallAcceptFilesOnlyOnce() throws IOException, ArchiverException {
+    void addDirectoryNoPermsCallAcceptFilesOnlyOnce() throws Exception {
         final Archiver delegate = new JarArchiver();
 
         final File output = File.createTempFile("junit", null, temporaryFolder);
@@ -165,7 +162,7 @@ public class AssemblyProxyArchiverTest {
     }
 
     @Test
-    public void assemblyWorkDir() {
+    void assemblyWorkDir() {
         final Archiver delegate = mock(Archiver.class);
         final List<FileSelector> selectors = new ArrayList<>();
 
@@ -181,13 +178,20 @@ public class AssemblyProxyArchiverTest {
         ArgumentCaptor<FileSet> delFileSet = ArgumentCaptor.forClass(FileSet.class);
         verify(delegate).addFileSet(delFileSet.capture());
 
-        assertThat(delFileSet.getValue().getDirectory(), is(fileSet.getDirectory()));
-        assertThat(delFileSet.getValue().getExcludes(), is(new String[] {"module1"}));
-        assertThat(delFileSet.getValue().getFileMappers(), is(fileSet.getFileMappers()));
-        assertThat(delFileSet.getValue().getFileSelectors(), is(fileSet.getFileSelectors()));
-        assertThat(delFileSet.getValue().getIncludes(), is(new String[0]));
-        assertThat(delFileSet.getValue().getPrefix(), is("prefix/"));
-        assertThat(delFileSet.getValue().getStreamTransformer(), is(fileSet.getStreamTransformer()));
+        assertEquals(delFileSet.getValue().getDirectory(), fileSet.getDirectory());
+
+        String[] excludes = delFileSet.getValue().getExcludes();
+        assertNotNull(excludes);
+        assertEquals("module1", excludes[0]);
+
+        assertEquals(delFileSet.getValue().getFileMappers(), fileSet.getFileMappers());
+        assertEquals(delFileSet.getValue().getFileSelectors(), fileSet.getFileSelectors());
+        String[] includes = delFileSet.getValue().getIncludes();
+        assertNotNull(includes);
+        assertEquals(0, includes.length);
+
+        assertEquals("prefix/", delFileSet.getValue().getPrefix());
+        assertEquals(delFileSet.getValue().getStreamTransformer(), fileSet.getStreamTransformer());
     }
 
     private static final class CounterSelector implements FileSelector {

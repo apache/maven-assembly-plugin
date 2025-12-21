@@ -19,7 +19,6 @@
 package org.apache.maven.plugins.assembly.utils;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -37,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class ProjectUtilsTest {
+class ProjectUtilsTest {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private MavenProject createTestProject(final String artifactId, final String groupId, final String version) {
@@ -50,7 +49,7 @@ public class ProjectUtilsTest {
     }
 
     @Test
-    public void testGetProjectModulesShouldIncludeDirectModuleOfMasterProject() throws IOException {
+    void getProjectModulesShouldIncludeDirectModuleOfMasterProject() throws Exception {
         final MavenProject master = createTestProject("test", "testGroup", "1.0");
 
         master.setFile(new File("pom.xml"));
@@ -74,7 +73,7 @@ public class ProjectUtilsTest {
     }
 
     @Test
-    public void testGetProjectModulesShouldNotIncludeMasterProject() throws IOException {
+    void getProjectModulesShouldNotIncludeMasterProject() throws Exception {
         final MavenProject master = createTestProject("test", "testGroup", "1.0");
 
         final Set<MavenProject> result =
@@ -85,8 +84,7 @@ public class ProjectUtilsTest {
     }
 
     @Test
-    public void testGetProjectModulesShouldIncludeInDirectModuleOfMasterWhenIncludeSubModulesIsTrue()
-            throws IOException {
+    void getProjectModulesShouldIncludeInDirectModuleOfMasterWhenIncludeSubModulesIsTrue() throws Exception {
         final MavenProject master = createTestProject("test", "testGroup", "1.0");
 
         master.setFile(new File("project/pom.xml"));
@@ -121,8 +119,7 @@ public class ProjectUtilsTest {
     }
 
     @Test
-    public void testGetProjectModulesShouldExcludeInDirectModuleOfMasterWhenIncludeSubModulesIsFalse()
-            throws IOException {
+    void getProjectModulesShouldExcludeInDirectModuleOfMasterWhenIncludeSubModulesIsFalse() throws Exception {
         final MavenProject master = createTestProject("test", "testGroup", "1.0");
 
         master.setFile(new File("project/pom.xml"));
@@ -158,7 +155,7 @@ public class ProjectUtilsTest {
     }
 
     @Test
-    public void testGetProjectModulesShouldExcludeNonModuleOfMasterProject() throws IOException {
+    void getProjectModulesShouldExcludeNonModuleOfMasterProject() throws Exception {
         final MavenProject master = createTestProject("test", "testGroup", "1.0");
 
         master.setFile(new File("project/pom.xml"));

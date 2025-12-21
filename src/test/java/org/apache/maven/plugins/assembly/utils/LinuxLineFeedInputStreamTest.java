@@ -25,40 +25,40 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class LinuxLineFeedInputStreamTest {
+class LinuxLineFeedInputStreamTest {
 
     @Test
-    public void testSimpleString() throws Exception {
+    void simpleString() throws Exception {
         assertEquals("abc\n", roundtrip("abc"));
     }
 
     @Test
-    public void testInTheMiddleOfTheLine() throws Exception {
+    void inTheMiddleOfTheLine() throws Exception {
         assertEquals("a\nbc\n", roundtrip("a\r\nbc"));
     }
 
     @Test
-    public void testCrOnly() throws Exception {
+    void crOnly() throws Exception {
         assertEquals("a\nb\n", roundtrip("a\rb"));
     }
 
     @Test
-    public void testCrAtEnd() throws Exception {
+    void crAtEnd() throws Exception {
         assertEquals("a\n", roundtrip("a\r"));
     }
 
     @Test
-    public void testMultipleBlankLines() throws Exception {
+    void multipleBlankLines() throws Exception {
         assertEquals("a\n\nbc\n", roundtrip("a\r\n\r\nbc"));
     }
 
     @Test
-    public void testTwoLinesAtEnd() throws Exception {
+    void twoLinesAtEnd() throws Exception {
         assertEquals("a\n\n", roundtrip("a\r\n\r\n"));
     }
 
     @Test
-    public void testRetainLineFeed() throws Exception {
+    void retainLineFeed() throws Exception {
         assertEquals("a\n\n", roundtrip("a\r\n\r\n", false));
         assertEquals("a", roundtrip("a", false));
     }

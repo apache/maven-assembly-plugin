@@ -94,14 +94,14 @@ public class DefaultAssemblyArchiverTest {
     }
 
     @BeforeEach
-    public void setup() throws PlexusContainerException {
+    void setup() throws PlexusContainerException {
         this.archiverManager = mock(ArchiverManager.class);
         this.container = new DefaultPlexusContainer();
         this.configurator = new BasicComponentConfigurator();
     }
 
     @Test
-    public void failWhenAssemblyIdIsNull() throws Exception {
+    void failWhenAssemblyIdIsNull() throws Exception {
         assertThrows(InvalidAssemblerConfigurationException.class, () -> {
             final DefaultAssemblyArchiver archiver = createSubject(Collections.emptyList());
             archiver.createArchive(new Assembly(), "full-name", "zip", null, null);
@@ -109,7 +109,7 @@ public class DefaultAssemblyArchiverTest {
     }
 
     @Test
-    public void testCreateArchive() throws Exception {
+    void createArchive() throws Exception {
         Archiver archiver = mock(Archiver.class);
 
         when(archiverManager.getArchiver("zip")).thenReturn(archiver);
@@ -165,7 +165,7 @@ public class DefaultAssemblyArchiverTest {
     }
 
     @Test
-    public void testCreateArchiverShouldConfigureArchiver() throws Exception {
+    void createArchiverShouldConfigureArchiver() throws Exception {
         final TestArchiverWithConfig archiver = new TestArchiverWithConfig();
 
         when(archiverManager.getArchiver("dummy")).thenReturn(archiver);
@@ -201,7 +201,7 @@ public class DefaultAssemblyArchiverTest {
     }
 
     @Test
-    public void testCreateArchiverShouldCreateTarArchiverWithNoCompression() throws Exception {
+    void createArchiverShouldCreateTarArchiverWithNoCompression() throws Exception {
         final TestTarArchiver ttArchiver = new TestTarArchiver();
 
         when(archiverManager.getArchiver("tar")).thenReturn(ttArchiver);
@@ -238,7 +238,7 @@ public class DefaultAssemblyArchiverTest {
     }
 
     @Test
-    public void testCreateArchiverShouldCreateWarArchiverWitExpectWebXmlSetToFalse() throws Exception {
+    void createArchiverShouldCreateWarArchiverWitExpectWebXmlSetToFalse() throws Exception {
         final TestWarArchiver twArchiver = new TestWarArchiver();
 
         when(archiverManager.getArchiver("war")).thenReturn(twArchiver);
@@ -278,7 +278,7 @@ public class DefaultAssemblyArchiverTest {
     }
 
     @Test
-    public void testCreateArchiverShouldCreateZipArchiver() throws Exception {
+    void createArchiverShouldCreateZipArchiver() throws Exception {
         final ZipArchiver archiver = new ZipArchiver();
 
         when(archiverManager.getArchiver("zip")).thenReturn(archiver);
@@ -311,7 +311,7 @@ public class DefaultAssemblyArchiverTest {
     }
 
     @Test
-    public void testCreateTarArchiverShouldNotInitializeCompression() throws Exception {
+    void createTarArchiverShouldNotInitializeCompression() throws Exception {
         final TestTarArchiver archiver = new TestTarArchiver();
 
         when(archiverManager.getArchiver("tar")).thenReturn(archiver);
@@ -333,7 +333,7 @@ public class DefaultAssemblyArchiverTest {
     }
 
     @Test
-    public void testCreateTarArchiverInvalidFormatShouldFailWithInvalidCompression() throws Exception {
+    void createTarArchiverInvalidFormatShouldFailWithInvalidCompression() throws Exception {
 
         when(archiverManager.getArchiver("tar.ZZZ")).thenThrow(new NoSuchArchiverException("no archiver"));
 

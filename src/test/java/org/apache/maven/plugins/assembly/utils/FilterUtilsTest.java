@@ -20,6 +20,7 @@ package org.apache.maven.plugins.assembly.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -29,7 +30,6 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
 import org.apache.maven.project.MavenProject;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -37,20 +37,20 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.slf4j.LoggerFactory;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @MockitoSettings(strictness = Strictness.WARN)
 @ExtendWith(MockitoExtension.class)
-public class FilterUtilsTest {
+class FilterUtilsTest {
 
     @Test
-    public void testFilterArtifactsShouldThrowExceptionUsingStrictModeWithUnmatchedInclude() {
+    void filterArtifactsShouldThrowExceptionUsingStrictModeWithUnmatchedInclude() {
         final Artifact artifact = mock(Artifact.class);
         when(artifact.getGroupId()).thenReturn("group");
         lenient().when(artifact.getArtifactId()).thenReturn("artifact");
@@ -66,24 +66,21 @@ public class FilterUtilsTest {
         final Set<Artifact> artifacts = new HashSet<>();
         artifacts.add(artifact);
 
-        try {
-            FilterUtils.filterArtifacts(
-                    artifacts, includes, excludes, true, false, LoggerFactory.getLogger(getClass()));
-
-            fail("Should fail because of unmatched include.");
-        } catch (final InvalidAssemblerConfigurationException e) {
-            // expected.
-        }
+        assertThrows(
+                InvalidAssemblerConfigurationException.class,
+                () -> FilterUtils.filterArtifacts(
+                        artifacts, includes, excludes, true, false, LoggerFactory.getLogger(getClass())),
+                "Should fail because of unmatched include.");
     }
 
     @Test
-    public void testFilterArtifactsShouldNotRemoveArtifactDirectlyIncluded() throws Exception {
+    void filterArtifactsShouldNotRemoveArtifactDirectlyIncluded() throws Exception {
         verifyArtifactInclusion("group", "artifact", "group:artifact", null, null, null);
         verifyArtifactInclusion("group", "artifact", "group:artifact:jar", null, null, null);
     }
 
     @Test
-    public void testFilterArtifactsShouldNotRemoveArtifactTransitivelyIncluded() throws Exception {
+    void filterArtifactsShouldNotRemoveArtifactTransitivelyIncluded() throws Exception {
         verifyArtifactInclusion(
                 "group",
                 "artifact",
@@ -94,7 +91,7 @@ public class FilterUtilsTest {
     }
 
     @Test
-    public void testFilterArtifactsShouldRemoveArtifactTransitivelyExcluded() throws Exception {
+    void filterArtifactsShouldRemoveArtifactTransitivelyExcluded() throws Exception {
         verifyArtifactExclusion(
                 "group",
                 "artifact",
@@ -105,37 +102,32 @@ public class FilterUtilsTest {
     }
 
     @Test
-    public void testFilterArtifactsShouldRemoveArtifactDirectlyExcluded() throws Exception {
+    void filterArtifactsShouldRemoveArtifactDirectlyExcluded() throws Exception {
         verifyArtifactExclusion("group", "artifact", null, "group:artifact", null, null);
         verifyArtifactExclusion("group", "artifact", null, "group:artifact:jar", null, null);
     }
 
     @Test
-    public void testFilterArtifactsShouldNotRemoveArtifactNotIncludedAndNotExcluded() throws Exception {
+    void filterArtifactsShouldNotRemoveArtifactNotIncludedAndNotExcluded() throws Exception {
         verifyArtifactInclusion("group", "artifact", null, null, null, null);
         verifyArtifactInclusion("group", "artifact", null, null, null, null);
     }
 
     @Test
-    public void testFilterArtifactsShouldRemoveArtifactExcludedByAdditionalFilter() throws Exception {
-        final ArtifactFilter filter = new ArtifactFilter() {
-
-            public boolean include(final Artifact artifact) {
-                return false;
-            }
-        };
+    void filterArtifactsShouldRemoveArtifactExcludedByAdditionalFilter() throws Exception {
+        ArtifactFilter filter = artifact -> false;
 
         verifyArtifactExclusion("group", "artifact", "fail:fail", null, null, filter);
     }
 
     @Test
-    public void testFilterProjectsShouldNotRemoveProjectDirectlyIncluded() {
+    void filterProjectsShouldNotRemoveProjectDirectlyIncluded() {
         verifyProjectInclusion("group", "artifact", "group:artifact", null, null);
         verifyProjectInclusion("group", "artifact", "group:artifact:jar", null, null);
     }
 
     @Test
-    public void testFilterProjectsShouldNotRemoveProjectTransitivelyIncluded() {
+    void filterProjectsShouldNotRemoveProjectTransitivelyIncluded() {
         verifyProjectInclusion(
                 "group",
                 "artifact",
@@ -145,7 +137,7 @@ public class FilterUtilsTest {
     }
 
     @Test
-    public void testFilterProjectsShouldRemoveProjectTransitivelyExcluded() {
+    void filterProjectsShouldRemoveProjectTransitivelyExcluded() {
         verifyProjectExclusion(
                 "group",
                 "artifact",
@@ -155,33 +147,42 @@ public class FilterUtilsTest {
     }
 
     @Test
-    public void testFilterProjectsShouldRemoveProjectDirectlyExcluded() {
+    void filterProjectsShouldRemoveProjectDirectlyExcluded() {
         verifyProjectExclusion("group", "artifact", null, "group:artifact", null);
         verifyProjectExclusion("group", "artifact", null, "group:artifact:jar", null);
     }
 
     @Test
-    public void testFilterProjectsShouldNotRemoveProjectNotIncludedAndNotExcluded() {
+    void filterProjectsShouldNotRemoveProjectNotIncludedAndNotExcluded() {
         verifyProjectInclusion("group", "artifact", null, null, null);
         verifyProjectInclusion("group", "artifact", null, null, null);
     }
 
     @Test
-    public void testTransitiveScopes() {
-        assertThat(
-                FilterUtils.newScopeFilter("compile").getIncluded(),
-                Matchers.containsInAnyOrder("compile", "provided", "system"));
+    void transitiveScopes() {
+        Collection<String> compileScope = FilterUtils.newScopeFilter("compile").getIncluded();
+        assertFalse(compileScope.isEmpty());
+        assertTrue(compileScope.contains("compile"));
+        assertTrue(compileScope.contains("provided"));
+        assertTrue(compileScope.contains("system"));
 
-        assertThat(FilterUtils.newScopeFilter("provided").getIncluded(), Matchers.containsInAnyOrder("provided"));
+        Collection<String> providedScope =
+                FilterUtils.newScopeFilter("provided").getIncluded();
+        assertTrue(providedScope.contains("provided"));
 
-        assertThat(FilterUtils.newScopeFilter("system").getIncluded(), Matchers.containsInAnyOrder("system"));
+        Collection<String> systemScope = FilterUtils.newScopeFilter("system").getIncluded();
+        assertTrue(systemScope.contains("system"));
 
-        assertThat(
-                FilterUtils.newScopeFilter("runtime").getIncluded(), Matchers.containsInAnyOrder("compile", "runtime"));
+        Collection<String> runtimeScope = FilterUtils.newScopeFilter("runtime").getIncluded();
+        assertTrue(runtimeScope.contains("compile"));
+        assertTrue(runtimeScope.contains("runtime"));
 
-        assertThat(
-                FilterUtils.newScopeFilter("test").getIncluded(),
-                Matchers.containsInAnyOrder("compile", "provided", "runtime", "system", "test"));
+        Collection<String> testScope = FilterUtils.newScopeFilter("test").getIncluded();
+        assertTrue(testScope.contains("compile"));
+        assertTrue(testScope.contains("provided"));
+        assertTrue(testScope.contains("runtime"));
+        assertTrue(testScope.contains("system"));
+        assertTrue(testScope.contains("test"));
     }
 
     private void verifyArtifactInclusion(

@@ -55,9 +55,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.ArgumentMatchers.any;
@@ -70,12 +69,12 @@ import static org.mockito.Mockito.when;
 
 @MockitoSettings(strictness = Strictness.WARN)
 @ExtendWith(MockitoExtension.class)
-public class AddDependencySetsTaskTest {
+class AddDependencySetsTaskTest {
     @TempDir
     private File temporaryFolder;
 
     @Test
-    public void testAddDependencySetShouldInterpolateDefaultOutputFileNameMapping() throws Exception {
+    void addDependencySetShouldInterpolateDefaultOutputFileNameMapping() throws Exception {
         final String outDir = "tmp/";
         final String mainAid = "main";
         final String mainGid = "org.maingrp";
@@ -169,7 +168,7 @@ public class AddDependencySetsTaskTest {
     }
 
     @Test
-    public void testAddDependencySetShouldNotAddDependenciesWhenProjectHasNone() throws Exception {
+    void addDependencySetShouldNotAddDependenciesWhenProjectHasNone() throws Exception {
         final MavenProject project = new MavenProject(new Model());
 
         final DependencySet ds = new DependencySet();
@@ -183,7 +182,7 @@ public class AddDependencySetsTaskTest {
 
     // TODO: Find a better way of testing the project-stubbing behavior when a ProjectBuildingException takes place.
     @Test
-    public void testAddDependencySetShouldNotAddDependenciesWhenProjectIsStubbed() throws Exception {
+    void addDependencySetShouldNotAddDependenciesWhenProjectIsStubbed() throws Exception {
         final MavenProject project = new MavenProject(new Model());
 
         final ProjectBuildingException pbe = new ProjectBuildingException("test", "Test error.", new Throwable());
@@ -251,12 +250,12 @@ public class AddDependencySetsTaskTest {
     }
 
     @Test
-    public void testAddDependencySetShouldAddOneDependencyFromProjectWithoutUnpacking() throws Exception {
+    void addDependencySetShouldAddOneDependencyFromProjectWithoutUnpacking() throws Exception {
         verifyOneDependencyAdded("out", false);
     }
 
     @Test
-    public void testAddDependencySetShouldAddOneDependencyFromProjectUnpacked() throws Exception {
+    void addDependencySetShouldAddOneDependencyFromProjectUnpacked() throws Exception {
         verifyOneDependencyAdded("out", true);
     }
 
@@ -340,7 +339,7 @@ public class AddDependencySetsTaskTest {
     }
 
     @Test
-    public void testGetDependencyArtifactsShouldGetOneDependencyArtifact() throws Exception {
+    void getDependencyArtifactsShouldGetOneDependencyArtifact() throws Exception {
         final MavenProject project = new MavenProject(new Model());
 
         Artifact artifact = mock(Artifact.class);
@@ -359,7 +358,7 @@ public class AddDependencySetsTaskTest {
     }
 
     @Test
-    public void testGetDependencyArtifactsShouldFilterOneDependencyArtifactViaInclude() throws Exception {
+    void getDependencyArtifactsShouldFilterOneDependencyArtifactViaInclude() throws Exception {
         final MavenProject project = new MavenProject(new Model());
 
         final Set<Artifact> artifacts = new HashSet<>();
@@ -390,8 +389,7 @@ public class AddDependencySetsTaskTest {
     }
 
     @Test
-    public void testGetDependencyArtifactsShouldIgnoreTransitivePathFilteringWhenIncludeNotTransitive()
-            throws Exception {
+    void getDependencyArtifactsShouldIgnoreTransitivePathFilteringWhenIncludeNotTransitive() throws Exception {
         final MavenProject project = new MavenProject(new Model());
 
         final Set<Artifact> artifacts = new HashSet<>();
@@ -423,7 +421,7 @@ public class AddDependencySetsTaskTest {
 
     // MASSEMBLY-879
     @Test
-    public void useDefaultExcludes() throws Exception {
+    void useDefaultExcludes() throws Exception {
         Artifact zipArtifact = mock(Artifact.class);
         when(zipArtifact.getGroupId()).thenReturn("some-artifact");
         when(zipArtifact.getArtifactId()).thenReturn("of-type-zip");
@@ -474,11 +472,11 @@ public class AddDependencySetsTaskTest {
 
         ArgumentCaptor<ArchivedFileSet> archivedFileSet = ArgumentCaptor.forClass(ArchivedFileSet.class);
         verify(archiver).addArchivedFileSet(archivedFileSet.capture(), isNull());
-        assertThat(archivedFileSet.getValue().isUsingDefaultExcludes(), is(false));
+        assertFalse(archivedFileSet.getValue().isUsingDefaultExcludes());
 
         ArgumentCaptor<FileSet> fileSet = ArgumentCaptor.forClass(FileSet.class);
         verify(archiver).addFileSet(fileSet.capture());
-        assertThat(fileSet.getValue().isUsingDefaultExcludes(), is(false));
+        assertFalse(fileSet.getValue().isUsingDefaultExcludes());
     }
 
     private static File newFile(File parent, String child) throws IOException {

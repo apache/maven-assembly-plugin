@@ -34,61 +34,61 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class LineEndingsUtilsTest {
+class LineEndingsUtilsTest {
 
     private static final String CRLF = "\r\n";
 
     private static final String LF = "\n";
 
     @Test
-    public void shouldWorkCauseWeTestJdkEnumConversion() {
+    void shouldWorkCauseWeTestJdkEnumConversion() {
         LineEndings lineEnding = LineEndings.valueOf("windows");
         assertEquals(CRLF, lineEnding.getLineEndingCharacters());
     }
 
     @Test
-    public void shouldReturnDosLineEnding() {
+    void shouldReturnDosLineEnding() {
         assertEquals(CRLF, LineEndings.windows.getLineEndingCharacters());
         assertEquals(CRLF, LineEndings.dos.getLineEndingCharacters());
         assertEquals(CRLF, LineEndings.crlf.getLineEndingCharacters());
     }
 
     @Test
-    public void shouldReturnUnixLineEnding() {
+    void shouldReturnUnixLineEnding() {
         assertEquals(LF, LineEndings.unix.getLineEndingCharacters());
         assertEquals(LF, LineEndings.lf.getLineEndingCharacters());
     }
 
     @Test
-    public void shouldReturnNullAsLineEndingForKeep() {
+    void shouldReturnNullAsLineEndingForKeep() {
         assertNull(LineEndings.keep.getLineEndingCharacters());
     }
 
     @Test
-    public void testGetLineEndingCharsShouldReturnDosLineEnding() throws AssemblyFormattingException {
+    void getLineEndingCharsShouldReturnDosLineEnding() throws Exception {
         assertEquals("\r\n", LineEndingsUtils.getLineEndingCharacters("windows"));
         assertEquals("\r\n", LineEndingsUtils.getLineEndingCharacters("dos"));
         assertEquals("\r\n", LineEndingsUtils.getLineEndingCharacters("crlf"));
     }
 
     @Test
-    public void testGetLineEndingCharsShouldReturnUnixLineEnding() throws AssemblyFormattingException {
+    void getLineEndingCharsShouldReturnUnixLineEnding() throws Exception {
         assertEquals("\n", LineEndingsUtils.getLineEndingCharacters("unix"));
         assertEquals("\n", LineEndingsUtils.getLineEndingCharacters("lf"));
     }
 
     @Test
-    public void testGetLineEndingCharsShouldReturnNullLineEnding() throws AssemblyFormattingException {
+    void getLineEndingCharsShouldReturnNullLineEnding() throws Exception {
         assertNull(LineEndingsUtils.getLineEndingCharacters("keep"));
     }
 
     @Test
-    public void testGetLineEndingCharsShouldThrowFormattingExceptionWithInvalidHint() {
+    void getLineEndingCharsShouldThrowFormattingExceptionWithInvalidHint() {
         assertThrows(AssemblyFormattingException.class, () -> LineEndingsUtils.getLineEndingCharacters("invalid"));
     }
 
     @Test
-    public void testConvertLineEndingsShouldReplaceLFWithCRLF() throws IOException {
+    void convertLineEndingsShouldReplaceLFWithCRLF() throws Exception {
         String test = "This is a \ntest.";
         String check = "This is a \r\ntest.";
 
@@ -96,7 +96,7 @@ public class LineEndingsUtilsTest {
     }
 
     @Test
-    public void testConvertLineEndingsShouldReplaceLFWithCRLFAtEOF() throws IOException {
+    void convertLineEndingsShouldReplaceLFWithCRLFAtEOF() throws Exception {
         String test = "This is a \ntest.\n";
         String check = "This is a \r\ntest.\r\n";
 
@@ -104,7 +104,7 @@ public class LineEndingsUtilsTest {
     }
 
     @Test
-    public void testConvertLineEndingsShouldReplaceCRLFWithLF() throws IOException {
+    void convertLineEndingsShouldReplaceCRLFWithLF() throws Exception {
         String test = "This is a \r\ntest.";
         String check = "This is a \ntest.";
 
@@ -112,7 +112,7 @@ public class LineEndingsUtilsTest {
     }
 
     @Test
-    public void testConvertLineEndingsShouldReplaceCRLFWithLFAtEOF() throws IOException {
+    void convertLineEndingsShouldReplaceCRLFWithLFAtEOF() throws Exception {
         String test = "This is a \r\ntest.\r\n";
         String check = "This is a \ntest.\n";
 
@@ -120,7 +120,7 @@ public class LineEndingsUtilsTest {
     }
 
     @Test
-    public void testConvertLineEndingsShouldReplaceLFWithLF() throws IOException {
+    void convertLineEndingsShouldReplaceLFWithLF() throws Exception {
         String test = "This is a \ntest.";
         String check = "This is a \ntest.";
 
@@ -128,7 +128,7 @@ public class LineEndingsUtilsTest {
     }
 
     @Test
-    public void testConvertLineEndingsShouldReplaceLFWithLFAtEOF() throws IOException {
+    void convertLineEndingsShouldReplaceLFWithLFAtEOF() throws Exception {
         String test = "This is a \ntest.\n";
         String check = "This is a \ntest.\n";
 
@@ -136,7 +136,7 @@ public class LineEndingsUtilsTest {
     }
 
     @Test
-    public void testConvertLineEndingsShouldReplaceCRLFWithCRLF() throws IOException {
+    void convertLineEndingsShouldReplaceCRLFWithCRLF() throws Exception {
         String test = "This is a \r\ntest.";
         String check = "This is a \r\ntest.";
 
@@ -144,7 +144,7 @@ public class LineEndingsUtilsTest {
     }
 
     @Test
-    public void testConvertLineEndingsShouldReplaceCRLFWithCRLFAtEOF() throws IOException {
+    void convertLineEndingsShouldReplaceCRLFWithCRLFAtEOF() throws Exception {
         String test = "This is a \r\ntest.\r\n";
         String check = "This is a \r\ntest.\r\n";
 
@@ -152,7 +152,7 @@ public class LineEndingsUtilsTest {
     }
 
     @Test
-    public void testConvertLineEndingsLFToCRLFNoEOFForceEOF() throws IOException {
+    void convertLineEndingsLFToCRLFNoEOFForceEOF() throws Exception {
         String test = "This is a \ntest.";
         String check = "This is a \r\ntest.\r\n";
 
@@ -160,7 +160,7 @@ public class LineEndingsUtilsTest {
     }
 
     @Test
-    public void testConvertLineEndingsLFToCRLFWithEOFForceEOF() throws IOException {
+    void convertLineEndingsLFToCRLFWithEOFForceEOF() throws Exception {
         String test = "This is a \ntest.\n";
         String check = "This is a \r\ntest.\r\n";
 
@@ -168,7 +168,7 @@ public class LineEndingsUtilsTest {
     }
 
     @Test
-    public void testConvertLineEndingsLFToCRLFNoEOFStripEOF() throws IOException {
+    void convertLineEndingsLFToCRLFNoEOFStripEOF() throws Exception {
         String test = "This is a \ntest.";
         String check = "This is a \r\ntest.";
 
@@ -176,7 +176,7 @@ public class LineEndingsUtilsTest {
     }
 
     @Test
-    public void testConvertLineEndingsLFToCRLFWithEOFStripEOF() throws IOException {
+    void convertLineEndingsLFToCRLFWithEOFStripEOF() throws Exception {
         String test = "This is a \ntest.\n";
         String check = "This is a \r\ntest.";
 
@@ -184,7 +184,7 @@ public class LineEndingsUtilsTest {
     }
 
     @Test
-    public void testConvertLineEndingsCRLFToLFNoEOFForceEOF() throws IOException {
+    void convertLineEndingsCRLFToLFNoEOFForceEOF() throws Exception {
         String test = "This is a \r\ntest.";
         String check = "This is a \ntest.\n";
 
@@ -192,7 +192,7 @@ public class LineEndingsUtilsTest {
     }
 
     @Test
-    public void testConvertLineEndingsCRLFToLFWithEOFForceEOF() throws IOException {
+    void convertLineEndingsCRLFToLFWithEOFForceEOF() throws Exception {
         String test = "This is a \r\ntest.\r\n";
         String check = "This is a \ntest.\n";
 
@@ -200,7 +200,7 @@ public class LineEndingsUtilsTest {
     }
 
     @Test
-    public void testConvertLineEndingsCRLFToLFNoEOFStripEOF() throws IOException {
+    void convertLineEndingsCRLFToLFNoEOFStripEOF() throws Exception {
         String test = "This is a \r\ntest.";
         String check = "This is a \ntest.";
 
@@ -208,7 +208,7 @@ public class LineEndingsUtilsTest {
     }
 
     @Test
-    public void testConvertLineEndingsCRLFToLFWithEOFStripEOF() throws IOException {
+    void convertLineEndingsCRLFToLFWithEOFStripEOF() throws Exception {
         String test = "This is a \r\ntest.\r\n";
         String check = "This is a \ntest.";
 

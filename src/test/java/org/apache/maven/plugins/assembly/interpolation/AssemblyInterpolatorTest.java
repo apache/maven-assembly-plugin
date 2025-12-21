@@ -48,11 +48,9 @@ import static org.mockito.Mockito.when;
 
 @MockitoSettings(strictness = Strictness.WARN)
 @ExtendWith(MockitoExtension.class)
-public class AssemblyInterpolatorTest {
+class AssemblyInterpolatorTest {
     @Test
-    public void testDependencySetOutputFileNameMappingsAreNotInterpolated()
-            throws IOException, AssemblyInterpolationException, AssemblyReadException,
-                    InvalidAssemblerConfigurationException {
+    void dependencySetOutputFileNameMappingsAreNotInterpolated() throws Exception {
         final Model model = new Model();
         model.setArtifactId("artifact-id");
         model.setGroupId("group.id");
@@ -88,9 +86,7 @@ public class AssemblyInterpolatorTest {
     }
 
     @Test
-    public void testDependencySetOutputDirectoryIsNotInterpolated()
-            throws IOException, AssemblyInterpolationException, AssemblyReadException,
-                    InvalidAssemblerConfigurationException {
+    void dependencySetOutputDirectoryIsNotInterpolated() throws Exception {
         final Model model = new Model();
         model.setArtifactId("artifact-id");
         model.setGroupId("group.id");
@@ -130,9 +126,7 @@ public class AssemblyInterpolatorTest {
     }
 
     @Test
-    public void testShouldResolveModelGroupIdInAssemblyId()
-            throws AssemblyInterpolationException, InvalidAssemblerConfigurationException, AssemblyReadException,
-                    IOException {
+    void shouldResolveModelGroupIdInAssemblyId() throws Exception {
         final Model model = new Model();
         model.setArtifactId("artifact-id");
         model.setGroupId("group.id");
@@ -154,9 +148,7 @@ public class AssemblyInterpolatorTest {
     }
 
     @Test
-    public void testShouldResolveModelPropertyBeforeModelGroupIdInAssemblyId()
-            throws AssemblyInterpolationException, InvalidAssemblerConfigurationException, AssemblyReadException,
-                    IOException {
+    void shouldResolveModelPropertyBeforeModelGroupIdInAssemblyId() throws Exception {
         final Model model = new Model();
         model.setArtifactId("artifact-id");
         model.setGroupId("group.id");
@@ -185,7 +177,7 @@ public class AssemblyInterpolatorTest {
     }
 
     @Test
-    public void testShouldResolveContextValueBeforeModelPropertyOrModelGroupIdInAssemblyId() throws Exception {
+    void shouldResolveContextValueBeforeModelPropertyOrModelGroupIdInAssemblyId() throws Exception {
         final Model model = new Model();
         model.setArtifactId("artifact-id");
         model.setGroupId("group.id");
@@ -219,9 +211,7 @@ public class AssemblyInterpolatorTest {
     }
 
     @Test
-    public void testShouldNotTouchUnresolvedExpression()
-            throws AssemblyInterpolationException, InvalidAssemblerConfigurationException, AssemblyReadException,
-                    IOException {
+    void shouldNotTouchUnresolvedExpression() throws Exception {
         final Model model = new Model();
         model.setArtifactId("artifact-id");
         model.setGroupId("group.id");
@@ -244,9 +234,7 @@ public class AssemblyInterpolatorTest {
     }
 
     @Test
-    public void testShouldInterpolateMultiDotProjectExpression()
-            throws AssemblyInterpolationException, InvalidAssemblerConfigurationException, AssemblyReadException,
-                    IOException {
+    void shouldInterpolateMultiDotProjectExpression() throws Exception {
         final Build build = new Build();
         build.setFinalName("final-name");
 
