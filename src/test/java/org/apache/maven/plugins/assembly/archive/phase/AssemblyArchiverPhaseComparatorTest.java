@@ -32,10 +32,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-public class AssemblyArchiverPhaseComparatorTest {
+class AssemblyArchiverPhaseComparatorTest {
 
     @Test
-    public void comparatorSortsCorrectly() throws Exception {
+    void comparatorSortsCorrectly() throws Exception {
         List<AssemblyArchiverPhase> items = new ArrayList<>();
         Unordered2 u2 = new Unordered2();
         items.add(u2);

@@ -60,7 +60,7 @@ import static org.mockito.Mockito.when;
 
 @MockitoSettings(strictness = Strictness.WARN)
 @ExtendWith(MockitoExtension.class)
-public class DefaultDependencyResolverTest {
+class DefaultDependencyResolverTest {
 
     @Mock
     private ArtifactHandlerManager artifactHandlerManager;
@@ -75,7 +75,7 @@ public class DefaultDependencyResolverTest {
     private DefaultDependencyResolver resolver;
 
     @Test
-    public void testGetDependencySetResolutionRequirementsTransitive() throws Exception {
+    void getDependencySetResolutionRequirementsTransitive() throws Exception {
         final DependencySet ds = new DependencySet();
         ds.setScope(Artifact.SCOPE_SYSTEM);
         ds.setUseTransitiveDependencies(true);
@@ -111,7 +111,7 @@ public class DefaultDependencyResolverTest {
     }
 
     @Test
-    public void testGetDependencySetResolutionRequirementsNonTransitive() throws DependencyResolutionException {
+    void getDependencySetResolutionRequirementsNonTransitive() throws Exception {
         final DependencySet ds = new DependencySet();
         ds.setScope(Artifact.SCOPE_SYSTEM);
         ds.setUseTransitiveDependencies(false);
@@ -131,7 +131,7 @@ public class DefaultDependencyResolverTest {
     }
 
     @Test
-    public void testGetModuleSetResolutionRequirementsWithoutBinaries() throws DependencyResolutionException {
+    void getModuleSetResolutionRequirementsWithoutBinaries() throws Exception {
         final File rootDir = new File("root");
         final MavenProject project = createMavenProject("main-group", "main-artifact", "1", rootDir);
         final MavenProject module1 = createMavenProject("main-group", "module-1", "1", new File(rootDir, "module-1"));
@@ -150,7 +150,7 @@ public class DefaultDependencyResolverTest {
     }
 
     @Test
-    public void testGetModuleSetResolutionRequirementsIncludeDeps() throws Exception {
+    void getModuleSetResolutionRequirementsIncludeDeps() throws Exception {
         final File rootDir = new File("root");
         final MavenProject project = createMavenProject("main-group", "main-artifact", "1", rootDir);
         final MavenProject module1 = createMavenProject("main-group", "module-1", "1", new File(rootDir, "module-1"));

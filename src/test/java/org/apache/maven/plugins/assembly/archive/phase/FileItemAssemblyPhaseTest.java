@@ -50,14 +50,14 @@ import static org.mockito.Mockito.when;
 
 @MockitoSettings(strictness = Strictness.WARN)
 @ExtendWith(MockitoExtension.class)
-public class FileItemAssemblyPhaseTest {
+class FileItemAssemblyPhaseTest {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @TempDir
     private File temporaryFolder;
 
     @Test
-    public void testExecuteShouldAddNothingWhenNoFileItemsArePresent() throws Exception {
+    void executeShouldAddNothingWhenNoFileItemsArePresent() throws Exception {
         final AssemblerConfigurationSource macCS = mock(AssemblerConfigurationSource.class);
 
         final File basedir = temporaryFolder;
@@ -73,7 +73,7 @@ public class FileItemAssemblyPhaseTest {
     }
 
     @Test
-    public void testExecuteShouldAddAbsoluteFileNoFilterNoLineEndingConversion() throws Exception {
+    void executeShouldAddAbsoluteFileNoFilterNoLineEndingConversion() throws Exception {
         final AssemblerConfigurationSource macCS = mock(AssemblerConfigurationSource.class);
 
         final File basedir = temporaryFolder;
@@ -107,7 +107,7 @@ public class FileItemAssemblyPhaseTest {
     }
 
     @Test
-    public void testExecuteShouldAddRelativeFileNoFilterNoLineEndingConversion() throws Exception {
+    void executeShouldAddRelativeFileNoFilterNoLineEndingConversion() throws Exception {
         final AssemblerConfigurationSource macCS = mock(AssemblerConfigurationSource.class);
 
         final File basedir = temporaryFolder;
@@ -141,7 +141,7 @@ public class FileItemAssemblyPhaseTest {
     }
 
     @Test
-    public void testExecuteWithOutputDirectory() throws Exception {
+    void executeWithOutputDirectory() throws Exception {
         final AssemblerConfigurationSource macCS = mock(AssemblerConfigurationSource.class);
 
         final File basedir = temporaryFolder;
@@ -220,7 +220,7 @@ public class FileItemAssemblyPhaseTest {
     }
 
     @Test
-    public void testExecuteWithOutputDirectoryAndDestName() throws Exception {
+    void executeWithOutputDirectoryAndDestName() throws Exception {
         final AssemblerConfigurationSource macCS = mock(AssemblerConfigurationSource.class);
 
         final File basedir = temporaryFolder;
@@ -302,7 +302,7 @@ public class FileItemAssemblyPhaseTest {
     }
 
     @Test
-    public void testExecuteWithOutputDirectoryAndDestNameAndIncludeBaseDirectoryFalse() throws Exception {
+    void executeWithOutputDirectoryAndDestNameAndIncludeBaseDirectoryFalse() throws Exception {
         final AssemblerConfigurationSource macCS = mock(AssemblerConfigurationSource.class);
 
         final File basedir = temporaryFolder;

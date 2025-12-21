@@ -25,7 +25,6 @@ import org.apache.maven.model.Model;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.testutils.PojoConfigSource;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluationException;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
 import org.codehaus.plexus.interpolation.fixed.PropertiesBasedValueSource;
 import org.junit.jupiter.api.Test;
@@ -41,11 +40,11 @@ import static org.mockito.Mockito.when;
 
 @MockitoSettings(strictness = Strictness.WARN)
 @ExtendWith(MockitoExtension.class)
-public class AssemblyExpressionEvaluatorTest {
+class AssemblyExpressionEvaluatorTest {
     private final PojoConfigSource configSourceStub = new PojoConfigSource();
 
     @Test
-    public void testShouldResolveModelGroupId() throws ExpressionEvaluationException {
+    void shouldResolveModelGroupId() throws Exception {
         final Model model = new Model();
         model.setArtifactId("artifact-id");
         model.setGroupId("group.id");
@@ -67,7 +66,7 @@ public class AssemblyExpressionEvaluatorTest {
     }
 
     @Test
-    public void testShouldResolveModelPropertyBeforeModelGroupId() throws ExpressionEvaluationException {
+    void shouldResolveModelPropertyBeforeModelGroupId() throws Exception {
         final Model model = new Model();
         model.setArtifactId("artifact-id");
         model.setGroupId("group.id");
@@ -88,8 +87,7 @@ public class AssemblyExpressionEvaluatorTest {
     }
 
     @Test
-    public void testShouldResolveContextValueBeforeModelPropertyOrModelGroupIdInAssemblyId()
-            throws ExpressionEvaluationException {
+    void shouldResolveContextValueBeforeModelPropertyOrModelGroupIdInAssemblyId() throws Exception {
         final Model model = new Model();
         model.setArtifactId("artifact-id");
         model.setGroupId("group.id");
@@ -124,7 +122,7 @@ public class AssemblyExpressionEvaluatorTest {
     }
 
     @Test
-    public void testShouldReturnUnchangedInputForUnresolvedExpression() throws ExpressionEvaluationException {
+    void shouldReturnUnchangedInputForUnresolvedExpression() throws Exception {
         final Model model = new Model();
         model.setArtifactId("artifact-id");
         model.setGroupId("group.id");
@@ -140,7 +138,7 @@ public class AssemblyExpressionEvaluatorTest {
     }
 
     @Test
-    public void testShouldInterpolateMultiDotProjectExpression() throws ExpressionEvaluationException {
+    void shouldInterpolateMultiDotProjectExpression() throws Exception {
         final Build build = new Build();
         build.setFinalName("final-name");
 

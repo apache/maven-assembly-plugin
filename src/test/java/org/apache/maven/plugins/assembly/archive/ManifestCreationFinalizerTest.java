@@ -45,18 +45,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @MockitoSettings(strictness = Strictness.WARN)
 @ExtendWith(MockitoExtension.class)
-public class ManifestCreationFinalizerTest {
+class ManifestCreationFinalizerTest {
 
     @TempDir
     private File temporaryFolder;
 
     @Test
-    public void testShouldDoNothingWhenArchiveConfigIsNull() throws Exception {
+    void shouldDoNothingWhenArchiveConfigIsNull() throws Exception {
         new ManifestCreationFinalizer(null, null, null).finalizeArchiveCreation(null);
     }
 
     @Test
-    public void testShouldDoNothingWhenArchiverIsNotJarArchiver() throws Exception {
+    void shouldDoNothingWhenArchiverIsNotJarArchiver() throws Exception {
         MavenProject project = new MavenProject(new Model());
         MavenArchiveConfiguration config = new MavenArchiveConfiguration();
 
@@ -64,7 +64,7 @@ public class ManifestCreationFinalizerTest {
     }
 
     @Test
-    public void testShouldAddManifestWhenArchiverIsJarArchiver() throws Exception {
+    void shouldAddManifestWhenArchiverIsJarArchiver() throws Exception {
         MavenProject project = new MavenProject(new Model());
         MavenArchiveConfiguration config = new MavenArchiveConfiguration();
 
@@ -101,7 +101,7 @@ public class ManifestCreationFinalizerTest {
     }
 
     @Test
-    public void testShouldAddManifestEntriesWhenArchiverIsJarArchiver() throws Exception {
+    void shouldAddManifestEntriesWhenArchiverIsJarArchiver() throws Exception {
         MavenProject project = new MavenProject(new Model());
         MavenArchiveConfiguration config = new MavenArchiveConfiguration();
 

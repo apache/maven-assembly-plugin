@@ -30,10 +30,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ResolutionManagementInfoTest {
+class ResolutionManagementInfoTest {
 
     @Test
-    public void testAddSingleArtifactWithReplacemen() throws Exception {
+    void addSingleArtifactWithReplacemen() throws Exception {
         ResolutionManagementInfo rmi = new ResolutionManagementInfo();
         Artifact a1 = new DefaultArtifact(
                 "groupid",
@@ -59,7 +59,7 @@ public class ResolutionManagementInfoTest {
     }
 
     @Test
-    public void testAddMultiArtifactWithReplacemen() throws Exception {
+    void addMultiArtifactWithReplacemen() throws Exception {
         ResolutionManagementInfo rmi = new ResolutionManagementInfo();
         Artifact a1 = new DefaultArtifact(
                 "groupid",

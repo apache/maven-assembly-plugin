@@ -84,7 +84,7 @@ public class DefaultAssemblyReaderTest {
     }
 
     @Test
-    public void testIncludeSiteInAssemblyShouldFailIfSiteDirectoryNonExistent() throws Exception {
+    void includeSiteInAssemblyShouldFailIfSiteDirectoryNonExistent() throws Exception {
         final File siteDir = Files.createTempFile("assembly-reader.", ".test").toFile();
         siteDir.delete();
 
@@ -102,7 +102,7 @@ public class DefaultAssemblyReaderTest {
     }
 
     @Test
-    public void testIncludeSiteInAssemblyShouldAddSiteDirFileSetWhenDirExists() throws Exception {
+    void includeSiteInAssemblyShouldAddSiteDirFileSetWhenDirExists() throws Exception {
         final File siteDir = temporaryFolder;
 
         when(configSource.getSiteDirectory()).thenReturn(siteDir);
@@ -122,7 +122,7 @@ public class DefaultAssemblyReaderTest {
     }
 
     @Test
-    public void testMergeComponentWithAssemblyShouldAddOneFileSetToExistingListOfTwo() {
+    void mergeComponentWithAssemblyShouldAddOneFileSetToExistingListOfTwo() {
         final Assembly assembly = new Assembly();
 
         FileSet fs = new FileSet();
@@ -159,7 +159,7 @@ public class DefaultAssemblyReaderTest {
     }
 
     @Test
-    public void testMergeComponentWithAssemblyShouldAddOneFileItemToExistingListOfTwo() {
+    void mergeComponentWithAssemblyShouldAddOneFileItemToExistingListOfTwo() {
         final Assembly assembly = new Assembly();
 
         FileItem fi = new FileItem();
@@ -197,7 +197,7 @@ public class DefaultAssemblyReaderTest {
     }
 
     @Test
-    public void testMergeComponentWithAssemblyShouldAddOneDependencySetToExistingListOfTwo() {
+    void mergeComponentWithAssemblyShouldAddOneDependencySetToExistingListOfTwo() {
         final Assembly assembly = new Assembly();
 
         DependencySet ds = new DependencySet();
@@ -230,7 +230,7 @@ public class DefaultAssemblyReaderTest {
     }
 
     @Test
-    public void testMergeComponentWithAssemblyShouldAddOneContainerDescriptorHandlerToExistingListOfTwo() {
+    void mergeComponentWithAssemblyShouldAddOneContainerDescriptorHandlerToExistingListOfTwo() {
         final Assembly assembly = new Assembly();
 
         ContainerDescriptorHandlerConfig cfg = new ContainerDescriptorHandlerConfig();
@@ -264,7 +264,7 @@ public class DefaultAssemblyReaderTest {
     }
 
     @Test
-    public void testMergeComponentsWithMainAssemblyShouldAddOneFileSetToAssembly() throws Exception {
+    void mergeComponentsWithMainAssemblyShouldAddOneFileSetToAssembly() throws Exception {
         final Component component = new Component();
 
         final FileSet fileSet = new FileSet();
@@ -310,7 +310,7 @@ public class DefaultAssemblyReaderTest {
     }
 
     @Test
-    public void testReadAssemblyShouldReadAssemblyWithoutComponentsInterpolationOrSiteDirInclusion() throws Exception {
+    void readAssemblyShouldReadAssemblyWithoutComponentsInterpolationOrSiteDirInclusion() throws Exception {
         final Assembly assembly = new Assembly();
         assembly.setId("test");
 
@@ -320,7 +320,7 @@ public class DefaultAssemblyReaderTest {
     }
 
     @Test
-    public void testReadAssemblyShouldReadAssemblyWithSiteDirInclusionFromAssemblyWithoutComponentsOrInterpolation()
+    void readAssemblyShouldReadAssemblyWithSiteDirInclusionFromAssemblyWithoutComponentsOrInterpolation()
             throws Exception {
         final Assembly assembly = new Assembly();
         assembly.setId("test");
@@ -360,8 +360,7 @@ public class DefaultAssemblyReaderTest {
     }
 
     @Test
-    public void testReadAssemblyShouldReadAssemblyWithComponentWithoutSiteDirInclusionOrInterpolation()
-            throws Exception {
+    void readAssemblyShouldReadAssemblyWithComponentWithoutSiteDirInclusionOrInterpolation() throws Exception {
         final File componentsFile = File.createTempFile("junit", null, temporaryFolder);
 
         final File basedir = componentsFile.getParentFile();
@@ -410,9 +409,8 @@ public class DefaultAssemblyReaderTest {
     }
 
     @Test
-    public void
-            testReadAssemblyShouldReadAssemblyWithComponentInterpolationWithoutSiteDirInclusionOrAssemblyInterpolation()
-                    throws Exception {
+    void readAssemblyShouldReadAssemblyWithComponentInterpolationWithoutSiteDirInclusionOrAssemblyInterpolation()
+            throws Exception {
         final File componentsFile = File.createTempFile("junit", null, temporaryFolder);
 
         final File basedir = componentsFile.getParentFile();
@@ -462,8 +460,7 @@ public class DefaultAssemblyReaderTest {
     }
 
     @Test
-    public void testReadAssemblyShouldReadAssemblyWithInterpolationWithoutComponentsOrSiteDirInclusion()
-            throws Exception {
+    void readAssemblyShouldReadAssemblyWithInterpolationWithoutComponentsOrSiteDirInclusion() throws Exception {
         final Assembly assembly = new Assembly();
         assembly.setId("${groupId}-assembly");
 
@@ -495,7 +492,7 @@ public class DefaultAssemblyReaderTest {
     }
 
     @Test
-    public void testGetAssemblyFromDescriptorFileShouldReadAssembly() throws Exception {
+    void getAssemblyFromDescriptorFileShouldReadAssembly() throws Exception {
         final Assembly assembly = new Assembly();
         assembly.setId("test");
 
@@ -525,7 +522,7 @@ public class DefaultAssemblyReaderTest {
     }
 
     @Test
-    public void testGetAssemblyForDescriptorReferenceShouldReadBinaryAssemblyRef() throws Exception {
+    void getAssemblyForDescriptorReferenceShouldReadBinaryAssemblyRef() throws Exception {
         final File basedir = temporaryFolder;
 
         when(configSource.getBasedir()).thenReturn(basedir);
@@ -540,7 +537,7 @@ public class DefaultAssemblyReaderTest {
     }
 
     @Test
-    public void testReadAssembliesShouldGetAssemblyDescriptorFromSingleFile() throws Exception {
+    void readAssembliesShouldGetAssemblyDescriptorFromSingleFile() throws Exception {
         final Assembly assembly = new Assembly();
         assembly.setId("test");
 
@@ -566,7 +563,7 @@ public class DefaultAssemblyReaderTest {
     }
 
     @Test
-    public void testReadAssembliesShouldFailWhenSingleDescriptorFileMissing() throws Exception {
+    void readAssembliesShouldFailWhenSingleDescriptorFileMissing() throws Exception {
         final File basedir = temporaryFolder;
 
         try {
@@ -579,7 +576,7 @@ public class DefaultAssemblyReaderTest {
     }
 
     @Test
-    public void testReadAssembliesShouldIgnoreMissingSingleDescriptorFileWhenIgnoreIsConfigured() throws Exception {
+    void readAssembliesShouldIgnoreMissingSingleDescriptorFileWhenIgnoreIsConfigured() throws Exception {
         final File basedir = temporaryFolder;
 
         try {
@@ -591,7 +588,7 @@ public class DefaultAssemblyReaderTest {
     }
 
     @Test
-    public void testReadAssembliesShouldGetAssemblyDescriptorFromFileArray() throws Exception {
+    void readAssembliesShouldGetAssemblyDescriptorFromFileArray() throws Exception {
         final Assembly assembly1 = new Assembly();
         assembly1.setId("test");
 
@@ -621,7 +618,7 @@ public class DefaultAssemblyReaderTest {
     }
 
     @Test
-    public void testReadAssembliesShouldGetAssemblyDescriptorFromMultipleRefs() throws Exception {
+    void readAssembliesShouldGetAssemblyDescriptorFromMultipleRefs() throws Exception {
         final File basedir = temporaryFolder;
 
         final List<Assembly> assemblies = performReadAssemblies(basedir, null, new String[] {"bin", "src"}, null);
@@ -639,7 +636,7 @@ public class DefaultAssemblyReaderTest {
     }
 
     @Test
-    public void testReadAssembliesShouldGetAssemblyDescriptorFromDirectory() throws Exception {
+    void readAssembliesShouldGetAssemblyDescriptorFromDirectory() throws Exception {
         final Assembly assembly1 = new Assembly();
         assembly1.setId("test");
 
@@ -669,7 +666,7 @@ public class DefaultAssemblyReaderTest {
     }
 
     @Test
-    public void testReadAssembliesShouldGetTwoAssemblyDescriptorsFromDirectoryWithThreeFiles() throws Exception {
+    void readAssembliesShouldGetTwoAssemblyDescriptorsFromDirectoryWithThreeFiles() throws Exception {
         final Assembly assembly1 = new Assembly();
         assembly1.setId("test");
 
@@ -704,7 +701,7 @@ public class DefaultAssemblyReaderTest {
     }
 
     @Test
-    public void inlineAssemblyShouldBeReturned() throws Exception {
+    void inlineAssemblyShouldBeReturned() throws Exception {
         // given
         Assembly assemby = new Assembly();
         assemby.setId("test-id");

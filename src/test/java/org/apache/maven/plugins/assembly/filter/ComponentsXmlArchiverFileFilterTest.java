@@ -61,7 +61,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class ComponentsXmlArchiverFileFilterTest {
+class ComponentsXmlArchiverFileFilterTest {
 
     @TempDir
     private File temporaryFolder;
@@ -69,12 +69,12 @@ public class ComponentsXmlArchiverFileFilterTest {
     private ComponentsXmlArchiverFileFilter filter;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         filter = new ComponentsXmlArchiverFileFilter();
     }
 
     @Test
-    public void testAddComponentsXmlShouldAddComponentWithoutRoleHint() throws Exception {
+    void addComponentsXmlShouldAddComponentWithoutRoleHint() throws Exception {
         final Reader reader =
                 writeComponentsXml(Collections.singletonList(new ComponentDef("role", null, "org.apache.maven.Impl")));
 
@@ -91,7 +91,7 @@ public class ComponentsXmlArchiverFileFilterTest {
     }
 
     @Test
-    public void testAddComponentsXmlShouldAddComponentWithRoleHint() throws Exception {
+    void addComponentsXmlShouldAddComponentWithRoleHint() throws Exception {
         final Reader reader = writeComponentsXml(
                 Collections.singletonList(new ComponentDef("role", "hint", "org.apache.maven.Impl")));
 
@@ -108,7 +108,7 @@ public class ComponentsXmlArchiverFileFilterTest {
     }
 
     @Test
-    public void testAddComponentsXmlShouldAddTwoComponentsWithRoleHints() throws Exception {
+    void addComponentsXmlShouldAddTwoComponentsWithRoleHints() throws Exception {
         final List<ComponentDef> defs = new ArrayList<>();
 
         defs.add(new ComponentDef("role", "hint", "org.apache.maven.Impl"));
@@ -137,7 +137,7 @@ public class ComponentsXmlArchiverFileFilterTest {
     }
 
     @Test
-    public void testAddToArchiveShouldWriteComponentWithoutHintToFile() throws Exception {
+    void addToArchiveShouldWriteComponentWithoutHintToFile() throws Exception {
         final Xpp3Dom dom = createComponentDom(new ComponentDef("role", null, "impl"));
 
         filter.components = new LinkedHashMap<>();
@@ -165,7 +165,7 @@ public class ComponentsXmlArchiverFileFilterTest {
     }
 
     @Test
-    public void testAddToArchiveShouldWriteComponentWithHintToFile() throws Exception {
+    void addToArchiveShouldWriteComponentWithHintToFile() throws Exception {
         final Xpp3Dom dom = createComponentDom(new ComponentDef("role", "hint", "impl"));
 
         filter.components = new LinkedHashMap<>();
@@ -193,7 +193,7 @@ public class ComponentsXmlArchiverFileFilterTest {
     }
 
     @Test
-    public void testAddToArchiveShouldWriteTwoComponentToFile() throws Exception {
+    void addToArchiveShouldWriteTwoComponentToFile() throws Exception {
         filter.components = new LinkedHashMap<>();
 
         final Xpp3Dom dom = createComponentDom(new ComponentDef("role", "hint", "impl"));
@@ -236,7 +236,7 @@ public class ComponentsXmlArchiverFileFilterTest {
     }
 
     @Test
-    public void testAddToArchiveShouldWriteTwoComponentToArchivedFile() throws Exception {
+    void addToArchiveShouldWriteTwoComponentToArchivedFile() throws Exception {
         filter.components = new LinkedHashMap<>();
 
         final Xpp3Dom dom = createComponentDom(new ComponentDef("role", "hint", "impl"));

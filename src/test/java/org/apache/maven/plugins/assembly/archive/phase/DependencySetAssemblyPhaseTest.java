@@ -18,17 +18,12 @@
  */
 package org.apache.maven.plugins.assembly.archive.phase;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Model;
-import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
-import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
-import org.apache.maven.plugins.assembly.artifact.DependencyResolutionException;
 import org.apache.maven.plugins.assembly.artifact.DependencyResolver;
-import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.model.DependencySet;
 import org.apache.maven.project.MavenProject;
@@ -49,22 +44,20 @@ import static org.mockito.Mockito.when;
 
 @MockitoSettings(strictness = Strictness.WARN)
 @ExtendWith(MockitoExtension.class)
-public class DependencySetAssemblyPhaseTest {
+class DependencySetAssemblyPhaseTest {
     private DependencySetAssemblyPhase phase;
 
     private DependencyResolver dependencyResolver;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         this.dependencyResolver = mock(DependencyResolver.class);
 
         this.phase = new DependencySetAssemblyPhase(mock(ProjectBuilder.class), dependencyResolver);
     }
 
     @Test
-    public void testExecuteShouldAddOneDependencyFromProject()
-            throws AssemblyFormattingException, ArchiveCreationException, IOException,
-                    InvalidAssemblerConfigurationException, DependencyResolutionException {
+    void executeShouldAddOneDependencyFromProject() throws Exception {
         final String outputLocation = "/out";
 
         final MavenProject project = newMavenProject("group", "project", "0");
@@ -98,7 +91,7 @@ public class DependencySetAssemblyPhaseTest {
     }
 
     @Test
-    public void testExecuteShouldNotAddDependenciesWhenProjectHasNone() throws Exception {
+    void executeShouldNotAddDependenciesWhenProjectHasNone() throws Exception {
         final Assembly assembly = new Assembly();
         assembly.setId("test");
         assembly.setIncludeBaseDirectory(false);

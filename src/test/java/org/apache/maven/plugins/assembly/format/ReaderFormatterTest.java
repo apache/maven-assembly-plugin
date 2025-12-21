@@ -42,18 +42,17 @@ import org.codehaus.plexus.components.io.resources.PlexusIoResource;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class ReaderFormatterTest {
+class ReaderFormatterTest {
     @Test
-    public void lineDosFeed() throws IOException, AssemblyFormattingException {
+    void lineDosFeed() throws Exception {
         final PojoConfigSource cfg = getPojoConfigSource();
         InputStreamTransformer fileSetTransformers =
                 ReaderFormatter.getFileSetTransformers(cfg, true, Collections.emptySet(), "dos");
@@ -62,7 +61,7 @@ public class ReaderFormatterTest {
     }
 
     @Test
-    public void lineDosFeedWithoutFiltering() throws IOException, AssemblyFormattingException {
+    void lineDosFeedWithoutFiltering() throws Exception {
         final PojoConfigSource cfg = getPojoConfigSource();
         InputStreamTransformer fileSetTransformers =
                 ReaderFormatter.getFileSetTransformers(cfg, false, Collections.emptySet(), "dos");
@@ -71,7 +70,7 @@ public class ReaderFormatterTest {
     }
 
     @Test
-    public void lineUnixFeedWithInterpolation() throws IOException, AssemblyFormattingException {
+    void lineUnixFeedWithInterpolation() throws Exception {
         final PojoConfigSource cfg = getPojoConfigSource();
         InputStreamTransformer fileSetTransformers =
                 ReaderFormatter.getFileSetTransformers(cfg, true, Collections.emptySet(), "unix");
@@ -81,7 +80,7 @@ public class ReaderFormatterTest {
     }
 
     @Test
-    public void nonFilteredFileExtensions() throws Exception {
+    void nonFilteredFileExtensions() throws Exception {
         final PojoConfigSource cfg = getPojoConfigSource();
         Set<String> nonFilteredFileExtensions = new HashSet<>(Arrays.asList("jpg", "tar.gz"));
         InputStreamTransformer transformer =
@@ -91,16 +90,16 @@ public class ReaderFormatterTest {
         PlexusIoResource resource = mock(PlexusIoResource.class);
 
         when(resource.getName()).thenReturn("file.jpg", "file.tar.gz", "file.txt", "file.nojpg", "file.gz", "file");
-        assertThat(transformer.transform(resource, is), sameInstance(is));
-        assertThat(transformer.transform(resource, is), sameInstance(is));
-        assertThat(transformer.transform(resource, is), not(sameInstance(is)));
-        assertThat(transformer.transform(resource, is), not(sameInstance(is)));
-        assertThat(transformer.transform(resource, is), not(sameInstance(is)));
-        assertThat(transformer.transform(resource, is), not(sameInstance(is)));
+        assertSame(transformer.transform(resource, is), is);
+        assertSame(transformer.transform(resource, is), is);
+        assertNotSame(transformer.transform(resource, is), is);
+        assertNotSame(transformer.transform(resource, is), is);
+        assertNotSame(transformer.transform(resource, is), is);
+        assertNotSame(transformer.transform(resource, is), is);
     }
 
     @Test
-    public void additionalProperties() throws Exception {
+    void additionalProperties() throws Exception {
         final MavenReaderFilter mavenReaderFilter = mock(MavenReaderFilter.class);
         when(mavenReaderFilter.filter(any())).thenReturn(mock(Reader.class));
 
@@ -121,7 +120,7 @@ public class ReaderFormatterTest {
         ArgumentCaptor<MavenReaderFilterRequest> filteringRequest =
                 ArgumentCaptor.forClass(MavenReaderFilterRequest.class);
         verify(mavenReaderFilter).filter(filteringRequest.capture());
-        assertThat(filteringRequest.getValue().getAdditionalProperties(), sameInstance(additionalProperties));
+        assertSame(filteringRequest.getValue().getAdditionalProperties(), additionalProperties);
     }
 
     private MavenProject createBasicMavenProject() {

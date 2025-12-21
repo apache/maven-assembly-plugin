@@ -25,41 +25,41 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class WindowsLineFeedInputStreamTest {
+class WindowsLineFeedInputStreamTest {
 
     @Test
-    public void testSimpleString() throws Exception {
+    void simpleString() throws Exception {
         assertEquals("abc\r\n", roundtrip("abc"));
     }
 
     @Test
-    public void testInTheMiddleOfTheLine() throws Exception {
+    void inTheMiddleOfTheLine() throws Exception {
         assertEquals("a\r\nbc\r\n", roundtrip("a\r\nbc"));
     }
 
     @Test
-    public void testMultipleBlankLines() throws Exception {
+    void multipleBlankLines() throws Exception {
         assertEquals("a\r\n\r\nbc\r\n", roundtrip("a\r\n\r\nbc"));
     }
 
     @Test
-    public void testTwoLinesAtEnd() throws Exception {
+    void twoLinesAtEnd() throws Exception {
         assertEquals("a\r\n\r\n", roundtrip("a\r\n\r\n"));
     }
 
     @Test
-    public void testLinuxLinefeeds() throws Exception {
+    void linuxLinefeeds() throws Exception {
         final String roundtrip = roundtrip("ab\nc", false);
         assertEquals("ab\r\nc", roundtrip);
     }
 
     @Test
-    public void testMalformed() throws Exception {
+    void malformed() throws Exception {
         assertEquals("a\rbc", roundtrip("a\rbc", false));
     }
 
     @Test
-    public void testRetainLineFeed() throws Exception {
+    void retainLineFeed() throws Exception {
         assertEquals("a\r\n\r\n", roundtrip("a\r\n\r\n", false));
         assertEquals("a", roundtrip("a", false));
     }

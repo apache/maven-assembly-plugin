@@ -52,7 +52,7 @@ import static org.mockito.Mockito.when;
 
 @MockitoSettings(strictness = Strictness.WARN)
 @ExtendWith(MockitoExtension.class)
-public class AddArtifactTaskTest {
+class AddArtifactTaskTest {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @TempDir
@@ -63,7 +63,7 @@ public class AddArtifactTaskTest {
     private AssemblerConfigurationSource configSource;
 
     @BeforeEach
-    public void setUp() throws IOException {
+    void setUp() throws IOException {
         Model model = new Model();
         model.setGroupId("group");
         model.setArtifactId("main");
@@ -76,14 +76,14 @@ public class AddArtifactTaskTest {
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         // result of easymock migration, should be assert of expected result instead of verifying methodcalls
         verify(configSource, atLeastOnce()).getFinalName();
         verify(configSource, atLeastOnce()).getMavenSession();
     }
 
     @Test
-    public void testShouldAddArchiveFileWithoutUnpacking() throws Exception {
+    void shouldAddArchiveFileWithoutUnpacking() throws Exception {
         String outputLocation = "artifact";
 
         Artifact artifact = mock(Artifact.class);
@@ -113,7 +113,7 @@ public class AddArtifactTaskTest {
     }
 
     @Test
-    public void testShouldAddArchiveFileWithDefaultOutputLocation() throws Exception {
+    void shouldAddArchiveFileWithDefaultOutputLocation() throws Exception {
         String artifactId = "myArtifact";
         String version = "1";
         String ext = "jar";
@@ -168,7 +168,7 @@ public class AddArtifactTaskTest {
     }
 
     @Test
-    public void testShouldAddArchiveFileWithUnpack() throws Exception {
+    void shouldAddArchiveFileWithUnpack() throws Exception {
         final int originalDirMode = -1;
         final int originalFileMode = -1;
 
@@ -195,7 +195,7 @@ public class AddArtifactTaskTest {
     }
 
     @Test
-    public void testShouldAddArchiveFileWithUnpackAndModes() throws Exception {
+    void shouldAddArchiveFileWithUnpackAndModes() throws Exception {
         final int directoryMode = TypeConversionUtils.modeToInt("777", logger);
         final int fileMode = TypeConversionUtils.modeToInt("777", logger);
         final int originalDirMode = -1;
@@ -230,7 +230,7 @@ public class AddArtifactTaskTest {
     }
 
     @Test
-    public void testShouldAddArchiveFileWithUnpackIncludesAndExcludes() throws Exception {
+    void shouldAddArchiveFileWithUnpackIncludesAndExcludes() throws Exception {
         final int originalDirMode = -1;
         final int originalFileMode = -1;
 

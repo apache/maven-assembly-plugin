@@ -33,11 +33,11 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class TypeConversionUtilsTest {
+class TypeConversionUtilsTest {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Test
-    public void testModeToIntInterpretAsOctalWithoutLeadingZero() throws AssemblyFormattingException {
+    void modeToIntInterpretAsOctalWithoutLeadingZero() throws Exception {
         final int check = Integer.decode("0777");
         final int test = TypeConversionUtils.modeToInt("777", logger);
 
@@ -45,7 +45,7 @@ public class TypeConversionUtilsTest {
     }
 
     @Test
-    public void testModeToIntInterpretValuesWithLeadingZeroAsOctal() throws AssemblyFormattingException {
+    void modeToIntInterpretValuesWithLeadingZeroAsOctal() throws Exception {
         final int check = Integer.decode("0777");
         final int test = TypeConversionUtils.modeToInt("0777", logger);
 
@@ -53,7 +53,7 @@ public class TypeConversionUtilsTest {
     }
 
     @Test
-    public void testModeToIntFailOnInvalidOctalValue() {
+    void modeToIntFailOnInvalidOctalValue() {
         try {
             TypeConversionUtils.modeToInt("493", logger);
 
@@ -64,7 +64,7 @@ public class TypeConversionUtilsTest {
     }
 
     @Test
-    public void testVerifyModeSanityWarnOnNonsensicalOctalValue002() {
+    void verifyModeSanityWarnOnNonsensicalOctalValue002() {
         final List<String> messages = new ArrayList<>(2);
         messages.add("World has write access, but user does not.");
         messages.add("World has write access, but group does not.");
@@ -73,7 +73,7 @@ public class TypeConversionUtilsTest {
     }
 
     @Test
-    public void testVerifyModeSanityWarnOnNonsensicalOctalValue020() {
+    void verifyModeSanityWarnOnNonsensicalOctalValue020() {
         final List<String> messages = new ArrayList<>(1);
         messages.add("Group has write access, but user does not.");
 
@@ -81,7 +81,7 @@ public class TypeConversionUtilsTest {
     }
 
     @Test
-    public void testVerifyModeSanityReturnTrueForValidOctalValue775() {
+    void verifyModeSanityReturnTrueForValidOctalValue775() {
         checkFileModeSanity("775", true, null);
     }
 
