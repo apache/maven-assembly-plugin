@@ -23,7 +23,7 @@ under the License.
   <parent>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-plugins</artifactId>
-    <version>45</version>
+    <version>47</version>
     <relativePath />
   </parent>
 
@@ -78,7 +78,6 @@ under the License.
     <mavenFilteringVersion>3.4.0</mavenFilteringVersion>
     <mavenArchiverVersion>3.6.6</mavenArchiverVersion>
     <commonsIoVersion>2.21.0</commonsIoVersion>
-    <version.maven-invoker-plugin>3.9.1</version.maven-invoker-plugin>
     <testOutputToFile>true</testOutputToFile>
     <project.build.outputTimestamp>2025-11-22T23:23:18Z</project.build.outputTimestamp>
   </properties>
@@ -401,6 +400,9 @@ under the License.
             <artifactId>maven-invoker-plugin</artifactId>
             <configuration>
               <showVersion>true</showVersion>
+              <scriptVariables>
+                <scriptVarVersionJunit>${versions.junit5}</scriptVarVersionJunit>
+              </scriptVariables>
             </configuration>
             <dependencies>
               <dependency>
