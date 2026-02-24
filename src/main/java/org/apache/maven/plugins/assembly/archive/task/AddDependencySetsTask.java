@@ -145,7 +145,8 @@ public class AddDependencySetsTask {
                 : null;
 
         for (final Artifact depArtifact : dependencyArtifacts) {
-            ProjectBuildingRequest pbr = getProjectBuildingRequest(configSource);
+            boolean isProjectArtifact = depArtifact.getRepository() == null;
+            ProjectBuildingRequest pbr = getProjectBuildingRequest(configSource, isProjectArtifact);
             MavenProject depProject;
             try {
                 ProjectBuildingResult build = projectBuilder1.build(depArtifact, pbr);
@@ -165,10 +166,15 @@ public class AddDependencySetsTask {
         }
     }
 
-    private ProjectBuildingRequest getProjectBuildingRequest(AssemblerConfigurationSource configSource) {
-        return new DefaultProjectBuildingRequest(configSource.getMavenSession().getProjectBuildingRequest())
-                .setValidationLevel(ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL)
-                .setProcessPlugins(false);
+    private ProjectBuildingRequest getProjectBuildingRequest(
+            AssemblerConfigurationSource configSource, boolean isProjectArtifact) {
+        DefaultProjectBuildingRequest pbr =
+                new DefaultProjectBuildingRequest(configSource.getMavenSession().getProjectBuildingRequest());
+        if (!isProjectArtifact) {
+            pbr.setValidationLevel(ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL)
+                    .setProcessPlugins(false);
+        }
+        return pbr;
     }
 
     private boolean isUnpackWithOptions(DependencySet dependencySet) {
