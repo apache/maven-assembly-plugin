@@ -19,11 +19,11 @@
 package org.apache.maven.plugins.assembly.filter;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,10 +75,11 @@ abstract class AbstractLineAggregatingHandler implements ContainerDescriptorHand
                 f = Files.createTempFile("assembly-" + fname, ".tmp").toFile();
                 f.deleteOnExit();
 
-                try (PrintWriter writer =
-                        new PrintWriter(new OutputStreamWriter(Files.newOutputStream(f.toPath()), getEncoding()))) {
+                try (BufferedWriter writer =
+                        new BufferedWriter(new OutputStreamWriter(Files.newOutputStream(f.toPath()), getEncoding()))) {
                     for (final String line : entry.getValue()) {
-                        writer.println(line);
+                        writer.write(line);
+                        writer.newLine();
                     }
                 }
             } catch (final IOException e) {
