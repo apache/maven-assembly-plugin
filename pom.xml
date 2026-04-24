@@ -74,7 +74,7 @@ under the License.
     <javaVersion>8</javaVersion>
     <mdoVersion>2.2.0</mdoVersion>
     <mavenVersion>3.9.15</mavenVersion>
-    <slf4jVersion>1.7.36</slf4jVersion>
+    <slf4jVersion>2.0.0</slf4jVersion>
     <mavenFilteringVersion>3.5.0</mavenFilteringVersion>
     <mavenArchiverVersion>3.6.6</mavenArchiverVersion>
     <commonsIoVersion>2.22.0</commonsIoVersion>
