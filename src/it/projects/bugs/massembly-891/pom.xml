@@ -34,6 +34,7 @@ under the License.
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.build.outputTimestamp>x</project.build.outputTimestamp>
   </properties>
 
   <build>
