@@ -17,9 +17,8 @@
  * under the License.
  */
 
-import java.io.*;
+String base = "./deploy/org/test/massembly-301/1/massembly-301-1";
 
-String base = "target/deploy/org/test/massembly-301/1/massembly-301-1";
 File jar = new File( basedir, base + ".jar" );
 File zip = new File( basedir, base + ".zip" );
 File tgz = new File( basedir, base + ".tar.gz" );

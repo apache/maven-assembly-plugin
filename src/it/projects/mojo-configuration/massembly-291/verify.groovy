@@ -16,10 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+String base = "./deploy/org/test/massembly-291/1/massembly-291-1";
 
-import java.io.*;
-
-String base = "target/deploy/org/test/massembly-291/1/massembly-291-1";
 File pom = new File( basedir, base + ".pom" );
 File zip = new File( basedir, base + ".zip" );
 File tgz = new File( basedir, base + ".tar.gz" );
