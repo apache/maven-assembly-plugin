@@ -19,17 +19,17 @@
 
 import java.io.*;
 
-// guava is absent from the runtime dependencySet: the nearer test-scoped guava 32.0.0-jre wins
-// version mediation and is then excluded by scope, while guice's transitive guava 31.0.1-jre is
-// omitted for the conflict. This is the runtime classpath Maven resolves.
+// guava 16.0 (from the test-scoped jackson-datatype-guava) wins version mediation over guice's
+// guava 31.0.1-jre and stays on the runtime classpath via guice.
 def expectedFilenames = [
         "aopalliance-1.0.jar",
+        "guava-16.0.jar",
         "guice-6.0.0.jar",
         "jakarta.inject-api-2.0.1.jar",
         "javax.inject-1.jar"
 ]
 
-File assemblyBasedir = new File( basedir, "target/massembly-1008-1-bin/" )
+File assemblyBasedir = new File( basedir, "target/massembly-1026-1-bin/" )
 
 assert assemblyBasedir.listFiles().length == expectedFilenames.size()
 
@@ -39,6 +39,7 @@ for ( fileName in expectedFilenames )
   assert file.isFile() // exists and is file
 }
 
-// defined set vs listed set: same cardinality and all present: OK
+// the losing version must not be assembled
+assert !new File( assemblyBasedir, "guava-31.0.1-jre.jar" ).exists()
 
 return true

@@ -22,7 +22,9 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
@@ -38,12 +40,14 @@ import org.apache.maven.plugins.assembly.model.ModuleSet;
 import org.apache.maven.project.MavenProject;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
+import org.eclipse.aether.artifact.ArtifactTypeRegistry;
 import org.eclipse.aether.graph.DefaultDependencyNode;
 import org.eclipse.aether.graph.Dependency;
 import org.eclipse.aether.resolution.DependencyRequest;
 import org.eclipse.aether.resolution.DependencyResult;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -108,6 +112,40 @@ class DefaultDependencyResolverTest {
                     project.getArtifact().getId(), artifact.getDependencyTrail().get(0));
             assertEquals(artifact.getId(), artifact.getDependencyTrail().get(1));
         });
+    }
+
+    @Test
+    void transitiveResolutionCollectsDependenciesOfEveryScope() throws Exception {
+        // Declared dependencies must reach the CollectRequest regardless of scope, so that
+        // full-graph mediation runs before the scope filter selects leaves.
+        final DependencySet ds = new DependencySet();
+        ds.setScope(Artifact.SCOPE_RUNTIME);
+        ds.setUseTransitiveDependencies(true);
+
+        final MavenProject project = createMavenProject("main-group", "main-artifact", "1", null);
+        project.getModel().addDependency(newModelDependency("g.id", "compile-dep", "1", Artifact.SCOPE_COMPILE));
+        project.getModel().addDependency(newModelDependency("g.id", "provided-dep", "1", Artifact.SCOPE_PROVIDED));
+        project.getModel().addDependency(newModelDependency("g.id", "test-dep", "1", Artifact.SCOPE_TEST));
+
+        when(systemSession.getArtifactTypeRegistry()).thenReturn(mock(ArtifactTypeRegistry.class));
+
+        DependencyResult dependencyResult = new DependencyResult(new DependencyRequest());
+        dependencyResult.setRoot(new DefaultDependencyNode((Dependency) null));
+
+        ArgumentCaptor<DependencyRequest> requestCaptor = ArgumentCaptor.forClass(DependencyRequest.class);
+        when(repositorySystem.resolveDependencies(eq(systemSession), requestCaptor.capture()))
+                .thenReturn(dependencyResult);
+
+        resolver.updateDependencySetResolutionRequirements(systemSession, ds, new ResolutionManagementInfo(), project);
+
+        List<Dependency> collected =
+                requestCaptor.getValue().getCollectRequest().getDependencies();
+        Set<String> collectedScopes =
+                collected.stream().map(Dependency::getScope).collect(Collectors.toSet());
+        assertEquals(3, collected.size());
+        assertEquals(
+                new HashSet<>(Arrays.asList(Artifact.SCOPE_COMPILE, Artifact.SCOPE_PROVIDED, Artifact.SCOPE_TEST)),
+                collectedScopes);
     }
 
     @Test
@@ -218,6 +256,16 @@ class DefaultDependencyResolverTest {
         project.setFile(new File(basedir, "pom.xml"));
 
         return project;
+    }
+
+    private org.apache.maven.model.Dependency newModelDependency(
+            final String groupId, final String artifactId, final String version, final String scope) {
+        final org.apache.maven.model.Dependency dependency = new org.apache.maven.model.Dependency();
+        dependency.setGroupId(groupId);
+        dependency.setArtifactId(artifactId);
+        dependency.setVersion(version);
+        dependency.setScope(scope);
+        return dependency;
     }
 
     private Artifact newArtifact(final String groupId, final String artifactId, final String version) {
