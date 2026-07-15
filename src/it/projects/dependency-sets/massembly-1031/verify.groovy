@@ -19,17 +19,13 @@
 
 import java.io.*;
 
-// guava is absent from the runtime dependencySet: the nearer test-scoped guava 32.0.0-jre wins
-// version mediation and is then excluded by scope, while guice's transitive guava 31.0.1-jre is
-// omitted for the conflict. This is the runtime classpath Maven resolves.
+// commons-lang3 is excluded: the direct provided declaration wins mediation over the transitive
+// compile one pulled in by commons-text, so only commons-text remains on the runtime classpath.
 def expectedFilenames = [
-        "aopalliance-1.0.jar",
-        "guice-6.0.0.jar",
-        "jakarta.inject-api-2.0.1.jar",
-        "javax.inject-1.jar"
+        "commons-text-1.12.0.jar"
 ]
 
-File assemblyBasedir = new File( basedir, "target/massembly-1008-1-bin/" )
+File assemblyBasedir = new File( basedir, "target/massembly-1031-1-bin/" )
 
 assert assemblyBasedir.listFiles().length == expectedFilenames.size()
 
@@ -39,6 +35,7 @@ for ( fileName in expectedFilenames )
   assert file.isFile() // exists and is file
 }
 
-// defined set vs listed set: same cardinality and all present: OK
+// commons-lang3 is provided and must be excluded
+assert !new File( assemblyBasedir, "commons-lang3-3.14.0.jar" ).exists()
 
 return true

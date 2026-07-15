@@ -52,7 +52,6 @@ import org.codehaus.plexus.util.StringUtils;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.collection.CollectRequest;
-import org.eclipse.aether.graph.DefaultDependencyNode;
 import org.eclipse.aether.graph.Dependency;
 import org.eclipse.aether.graph.DependencyFilter;
 import org.eclipse.aether.graph.DependencyNode;
@@ -213,13 +212,14 @@ public class DefaultDependencyResolver implements DependencyResolver {
             RepositorySystemSession repositorySession, String scope, MavenProject project)
             throws org.eclipse.aether.resolution.DependencyResolutionException {
 
-        // scope dependency filter
-        DependencyFilter scoopeDependencyFilter = DependencyFilterUtils.classpathFilter(scope);
+        DependencyFilter scopeDependencyFilter = DependencyFilterUtils.classpathFilter(scope);
 
-        // get project dependencies filtered by requested scope
+        // Collect every declared dependency and apply the scope filter only when resolving below.
+        // Filtering declared dependencies by scope first would drop ones that win mediation - a
+        // nearer version, or a direct provided dependency that also appears transitively - leaving
+        // a graph that disagrees with the resolved compile/runtime classpath.
         List<Dependency> dependencies = project.getDependencies().stream()
                 .map(d -> RepositoryUtils.toDependency(d, repositorySession.getArtifactTypeRegistry()))
-                .filter(d -> scoopeDependencyFilter.accept(new DefaultDependencyNode(d), null))
                 .collect(Collectors.toList());
 
         List<Dependency> managedDependencies = Optional.ofNullable(project.getDependencyManagement())
@@ -235,7 +235,7 @@ public class DefaultDependencyResolver implements DependencyResolver {
         collectRequest.setDependencies(dependencies);
         collectRequest.setRootArtifact(RepositoryUtils.toArtifact(project.getArtifact()));
 
-        DependencyRequest request = new DependencyRequest(collectRequest, scoopeDependencyFilter);
+        DependencyRequest request = new DependencyRequest(collectRequest, scopeDependencyFilter);
 
         DependencyResult dependencyResult = repositorySystem.resolveDependencies(repositorySession, request);
 
