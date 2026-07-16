@@ -16,22 +16,37 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+def expectedFilenames = null
 
-import java.io.*;
-
-def expectedFilenames = [
-        "aopalliance-1.0.jar",
-        "checker-qual-3.12.0.jar",
-        "error_prone_annotations-2.7.1.jar",
-        "failureaccess-1.0.1.jar",
-        "guava-31.0.1-jre.jar",
-        "guice-6.0.0.jar",
-        "j2objc-annotations-1.3.jar",
-        "jakarta.inject-api-2.0.1.jar",
-        "javax.inject-1.jar",
-        "jsr305-3.0.2.jar",
-        "listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar"
-]
+if (mavenVersion.startsWith('4.')) {
+  expectedFilenames = [
+          "aopalliance-1.0.jar",
+          "checker-qual-3.12.0.jar",
+          "error_prone_annotations-2.18.0.jar", // comes from guava 32.0.0-jre dependency runtime-dependency (not the test one)
+          "failureaccess-1.0.1.jar",
+          "guava-31.0.1-jre.jar",
+          "guice-6.0.0.jar",
+          "j2objc-annotations-1.3.jar",
+          "jakarta.inject-api-2.0.1.jar",
+          "javax.inject-1.jar",
+          "jsr305-3.0.1.jar", // funny that this is lower than in Maven 3
+          "listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar"
+  ]
+} else {
+  expectedFilenames = [
+          "aopalliance-1.0.jar",
+          "checker-qual-3.12.0.jar",
+          "error_prone_annotations-2.7.1.jar",
+          "failureaccess-1.0.1.jar",
+          "guava-31.0.1-jre.jar",
+          "guice-6.0.0.jar",
+          "j2objc-annotations-1.3.jar",
+          "jakarta.inject-api-2.0.1.jar",
+          "javax.inject-1.jar",
+          "jsr305-3.0.2.jar",
+          "listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar"
+  ]
+}
 
 File assemblyBasedir = new File( basedir, "target/massembly-1008-1-bin/" )
 

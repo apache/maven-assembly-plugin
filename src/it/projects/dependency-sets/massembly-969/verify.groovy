@@ -16,20 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import java.io.*;
-
-def expectedFilenames = [ "javafx-base-20.jar",
-  "javafx-controls-20-linux.jar",
-  "javafx-media-20-linux.jar",
-  "javafx-web-20.jar",
-  "javafx-base-20-linux.jar",
-  "javafx-graphics-20-linux.jar",
-  "javafx-swing-20.jar",
-  "javafx-web-20-linux.jar",
-  "javafx-controls-20.jar",
-  "javafx-media-20.jar",
-  "javafx-swing-20-linux.jar"
+def expectedFilenames = [ "javafx-base-26.jar",
+  "javafx-controls-26-linux.jar",
+  "javafx-media-26-linux.jar",
+  "javafx-web-26.jar",
+  "javafx-base-26-linux.jar",
+  "javafx-graphics-26-linux.jar",
+  "javafx-swing-26.jar",
+  "javafx-web-26-linux.jar",
+  "javafx-controls-26.jar",
+  "javafx-media-26.jar",
+  "javafx-swing-26-linux.jar"
 ]
 
 File assemblyBasedir = new File( basedir, "target/massembly-969-1-bin/" )
