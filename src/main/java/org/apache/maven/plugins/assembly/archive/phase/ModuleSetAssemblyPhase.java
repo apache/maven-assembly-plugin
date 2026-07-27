@@ -121,24 +121,22 @@ public class ModuleSetAssemblyPhase implements AssemblyArchiverPhase, PhaseOrder
     public static Set<MavenProject> getModuleProjects(
             final ModuleSet moduleSet, final AssemblerConfigurationSource configSource, final Logger logger)
             throws ArchiveCreationException {
-        MavenProject project = configSource.getProject();
-        Set<MavenProject> moduleProjects = null;
+        final Set<MavenProject> moduleProjects;
 
         if (moduleSet.isUseAllReactorProjects()) {
-            if (!moduleSet.isIncludeSubModules()) {
-                moduleProjects = new LinkedHashSet<>(configSource.getReactorProjects());
-            }
-
-            project = configSource.getReactorProjects().get(0);
-        }
-
-        if (moduleProjects == null) {
+            moduleProjects = new LinkedHashSet<>(configSource.getReactorProjects());
+        } else {
             try {
                 moduleProjects = ProjectUtils.getProjectModules(
-                        project, configSource.getReactorProjects(), moduleSet.isIncludeSubModules(), logger);
+                        configSource.getProject(),
+                        configSource.getReactorProjects(),
+                        moduleSet.isIncludeSubModules(),
+                        logger);
             } catch (final IOException e) {
                 throw new ArchiveCreationException(
-                        "Error retrieving module-set for project: " + project.getId() + ": " + e.getMessage(), e);
+                        "Error retrieving module-set for project: "
+                                + configSource.getProject().getId() + ": " + e.getMessage(),
+                        e);
             }
         }
 

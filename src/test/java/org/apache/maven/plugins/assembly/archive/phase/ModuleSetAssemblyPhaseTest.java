@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -614,6 +615,38 @@ class ModuleSetAssemblyPhaseTest {
         // result of easymock migration, should be assert of expected result instead of verifying methodcalls
         verify(configSource).getReactorProjects();
         verify(configSource, atLeastOnce()).getProject();
+    }
+
+    @Test
+    void getModuleProjectsShouldUseAllReactorProjectsRegardlessOfReactorOrder() throws Exception {
+        final MavenProject parent = createProject("group", "parent", "version", null);
+
+        final Model aggregatorModel = new Model();
+        aggregatorModel.setGroupId("group");
+        aggregatorModel.setArtifactId("aggregator");
+        aggregatorModel.setVersion("version");
+
+        final MavenProject aggregator = new MavenProject(aggregatorModel);
+        aggregator.setFile(new File(temporaryFolder, "aggregator/pom.xml"));
+
+        final MavenProject module = createProject("group", "module", "version", aggregator);
+        final MavenProject distribution = createProject("group", "distribution", "version", aggregator);
+
+        final List<MavenProject> projects = Arrays.asList(parent, aggregator, module, distribution);
+
+        final AssemblerConfigurationSource configSource = mock(AssemblerConfigurationSource.class);
+        when(configSource.getReactorProjects()).thenReturn(projects);
+        when(configSource.getProject()).thenReturn(distribution);
+
+        final ModuleSet moduleSet = new ModuleSet();
+        moduleSet.setUseAllReactorProjects(true);
+        moduleSet.setIncludeSubModules(true);
+
+        final Set<MavenProject> moduleProjects =
+                ModuleSetAssemblyPhase.getModuleProjects(moduleSet, configSource, logger);
+
+        assertEquals(new LinkedHashSet<>(projects), moduleProjects);
+        verify(configSource).getReactorProjects();
     }
 
     @Test
