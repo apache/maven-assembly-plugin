@@ -186,17 +186,12 @@ public class DefaultDependencyResolver implements DependencyResolver {
                 continue;
             }
 
-            Set<Artifact> dependencyArtifacts = null;
-            if (set.isUseTransitiveDependencies()) {
-                try {
-                    // we need resolve project again according to requested scope
-                    dependencyArtifacts = resolveTransitive(systemSession, set.getScope(), project);
-                } catch (org.eclipse.aether.resolution.DependencyResolutionException e) {
-                    throw new DependencyResolutionException(e.getMessage(), e);
-                }
-            } else {
-                // FIXME remove using deprecated method
-                dependencyArtifacts = project.getDependencyArtifacts();
+            final Set<Artifact> dependencyArtifacts;
+            try {
+                dependencyArtifacts =
+                        resolveDependencies(systemSession, set.getScope(), project, set.isUseTransitiveDependencies());
+            } catch (org.eclipse.aether.resolution.DependencyResolutionException e) {
+                throw new DependencyResolutionException(e.getMessage(), e);
             }
 
             requirements.addArtifacts(dependencyArtifacts);
@@ -209,17 +204,17 @@ public class DefaultDependencyResolver implements DependencyResolver {
         }
     }
 
-    private Set<Artifact> resolveTransitive(
-            RepositorySystemSession repositorySession, String scope, MavenProject project)
+    private Set<Artifact> resolveDependencies(
+            RepositorySystemSession repositorySession, String scope, MavenProject project, boolean transitive)
             throws org.eclipse.aether.resolution.DependencyResolutionException {
 
         // scope dependency filter
-        DependencyFilter scoopeDependencyFilter = DependencyFilterUtils.classpathFilter(scope);
+        DependencyFilter scopeDependencyFilter = DependencyFilterUtils.classpathFilter(scope);
 
         // get project dependencies filtered by requested scope
         List<Dependency> dependencies = project.getDependencies().stream()
                 .map(d -> RepositoryUtils.toDependency(d, repositorySession.getArtifactTypeRegistry()))
-                .filter(d -> scoopeDependencyFilter.accept(new DefaultDependencyNode(d), null))
+                .filter(d -> scopeDependencyFilter.accept(new DefaultDependencyNode(d), null))
                 .collect(Collectors.toList());
 
         List<Dependency> managedDependencies = Optional.ofNullable(project.getDependencyManagement())
@@ -235,7 +230,9 @@ public class DefaultDependencyResolver implements DependencyResolver {
         collectRequest.setDependencies(dependencies);
         collectRequest.setRootArtifact(RepositoryUtils.toArtifact(project.getArtifact()));
 
-        DependencyRequest request = new DependencyRequest(collectRequest, scoopeDependencyFilter);
+        DependencyFilter resolutionFilter = (node, parents) ->
+                scopeDependencyFilter.accept(node, parents) && (transitive || isDirectDependency(node, parents));
+        DependencyRequest request = new DependencyRequest(collectRequest, resolutionFilter);
 
         DependencyResult dependencyResult = repositorySystem.resolveDependencies(repositorySession, request);
 
@@ -264,7 +261,9 @@ public class DefaultDependencyResolver implements DependencyResolver {
                 if (dependency != null) {
                     Artifact artifact = aetherToMavenArtifacts.computeIfAbsent(
                             dependency.getArtifact(), RepositoryUtils::toArtifact);
-                    if (artifact.isResolved() && artifact.getFile() != null) {
+                    if ((transitive || isDirectDependency(stack))
+                            && artifact.isResolved()
+                            && artifact.getFile() != null) {
                         List<String> depTrail = new ArrayList<>();
                         stack.descendingIterator().forEachRemaining(depTrail::add);
                         artifact.setDependencyTrail(depTrail);
@@ -279,5 +278,26 @@ public class DefaultDependencyResolver implements DependencyResolver {
         });
 
         return artifacts;
+    }
+
+    private static boolean isDirectDependency(Deque<String> stack) {
+        // The stack contains only the project and current node for direct dependencies.
+        return stack.size() == 2;
+    }
+
+    private static boolean isDirectDependency(DependencyNode node, List<DependencyNode> parents) {
+        int depth = parents == null ? 0 : parents.size();
+
+        // Maven Resolver 2.0.13 includes the node itself in the parent list, unlike Resolver 1.x and newer 2.x.
+        if (parents != null) {
+            for (DependencyNode parent : parents) {
+                if (parent == node) {
+                    depth--;
+                    break;
+                }
+            }
+        }
+
+        return depth <= 1;
     }
 }
