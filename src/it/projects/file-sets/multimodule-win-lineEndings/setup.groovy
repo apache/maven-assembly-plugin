@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -20,18 +20,6 @@
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 
-String expected = "1\r\nchild"
-for ( String name : [ "test.txt", "mac2win.txt" ] )
-{
-    File file = new File( basedir, "child/target/child-1-src/" + name )
-    if ( !file.exists() )
-    {
-        throw new FileNotFoundException( "Filtered file from file-set: " + file + " is missing." )
-    }
-
-    String actual = new String( Files.readAllBytes( file.toPath() ), StandardCharsets.UTF_8 )
-    assert actual == expected :
-            "Contents of " + name + ": '" + actual + "' should contain exactly one windows newline: '\\r\\n'."
-}
-
-return true;
+File input = new File( basedir, "child/src/main/assembly-resources/mac2win.txt" )
+Files.write( input.toPath(), '${project.version}\r${project.artifactId}'.getBytes( StandardCharsets.UTF_8 ) )
+return true

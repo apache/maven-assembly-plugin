@@ -54,8 +54,23 @@ class WindowsLineFeedInputStreamTest {
     }
 
     @Test
-    void malformed() throws Exception {
-        assertEquals("a\rbc", roundtrip("a\rbc", false));
+    void crOnly() throws Exception {
+        assertEquals("a\r\nbc", roundtrip("a\rbc", false));
+    }
+
+    @Test
+    void crAtEnd() throws Exception {
+        assertEquals("a\r\n", roundtrip("a\r", false));
+    }
+
+    @Test
+    void consecutiveCrCharacters() throws Exception {
+        assertEquals("a\r\n\r\nb", roundtrip("a\r\rb", false));
+    }
+
+    @Test
+    void mixedLineEndings() throws Exception {
+        assertEquals("a\r\nb\r\nc\r\nd", roundtrip("a\rb\nc\r\nd", false));
     }
 
     @Test
