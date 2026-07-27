@@ -387,7 +387,9 @@
       <version>1.0.0+</version>
       <description>
         A dependencySet allows inclusion and exclusion of project dependencies
-        in the assembly.
+        in the assembly. Dependency sets are evaluated against the project's
+        dependency graph after Maven dependency conflict resolution; include
+        patterns do not create separate dependency-resolution roots.
       </description>
       <fields>
         <field>
