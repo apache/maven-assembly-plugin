@@ -1,0 +1,1 @@
+This content comes from an artifact attached to a POM-packaged module.
