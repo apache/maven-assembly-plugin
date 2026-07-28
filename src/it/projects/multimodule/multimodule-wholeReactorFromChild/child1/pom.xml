@@ -35,5 +35,11 @@ under the License.
       <artifactId>junit-jupiter-api</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <!-- This runtime dependency must be excluded by includeDependencies=false. -->
+      <scope>runtime</scope>
+    </dependency>
   </dependencies>
 </project>

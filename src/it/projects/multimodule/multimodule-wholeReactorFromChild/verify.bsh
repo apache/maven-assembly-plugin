@@ -39,4 +39,14 @@ if ( new File( basedir, "child4/target/child4-1.0-bin/lib/child2.jar" ).exists()
     result = false;
 }
 
+File libDirectory = new File( basedir, "child4/target/child4-1.0-bin/lib" );
+File[] includedArtifacts = libDirectory.listFiles();
+
+if ( includedArtifacts == null || includedArtifacts.length != 2 )
+{
+    System.out.println( "Only the two selected module artifacts should be present when includeDependencies=false." );
+    System.out.println( "Files found: " + Arrays.toString( includedArtifacts ) );
+    result = false;
+}
+
 return result;
