@@ -157,7 +157,7 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     /**
      * A list of descriptor files to generate from.
      */
-    @Parameter
+    @Parameter(property = "assembly.descriptors")
     private String[] descriptors;
 
     /**
