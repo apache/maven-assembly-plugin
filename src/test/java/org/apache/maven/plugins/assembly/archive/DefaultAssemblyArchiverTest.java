@@ -44,6 +44,7 @@ import org.codehaus.plexus.archiver.tar.TarArchiver;
 import org.codehaus.plexus.archiver.tar.TarLongFileMode;
 import org.codehaus.plexus.archiver.war.WarArchiver;
 import org.codehaus.plexus.archiver.zip.ZipArchiver;
+import org.codehaus.plexus.build.BuildContext;
 import org.codehaus.plexus.component.configurator.BasicComponentConfigurator;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
 import org.junit.jupiter.api.BeforeEach;
@@ -80,6 +81,8 @@ public class DefaultAssemblyArchiverTest {
 
     private BasicComponentConfigurator configurator;
 
+    private BuildContext buildContext;
+
     public static void setupInterpolators(AssemblerConfigurationSource configSource) {
         when(configSource.getRepositoryInterpolator()).thenReturn(FixedStringSearchInterpolator.create());
         when(configSource.getCommandLinePropsInterpolator()).thenReturn(FixedStringSearchInterpolator.create());
@@ -98,6 +101,7 @@ public class DefaultAssemblyArchiverTest {
         this.archiverManager = mock(ArchiverManager.class);
         this.container = new DefaultPlexusContainer();
         this.configurator = new BasicComponentConfigurator();
+        this.buildContext = mock(BuildContext.class);
     }
 
     @Test
@@ -162,6 +166,7 @@ public class DefaultAssemblyArchiverTest {
         verify(archiver).setOverrideGroupName("root");
 
         verify(archiverManager).getArchiver("zip");
+        verify(buildContext).refresh(new File(outDir, "full-name.zip"));
     }
 
     @Test
@@ -352,7 +357,8 @@ public class DefaultAssemblyArchiverTest {
     }
 
     private DefaultAssemblyArchiver createSubject(final List<AssemblyArchiverPhase> phases) {
-        return new DefaultAssemblyArchiver(archiverManager, phases, Collections.emptyMap(), container, configurator);
+        return new DefaultAssemblyArchiver(
+                archiverManager, phases, Collections.emptyMap(), container, configurator, buildContext);
     }
 
     private static final class TestTarArchiver extends TarArchiver {
