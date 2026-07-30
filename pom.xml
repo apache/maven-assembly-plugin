@@ -171,6 +171,11 @@ under the License.
       <artifactId>plexus-interpolation</artifactId>
       <version>1.29</version>
     </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-build-api</artifactId>
+      <version>1.2.0</version>
+    </dependency>
 
     <dependency>
       <groupId>commons-io</groupId>

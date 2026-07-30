@@ -57,6 +57,7 @@ import org.codehaus.plexus.archiver.tar.TarArchiver;
 import org.codehaus.plexus.archiver.tar.TarLongFileMode;
 import org.codehaus.plexus.archiver.war.WarArchiver;
 import org.codehaus.plexus.archiver.zip.AbstractZipArchiver;
+import org.codehaus.plexus.build.BuildContext;
 import org.codehaus.plexus.component.configurator.BasicComponentConfigurator;
 import org.codehaus.plexus.component.configurator.ComponentConfigurationException;
 import org.codehaus.plexus.component.configurator.ConfigurationListener;
@@ -97,18 +98,22 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver {
 
     private final BasicComponentConfigurator configurator;
 
+    private final BuildContext buildContext;
+
     @Inject
     public DefaultAssemblyArchiver(
             ArchiverManager archiverManager,
             List<AssemblyArchiverPhase> assemblyPhases,
             Map<String, ContainerDescriptorHandler> containerDescriptorHandlers,
             PlexusContainer container,
-            BasicComponentConfigurator configurator) {
+            BasicComponentConfigurator configurator,
+            BuildContext buildContext) {
         this.archiverManager = requireNonNull(archiverManager);
         this.assemblyPhases = requireNonNull(assemblyPhases);
         this.containerDescriptorHandlers = requireNonNull(containerDescriptorHandlers);
         this.container = requireNonNull(container);
         this.configurator = requireNonNull(configurator);
+        this.buildContext = requireNonNull(buildContext);
     }
 
     private List<AssemblyArchiverPhase> sortedPhases() {
@@ -174,6 +179,7 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver {
             }
 
             archiver.createArchive();
+            buildContext.refresh(destFile);
         } catch (final ArchiverException | IOException e) {
             throw new ArchiveCreationException(
                     "Error creating assembly archive " + assembly.getId() + ": " + e.getMessage(), e);
