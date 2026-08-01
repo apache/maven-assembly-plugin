@@ -133,8 +133,7 @@ public class ModuleSetAssemblyPhase implements AssemblyArchiverPhase, PhaseOrder
                         project, reactorProjects, moduleSet.isIncludeSubModules(), logger);
             } catch (final IOException e) {
                 throw new ArchiveCreationException(
-                        "Error retrieving module-set for project: " + project.getId() + ": " + e.getMessage(),
-                        e);
+                        "Error retrieving module-set for project: " + project.getId() + ": " + e.getMessage(), e);
             }
         }
 
