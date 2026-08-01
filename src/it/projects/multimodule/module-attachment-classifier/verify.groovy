@@ -24,6 +24,10 @@ def attachment = new File(modulesDirectory, 'producer-tests.jar')
 
 assert attachment.isFile() : "The attached test JAR is missing: ${attachment}"
 
+def moduleArtifacts = modulesDirectory.listFiles()*.name.sort()
+assert moduleArtifacts == ['producer-tests.jar'] :
+        "Expected only the attached test JAR, but found: ${moduleArtifacts}"
+
 def jar = new JarFile(attachment)
 try {
     assert jar.getEntry('attachment-marker.txt') != null :
@@ -31,6 +35,3 @@ try {
 } finally {
     jar.close()
 }
-
-assert !new File(modulesDirectory, 'producer.jar').exists() :
-        'The main module artifact was included instead of its attachment.'
