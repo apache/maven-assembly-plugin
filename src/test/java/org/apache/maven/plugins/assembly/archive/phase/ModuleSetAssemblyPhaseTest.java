@@ -24,7 +24,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -645,7 +644,7 @@ class ModuleSetAssemblyPhaseTest {
         final Set<MavenProject> moduleProjects =
                 ModuleSetAssemblyPhase.getModuleProjects(moduleSet, configSource, logger);
 
-        assertEquals(new LinkedHashSet<>(projects), moduleProjects);
+        assertEquals(projects, new ArrayList<>(moduleProjects));
         verify(configSource).getReactorProjects();
     }
 
