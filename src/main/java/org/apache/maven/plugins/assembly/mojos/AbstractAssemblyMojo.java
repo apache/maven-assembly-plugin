@@ -31,7 +31,6 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
@@ -51,6 +50,8 @@ import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
 import org.codehaus.plexus.interpolation.fixed.PrefixedPropertiesValueSource;
 import org.codehaus.plexus.interpolation.fixed.PropertiesBasedValueSource;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
@@ -205,17 +206,9 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     @Parameter(defaultValue = "${project.basedir}", required = true, readonly = true)
     private File basedir;
 
-    /**
-     * Maven ProjectHelper.
-     */
-    @Component
-    private MavenProjectHelper projectHelper;
+    private final MavenProjectHelper projectHelper;
 
-    /**
-     * Maven shared filtering utility.
-     */
-    @Component
-    private MavenReaderFilter mavenReaderFilter;
+    private final MavenReaderFilter mavenReaderFilter;
 
     /**
      * The Maven Session Object
@@ -300,17 +293,9 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     @Parameter
     private String mergeManifestMode;
 
-    /**
-     *
-     */
-    @Component
-    private AssemblyArchiver assemblyArchiver;
+    private final AssemblyArchiver assemblyArchiver;
 
-    /**
-     *
-     */
-    @Component
-    private AssemblyReader assemblyReader;
+    private final AssemblyReader assemblyReader;
 
     /**
      * Allows additional configuration options that are specific to a particular type of archive format. This is
@@ -425,6 +410,17 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
      */
     @Parameter
     private String overrideGroupName;
+
+    protected AbstractAssemblyMojo(
+            MavenProjectHelper projectHelper,
+            MavenReaderFilter mavenReaderFilter,
+            AssemblyArchiver assemblyArchiver,
+            AssemblyReader assemblyReader) {
+        this.projectHelper = requireNonNull(projectHelper);
+        this.mavenReaderFilter = requireNonNull(mavenReaderFilter);
+        this.assemblyArchiver = requireNonNull(assemblyArchiver);
+        this.assemblyReader = requireNonNull(assemblyReader);
+    }
 
     public static FixedStringSearchInterpolator mainProjectInterpolator(MavenProject mainProject) {
         if (mainProject != null) {
