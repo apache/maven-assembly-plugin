@@ -24,10 +24,7 @@ String expected = "1\r\nchild"
 for ( String name : [ "test.txt", "mac2win.txt" ] )
 {
     File file = new File( basedir, "child/target/child-1-src/" + name )
-    if ( !file.exists() )
-    {
-        throw new FileNotFoundException( "Filtered file from file-set: " + file + " is missing." )
-    }
+    assert file.exists() : "Filtered file from file-set: " + file + " is missing."
 
     String actual = new String( Files.readAllBytes( file.toPath() ), StandardCharsets.UTF_8 )
     assert actual == expected :
