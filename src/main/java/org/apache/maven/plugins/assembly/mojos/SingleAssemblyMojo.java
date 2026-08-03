@@ -18,13 +18,19 @@
  */
 package org.apache.maven.plugins.assembly.mojos;
 
+import javax.inject.Inject;
+
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.apache.maven.plugins.assembly.archive.AssemblyArchiver;
+import org.apache.maven.plugins.assembly.io.AssemblyReader;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.MavenProjectHelper;
+import org.apache.maven.shared.filtering.MavenReaderFilter;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 /**
@@ -41,6 +47,16 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
  */
 @Mojo(name = "single", requiresDependencyResolution = ResolutionScope.TEST, threadSafe = true)
 public class SingleAssemblyMojo extends AbstractAssemblyMojo {
+
+    @Inject
+    public SingleAssemblyMojo(
+            MavenProjectHelper projectHelper,
+            MavenReaderFilter mavenReaderFilter,
+            AssemblyArchiver assemblyArchiver,
+            AssemblyReader assemblyReader) {
+        super(projectHelper, mavenReaderFilter, assemblyArchiver, assemblyReader);
+    }
+
     @Parameter(defaultValue = "${plugin}", readonly = true)
     private PluginDescriptor plugin;
 
