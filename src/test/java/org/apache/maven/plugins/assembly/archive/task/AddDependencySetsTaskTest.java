@@ -28,8 +28,6 @@ import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.handler.ArtifactHandler;
-import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.apache.maven.artifact.repository.ArtifactRepositoryPolicy;
 import org.apache.maven.artifact.repository.MavenArtifactRepository;
 import org.apache.maven.artifact.repository.layout.DefaultRepositoryLayout;
 import org.apache.maven.execution.MavenSession;
@@ -120,12 +118,10 @@ class AddDependencySetsTaskTest {
         when(depArtifact.getGroupId()).thenReturn("GROUPID");
 
         depProject.setArtifact(depArtifact);
-        ArtifactRepository remoteRepository = new MavenArtifactRepository(
-                "project-repository",
-                "https://repository.example/",
-                new DefaultRepositoryLayout(),
-                new ArtifactRepositoryPolicy(),
-                new ArtifactRepositoryPolicy());
+        MavenArtifactRepository remoteRepository = new MavenArtifactRepository();
+        remoteRepository.setId("project-repository");
+        remoteRepository.setUrl("https://repository.example/");
+        remoteRepository.setLayout(new DefaultRepositoryLayout());
         depProject.setRemoteArtifactRepositories(Collections.singletonList(remoteRepository));
 
         ProjectBuildingResult pbr = mock(ProjectBuildingResult.class);
