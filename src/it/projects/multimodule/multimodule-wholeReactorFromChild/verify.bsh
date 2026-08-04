@@ -18,6 +18,7 @@
  */
 
 import java.io.*;
+import java.util.Arrays;
 
 boolean result = true;
 
@@ -36,6 +37,16 @@ if ( !new File( basedir, "child4/target/child4-1.0-bin/lib/child3.jar" ).exists(
 if ( new File( basedir, "child4/target/child4-1.0-bin/lib/child2.jar" ).exists() )
 {
     System.out.println( "Child-2 jar SHOULD NOT BE in output!" );
+    result = false;
+}
+
+File libDirectory = new File( basedir, "child4/target/child4-1.0-bin/lib" );
+File[] includedArtifacts = libDirectory.listFiles();
+
+if ( includedArtifacts == null || includedArtifacts.length != 2 )
+{
+    System.out.println( "Only the two selected module artifacts should be present when includeDependencies=false." );
+    System.out.println( "Files found: " + Arrays.toString( includedArtifacts ) );
     result = false;
 }
 

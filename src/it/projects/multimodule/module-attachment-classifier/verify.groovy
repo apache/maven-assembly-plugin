@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -17,16 +17,21 @@
  * under the License.
  */
 
-import java.io.*;
+import java.util.jar.JarFile
 
-boolean result = true;
+def modulesDirectory = new File(basedir, 'assembly/target/assembly-1.0-bin/modules')
+def attachment = new File(modulesDirectory, 'producer-tests.jar')
 
-result = result && new File( basedir, "module-b/target/module-b-1.0-SNAPSHOT-bin/modules/jdom-1.0.jar" ).exists();
-result = result && new File( basedir, "module-b/target/module-b-1.0-SNAPSHOT-bin/modules/velocity-1.4.jar" ).exists();
-result = result && new File( basedir, "module-b/target/module-b-1.0-SNAPSHOT-bin/modules/velocity-dep-1.4.jar" ).exists();
+assert attachment.isFile() : "The attached test JAR is missing: ${attachment}"
 
-result = result && new File( basedir, "module-b/target/module-b-1.0-SNAPSHOT-bin/modules/module-a.jar" ).exists();
-result = result && new File( basedir, "module-b/target/module-b-1.0-SNAPSHOT-bin/modules/module-b.jar" ).exists();
+def moduleArtifacts = modulesDirectory.listFiles()*.name.sort()
+assert moduleArtifacts == ['producer-tests.jar'] :
+        "Expected only the attached test JAR, but found: ${moduleArtifacts}"
 
-
-return result;
+def jar = new JarFile(attachment)
+try {
+    assert jar.getEntry('attachment-marker.txt') != null :
+            'The selected artifact does not contain the attachment marker.'
+} finally {
+    jar.close()
+}
