@@ -59,7 +59,7 @@ abstract class AbstractLineAggregatingHandler implements ContainerDescriptorHand
      * @return the output stream to write the aggregated content to
      * @throws IOException if the output stream cannot be created
      */
-    protected OutputStream newAggregationOutputStream(final Path path) throws IOException {
+    OutputStream newAggregationOutputStream(final Path path) throws IOException {
         return Files.newOutputStream(path);
     }
 
