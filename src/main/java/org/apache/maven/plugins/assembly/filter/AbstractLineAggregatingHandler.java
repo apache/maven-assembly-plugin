@@ -91,7 +91,7 @@ abstract class AbstractLineAggregatingHandler implements ContainerDescriptorHand
                         new OutputStreamWriter(newAggregationOutputStream(f.toPath()), getEncoding())) {
                     for (final String line : entry.getValue()) {
                         writer.write(line);
-                        writer.write(System.lineSeparator());
+                        writer.write('\n');
                     }
                 }
             } catch (final IOException e) {
