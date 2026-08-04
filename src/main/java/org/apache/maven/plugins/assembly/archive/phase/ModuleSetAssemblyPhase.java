@@ -220,11 +220,14 @@ public class ModuleSetAssemblyPhase implements AssemblyArchiverPhase, PhaseOrder
             return;
         }
 
-        final Set<MavenProject> moduleProjects = new LinkedHashSet<>();
-
-        MavenProjects.select(projects, "pom", log(LOGGER), addTo(moduleProjects));
-
         final String classifier = binaries.getAttachmentClassifier();
+
+        final Set<MavenProject> moduleProjects = new LinkedHashSet<>();
+        if (classifier == null) {
+            MavenProjects.select(projects, "pom", log(LOGGER), addTo(moduleProjects));
+        } else {
+            moduleProjects.addAll(projects);
+        }
 
         final Map<MavenProject, Artifact> chosenModuleArtifacts = new HashMap<>();
 

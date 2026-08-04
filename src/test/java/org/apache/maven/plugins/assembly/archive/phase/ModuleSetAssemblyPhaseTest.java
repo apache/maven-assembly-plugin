@@ -338,7 +338,7 @@ class ModuleSetAssemblyPhaseTest {
     }
 
     @Test
-    void addModuleBinariesShouldAddOneModuleAttachmentArtifactAndNoDeps() throws Exception {
+    void addModuleBinariesShouldAddOnePomModuleAttachmentArtifactAndNoDeps() throws Exception {
         final AssemblerConfigurationSource configSource = mock(AssemblerConfigurationSource.class);
         when(configSource.getFinalName()).thenReturn("final-name");
 
@@ -363,6 +363,7 @@ class ModuleSetAssemblyPhaseTest {
         binaries.setAttachmentClassifier("test");
 
         final MavenProject project = createProject("group", "artifact", "version", null);
+        project.setPackaging("pom");
         project.addAttachedArtifact(artifact);
 
         final Set<MavenProject> projects = singleton(project);
