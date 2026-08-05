@@ -26,78 +26,81 @@ import java.io.InputStream;
  */
 class WindowsLineFeedInputStream extends InputStream {
 
-    private final InputStream target;
+    private static final int NO_PENDING_BYTE = -2;
+
+    private final InputStream inputStream;
 
     private final boolean ensureLineFeedAtEndOfFile;
-
-    private boolean slashRSeen = false;
-
-    private boolean slashNSeen = false;
 
     private boolean injectSlashN = false;
 
     private boolean eofSeen = false;
 
+    private boolean slashNSeen = false;
+
+    private int pendingByte = NO_PENDING_BYTE;
+
     WindowsLineFeedInputStream(InputStream in, boolean ensureLineFeedAtEndOfFile) {
-        this.target = in;
+        this.inputStream = in;
         this.ensureLineFeedAtEndOfFile = ensureLineFeedAtEndOfFile;
     }
 
-    private int readWithUpdate() throws IOException {
-        final int target = this.target.read();
-        eofSeen = target == -1;
-        if (eofSeen) {
-            return target;
+    private int readTarget() throws IOException {
+        if (pendingByte != NO_PENDING_BYTE) {
+            int result = pendingByte;
+            pendingByte = NO_PENDING_BYTE;
+            return result;
         }
-        slashRSeen = target == '\r';
-        slashNSeen = target == '\n';
+        if (eofSeen) {
+            return -1;
+        }
+
+        final int target = this.inputStream.read();
+        eofSeen = target == -1;
         return target;
     }
 
     @Override
     public int read() throws IOException {
-        if (eofSeen) {
-            return eofGame();
-        } else if (injectSlashN) {
+        if (injectSlashN) {
             injectSlashN = false;
+            slashNSeen = true;
             return '\n';
-        } else {
-            boolean prevWasSlashR = slashRSeen;
-            int target = readWithUpdate();
-            if (eofSeen) {
-                return eofGame();
-            }
-            if (target == '\n') {
-                if (!prevWasSlashR) {
-                    injectSlashN = true;
-                    return '\r';
-                }
-            }
-            return target;
         }
+
+        int target = readTarget();
+        if (target == -1) {
+            return eofGame();
+        }
+
+        slashNSeen = false;
+        if (target == '\r') {
+            int next = readTarget();
+            if (next != '\n' && next != -1) {
+                pendingByte = next;
+            }
+            injectSlashN = true;
+            return '\r';
+        }
+        if (target == '\n') {
+            injectSlashN = true;
+            return '\r';
+        }
+        return target;
     }
 
     private int eofGame() {
-        if (!ensureLineFeedAtEndOfFile) {
-            return -1;
-        }
-        if (!slashNSeen && !slashRSeen) {
-            slashRSeen = true;
+        if (ensureLineFeedAtEndOfFile && !slashNSeen) {
+            injectSlashN = true;
             return '\r';
         }
-        if (!slashNSeen) {
-            slashRSeen = false;
-            slashNSeen = true;
-            return '\n';
-        } else {
-            return -1;
-        }
+        return -1;
     }
 
     @Override
     public void close() throws IOException {
         super.close();
-        target.close();
+        inputStream.close();
     }
 
     @Override
