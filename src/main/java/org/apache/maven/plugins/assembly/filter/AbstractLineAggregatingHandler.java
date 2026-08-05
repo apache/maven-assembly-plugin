@@ -22,9 +22,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,6 +52,17 @@ abstract class AbstractLineAggregatingHandler implements ContainerDescriptorHand
         return "UTF-8";
     }
 
+    /**
+     * Creates the output stream the aggregated lines are written to.
+     *
+     * @param path the path of the temporary file the aggregated content is written to
+     * @return the output stream to write the aggregated content to
+     * @throws IOException if the output stream cannot be created
+     */
+    OutputStream newAggregationOutputStream(final Path path) throws IOException {
+        return Files.newOutputStream(path);
+    }
+
     @Override
     public void finalizeArchiveCreation(final Archiver archiver) {
         // this will prompt the isSelected() call, below, for all resources added to the archive.
@@ -75,10 +87,11 @@ abstract class AbstractLineAggregatingHandler implements ContainerDescriptorHand
                 f = Files.createTempFile("assembly-" + fname, ".tmp").toFile();
                 f.deleteOnExit();
 
-                try (PrintWriter writer =
-                        new PrintWriter(new OutputStreamWriter(Files.newOutputStream(f.toPath()), getEncoding()))) {
+                try (OutputStreamWriter writer =
+                        new OutputStreamWriter(newAggregationOutputStream(f.toPath()), getEncoding())) {
                     for (final String line : entry.getValue()) {
-                        writer.println(line);
+                        writer.write(line);
+                        writer.write('\n');
                     }
                 }
             } catch (final IOException e) {
