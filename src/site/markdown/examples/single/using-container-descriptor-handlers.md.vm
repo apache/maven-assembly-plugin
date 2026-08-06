@@ -1,131 +1,95 @@
- ------
-  Using Container Descriptor Handlers
- ------
-  Guillaume Boué
- ------
-  2017-07-15
- ------
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
 
-~~ Licensed to the Apache Software Foundation (ASF) under one
-~~ or more contributor license agreements.  See the NOTICE file
-~~ distributed with this work for additional information
-~~ regarding copyright ownership.  The ASF licenses this file
-~~ to you under the Apache License, Version 2.0 (the
-~~ "License"); you may not use this file except in compliance
-~~ with the License.  You may obtain a copy of the License at
-~~
-~~   http://www.apache.org/licenses/LICENSE-2.0
-~~
-~~ Unless required by applicable law or agreed to in writing,
-~~ software distributed under the License is distributed on an
-~~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-~~ KIND, either express or implied.  See the License for the
-~~ specific language governing permissions and limitations
-~~ under the License.
+http://www.apache.org/licenses/LICENSE-2.0
 
-~~ NOTE: For help with the syntax of this file, see:
-~~ https://maven.apache.org/doxia/references/apt-format.html
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
 
-Using Container Descriptor Handlers
+# Using Container Descriptor Handlers
 
-* Introduction
+Introduction
+------------
 
-  Container descriptor handlers can be used to filter dynamically the content
-  of files configured in a descriptor, for example by aggregating multiple files 
-  into a single file, or customizing the content of specific files.
+Container descriptor handlers can be used to filter dynamically the content of files configured in a descriptor, for example by aggregating multiple files into a single file, or customizing the content of specific files.
 
-  This example demonstrate the use of <<<\<containerDescriptorHandlers\>>>> in
-  the assembly {{{../../assembly.html}descriptor format}}.
+This example demonstrate the use of `<containerDescriptorHandlers>` in the assembly [descriptor format](../../assembly.html).
 
-* Built-in container descriptor handlers
+Built-in container descriptor handlers
+--------------------------------------
 
-  The plugin comes with several handlers already defined.
-  
-    [<<<file-aggregator>>>] This handler matches the files according to the given regular
-    expression <<<filePattern>>>, aggregates their content, and stores the output 
-    in the assembly at the given <<<outputPath>>>. A sample descriptor which matches
-    all <<<file.txt>>> files configured in the assembly and aggregates them, by 
-    appending their content, into a single <<<file.txt>>> located under the base directory
-    of the assembly, is:
+The plugin comes with several handlers already defined.
 
-+-----
-<assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
+<dl>
+<dt><code>file-aggregator</code></dt>
+<dd>This handler matches the files according to the given regular expression <code>filePattern</code>, aggregates their content, and stores the output in the assembly at the given <code>outputPath</code>. A sample descriptor which matches all <code>file.txt</code> files configured in the assembly and aggregates them, by appending their content, into a single <code>file.txt</code> located under the base directory of the assembly, is:<pre><code>&lt;assembly xmlns=&quot;http://maven.apache.org/ASSEMBLY/${mdoVersion}&quot;
+    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+    xsi:schemaLocation=&quot;http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd&quot;&gt;
   ....
-  <containerDescriptorHandlers>
-    <containerDescriptorHandler>
-      <handlerName>file-aggregator</handlerName>
-      <configuration>
-        <filePattern>.*/file.txt</filePattern>
-        <outputPath>file.txt</outputPath>
-      </configuration>
-    </containerDescriptorHandler>
-  </containerDescriptorHandlers>
-</assembly>
-+-----
-
-    [<<<metaInf-services>>>] This handler matches every <<<META-INF/services>>> file and
-    aggregates them into a single <<<META-INF/services>>>. The content of the files
-    are appended together.
-
-+-----
-<assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
+  &lt;containerDescriptorHandlers&gt;
+    &lt;containerDescriptorHandler&gt;
+      &lt;handlerName&gt;file-aggregator&lt;/handlerName&gt;
+      &lt;configuration&gt;
+        &lt;filePattern&gt;.*/file.txt&lt;/filePattern&gt;
+        &lt;outputPath&gt;file.txt&lt;/outputPath&gt;
+      &lt;/configuration&gt;
+    &lt;/containerDescriptorHandler&gt;
+  &lt;/containerDescriptorHandlers&gt;
+&lt;/assembly&gt;</code></pre></dd>
+<dt><code>metaInf-services</code></dt>
+<dd>This handler matches every <code>META-INF/services</code> file and aggregates them into a single <code>META-INF/services</code>. The content of the files are appended together.<pre><code>&lt;assembly xmlns=&quot;http://maven.apache.org/ASSEMBLY/${mdoVersion}&quot;
+    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+    xsi:schemaLocation=&quot;http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd&quot;&gt;
   ....
-  <containerDescriptorHandlers>
-    <containerDescriptorHandler>
-      <handlerName>metaInf-services</handlerName>
-    </containerDescriptorHandler>
-  </containerDescriptorHandlers>
-</assembly>
-+-----
-
-    [<<<metaInf-spring>>>] This handler is similar to <<<metaInf-services>>>. It matches
-    every file with a name starting with <<<META-INF/spring.>>>.
-
-+-----
-<assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
+  &lt;containerDescriptorHandlers&gt;
+    &lt;containerDescriptorHandler&gt;
+      &lt;handlerName&gt;metaInf-services&lt;/handlerName&gt;
+    &lt;/containerDescriptorHandler&gt;
+  &lt;/containerDescriptorHandlers&gt;
+&lt;/assembly&gt;</code></pre></dd>
+<dt><code>metaInf-spring</code></dt>
+<dd>This handler is similar to <code>metaInf-services</code>. It matches every file with a name starting with <code>META-INF/spring.</code>.<pre><code>&lt;assembly xmlns=&quot;http://maven.apache.org/ASSEMBLY/${mdoVersion}&quot;
+    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+    xsi:schemaLocation=&quot;http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd&quot;&gt;
   ....
-  <containerDescriptorHandlers>
-    <containerDescriptorHandler>
-      <handlerName>metaInf-spring</handlerName>
-    </containerDescriptorHandler>
-  </containerDescriptorHandlers>
-</assembly>
-+-----
-
-    [<<<plexus>>>] This handler matches every <<<META-INF/plexus/components.xml>>> file and
-    aggregates them into a single valid <<<META-INF/plexus/components.xml>>>.
-
-+-----
-<assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
+  &lt;containerDescriptorHandlers&gt;
+    &lt;containerDescriptorHandler&gt;
+      &lt;handlerName&gt;metaInf-spring&lt;/handlerName&gt;
+    &lt;/containerDescriptorHandler&gt;
+  &lt;/containerDescriptorHandlers&gt;
+&lt;/assembly&gt;</code></pre></dd>
+<dt><code>plexus</code></dt>
+<dd>This handler matches every <code>META-INF/plexus/components.xml</code> file and aggregates them into a single valid <code>META-INF/plexus/components.xml</code>.<pre><code>&lt;assembly xmlns=&quot;http://maven.apache.org/ASSEMBLY/${mdoVersion}&quot;
+    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+    xsi:schemaLocation=&quot;http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd&quot;&gt;
   ....
-  <containerDescriptorHandlers>
-    <containerDescriptorHandler>
-      <handlerName>plexus</handlerName>
-    </containerDescriptorHandler>
-  </containerDescriptorHandlers>
-</assembly>
-+-----
+  &lt;containerDescriptorHandlers&gt;
+    &lt;containerDescriptorHandler&gt;
+      &lt;handlerName&gt;plexus&lt;/handlerName&gt;
+    &lt;/containerDescriptorHandler&gt;
+  &lt;/containerDescriptorHandlers&gt;
+&lt;/assembly&gt;</code></pre></dd>
+</dl>
 
-    []
+Custom container descriptor handlers
+------------------------------------
 
-* Custom container descriptor handlers
+You can create your own container descriptor handler by creating a class implementing `ContainerDescriptorHandler`. As an example, let's create a handler that will prepend a configured comment to every properties file configured in an assembly descriptor. 
 
-  You can create your own container descriptor handler by creating a class implementing 
-  <<<ContainerDescriptorHandler>>>. As an example, let's create a handler that will prepend 
-  a configured comment to every properties file configured in an assembly descriptor. 
+We start by creating a new Maven project named `custom-container-descriptor-handler` with the following POM:
 
-  We start by creating a new Maven project named <<<custom-container-descriptor-handler>>>
-  with the following POM:
-
-+-----
+```xml
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.test</groupId>
@@ -155,39 +119,26 @@ Using Container Descriptor Handlers
     </plugins>
   </build>
 </project>
-+-----
+```
 
-  This POM declares a dependency on the Assembly Plugin so that we can create
-  our handler, and generates a Plexus configuration file so that it can be
-  found through dependency injection during assembling.
+This POM declares a dependency on the Assembly Plugin so that we can create our handler, and generates a Plexus configuration file so that it can be found through dependency injection during assembling.
 
-  Implementing <<<ContainerDescriptorHandler>>> requires defining a couple of 
-  methods:
-  
-    [<<<isSelected>>>] Tells whether a given file or directory, configured in the
-    assembly descriptor, should be added to the final assembly. A typical
-    set-up would be to prevent the addition of certain files, and let the
-    handler do its work on them.
-    
-    [<<<getVirtualFiles>>>] Returns the list of file paths, from the root of the assembly,
-    of each file this handler will add.
-    
-    [<<<finalizeArchiveCreation>>>] Callback that is invoked when an assembly is going
-    to be created. This method can be used to add files that resulted from the
-    handler's work on each selected file. <<Cave-at:>> Because of the way archive
-    finalization is performed, we need to loop through each resource in the archive
-    before doing anything.
-    
-    [<<<finalizeArchiveExtraction>>>] Callback that is invoked when an assembly has been
-    extracted into a directory. This method can be used to process files that resulted
-    from the handler's work on each selected file.
+Implementing `ContainerDescriptorHandler` requires defining a couple of methods:
 
-    []
-    
-  Our handler that prepends a comment to each properties file could look like the following
-  (using here Java 8 features):
+<dl>
+<dt><code>isSelected</code></dt>
+<dd>Tells whether a given file or directory, configured in the assembly descriptor, should be added to the final assembly. A typical set-up would be to prevent the addition of certain files, and let the handler do its work on them.</dd>
+<dt><code>getVirtualFiles</code></dt>
+<dd>Returns the list of file paths, from the root of the assembly, of each file this handler will add.</dd>
+<dt><code>finalizeArchiveCreation</code></dt>
+<dd>Callback that is invoked when an assembly is going to be created. This method can be used to add files that resulted from the handler's work on each selected file. <b>Cave-at:</b> Because of the way archive finalization is performed, we need to loop through each resource in the archive before doing anything.</dd>
+<dt><code>finalizeArchiveExtraction</code></dt>
+<dd>Callback that is invoked when an assembly has been extracted into a directory. This method can be used to process files that resulted from the handler's work on each selected file.</dd>
+</dl>
 
-+-----
+Our handler that prepends a comment to each properties file could look like the following (using here Java 8 features):
+
+```java
 package com.test;
 
 import java.io.BufferedReader;
@@ -287,28 +238,15 @@ public class MyCustomDescriptorHandler implements ContainerDescriptorHandler {
     }
 
 }
-+-----
+```
 
-  It is a Plexus component, having the <<<ContainerDescriptorHandler>>> role,
-  that is distinguished from the other handlers with its <<<hint>>> of <<<custom>>>.
+It is a Plexus component, having the `ContainerDescriptorHandler` role, that is distinguished from the other handlers with its `hint` of `custom`.
 
-  It selects each properties file and stores their content into a catalog map,
-  where the key is the name of the file and the value is a list of its lines.
-  Those matched files are not added to the assembly, because the handler needs
-  to process them first. During assembly creation, it creates temporary files
-  whose content are the previously read lines, prepended by a custom comment.
-  They are then added back into the archive with their previous name. Note that
-  this simple handler does not aggregate files with the same name - it could be
-  enhanced to do it. When the temporary files are added to the archive, the 
-  <<<isSelected>>> method is automatically called, hence we need to set a boolean 
-  <<<excludeOverride>>> to <<<true>>> to make sure the catalog processing part is not done.
+It selects each properties file and stores their content into a catalog map, where the key is the name of the file and the value is a list of its lines. Those matched files are not added to the assembly, because the handler needs to process them first. During assembly creation, it creates temporary files whose content are the previously read lines, prepended by a custom comment. They are then added back into the archive with their previous name. Note that this simple handler does not aggregate files with the same name - it could be enhanced to do it. When the temporary files are added to the archive, the `isSelected` method is automatically called, hence we need to set a boolean `excludeOverride` to `true` to make sure the catalog processing part is not done.
 
-  The last ingredient is using our custom handler in an assembly descriptor of
-  some Maven project. Suppose there is a <<<src/samples>>> directory in this project,
-  containing an XML file named <<<test.xml>>> and a properties file named 
-  <<<test.properties>>>. With the following descriptor format
+The last ingredient is using our custom handler in an assembly descriptor of some Maven project. Suppose there is a `src/samples` directory in this project, containing an XML file named `test.xml` and a properties file named `test.properties`. With the following descriptor format
 
-+-----
+```xml
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
   <id>dist</id>
@@ -330,11 +268,11 @@ public class MyCustomDescriptorHandler implements ContainerDescriptorHandler {
     </fileSet>
   </fileSets>
 </assembly>
-+-----
+```
 
-  and the following Assembly plugin configuration
+and the following Assembly plugin configuration
 
-+-----
+```xml
 <project>
   [...]
   <build>
@@ -367,7 +305,6 @@ public class MyCustomDescriptorHandler implements ContainerDescriptorHandler {
       </plugin>
   [...]
 </project>
-+-----
+```
 
-  the resulting assembly would contain both <<<test.xml>>> and <<<test.properties>>>
-  under the base directory, with only the latter starting with <<<# A comment>>>.
+the resulting assembly would contain both `test.xml` and `test.properties` under the base directory, with only the latter starting with `# A comment`.
