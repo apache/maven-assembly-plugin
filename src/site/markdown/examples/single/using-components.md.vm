@@ -1,54 +1,39 @@
- ------
-  Using Component Descriptors
- ------
-  Edwin Punzalan
- ------
-  2006-07-24
- ------
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
 
-~~ Licensed to the Apache Software Foundation (ASF) under one
-~~ or more contributor license agreements.  See the NOTICE file
-~~ distributed with this work for additional information
-~~ regarding copyright ownership.  The ASF licenses this file
-~~ to you under the Apache License, Version 2.0 (the
-~~ "License"); you may not use this file except in compliance
-~~ with the License.  You may obtain a copy of the License at
-~~
-~~   http://www.apache.org/licenses/LICENSE-2.0
-~~
-~~ Unless required by applicable law or agreed to in writing,
-~~ software distributed under the License is distributed on an
-~~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-~~ KIND, either express or implied.  See the License for the
-~~ specific language governing permissions and limitations
-~~ under the License.
+http://www.apache.org/licenses/LICENSE-2.0
 
-~~ NOTE: For help with the syntax of this file, see:
-~~ https://maven.apache.org/doxia/references/apt-format.html
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
 
-Using Component Descriptors
+# Using Component Descriptors
 
-* Introduction
+Introduction
+------------
 
-  Suppose you have a project which will be distributed in two forms: one for
-  use with appserver A and another for appserver B. And as customization for
-  these two servers, you need to exclude some dependencies which are not used
-  by the appserver you will be distributing.
+Suppose you have a project which will be distributed in two forms: one for use with appserver A and another for appserver B. And as customization for these two servers, you need to exclude some dependencies which are not used by the appserver you will be distributing.
 
-  <<NOTE:>> <Although putting \<excludes\> inside \<dependencySets\> may provide
-  the result we want, it is not recommended because if a new appserver becomes
-  available, you will have to maintain the excludes of the other distributions
-  to exclude dependencies meant for the new appserver.>
+**NOTE:** _Although putting &lt;excludes&gt; inside &lt;dependencySets&gt; may provide the result we want, it is not recommended because if a new appserver becomes available, you will have to maintain the excludes of the other distributions to exclude dependencies meant for the new appserver._
 
-  This example demonstrate the use of \<componentDescriptors\>, more information
-  can be found {{{../../assembly.html}here}}.
+This example demonstrate the use of &lt;componentDescriptors&gt;, more information can be found [here](../../assembly.html).
 
-* The Assembly Descriptors
+The Assembly Descriptors
+------------------------
 
-  First, let's write the assembly descriptor for appserver A distribution. It
-  should like this:
+First, let's write the assembly descriptor for appserver A distribution. It should like this:
 
-+-----
+```xml
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
@@ -68,11 +53,11 @@ Using Component Descriptors
     </dependencySet>
   </dependencySets>
 </assembly>
-+-----
+```
 
-  The assembly descriptor for appserver B distribution would then be similar:
+The assembly descriptor for appserver B distribution would then be similar:
 
-+-----
+```xml
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
@@ -92,14 +77,11 @@ Using Component Descriptors
     </dependencySet>
   </dependencySets>
 </assembly>
-+-----
+```
 
-  From the two descriptors shown, we can say that there are three artifacts
-  common for both, thus we separate them into a common component descriptor
-  and save it as <<<src/assembly/component.xml>>>.  Its contents would
-  be:
+From the two descriptors shown, we can say that there are three artifacts common for both, thus we separate them into a common component descriptor and save it as `src/assembly/component.xml`. Its contents would be:
 
-+-----
+```xml
 <component>
   <dependencySets>
     <dependencySet>
@@ -112,11 +94,11 @@ Using Component Descriptors
     </dependencySet>
   </dependencySets>
 </component>
-+-----
+```
 
-  Then the final assembly descriptor for the appserver A would be:
+Then the final assembly descriptor for the appserver A would be:
 
-+-----
+```xml
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
@@ -136,11 +118,11 @@ Using Component Descriptors
     </dependencySet>
   </dependencySets>
 </assembly>
-+-----
+```
 
-  And the corresponding assembly descriptor for the appserver B then would be:
+And the corresponding assembly descriptor for the appserver B then would be:
 
-+-----
+```xml
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
@@ -160,14 +142,14 @@ Using Component Descriptors
     </dependencySet>
   </dependencySets>
 </assembly>
-+-----
+```
 
-* The POM
+The POM
+-------
 
-  Now we should update the POM configuration of the project for the Assembly
-  Plugin, which should look like:
+Now we should update the POM configuration of the project for the Assembly Plugin, which should look like:
 
-+-----
+```xml
 <project>
   [...]
   <build>
@@ -186,14 +168,13 @@ Using Component Descriptors
       </plugin>
    [...]
 </project>
-+-----
+```
 
-* Creating The Distributions
+Creating The Distributions
+--------------------------
 
-  Since we didn't configure the assembly plugin to always generate the
-  configured assemblies during the project's normal build lifecycle, we create
-  the distributions by:
+Since we didn't configure the assembly plugin to always generate the configured assemblies during the project's normal build lifecycle, we create the distributions by:
 
-+-----
+```shell
   mvn assembly:single
-+-----
+```

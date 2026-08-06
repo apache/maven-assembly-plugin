@@ -1,93 +1,56 @@
- ------
- Predefined Assembly Descriptors
- ------
- Johnny R. Ruiz III <jruiz@exist.com>
- Edwin Punzalan
- John Casey
- ------
- 2011-02-07
- ------
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
 
-~~ Licensed to the Apache Software Foundation (ASF) under one
-~~ or more contributor license agreements.  See the NOTICE file
-~~ distributed with this work for additional information
-~~ regarding copyright ownership.  The ASF licenses this file
-~~ to you under the Apache License, Version 2.0 (the
-~~ "License"); you may not use this file except in compliance
-~~ with the License.  You may obtain a copy of the License at
-~~
-~~   http://www.apache.org/licenses/LICENSE-2.0
-~~
-~~ Unless required by applicable law or agreed to in writing,
-~~ software distributed under the License is distributed on an
-~~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-~~ KIND, either express or implied.  See the License for the
-~~ specific language governing permissions and limitations
-~~ under the License.
+http://www.apache.org/licenses/LICENSE-2.0
 
-~~ NOTE: For help with the syntax of this file, see:
-~~ https://maven.apache.org/doxia/references/apt-format.html
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
 
-Pre-defined Descriptor Files
+# Pre-defined Descriptor Files
 
-  There are four predefined descriptor formats available for reuse, packaged
-  within the Assembly Plugin. Their descriptorIds are:
-  
-%{toc|fromDepth=2|toDepth=2}
+There are four predefined descriptor formats available for reuse, packaged within the Assembly Plugin. Their descriptorIds are:
 
-* bin
+<!-- MACRO{toc|fromDepth=2|toDepth=2} -->
+## bin
 
-  Use <<<bin>>> as the <<<descriptorRef>>> of your assembly-plugin configuration
-  in order to create a binary distribution archive of your project.
-  This built-in descriptor produces an assembly with the classifier <<<bin>>>
-  in three archive formats: tar.gz, tar.bz2, and zip.
+Use `bin` as the `descriptorRef` of your assembly-plugin configuration in order to create a binary distribution archive of your project. This built-in descriptor produces an assembly with the classifier `bin` in three archive formats: tar.gz, tar.bz2, and zip.
 
-  The assembled archive contains the binary JAR produced by running
-  <<<mvn package>>> plus any README, LICENSE, and NOTICE files available in the
-  project root directory.
+The assembled archive contains the binary JAR produced by running `mvn package` plus any README, LICENSE, and NOTICE files available in the project root directory.
 
-  Below is the <<<bin>>> descriptor format:
+Below is the `bin` descriptor format:
 
-%{snippet|id=bin|file=target/classes/assemblies/bin.xml}
+<!-- MACRO{snippet|id=bin|file=target/classes/assemblies/bin.xml} -->
+## jar-with-dependencies
 
-* jar-with-dependencies
+Use `jar-with-dependencies` as the `descriptorRef` of your assembly-plugin configuration in order to create a JAR which contains the binary output of your project, along its the unpacked dependencies. This built-in descriptor produces an assembly with the classifier `jar-with-dependencies` using the JAR archive format.
 
-  Use <<<jar-with-dependencies>>> as the <<<descriptorRef>>> of your
-  assembly-plugin configuration in order to create a JAR which contains
-  the binary output of your project, along its the unpacked dependencies.
-  This built-in descriptor produces an assembly with the classifier
-  <<<jar-with-dependencies>>> using the JAR archive format.
+Note that `jar-with-dependencies` provides only basic support for uber-jars. For more control, use the [Maven Shade Plugin](https://maven.apache.org/plugins/maven-shade-plugin/).
 
-  Note that <<<jar-with-dependencies>>> provides only basic support for uber-jars. 
-  For more control, use the
-  {{{https://maven.apache.org/plugins/maven-shade-plugin/} Maven Shade Plugin}}.
+Below is the `jar-with-dependencies` descriptor format:
 
-  Below is the <<<jar-with-dependencies>>> descriptor format:
+<!-- MACRO{snippet|id=jar-with-dependencies|file=target/classes/assemblies/jar-with-dependencies.xml} -->
+## src
 
-%{snippet|id=jar-with-dependencies|file=target/classes/assemblies/jar-with-dependencies.xml}
+Use `src` as the `descriptorRef` in your assembly-plugin configuration to create source archives for your project. The archive will contain the contents of your project's `/src` directory structure, for reference by your users. The `src` descriptorId produces an assembly archive with the classifier `src` in three formats: tar.gz, tar.bz2, and zip.
 
-* src
+Below is the `src` descriptor format:
 
-  Use <<<src>>> as the <<<descriptorRef>>> in your assembly-plugin configuration
-  to create source archives for your project.  The archive will contain the
-  contents of your project's <<</src>>> directory structure, for reference by
-  your users. The <<<src>>> descriptorId produces an assembly archive with the
-  classifier <<<src>>> in three formats: tar.gz, tar.bz2, and zip.
+<!-- MACRO{snippet|id=src|file=target/classes/assemblies/src.xml} -->
+## project
 
-  Below is the <<<src>>> descriptor format:
+Using the `project` `<descriptorRef>` in your Assembly Plugin configuration will produce an assembly containing your entire project, minus any build output that lands in the `/target` directory. The resulting assembly should allow your users to build your project using Maven, Ant, or whatever build system you have configured in your project's normal SCM working directory. It produces assemblies with the classifier `project` in three archive formats: tar.gz, tar.bz2, and zip.
 
-%{snippet|id=src|file=target/classes/assemblies/src.xml}
+The following is the assembly descriptor for the `project` descriptorRef:
 
-* project
-
-  Using the <<<project>>> <<<\<descriptorRef\>>>> in your Assembly Plugin
-  configuration will produce an assembly containing your entire project, minus
-  any build output that lands in the <<</target>>> directory. The resulting
-  assembly should allow your users to build your project using Maven, Ant, or
-  whatever build system you have configured in your project's normal SCM working
-  directory. It produces assemblies with the classifier <<<project>>> in
-  three archive formats: tar.gz, tar.bz2, and zip.
-
-  The following is the assembly descriptor for the <<<project>>> descriptorRef:
-
-%{snippet|id=project|file=target/classes/assemblies/project.xml}
+<!-- MACRO{snippet|id=project|file=target/classes/assemblies/project.xml} -->

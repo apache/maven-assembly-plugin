@@ -1,51 +1,30 @@
-  ---
-  Including and Excluding Artifacts
-  ---
-  Barrie Treloar
-  ---
-  2006-07-31
-  ---
+<!--
+Copyright 2006 The Apache Software Foundation.
 
-~~ Copyright 2006 The Apache Software Foundation.
-~~
-~~ Licensed under the Apache License, Version 2.0 (the "License");
-~~ you may not use this file except in compliance with the License.
-~~ You may obtain a copy of the License at
-~~
-~~      http://www.apache.org/licenses/LICENSE-2.0
-~~
-~~ Unless required by applicable law or agreed to in writing, software
-~~ distributed under the License is distributed on an "AS IS" BASIS,
-~~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-~~ See the License for the specific language governing permissions and
-~~ limitations under the License.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-~~ NOTE: For help with the syntax of this file, see:
-~~ https://maven.apache.org/doxia/references/apt-format.html
+http://www.apache.org/licenses/LICENSE-2.0
 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
 
-Including and Excluding Artifacts
+# Including and Excluding Artifacts
 
-  Currently the include/exclude format is based upon the dependency conflict id
-  which has a form of: <<<groupId:artifactId:type:classifier>>>. A shortened
-  form of the dependency conflict id may also be used <<<groupId:artifactId>>>.
+Currently the include/exclude format is based upon the dependency conflict id which has a form of: `groupId:artifactId:type:classifier`. A shortened form of the dependency conflict id may also be used `groupId:artifactId`.
 
-  The check for inclusion/exclusion is done based on either the dependency
-  conflict id or the shortened form as a <<<String.equals()>>> so it must
-  be an identical match for it to be included or excluded. At present there is
-  no support for regular expressions.
+The check for inclusion/exclusion is done based on either the dependency conflict id or the shortened form as a `String.equals()` so it must be an identical match for it to be included or excluded. At present there is no support for regular expressions.
 
-  This example excludes the log4j-1.2-api and commons-lang3 jar files from the assembly.
-  This would be useful when you are building a super distribution assembly which
-  contained sub distributions (i.e. other already assembled zips or tars) where
-  in your pom you are depenedent upon those distributions.  But because the
-  distributions transitively depend upon the project's dependencies the assembly
-  also includes the jar files (which are already in the assemblies and don't
-  need to be duplicated)
+This example excludes the log4j-1.2-api and commons-lang3 jar files from the assembly. This would be useful when you are building a super distribution assembly which contained sub distributions (i.e. other already assembled zips or tars) where in your pom you are depenedent upon those distributions. But because the distributions transitively depend upon the project's dependencies the assembly also includes the jar files (which are already in the assemblies and don't need to be duplicated)
 
-  Your pom might include something like:
+Your pom might include something like:
 
-+-----
+```xml
     <dependencies>
         <dependency>
             <groupId>YOUR GROUP</groupId>
@@ -54,13 +33,11 @@ Including and Excluding Artifacts
             <classifier>bin</classifier>
             <type>zip</type>
         </dependency>
-+-----
+```
 
-  And then in your assembly you exclude all the jar dependencies pulled in
-  from the binary assembly. In this example the commons-lang3 and log4j-1.2-api jars
-  are included unnecessarily (as they are in the bin.zip file already)
+And then in your assembly you exclude all the jar dependencies pulled in from the binary assembly. In this example the commons-lang3 and log4j-1.2-api jars are included unnecessarily (as they are in the bin.zip file already)
 
-+-----
+```xml
   <dependencySets>
     <dependencySet>
       ....
@@ -71,11 +48,10 @@ Including and Excluding Artifacts
     </dependencySet>
     ....
   </dependencySets>
-+-----
+```
 
-* What about your Project's Artifacts?
+## What about your Project's Artifacts?
 
-  {{{https://issues.apache.org/jira/browse/MASSEMBLY-197}MASSEMBLY-197}} added <<<useProjectArtifact>>>
-  and <<<useProjectAttachments>>> to the <<<dependencySet>>> configuration.
+[MASSEMBLY-197](https://issues.apache.org/jira/browse/MASSEMBLY-197) added `useProjectArtifact` and `useProjectAttachments` to the `dependencySet` configuration.
 
-  See {{{../../assembly.html#class_dependencySet}Assembly Descriptor Format}} for the default values and how to configure them.
+See [Assembly Descriptor Format](../../assembly.html#class_dependencySet) for the default values and how to configure them.

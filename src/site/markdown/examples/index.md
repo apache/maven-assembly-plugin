@@ -1,60 +1,35 @@
-  ---
-  Examples
-  ---
-  John Casey
-  ---
-  2008-11-03
-  ---
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
 
-~~ Licensed to the Apache Software Foundation (ASF) under one
-~~ or more contributor license agreements.  See the NOTICE file
-~~ distributed with this work for additional information
-~~ regarding copyright ownership.  The ASF licenses this file
-~~ to you under the Apache License, Version 2.0 (the
-~~ "License"); you may not use this file except in compliance
-~~ with the License.  You may obtain a copy of the License at
-~~
-~~   http://www.apache.org/licenses/LICENSE-2.0
-~~
-~~ Unless required by applicable law or agreed to in writing,
-~~ software distributed under the License is distributed on an
-~~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-~~ KIND, either express or implied.  See the License for the
-~~ specific language governing permissions and limitations
-~~ under the License.
+http://www.apache.org/licenses/LICENSE-2.0
 
-~~ NOTE: For help with the syntax of this file, see:
-~~ https://maven.apache.org/doxia/references/apt-format.html
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
 
-Examples
+# Examples
 
-* Table of Contents
+## Table of Contents
 
-  Below, you will see a series of examples showing how to use the Assembly
-  Plugin in various contexts.
+Below, you will see a series of examples showing how to use the Assembly Plugin in various contexts.
 
-  * {{{./single/index.html}Working with Single Projects}}
-
-    * {{{./single/filtering-some-distribution-files.html}Filtering Some Distribution Files}}
-
-    * {{{./single/including-and-excluding-artifacts.html}Including/Excluding Artifacts}}
-
-    * {{{./single/using-components.html}Using Component Descriptors}}
-
-    * {{{./single/using-container-descriptor-handlers.html}Using Container Descriptor Handlers}}
-
-    []
-
-  * {{{./multimodule/index.html}Working with Multi-Module Projects}}
-
-    * {{{./multimodule/module-source-inclusion-simple.html}Adding Module Sources to the Assembly}}
-
-    * {{{./multimodule/module-binary-inclusion-simple.html}Adding Module Binaries to the Assembly}}
-
-    []
-
-  * {{{./sharing-descriptors.html}Sharing Assembly Descriptors}}
-
-  * {{{./using-inline-descriptors.html}Using Inline Assembly Descriptors}}
-
-  []
+- [Working with Single Projects](./single/index.html)
+    - [Filtering Some Distribution Files](./single/filtering-some-distribution-files.html)
+    - [Including/Excluding Artifacts](./single/including-and-excluding-artifacts.html)
+    - [Using Component Descriptors](./single/using-components.html)
+    - [Using Container Descriptor Handlers](./single/using-container-descriptor-handlers.html)
+- [Working with Multi-Module Projects](./multimodule/index.html)
+    - [Adding Module Sources to the Assembly](./multimodule/module-source-inclusion-simple.html)
+    - [Adding Module Binaries to the Assembly](./multimodule/module-binary-inclusion-simple.html)
+- [Sharing Assembly Descriptors](./sharing-descriptors.html)
+- [Using Inline Assembly Descriptors](./using-inline-descriptors.html)
