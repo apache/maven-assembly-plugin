@@ -167,6 +167,7 @@ public class AddDependencySetsTask {
 
     private ProjectBuildingRequest getProjectBuildingRequest(AssemblerConfigurationSource configSource) {
         return new DefaultProjectBuildingRequest(configSource.getMavenSession().getProjectBuildingRequest())
+                .setRemoteRepositories(project.getRemoteArtifactRepositories())
                 .setValidationLevel(ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL)
                 .setProcessPlugins(false);
     }

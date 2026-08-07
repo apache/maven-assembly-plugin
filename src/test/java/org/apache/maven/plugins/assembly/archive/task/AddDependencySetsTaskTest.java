@@ -28,6 +28,8 @@ import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.handler.ArtifactHandler;
+import org.apache.maven.artifact.repository.MavenArtifactRepository;
+import org.apache.maven.artifact.repository.layout.DefaultRepositoryLayout;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Model;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
@@ -116,6 +118,11 @@ class AddDependencySetsTaskTest {
         when(depArtifact.getGroupId()).thenReturn("GROUPID");
 
         depProject.setArtifact(depArtifact);
+        MavenArtifactRepository remoteRepository = new MavenArtifactRepository();
+        remoteRepository.setId("project-repository");
+        remoteRepository.setUrl("https://repository.example/");
+        remoteRepository.setLayout(new DefaultRepositoryLayout());
+        depProject.setRemoteArtifactRepositories(Collections.singletonList(remoteRepository));
 
         ProjectBuildingResult pbr = mock(ProjectBuildingResult.class);
         when(pbr.getProject()).thenReturn(depProject);
@@ -164,7 +171,11 @@ class AddDependencySetsTaskTest {
         verify(session, times(2)).getUserProperties();
         verify(session, times(2)).getSystemProperties();
 
-        verify(projectBuilder).build(any(Artifact.class), any(ProjectBuildingRequest.class));
+        ArgumentCaptor<ProjectBuildingRequest> request = ArgumentCaptor.forClass(ProjectBuildingRequest.class);
+        verify(projectBuilder).build(any(Artifact.class), request.capture());
+        assertEquals(
+                "project-repository",
+                request.getValue().getRemoteRepositories().get(0).getId());
     }
 
     @Test
