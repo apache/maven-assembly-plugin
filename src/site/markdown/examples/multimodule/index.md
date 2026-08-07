@@ -1,3 +1,10 @@
+---
+title: Multi-Module Examples
+author: 
+  - Edwin Punzalan
+date: 2006-07-24
+---
+
 <!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file

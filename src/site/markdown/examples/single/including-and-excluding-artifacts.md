@@ -1,3 +1,10 @@
+---
+title: Including and Excluding Artifacts
+author: 
+  - Barrie Treloar
+date: 2006-07-31
+---
+
 <!--
 Copyright 2006 The Apache Software Foundation.
 
