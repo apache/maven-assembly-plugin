@@ -1,3 +1,12 @@
+---
+title: Predefined Assembly Descriptors
+author: 
+  - Johnny R. Ruiz III <jruiz@exist.com>
+  - Edwin Punzalan
+  - John Casey
+date: 2011-02-07
+---
+
 <!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
