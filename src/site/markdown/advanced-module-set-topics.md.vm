@@ -31,7 +31,7 @@ As you are no doubt aware, Maven introduces advanced handling of multimodule bui
 
 When constructing an assembly from any parent-level project in a multimodule build, it's possible to process this parent-POM's descendent modules, and include them in some form within the resulting assembly artifact. By default, the entire module hierarchy below the current project is available for inclusion or exclusion. Also, include/exclude patterns for modules are matched using the artifact-matching rules explained in the **Advanced Assembly-Descriptor Topics** document.
 
-The following examples describe how to select certain modules in the project hierarchy using basic artifact includes/excludes. It does **not** describe what to do with the selected modules; to learn about the actions available for selected modules, see [including module sources](#Including_Module_Sources) and [including module binaries](#Including_Module_Binaries) below. For other, more advanced module-handling options, read on\!
+The following examples describe how to select certain modules in the project hierarchy using basic artifact includes/excludes. It does **not** describe what to do with the selected modules; to learn about the actions available for selected modules, see [including module sources](#Including_Module_Sources) and [including module binaries](#Including_Module_Binaries) below. For other, more advanced module-handling options, read on!
 
 #[[### Example: Select one from a set of child projects]]#
 
@@ -101,7 +101,7 @@ _NOTE: The expression_ `${esc.d}{module.extension}` _is mapped to the file exten
 <a id="Including_Module_Sources"></a>Including Module Sources
 -------------------------------------------------------------
 
-Once you've selected certain modules to be included in the assembly, you have to determine what you want included from each module. This usually depends on the purpose of the assembly. For instance, if you're building a binary assembly, for use in a runtime context, you probably want to include module binaries only (see the [Including\_Module\_Binaries](#Including_Module_Binaries) section below). However, if your assembly is meant to include project sources, either as a reference or to allow users to build your project (or for some other reason altogether), then you're probably interested in the `sources` section of the `moduleSet`.
+Once you've selected certain modules to be included in the assembly, you have to determine what you want included from each module. This usually depends on the purpose of the assembly. For instance, if you're building a binary assembly, for use in a runtime context, you probably want to include module binaries only (see the [Including_Module_Binaries](#Including_Module_Binaries) section below). However, if your assembly is meant to include project sources, either as a reference or to allow users to build your project (or for some other reason altogether), then you're probably interested in the `sources` section of the `moduleSet`.
 
 Processing module sources is a fileSet-based activity. That is, sources are included or excluded based on file-matching patterns, or explicit `fileSet` subsections. **For backward compatibility only**, the `<sources/>` section itself supports `includes` and `excludes` that can help determine which files from a module's directory should be processed. Starting in version 2.2 of the assembly plugin, the `<sources/>` section supports a `<fileSets/>` subsection, which is the preferred way of selecting module-source files for processing.
 
@@ -289,7 +289,7 @@ To accomplish this restructuring, simply use the `excludeSubModuleDirectories` f
 <a id="Including_Module_Binaries"></a>Including Module Binaries
 ---------------------------------------------------------------
 
-**WARNING\!** Using the `binaries` section of a `moduleSet` definition involves some tricky considerations that are a result of the way Maven sorts and executes project builds within a multimodule context. Please read [this FAQ entry](./faq.html#module-binaries) if you decide to use them.
+**WARNING!** Using the `binaries` section of a `moduleSet` definition involves some tricky considerations that are a result of the way Maven sorts and executes project builds within a multimodule context. Please read [this FAQ entry](./faq.html#module-binaries) if you decide to use them.
 
 In cases where your assembly artifact is meant to be used in a runtime context, you'll most likely want to include the binaries from any modules processed by the assembly plugin. This can be as simple as adding the module's jar artifact to your assembly archive; or, it can involve selectively including the dependencies of that module in addition to the module's own jar.
 
