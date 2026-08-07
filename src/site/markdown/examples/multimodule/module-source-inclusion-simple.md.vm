@@ -120,7 +120,7 @@ Now, let's review the POM configuration necessary to enable the building of this
 
 This POM simply directs the Assembly Plugin to use the `src.xml` assembly descriptor when executing.
 
-Execute\!
+Execute!
 ---------
 
 To build the assembly, we issue the following command:

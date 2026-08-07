@@ -76,7 +76,7 @@ In this example, we'll configure a `dependencySet` so it only includes those `wa
 </assembly>
 ```
 
-#[[#### GOTCHA\!]]#
+#[[#### GOTCHA!]]#
 
 In the above example, any `war` artifacts that happen to have a classifier (not sure why this particular case would happen, but it _is_ possible) will be **skipped**. If you _really_ want to be careful about catching all of the `war` artifacts in your project, you might want to use the following pattern:
 

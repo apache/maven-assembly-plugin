@@ -139,7 +139,7 @@ target/sample-1.0-SNAPSHOT-jar-with-dependencies.jar
 
 Notice the artifact classifier, between the end of the version and the beginning of the file extension, `jar-with-dependencies`. This is the `id` of the assembly descriptor used to create this artifact.
 
-#[[### GOTCHA\!]]#
+#[[### GOTCHA!]]#
 
 In most cases, the `single` goal should be bound to the `package` phase of the build. However, if your assembly doesn't require binaries, or if you need to use one assembly as input for another, you may need to change this. While it's possible to assign the `single` goal to any phase of the build lifecycle, you should be careful to make sure the resources included in your assembly exist before that assembly is created.
 
@@ -184,7 +184,7 @@ Main-Class: org.sample.App
 
 For more information on advanced configuration for the Assembly Plugin, see the [Resources](#Resources) section.
 
-#[[### GOTCHA\!]]#
+#[[### GOTCHA!]]#
 
 At this point, only the `jar` and `war` assembly formats support the `<archive>` configuration element.
 
