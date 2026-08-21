@@ -157,7 +157,6 @@ class DefaultDependencyResolverTest {
         ds.setUseTransitiveDependencies(false);
 
         final MavenProject project = createMavenProject("main-group", "empty-pom", "1", null);
-        project.setDependencyArtifacts(null);
 
         DependencyResult dependencyResult = new DependencyResult(new DependencyRequest());
         dependencyResult.setRoot(new DefaultDependencyNode((Dependency) null));
@@ -251,7 +250,6 @@ class DefaultDependencyResolverTest {
         final Artifact pomArtifact = newArtifact(groupId, artifactId, version);
         project.setArtifact(pomArtifact);
         project.setArtifacts(new HashSet<>());
-        project.setDependencyArtifacts(new HashSet<>());
 
         project.setFile(new File(basedir, "pom.xml"));
 
