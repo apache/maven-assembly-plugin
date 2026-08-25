@@ -28,7 +28,7 @@ under the License.
 
 ## Table of Contents
 
-Below, you will see a series of examples showing how to use the Assembly Plugin in various contexts.
+Below, you see a series of examples showing how to use the Assembly Plugin in various contexts.
 
 - [Working with Single Projects](./single/index.html)
     - [Filtering Some Distribution Files](./single/filtering-some-distribution-files.html)

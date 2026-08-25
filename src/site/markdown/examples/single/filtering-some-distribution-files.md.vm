@@ -26,20 +26,19 @@ under the License.
 
 # Filtering Some Distribution Files
 
-Introduction
-------------
+## Introduction
 
-File filtering is used to substitute variable fields from inside a file to their represented values. For the Assembly Plugin, and most Maven filtering procedures, these variables are enclosed between ${esc.d}{ and }. For example, before a file is filtered, it contains `${esc.d}{project.artifactId}`. But after filtering is complete, a new file is created with the project's `artifactId` substituting `${esc.d}{project.artifactId}` and that this new file is used instead of the original one.
+File filtering is used to substitute variable fields from inside a file to their represented values. For the Assembly Plugin, and most Maven filtering procedures, these variables are enclosed between ${esc.d}{ and }. For example, before a file is filtered, it contains `${esc.d}{project.artifactId}`. After filtering is complete, a new file is created. The project's `artifactId` substitutes `${esc.d}{project.artifactId}`. This new file is used instead of the original one.
 
-Although filtering can be done during the process-resources phase, not all files going into your distribution will be coming from a project resource. Thus, the Assembly Plugin allows filtering of files before copying them into the created assembly.
+Although filtering can be done during the process-resources phase, not all files going into your distribution come from a project resource. Thus, the Assembly Plugin allows filtering of files before copying them into the created assembly.
 
-This example demonstrates how to filter files before adding them into the assembly. In this example, we need to filter distribution files into the archive. The files included in the distribution are:
+This example demonstrates how to filter files before adding them into the assembly. We need to filter distribution files into the archive. The files included in the distribution are:
 
 - README.txt
 - LICENSE.txt
 - NOTICE.txt
 
-All the above files are in the root directory of the project but only the README and the NOTICE files should be filtered. The property file used to filter these are files is found in `src/assembly/filter.properties`.
+All the above files are in the root directory of the project but only the README and the NOTICE files must be filtered. The property file used to filter these files is found in `src/assembly/filter.properties`.
 
 A property file is a file which contains the names of the variables and their corresponding string value. The format of its contents is identical to how Java Property files are saved. Below is an example of a property file:
 
@@ -50,10 +49,9 @@ variable1=value1
 variable2=value2
 ```
 
-The Assembly Descriptor
------------------------
+## The Assembly Descriptor
 
-Filtering is only enabled inside &lt;files&gt; so that's what we will use. Thus, our assembly descriptor will be:
+Filtering is only enabled inside &lt;files&gt; so that is what we will use. Our assembly descriptor will be:
 
 ```xml
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
@@ -123,10 +121,9 @@ Alternatively, if there are many .txt files to include inside &lt;files&gt;, we 
 
 The above descriptor adds all .txt files to the assembly but filters README.txt and NOTICE.txt files.
 
-The POM
--------
+## The POM
 
-The configuration of the Assembly Plugin inside pom.xml should not be different from the others, except for the configuration of the filter file, so:
+The configuration of the Assembly Plugin inside pom.xml must not be different from the others, except for the configuration of the filter file:
 
 ```xml
 <project>
@@ -151,10 +148,9 @@ The configuration of the Assembly Plugin inside pom.xml should not be different 
 </project>
 ```
 
-Generating The Assembly
------------------------
+## Generating The Assembly
 
-To generate the distribution assembly, we then use:
+To generate the distribution assembly, run:
 
 ```shell
 mvn clean assembly:single

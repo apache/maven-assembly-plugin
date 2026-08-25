@@ -28,7 +28,7 @@ under the License.
 
 A Single Project is a project whose assemblies do not use &lt;moduleSets&gt;.
 
-The examples below may help you in creating assemblies for your single projects.
+The examples below can help you in creating assemblies for your single projects.
 
 - [Filtering Some Distribution Files](./filtering-some-distribution-files.html)
 - [Including/Excluding Artifacts](./including-and-excluding-artifacts.html)

@@ -26,17 +26,15 @@ under the License.
 
 # Using Inline Assembly Descriptors
 
-Introduction
-------------
+## Introduction
 
-For simple usage we can inline Assembly descriptor into the project configuration. We don't need to create an additional file with Assembly descriptor.
+For simple usage, we can inline Assembly descriptor into the project configuration. We do not need to create an additional file with Assembly descriptor.
 
-It can simplify configuration in case of the parent project inherited, we don't need to use a [Shared Assembly Descriptors](./sharing-descriptors.html)
+It can simplify configuration in case of the parent project inherited. We do not need to use a [Shared Assembly Descriptors](./sharing-descriptors.html).
 
-The POM
--------
+## The POM
 
-We can have POM configuration of the project for the Assembly Plugin, which can look like:
+We can have POM configuration of the project for the Assembly Plugin:
 
 ```xml
 <project>
