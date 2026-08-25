@@ -22,6 +22,7 @@ package org.apache.maven.plugins.assembly.filter;
 import org.apache.maven.plugins.assembly.utils.AssemblyFileUtils;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
+import org.codehaus.plexus.archiver.ResourceIterator;
 import org.codehaus.plexus.archiver.UnArchiver;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.components.io.fileselectors.FileInfo;
@@ -78,6 +79,16 @@ public class SimpleAggregatingDescriptorHandler
     public void finalizeArchiveCreation( final Archiver archiver )
     {
         checkConfig();
+
+        // The archiver runs its finalizers before it scans the resources that have
+        // been added so far (see AbstractArchiver.createArchive()), because the
+        // manifest has to be added first. Iterating the added resources up front
+        // applies the file selectors of every added resource collection, which
+        // invokes this handler's isSelected() and collects the content to aggregate.
+        for ( final ResourceIterator it = archiver.getResources(); it.hasNext(); )
+        {
+            it.next();
+        }
 
         if ( outputPath.endsWith( "/" ) )
         {
