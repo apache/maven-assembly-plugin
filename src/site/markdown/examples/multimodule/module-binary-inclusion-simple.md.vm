@@ -40,12 +40,12 @@ This example demonstrates how to include the artifact and dependencies of a modu
 
 ## The Assembly Descriptor
 
-First, write an assembly descriptor to create this assembly. For clarity, this descriptor will be as simple as possible, only demonstrating the features described by this example.
+This is an assembly descriptor that can create this assembly. It is as simple as possible, only demonstrating the features described by this example.
 
 ```xml
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
+    xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} https://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
   <id>bin</id>
   <formats>
     <format>dir</format>
