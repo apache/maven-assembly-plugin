@@ -23,7 +23,9 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -41,6 +43,8 @@ import org.codehaus.plexus.archiver.FileSet;
 import org.codehaus.plexus.archiver.ResourceIterator;
 import org.codehaus.plexus.archiver.diags.NoOpArchiver;
 import org.codehaus.plexus.archiver.zip.ZipArchiver;
+import org.codehaus.plexus.components.io.fileselectors.FileSelector;
+import org.codehaus.plexus.components.io.resources.DefaultPlexusIoFileResourceCollection;
 import org.codehaus.plexus.components.io.resources.PlexusIoResource;
 import org.codehaus.plexus.components.io.resources.PlexusIoResourceCollection;
 import org.codehaus.plexus.util.xml.PrettyPrintXMLWriter;
@@ -60,6 +64,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ComponentsXmlArchiverFileFilterTest {
 
@@ -290,6 +295,78 @@ class ComponentsXmlArchiverFileFilterTest {
         assertEquals("role", role2.evaluateFirst(doc).getText());
         assertEquals("hint2", hint2.evaluateFirst(doc).getText());
         assertEquals("impl", implementation2.evaluateFirst(doc).getText());
+    }
+
+    @Test
+    void shouldAggregateComponentsFromResourcesAddedToTheArchive() throws Exception {
+        final Path dirA = Files.createDirectories(temporaryFolder.toPath().resolve("a"));
+        final Path dirB = Files.createDirectories(temporaryFolder.toPath().resolve("b"));
+
+        writeComponentDescriptor(dirA, "role1", "impl1");
+        writeComponentDescriptor(dirB, "role2", "impl2");
+
+        final ZipArchiver archiver = new ZipArchiver();
+
+        final File archiveFile = newFile(temporaryFolder, "archive");
+
+        archiver.setDestFile(archiveFile);
+
+        archiver.addResources(componentResourceCollection(dirA.toFile(), filter));
+        archiver.addResources(componentResourceCollection(dirB.toFile(), filter));
+
+        archiver.setArchiveFinalizers(Collections.singletonList(filter));
+
+        archiver.createArchive();
+
+        try (ZipFile zf = new ZipFile(archiveFile)) {
+            final ZipEntry ze = zf.getEntry(ComponentsXmlArchiverFileFilter.COMPONENTS_XML_PATH);
+
+            assertNotNull(ze);
+
+            final String content = new String(Files.readAllBytes(copyToFile(zf, ze)), StandardCharsets.UTF_8);
+
+            assertTrue(content.contains("<role>role1</role>"), "aggregated components.xml should contain role1");
+            assertTrue(content.contains("<role>role2</role>"), "aggregated components.xml should contain role2");
+            assertTrue(
+                    content.contains("<implementation>impl1</implementation>"),
+                    "aggregated components.xml should contain impl1");
+            assertTrue(
+                    content.contains("<implementation>impl2</implementation>"),
+                    "aggregated components.xml should contain impl2");
+        }
+    }
+
+    private void writeComponentDescriptor(final Path baseDir, final String role, final String implementation)
+            throws IOException {
+        Files.createDirectories(baseDir.resolve("META-INF/plexus"));
+
+        final Path descriptor = baseDir.resolve(ComponentsXmlArchiverFileFilter.COMPONENTS_XML_PATH);
+
+        Files.write(
+                descriptor,
+                ("<component-set><components><component><role>" + role
+                                + "</role><implementation>" + implementation
+                                + "</implementation></component></components></component-set>")
+                        .getBytes(StandardCharsets.UTF_8));
+    }
+
+    private DefaultPlexusIoFileResourceCollection componentResourceCollection(
+            final File baseDir, final FileSelector selector) {
+        final DefaultPlexusIoFileResourceCollection collection = new DefaultPlexusIoFileResourceCollection();
+
+        collection.setBaseDir(baseDir);
+        collection.setIncludes(new String[] {"**/components.xml"});
+        collection.setFileSelectors(new FileSelector[] {selector});
+
+        return collection;
+    }
+
+    private Path copyToFile(final ZipFile zf, final ZipEntry ze) throws IOException {
+        final Path dest = new File(temporaryFolder, "descriptor.xml").toPath();
+
+        Files.copy(zf.getInputStream(ze), dest);
+
+        return dest;
     }
 
     private Xpp3Dom createComponentDom(final ComponentDef def) {

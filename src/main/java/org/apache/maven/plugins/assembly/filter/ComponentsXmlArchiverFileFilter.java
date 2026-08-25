@@ -116,11 +116,11 @@ public class ComponentsXmlArchiverFileFilter implements ContainerDescriptorHandl
 
     @Override
     public void finalizeArchiveCreation(final Archiver archiver) {
-        // this will prompt the isSelected() call, below, for all resources added to the archive.
-        // FIXME: This needs to be corrected in the AbstractArchiver, where
-        // runArchiveFinalizers() is called before regular resources are added...
-        // which is done because the manifest needs to be added first, and the
-        // manifest-creation component is a finalizer in the assembly plugin...
+        // The archiver runs its finalizers before it scans the resources that have
+        // been added so far (see AbstractArchiver.createArchive()), because the
+        // manifest has to be added first. Iterating the added resources up front
+        // applies the file selectors of every added resource collection, which
+        // invokes this handler's isSelected() and collects the content to aggregate.
         for (final ResourceIterator it = archiver.getResources(); it.hasNext(); ) {
             it.next();
         }
