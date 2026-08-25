@@ -618,6 +618,38 @@ class ModuleSetAssemblyPhaseTest {
     }
 
     @Test
+    void getModuleProjectsShouldUseAllReactorProjectsRegardlessOfReactorOrder() throws Exception {
+        final MavenProject parent = createProject("group", "parent", "version", null);
+
+        final Model aggregatorModel = new Model();
+        aggregatorModel.setGroupId("group");
+        aggregatorModel.setArtifactId("aggregator");
+        aggregatorModel.setVersion("version");
+
+        final MavenProject aggregator = new MavenProject(aggregatorModel);
+        aggregator.setFile(new File(temporaryFolder, "aggregator/pom.xml"));
+
+        final MavenProject module = createProject("group", "module", "version", aggregator);
+        final MavenProject distribution = createProject("group", "distribution", "version", aggregator);
+
+        final List<MavenProject> projects = Arrays.asList(parent, aggregator, module, distribution);
+
+        final AssemblerConfigurationSource configSource = mock(AssemblerConfigurationSource.class);
+        when(configSource.getReactorProjects()).thenReturn(projects);
+        when(configSource.getProject()).thenReturn(distribution);
+
+        final ModuleSet moduleSet = new ModuleSet();
+        moduleSet.setUseAllReactorProjects(true);
+        moduleSet.setIncludeSubModules(true);
+
+        final Set<MavenProject> moduleProjects =
+                ModuleSetAssemblyPhase.getModuleProjects(moduleSet, configSource, logger);
+
+        assertEquals(projects, new ArrayList<>(moduleProjects));
+        verify(configSource).getReactorProjects();
+    }
+
+    @Test
     void getModuleProjectsShouldReturnModuleOfCurrentProject() throws Exception {
         final MavenProject project = createProject("group", "artifact", "version", null);
         final MavenProject project2 = createProject("group", "artifact2", "version", project);
