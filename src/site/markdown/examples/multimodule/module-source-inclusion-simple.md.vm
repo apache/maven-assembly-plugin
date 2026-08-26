@@ -28,7 +28,8 @@ under the License.
 
 ## Introduction
 
-It is common practice to create an assembly using the parent POM of a multimodule build. At times, you may want to ensure that this assembly also includes the source code from one or more of the modules in this build.
+It is common practice to create an assembly using the parent POM of a multimodule build.
+At times, you may this assembly to also include the source code from one or more of the modules in this build.
 
 This example demonstrates how to include the project sources from a module in the project assembly, under the directory `sources/<module-name>`.
 
@@ -125,11 +126,11 @@ To build the assembly, run the following command:
 mvn clean assembly:single
 ```
 
-This ensures that the output directory (normally, `target`) is removed before building the assembly directory.
+This rmeoves the output directory (normally, `target`) before building the assembly directory.
 
 ## Examining the Output
 
-When the Maven execution completes, the following directory structure will be left:
+When the Maven execution completes, the following directory structure is left:
 
 ```unknown
 target/parent-1.0-src/
