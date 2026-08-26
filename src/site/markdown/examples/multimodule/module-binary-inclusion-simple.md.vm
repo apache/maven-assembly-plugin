@@ -83,11 +83,12 @@ Furthermore, it states that the assembly will include the artifact files for the
 along with its dependency artifacts. These artifacts must be contained within the directory structure `modules/child1` for this module,
 since the outputDirectory expression will be interpolated on a module-by-module basis.
 
-**Finally**, notice the **new** `useAllReactorProjects` flag. This enables access to all projects in the current reactor (multimodule build), even from a child module. Using this flag, it is now possible to use a child module (sorted to the end of the multimodule build process using appropriate dependency declarations) to generate an assembly containing module binaries.
+**Finally**, notice the **new** `useAllReactorProjects` flag. This enables access to all projects in the current reactor (multimodule build), even from a child module.
+Using this flag, a child module (sorted to the end of the multimodule build process using appropriate dependency declarations) can generate an assembly containing module binaries.
 
 ## The POM
 
-Now, review the POM configuration necessary to enable the building of this assembly via the `assembly:single` goal. First, look at the parent POM:
+Now, review the POM configuration necessary to build this assembly via the `assembly:single` goal. First, look at the parent POM:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
