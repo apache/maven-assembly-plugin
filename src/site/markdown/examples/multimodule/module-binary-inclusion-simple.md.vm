@@ -76,9 +76,12 @@ This is an assembly descriptor that can create this assembly. It is as simple as
 </assembly>
 ```
 
-This descriptor states that the assembly id will be `bin`, that the output format is a directory, and that the contents of the assembly must **not** be contained within a directory named after the finalName of the top-level project.
+This descriptor states that the assembly id is `bin`, that the output format is a directory,
+and that the contents of the assembly must **not** be contained within a directory named after the finalName of the top-level project.
 
-Furthermore, it states that we wish to include the artifact files for the module with a groupId of `org.test` and an artifactId of `child1`, along with its dependency artifacts. These artifacts must be contained within the directory structure `modules/child1` for this module, since the outputDirectory expression will be interpolated on a module-by-module basis.
+Furthermore, it states that the assembly will include the artifact files for the module with a groupId of `org.test` and an artifactId of `child1`,
+along with its dependency artifacts. These artifacts must be contained within the directory structure `modules/child1` for this module,
+since the outputDirectory expression will be interpolated on a module-by-module basis.
 
 **Finally**, notice the **new** `useAllReactorProjects` flag. This enables access to all projects in the current reactor (multimodule build), even from a child module. Using this flag, it is now possible to use a child module (sorted to the end of the multimodule build process using appropriate dependency declarations) to generate an assembly containing module binaries.
 
