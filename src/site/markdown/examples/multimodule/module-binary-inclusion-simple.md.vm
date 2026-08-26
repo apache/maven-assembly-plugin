@@ -190,7 +190,8 @@ That POM looks like this:
 </project>
 ```
 
-This POM directs the Assembly Plugin to execute the `single` goal when the build reaches the `package` phase. It tells the plugin to use the `bin.xml` assembly descriptor when executing.
+This POM directs the Assembly Plugin to execute the `single` goal when the build reaches the `package` phase.
+It tells the plugin to use the `bin.xml` assembly descriptor when executing.
 
 ## Execute!
 
@@ -200,9 +201,10 @@ To build the assembly, run the following command:
 mvn clean package
 ```
 
-This ensures that the output directory (normally, `target`) is removed before building the assembly directory.
+This removes the output directory (normally, `target`) before building the assembly directory.
 
-**Note:** Because of a quirk in Maven 2.0's execution model relating to aggregator goals and the inheritance hierarchy, we need to explicitly execute the package phase ahead of the assembly invocation. This ensures all modules have been built.
+**Note:** Because of a quirk in Maven 2.0's execution model relating to aggregator goals and the inheritance hierarchy, we need to explicitly execute the package phase ahead of the assembly invocation.
+This ensures all modules have been built.
 
 ## Examining the Output
 
