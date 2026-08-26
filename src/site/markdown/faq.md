@@ -110,7 +110,8 @@ In some cases, it makes sense to use the assembly output as the main project art
 
 ### I have a dependencySet that includes some artifacts with classifiers, and others without classifiers. How can I setup the file mappings to handle both cases appropriately?
 
-The best way to handle a mixed bag of dependencies with and without classifiers is to use the **${dashClassifier?}** expression. This expression was added in version 2.2-beta-2 of the assembly plugin for this purpose. It determines whether each artifact has a classifier. If it does, it substitutes the artifact's classifier (prepended by a dash) in place of the expression.
+The the **${dashClassifier?}** expression is the best way to handle a mixed bag of dependencies with and without classifiers.
+This expression was added in version 2.2-beta-2 of the assembly plugin. It determines whether each artifact has a classifier. If it does, it substitutes the artifact's classifier (prepended by a dash) in place of the expression.
 
 For example, suppose you want to include two artifacts. One is commons-logging-1.0.4.jar. The other is yourserver-1.0-client.jar (where 'client' is the classifier). Add the following to your dependencySet:
 
