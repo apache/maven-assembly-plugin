@@ -208,7 +208,8 @@ This ensures all modules have been built.
 
 ## Examining the Output
 
-When the Maven execution completes, the following directory structure will be left. Remember, our assembly format was `dir`, which is why the output is a directory and not an archive of some sort.
+When the Maven execution completes, the following directory structure is left.
+Remember, the assembly format was `dir`, which is why the output is a directory and not an archive of some sort.
 
 Here are the directory contents:
 
