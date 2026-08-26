@@ -25,11 +25,11 @@ limitations under the License.
 
 The include/exclude format is based on the dependency conflict id. The form is: `groupId:artifactId:type:classifier`. A shortened form `groupId:artifactId` can also be used.
 
-The check for inclusion/exclusion is done based on either the dependency conflict id or the shortened form as a `String.equals()` match. It must be an identical match for the artifact to be included or excluded. At present there is no support for regular expressions.
+The check for inclusion/exclusion is done based on either the dependency conflict id or the shortened form as a `String.equals()` match. It must be an identical match for the artifact to be included or excluded. There is no support for regular expressions.
 
 This example excludes the log4j-1.2-api and commons-lang3 jar files from the assembly. This is useful when you are building a super distribution assembly. The assembly contains sub distributions (other already assembled zips or tars). Your pom depends on those distributions. Because the distributions transitively depend on the project's dependencies, the assembly also includes the jar files. These files are already in the assemblies and do not need to be duplicated.
 
-Your pom might include something like:
+The pom might include something like:
 
 ```xml
     <dependencies>
@@ -42,7 +42,7 @@ Your pom might include something like:
         </dependency>
 ```
 
-Then, in your assembly, exclude all the jar dependencies pulled in from the binary assembly. In this example the commons-lang3 and log4j-1.2-api jars are included unnecessarily (as they are in the bin.zip file already).
+Then, in the assembly, exclude all the jar dependencies pulled in from the binary assembly. In this example the commons-lang3 and log4j-1.2-api jars are included unnecessarily (as they are in the bin.zip file already).
 
 ```xml
   <dependencySets>
