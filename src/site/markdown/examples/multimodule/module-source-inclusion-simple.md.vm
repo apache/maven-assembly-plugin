@@ -35,7 +35,7 @@ This example demonstrates how to include the project sources from a module in th
 
 ## The Assembly Descriptor
 
-First, write an assembly descriptor to create this assembly. For clarity, this descriptor will be as simple as possible, only demonstrating the features described by this example.
+First, write an assembly descriptor to create this assembly. For clarity, this descriptor is as simple as possible, only demonstrating the features described by this example.
 
 ```xml
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
@@ -68,17 +68,17 @@ First, write an assembly descriptor to create this assembly. For clarity, this d
 </assembly>
 ```
 
-This descriptor states that the assembly id will be `src`, that the output format is a directory, and that the contents of the assembly must **not** be contained within a directory named after the finalName of the top-level project.
+This descriptor states that the assembly id is `src`, that the output format is a directory, and that the contents of the assembly must **not** be contained within a directory named after the finalName of the top-level project.
 
-Furthermore, it states that we wish to include the source files for the module with a groupId of `org.test` and an artifactId of `child1`. These sources must be contained within the directory structure `sources/child1` for this module, since the outputDirectory expression will be interpolated on a module-by-module basis.
+Furthermore, it states that we wish to include the source files for the module with a groupId of `org.test` and an artifactId of `child1`. These sources must be contained within the directory structure `sources/child1` for this module, since the outputDirectory expression is interpolated on a module-by-module basis.
 
-By default, the Assembly Plugin will add the sources under a folder named with the artifactId of each module. This can be disabled by setting `includeModuleDirectory` to `false`.
+By default, the Assembly Plugin adds the sources in a folder named with the artifactId of each module. This can be disabled by setting `includeModuleDirectory` to `false`.
 
-The build directory (`target` by default) will be included, so it is explicitly excluded since this is a temporary storage for files produced during the build and it must not contain any project sources.
+The build directory is included by default, so it is explicitly excluded since this is a temporary storage for files produced during the build and it must not contain any project sources.
 
 ## The POM
 
-Now, review the POM configuration necessary to enable the building of this assembly via the _assembly:single_ goal:
+Now, review the POM configuration necessary to build of this assembly via the _assembly:single_ goal:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
