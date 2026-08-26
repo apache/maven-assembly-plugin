@@ -28,7 +28,9 @@ under the License.
 
 ## Warning
 
-**Warning:** Using the `binaries` section of a `moduleSet` definition involves tricky considerations. These are a result of the way Maven sorts and executes project builds within a multimodule context. Read [this FAQ entry](../../faq.html#module-binaries) if you decide to use them.
+**Warning:** Using the `binaries` section of a `moduleSet` definition is tricky.
+These are a result of the way Maven sorts and executes project builds within a multimodule context.
+Read [this FAQ entry](../../faq.html#module-binaries) if you decide to use them.
 
 **NOTE:** The new `useAllReactorProjects` flag in the `moduleSet` section allows you to consume module binaries from child modules in a multimodule build. This is an important way to resolve the conflict between Maven's build ordering and the old approach to module binaries. The old approach built the assembly from the parent POM. Read the FAQ entry above for more information, and read the documentation below carefully to see the new approach in action.
 
