@@ -34,15 +34,26 @@ under the License.
 
 If two or more elements (for example, file, fileSet) select different sources for the same file for archiving, only one of the source files will be archived.
 
-As per version 2.5.2 of the assembly plugin, the first phase to add the file to the archive "wins". The filtering is done solely based on name inside the archive, so the same source file can be added under different output names. The order of the phases is as follows: 1) FileItem 2) FileSets 3) ModuleSet 4) DependencySet.
+As of version 2.5.2 of the assembly plugin, the first phase to add the file to the archive "wins".
+The filtering is done solely based on name inside the archive, so the same source file can be added under different output names.
+The order of the phases is as follows: 
 
-Elements of the same type are processed in the order they appear in the descriptors. If you need to "overwrite" a file included by a previous set, exclude that file from the earlier set.
+1. FileItem 
+2. FileSets 
+3. ModuleSet 
+4. DependencySet.
+
+Elements of the same type are processed in the order they appear in the descriptors.
+If you need to overwrite a file included by a previous set, exclude that file from the earlier set.
 
 This behavior was different in earlier versions of the assembly plugin.
 
 ## Advanced Artifact-Matching in `includes` and `excludes`
 
-When using `dependencySet` or `moduleSet`, the `<includes/>` and `<excludes/>` sections apply to artifacts, not filenames. This can be useful since you do not have to know the artifact's filename in the local repository. However, explicitly specifying the full artifact ID (consisting of groupId, artifactId, version, type, and classifier) for each artifact to be included or excluded can lead to a verbose descriptor. Starting with version 2.2, the assembly plugin addresses this issue through the use of wildcard patterns.
+When using `dependencySet` or `moduleSet`, the `<includes/>` and `<excludes/>` sections apply to artifacts, not filenames.
+You do not have to know the artifact's filename in the local repository. However, explicitly specifying the full artifact ID
+(consisting of groupId, artifactId, version, type, and classifier) for each artifact to be included or excluded can lead to a verbose descriptor.
+Starting with version 2.2, the assembly plugin addresses this issue through the use of wildcard patterns.
 
 Apply these rules when specifying artifact-matching patterns:
 
@@ -76,7 +87,8 @@ In this example, we configure a `dependencySet` so it only includes those `war` 
 
 #[[#### GOTCHA!]]#
 
-In the above example, any `war` artifacts that have a classifier will be **skipped**. If you want to catch all of the `war` artifacts in your project, use the following pattern:
+In the above example, any `war` artifacts that have a classifier will be **skipped**.
+If you want to catch all of the `war` artifacts in the project, use the pattern:
 
 ```
 *:war:*
@@ -84,7 +96,8 @@ In the above example, any `war` artifacts that have a classifier will be **skipp
 
 #[[### Example: Exclude all source-jar dependencies.]]#
 
-In this example, we deal with the fact that project sources are often distributed using jar files, in addition to normal binaries. We want to filter out any source-jar files (they are marked with a `sources` classifier) from the binary jars.
+In this example, we deal with the fact that project sources are often distributed using jar files, in addition to normal binaries.
+We want to filter out any source-jar files (they are marked with a `sources` classifier) from the binary jars.
 
 ```xml
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
@@ -107,15 +120,21 @@ In this example, we deal with the fact that project sources are often distribute
 
 ## Including Subversion Metadata Directories in a FileSet
 
-For most use cases, it is important to avoid adding metadata files from your source-control system, such as Subversion's `.svn` directories. Such metadata can increase the size of the resulting assembly. By default, the assembly plugin excludes metadata files for most common source-control systems from the `fileSet`s specified in the descriptor.
+In most cases, it is important to avoid adding metadata files from the source-control system, such as Subversion's `.svn` directories.
+Such metadata can increase the size of the resulting assembly. By default, the assembly plugin excludes metadata files for most common source-control systems
+from the `fileSet`s specified in the descriptor.
 
-If you want to include Subversion metadata directories, use the `useDefaultExcludes` option on all `fileSet` elements. This option was added in version 2.2.
+If you want to include Subversion metadata directories, use the `useDefaultExcludes` option on all `fileSet` elements.
 
 #[[### Example: Bundle project sources for a developer-quickstart pack]]#
 
-In this example, consider what happens if you have a large project in source control. This project contains a large number of sizable files that have not changed since the day they were added. You want to enable potential developers to get started quickly, without checking out hundreds of 10-megabyte files first.
+In this example, consider what happens if you have a large project in source control.
+This project contains a large number of sizable files that have not changed since the day they were added.
+You want to enable developers to get started quickly, without checking out hundreds of 10-megabyte files first.
 
-The compression incorporated with many archiving formats can offer an advantage here. If we create a project assembly including Subversion metadata directories, developers can download the assembly artifact and expand it. Then they can simply type `svn up`.
+The compression incorporated with many archiving formats can offer an advantage.
+If we create a project assembly including Subversion metadata directories, developers can download the assembly artifact and expand it.
+Then they can simply type `svn up`.
 
 ```xml
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
@@ -134,19 +153,25 @@ The compression incorporated with many archiving formats can offer an advantage 
 </assembly>
 ```
 
-_NOTE: We exclude all target directories. These are a form of calculated and otherwise transient data. They generally must not be included in archives, unless your goal is to create project binaries or similar._
+_NOTE: We exclude all target directories. These are calculated and otherwise transient data.
+They generally should not be included in archives.
 
 ## Using Regular Expressions to Exclude Files
 
-Sometimes you may need to specify an extremely fine-grained inclusion or exclusion pattern for a `fileSet`. In these cases, you can specify your pattern in the form of a regular expression by using the `%regex[...]` syntax.
+Sometimes you need to specify an extremely fine-grained inclusion or exclusion pattern for a `fileSet`.
+In these cases, you can specify the pattern using the `%regex[...]` syntax.
 
-_Note:_ For completeness, the default pattern type (Ant-style patterns) can also be specified using the `%ant[...]` syntax. This allows room for future expansion of `fileSet` patterns, including the option to change the default pattern syntax someday.
+_Note:_ For completeness, the default pattern type (Ant-style patterns) can also be specified using the `%ant[...]` syntax.
+This allows room for future expansion of `fileSet` patterns, including the option to change the default pattern syntax someday.
 
 _Note:_ The same syntax is also supported for include patterns.
 
 #[[### Example: Including directories named `target` in the `src` directory]]#
 
-In this example, we want to produce a buildable source distribution of a Maven project hierarchy. Each project's `target` directory is a temporary workspace for the build process, so we want to exclude these directories. However, if one or more of the projects includes a subdirectory named `target` in the `src` directory structure (perhaps as part of a Java package name), we want to make sure the files in this directory are included in the assembly.
+In this example, we want to produce a buildable source distribution of a Maven project hierarchy.
+Each project's `target` directory is a temporary workspace for the build process, so we want to exclude these directories.
+However, if one or more of the projects includes a subdirectory named `target` in the `src` directory structure (perhaps as part of a Java package name),
+we want to make sure the files in this directory are included in the assembly.
 
 ```xml
 <assembly>
@@ -165,20 +190,27 @@ In this example, we want to produce a buildable source distribution of a Maven p
 </assembly>
 ```
 
-The above `fileSet` uses a feature of regular expressions called *negative lookahead*. This means our exclude pattern will only match paths that contain the word `target` but **do not** contain `src`. Effectively, any `target` directory within the `src` directory structure will be preserved in the assembly.
+The above `fileSet` uses a feature of regular expressions called *negative lookahead*.
+This means the exclude pattern only matches paths that contain the word `target` but **do not** contain `src`.
+Effectively, any `target` directory within the `src` directory structure will be preserved in the assembly.
 
 ## Using Strict-Filtering to Catch Obsolete Patterns or Incorrect Builds
 
-You can build sanity checks when creating your assembly. This ensures that what goes into the assembly artifact is what you intended. One way to do this is by enabling `useStrictFiltering` on your `dependencySets`.
+You can build sanity checks when creating an assembly. This ensures that what goes into the assembly artifact is what you intended.
+One way to do this is by enabling `useStrictFiltering` on your `dependencySets`.
 
-`useStrictFiltering` is a flag that tells the assembly plugin to track each include/exclude pattern. It checks that each pattern is used during creation of the assembly. If the assembly-descriptor author intended for a particular artifact to be present, he can add an include/exclude pattern to the descriptor. Then he can set the `useStrictFiltering` flag. If the pattern is not used to match at least one artifact during assembly creation, the build will fail. The user will receive a message notifying him of the unused patterns.
+`useStrictFiltering` is a flag that tells the assembly plugin to track each include/exclude pattern.
+It checks that each pattern is used during creation of the assembly.
+If the assembly-descriptor author intended for a particular artifact to be present, they can add an include/exclude pattern to the descriptor.
+Then they can set the `useStrictFiltering` flag. If the pattern is not used to match at least one artifact during assembly creation, the build fails.
+The user will receive a message notifying him of the unused patterns.
 
 #[[### Example:]]#
 
 ```xml
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
+    xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} https://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
   [...]
   <dependencySets>
     <dependencySet>
@@ -192,29 +224,37 @@ You can build sanity checks when creating your assembly. This ensures that what 
 </assembly>
 ```
 
-If the **commons-logging** artifact is not present on the project dependencies list, the assembly plugin will refuse to build this assembly.
+If the **commons-logging** artifact is not present on the project dependencies list, the assembly plugin refuses to build this assembly.
 
 ## Using an Alternative Assembly Base Directory
 
-In many cases, assemblies must have all files arranged under one assembly base directory. This way, a user who expands the assembly will have all of the contents collected in a neat directory structure. This is achieved using the `includeBaseDirectory` flag. This flag is set to `true` by default, which results in the project's `artifactId-version` used as the assembly base directory.
+In many cases, assemblies must have all files arranged under one assembly base directory. This way, a user who expands the assembly has
+all of the contents collected in a neat directory structure. This is achieved using the `includeBaseDirectory` flag
+This flag is set to `true` by default, which results in the project's `artifactId-version` used as the assembly base directory.
 
-In some special cases, you may want to use a different directory name for the root of your assembly. Starting in the 2.2 version of the assembly plugin, this use case is addressed using the `baseDirectory` element of the assembly descriptor. With this element, you can use POM expressions and static strings to specify the name of the assembly root directory.
+In some special cases, you want to use a different directory name for the root of your assembly.
+This need is addressed using the `baseDirectory` element of the assembly descriptor
+With this element, you can use POM expressions and static strings to specify the name of the assembly root directory.
 
 #[[### Example: Eclipse-style invariable directory name for the Maven assembly]]#
 
-In this example, consider what would happen if we wanted Maven to use the Eclipse approach for naming the root directory in its distribution assemblies. This way, instead of expanding the distribution to find a new `maven-2.0.4` directory, you would find a `maven` directory. Also, consider that the distribution assembly is currently built from the `maven-core` project, which means we must not use the `artifactId` as part of the assembly root directory.
+In this example, consider what would happen if we want Maven to use the Eclipse approach for naming the root directory in its distribution assemblies.
+This way, instead of expanding the distribution to find a new `maven-2.0.4` directory, you would find a `maven` directory.
+Also, consider that the distribution assembly is currently built from the `maven-core` project, which means we must not use the `artifactId`
+as part of the assembly root directory.
 
 ```xml
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
+    xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} https://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
   [...]
   <baseDirectory>maven</baseDirectory>
   [...]
 </assembly>
 ```
 
-Now, imagine that the distribution assembly is created in the top-level `maven` project. We can use the `artifactId` and probably must, to minimize the maintenance of these files.
+Now, imagine that the distribution assembly is created in the top-level `maven` project.
+We can use the `artifactId` to minimize the maintenance of these files.
 
 ```xml
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
@@ -228,6 +268,7 @@ Now, imagine that the distribution assembly is created in the top-level `maven` 
 
 ## Advanced ModuleSet Topics
 
-The `moduleSets` section is one of the most complex sections of the assembly descriptor. Many improvements have been made to this section. We have dedicated a separate page to it.
+The `moduleSets` section is one of the most complex sections of the assembly descriptor. Many improvements have been made to this section.
+We have dedicated a separate page to it.
 
 - Go to [Advanced Module-Set Topics](./advanced-module-set-topics.html).
