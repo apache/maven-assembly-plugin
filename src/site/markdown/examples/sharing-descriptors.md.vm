@@ -26,9 +26,8 @@ under the License.
 
 # Sharing Assembly Descriptors
 
-You have created an assembly descriptor that you want to share between several of your projects. The simplest way to solve this problem is to create a separate project for your assembly descriptor. Let us call the project _my-assembly-descriptor_.
-
-**Note:** This example has been updated for version 2.2. The previous versions of this example were wrong. You must follow the steps below to make your shared assembly descriptors work with version 2.2 or later.
+You have created an assembly descriptor that you want to share between several projects.
+The simplest way to solve this problem is to create a separate project for your assembly descriptor. Let us call the project _my-assembly-descriptor_.
 
 ## The Shared Assembly Descriptor Project
 
@@ -44,11 +43,11 @@ my-assembly-descriptor
     `-- pom.xml
 ```
 
-There are just two files in this project: your assembly descriptor `myassembly.xml` and a `pom.xml`.
+There are just two files in this project: your assembly descriptor `myassembly.xml` and `pom.xml`.
 
 **Note:** Your assembly descriptors must be in the directory `/src/main/resources/assemblies` to be available to the Assembly Plugin.
 
-First, check out the POM for the Shared Assembly Descriptor Project. It is quite simple:
+This is the POM for the Shared Assembly Descriptor Project. It is quite simple:
 
 ```xml
 <project>
@@ -60,7 +59,7 @@ First, check out the POM for the Shared Assembly Descriptor Project. It is quite
 </project>
 ```
 
-Next, look at our shared assembly descriptor. This is just an example. Replace it with the assembly descriptor you want to share.
+Next, look at the shared assembly descriptor.
 
 ```xml
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
@@ -85,13 +84,16 @@ Next, look at our shared assembly descriptor. This is just an example. Replace i
 </assembly>
 ```
 
-Run '`mvn install`' on this project to install the Shared Assembly Descriptor project into your local repository.
+Run '`mvn install`' to install the Shared Assembly Descriptor project into the local repository.
 
 ## The Project Using the Shared Assembly Descriptor
 
-In the project that wants to use our Shared Assembly Descriptor, you need to add `my-assembly-descriptor` as a dependency on the Assembly Plugin. This makes our assembly descriptor available for the Assembly Plugin to use.
+In the project that needs Shared Assembly Descriptor, add `my-assembly-descriptor` as a dependency on the Assembly Plugin.
+This makes the assembly descriptor available for the Assembly Plugin to use.
 
-**Note:** You need to use the file name of your assembly descriptor, without the xml file extension, in `<descriptorRef>`. You can not use the id of your assembly descriptor. The assembly descriptor used in this example have the file name `myassembly.xml`, but its id is `my-assembly-descriptor-id`. Therefore, we use `myassembly` to reference that assembly descriptor.
+**Note:** You need to use the file name of the assembly descriptor, without the xml file extension, in `<descriptorRef>`. You can ot use the id of the assembly descriptor.
+The assembly descriptor used in this example has the file name `myassembly.xml`, but its id is `my-assembly-descriptor-id`.
+Therefore, we use `myassembly` to reference that assembly descriptor.
 
 ```xml
 <project>
