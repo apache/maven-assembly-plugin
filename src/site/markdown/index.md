@@ -28,7 +28,7 @@ under the License.
 # Apache Maven Assembly Plugin
 ## Introduction
 
-The Assembly Plugin for Maven enables you to combine project output into a single distributable archive. The archive also contains dependencies, modules, site documentation, and other files.
+The Assembly Plugin for Maven combines project output into a single distributable archive. The archive also contains dependencies, modules, site documentation, and other files.
 
 Your project can build distribution "assemblies" by using one of the [prefabricated assembly descriptors](./descriptor-refs.html). These descriptors handle common operations. For example, they package a project's artifact along with generated documentation into a [single zip archive](./descriptor-refs.html#bin). Your project can also provide its own [descriptor](./assembly.html). This gives you more control over how dependencies, modules, file-sets, and individual files are packaged.
 
@@ -66,7 +66,7 @@ The Assembly Plugin provides a descriptor format. This format allows you to defi
 
 The main goal in the assembly plugin is the [single](./single-mojo.html) goal. This goal creates all assemblies.
 
-For more information about the goals available in the Assembly Plugin, see [the plugin documentation page](./plugin-info.html).
+For more information about the goals in the Assembly Plugin, see [the plugin documentation page](./plugin-info.html).
 
 ## Assembly and Component Descriptor Schemas (XSD)
 
@@ -86,8 +86,8 @@ General instructions on how to use the Assembly Plugin are on the [usage page](.
 
 If you have questions about the plugin's usage, look at the [FAQ](./faq.html) and contact the [user mailing list](./mailing-lists.html). The posts to the mailing list are archived and may already contain the answer to your question. You can browse the [mail archive](./mailing-lists.html).
 
-If you think the plugin is missing a feature or has a defect, you can file a feature request or bug report in our [issue tracker](./issue-management.html). When you create a new issue, provide a clear description of your concern. For bug fixes, developers must be able to reproduce your problem. Attach debug logs, POMs, or small demo projects to the issue. Contributors can check out the project from our [source repository](./scm.html) and find information in the [guide to helping with Maven](/guides/development/guide-helping.html).
+If the plugin is missing a feature or has a defect, file a feature request or bug report in our [issue tracker](./issue-management.html). When you create a new issue, provide a clear description of your concern. For bug fixes, developers must be able to reproduce your problem. Attach debug logs, POMs, or small demo projects to the issue. Contributors can check out the project from our [source repository](./scm.html) and find information in the [guide to helping with Maven](/guides/development/guide-helping.html).
 
 ## Examples
 
-For more understanding of the Assembly Plugin, see the [examples](./examples/index.html).
+For a deeper understanding of the Assembly Plugin, see the [examples](./examples/index.html).
