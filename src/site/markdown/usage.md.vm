@@ -145,9 +145,9 @@ In most cases, the `single` goal must be bound to the `package` phase of the bui
 
 #[[### Creating an Executable JAR]]#
 
-The Assembly Plugin is a useful way to create a self-contained binary artifact for your project. Once you have created this self-contained JAR, you want the ability to execute it using the `-jar` JVM switch.
+The Assembly Plugin creates a self-contained binary artifact for a project. You make this an executable jar 
+by specifying the `Main-Class` in a `configuration`/`archive`/`manifest`/`mainClass` element.
 
-To accommodate this, the Assembly Plugin supports configuration of an `<archive>` element. This element is handled by `maven-archiver` (see [Resources](#Resources)). Use this configuration to set the `Main-Class` attribute of the JAR manifest:
 
 ```xml
 <project>
@@ -172,7 +172,7 @@ To accommodate this, the Assembly Plugin supports configuration of an `<archive>
 </project>
 ```
 
-If we add this configuration to the `single` goal example above and rebuild, we see an entry like this in the `META-INF/MANIFEST.MF` file of the resulting JAR:
+With this configuration, the `single` goal adds an entry like this in the `META-INF/MANIFEST.MF` file of the JAR it assembles:
 
 ```unknown
 [...]
