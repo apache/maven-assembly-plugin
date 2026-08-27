@@ -28,7 +28,7 @@ under the License.
 
 Multimodule Projects use &lt;moduleSets&gt; in their assemblies.
 
-The examples below may be able to help you when creating assemblies for your multimodule project.
+The examples below can help you create assemblies for multimodule projects.
 
 - [Adding Module Sources to the Assembly](./module-source-inclusion-simple.html)
 - [Adding Module Binaries to the Assembly](./module-binary-inclusion-simple.html)

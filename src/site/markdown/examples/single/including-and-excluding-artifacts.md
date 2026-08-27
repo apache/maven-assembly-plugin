@@ -23,13 +23,13 @@ limitations under the License.
 
 # Including and Excluding Artifacts
 
-Currently the include/exclude format is based upon the dependency conflict id which has a form of: `groupId:artifactId:type:classifier`. A shortened form of the dependency conflict id may also be used `groupId:artifactId`.
+The include/exclude format is based on the dependency conflict id. The form is: `groupId:artifactId:type:classifier`. A shortened form `groupId:artifactId` can also be used.
 
-The check for inclusion/exclusion is done based on either the dependency conflict id or the shortened form as a `String.equals()` so it must be an identical match for it to be included or excluded. At present there is no support for regular expressions.
+The check for inclusion/exclusion is done based on either the dependency conflict id or the shortened form as a `String.equals()` match. It must be an identical match for the artifact to be included or excluded. There is no support for regular expressions.
 
-This example excludes the log4j-1.2-api and commons-lang3 jar files from the assembly. This would be useful when you are building a super distribution assembly which contained sub distributions (i.e. other already assembled zips or tars) where in your pom you are depenedent upon those distributions. But because the distributions transitively depend upon the project's dependencies the assembly also includes the jar files (which are already in the assemblies and don't need to be duplicated)
+This example excludes the log4j-1.2-api and commons-lang3 jar files from the assembly. This is useful when you are building a super distribution assembly. The assembly contains sub distributions (other already assembled zips or tars). Your pom depends on those distributions. Because the distributions transitively depend on the project's dependencies, the assembly also includes the jar files. These files are already in the assemblies and do not need to be duplicated.
 
-Your pom might include something like:
+The pom might include something like:
 
 ```xml
     <dependencies>
@@ -42,7 +42,7 @@ Your pom might include something like:
         </dependency>
 ```
 
-And then in your assembly you exclude all the jar dependencies pulled in from the binary assembly. In this example the commons-lang3 and log4j-1.2-api jars are included unnecessarily (as they are in the bin.zip file already)
+Then, in the assembly, exclude all the jar dependencies pulled in from the binary assembly. In this example the commons-lang3 and log4j-1.2-api jars are included unnecessarily (as they are in the bin.zip file already).
 
 ```xml
   <dependencySets>

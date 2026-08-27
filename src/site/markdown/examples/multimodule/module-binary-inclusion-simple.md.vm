@@ -26,29 +26,32 @@ under the License.
 
 # Including Module Binaries
 
-Warning
--------
+## Warning
 
-**Warning:** Using the `binaries` section of a `moduleSet` definition involves some tricky considerations that are a result of the way Maven sorts and executes project builds within a multimodule context. Please read [this FAQ entry](../../faq.html#module-binaries) if you decide to use them.
+**Warning:** Using the `binaries` section of a `moduleSet` definition is tricky.
+These are a result of the way Maven sorts and executes project builds within a multimodule context.
+Read [this FAQ entry](../../faq.html#module-binaries) if you decide to use them.
 
-**NOTE:** The new `useAllReactorProjects` flag in the `moduleSet` section allows you to consume module binaries from child modules in a multimodule build. This is an important to resolve the conflict between Maven's build ordering and the old approach to module binaries, where the assembly was build from the parent POM. Please read the FAQ entry above for more information, and read the documentation below (carefully!) to see the new approach in action.
+**NOTE:** The new `useAllReactorProjects` flag in the `moduleSet` section allows you to consume module binaries from child modules in a multimodule build.
+This is important to resolve the conflict between Maven's build ordering and the old approach to module binaries.
+The old approach built the assembly from the parent POM.
+Read the FAQ entry above for more information, and read the documentation below to see the new approach in action.
 
-Introduction
-------------
+## Introduction
 
-It is common practice to create an assembly using the parent POM of a multimodule build. At times, you may want to ensure that this assembly also includes one or more of the module binaries.
+It is common practice to create an assembly using the parent POM of a multimodule build. 
+At times, you may want this assembly to also include one or more of the module binaries.
 
 This example demonstrates how to include the artifact and dependencies of a module, under the directory `modules/<module-name>`.
 
-The Assembly Descriptor
------------------------
+## The Assembly Descriptor
 
-First, let's write an assembly descriptor to create this assembly. For the sake of clarity, this descriptor will be as simple as possible, only demonstrating the features described by this example.
+This is an assembly descriptor that can create this assembly. It is as simple as possible, only demonstrating the features described by this example.
 
 ```xml
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/${mdoVersion}"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} http://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
+    xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/${mdoVersion} https://maven.apache.org/xsd/assembly-${mdoVersion}.xsd">
   <id>bin</id>
   <formats>
     <format>dir</format>
@@ -73,16 +76,19 @@ First, let's write an assembly descriptor to create this assembly. For the sake 
 </assembly>
 ```
 
-This descriptor states that the assembly id should be `bin`, that the output format is a directory, and that the contents of the assembly should **not** be contained within a directory named after the finalName of the top-level project.
+This descriptor states that the assembly id is `bin`, that the output format is a directory,
+and that the contents of the assembly must **not** be contained within a directory named after the finalName of the top-level project.
 
-Furthermore, it states that we wish to include the artifact files for the module with a groupId of `org.test` and an artifactId of `child1`, along with its dependency artifacts. These artifacts should be contained within the directory structure `modules/child1` for this module, since the outputDirectory expression will be interpolated on a module-by-module basis.
+Furthermore, it states that the assembly will include the artifact files for the module with a groupId of `org.test` and an artifactId of `child1`,
+along with its dependency artifacts. These artifacts must be contained within the directory structure `modules/child1` for this module,
+since the outputDirectory expression will be interpolated on a module-by-module basis.
 
-**Finally**, notice the **new** `useAllReactorProjects` flag. This enables access to all projects in the current reactor (multimodule build), even from a child module. Using this flag, it's now possible to use a child module - sorted to the end of the multimodule build process using appropriate dependency declarations - to generate an assembly containing module binaries.
+**Finally**, notice the **new** `useAllReactorProjects` flag. This enables access to all projects in the current reactor (multimodule build), even from a child module.
+Using this flag, a child module (sorted to the end of the multimodule build process using appropriate dependency declarations) can generate an assembly containing module binaries.
 
-The POM
--------
+## The POM
 
-Now, let's review the POM configuration necessary to enable the building of this assembly via the `assembly:single` goal. First, let's look at the parent POM:
+Now, review the POM configuration necessary to build this assembly via the `assembly:single` goal. First, look at the parent POM:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -123,7 +129,7 @@ Now, let's review the POM configuration necessary to enable the building of this
 </project>
 ```
 
-**NOTE:** The last module - `distribution` - is the child in which the assembly will be created.
+**NOTE:** The last module (`distribution`) is the child in which the assembly will be created.
 
 That POM looks like this:
 
@@ -184,25 +190,26 @@ That POM looks like this:
 </project>
 ```
 
-This POM directs the Assembly Plugin to execute the `single` goal when the build reaches the `package` phase, and tells it to use the `bin.xml` assembly descriptor when executing.
+This POM directs the Assembly Plugin to execute the `single` goal when the build reaches the `package` phase.
+It tells the plugin to use the `bin.xml` assembly descriptor when executing.
 
-Execute!
----------
+## Execute!
 
-To build the assembly, we issue the following command:
+To build the assembly, run the following command:
 
 ```
 mvn clean package
 ```
 
-This will ensure that the output directory (normally, `target`), is removed before building the assembly directory.
+This removes the output directory (normally, `target`) before building the assembly directory.
 
-**Note:** Because of a quirk in Maven 2.0's execution model relating to aggregator goals and the inheritance hierarchy, we need to explicitly execute the package phase ahead of the assembly invocation, to ensure all modules have been built.
+**Note:** Because of a quirk in Maven 2.0's execution model relating to aggregator goals and the inheritance hierarchy, we need to explicitly execute the package phase ahead of the assembly invocation.
+This ensures all modules have been built.
 
-Examining the Output
---------------------
+## Examining the Output
 
-When the Maven execution completes, the following directory structure should be left. Remember, our assembly format was `dir`, which is why the output is a directory and not an archive of some sort.
+When the Maven execution completes, the following directory structure is left.
+Remember, the assembly format was `dir`, which is why the output is a directory and not an archive of some sort.
 
 Here are the directory contents:
 

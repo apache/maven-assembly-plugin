@@ -28,11 +28,11 @@ under the License.
 # Apache Maven Assembly Plugin
 ## Introduction
 
-The Assembly Plugin for Maven enables developers to combine project output into a single distributable archive that also contains dependencies, modules, site documentation, and other files.
+The Assembly Plugin for Maven combines project output into a single distributable archive. The archive also contains dependencies, modules, site documentation, and other files.
 
-Your project can easily build distribution "assemblies" using one of the [prefabricated assembly descriptors](./descriptor-refs.html). These descriptors handle many common operations, such as packaging a project's artifact along with generated documentation into a [single zip archive](./descriptor-refs.html#bin). Alternatively, your project can provide its own [descriptor](./assembly.html) and assume a much higher level of control over how dependencies, modules, file-sets, and individual files are packaged in the assembly.
+Your project can build distribution "assemblies" by using one of the [prefabricated assembly descriptors](./descriptor-refs.html). These descriptors handle common operations. For example, they package a project's artifact along with generated documentation into a [single zip archive](./descriptor-refs.html#bin). Your project can also provide its own [descriptor](./assembly.html). This gives you more control over how dependencies, modules, file-sets, and individual files are packaged.
 
-Currently it can create distributions in the following formats:
+The plugin can create distributions in these formats:
 
 - zip
 - tar
@@ -44,29 +44,29 @@ Currently it can create distributions in the following formats:
 - jar
 - dir
 - war
-- and any other format that the ArchiveManager has been configured for
+- Any other format that the ArchiveManager supports
 
-If your project wants to package your artifact in an uber-jar, the assembly plugin provides only basic support. For more control, use the [Maven Shade Plugin](/plugins/maven-shade-plugin/).
+If your project must package artifacts in an uber-jar, the assembly plugin provides only basic support. For more control, use the [Maven Shade Plugin](/plugins/maven-shade-plugin/).
 
-To use the Assembly Plugin in Maven, you simply need to:
+To use the Assembly Plugin in Maven, you must:
 
-- choose or write the assembly descriptor to use,
-- configure the Assembly Plugin in your project's `pom.xml`, and
-- run "mvn assembly:single" on your project.
+- Choose or write the assembly descriptor.
+- Configure the Assembly Plugin in your project's `pom.xml`.
+- Run `mvn assembly:single` on your project.
 
-To write your own custom assembly, you will need to refer to the [Assembly Descriptor Format](./assembly.html) reference.
+To write a custom assembly, refer to the [Assembly Descriptor Format](./assembly.html) reference.
 
 ## What is an Assembly?
 
-An "assembly" is a group of files, directories, and dependencies that are assembled into an archive format and distributed. For example, assume that a Maven project defines a single JAR artifact that contains both a console application and a Swing application. Such a project could define two "assemblies" that bundle the application with a different set of supporting scripts and dependency sets. One assembly would be the assembly for the console application, and the other assembly could be a Swing application bundled with a slightly different set of dependencies.
+An "assembly" is a group of files, directories, and dependencies that are assembled into an archive format and distributed. For example, consider a Maven project that defines a single JAR artifact. The artifact contains both a console application and a Swing application. This project could define two "assemblies". One assembly bundles the console application with its supporting scripts and dependencies. The other assembly bundles the Swing application with a different set of dependencies.
 
-The Assembly Plugin provides a descriptor format which allows you to define an arbitrary assembly of files and directories from a project. For example, if your Maven project contains the directory "src/main/bin", you can instruct the Assembly Plugin to copy the contents of this directory to the "bin" directory of an assembly and to change the permissions of the files in the "bin" directory to UNIX mode 755. The parameters for configuring this behavior are supplied to the Assembly Plugin by way of the [assembly descriptor](./assembly.html).
+The Assembly Plugin provides a descriptor format. This format allows you to define an arbitrary assembly of files and directories from a project. For example, if your Maven project contains the directory `src/main/bin`, you can instruct the plugin to copy this directory to the `bin` directory of an assembly. You can also change the file permissions to UNIX mode 755. The parameters for this configuration are supplied through the [assembly descriptor](./assembly.html).
 
 ## Goals
 
-The main goal in the assembly plugin is the [single](./single-mojo.html) goal. It is used to create all assemblies.
+The main goal in the assembly plugin is the [single](./single-mojo.html) goal. This goal creates all assemblies.
 
-For more information about the goals that are available in the Assembly Plugin, see [the plugin documentation page](./plugin-info.html).
+For more information about the goals in the Assembly Plugin, see [the plugin documentation page](./plugin-info.html).
 
 ## Assembly and Component Descriptor Schemas (XSD)
 
@@ -79,14 +79,15 @@ For more information about the goals that are available in the Assembly Plugin, 
 - [https://maven.apache.org/xsd/assembly-1.1.1.xsd](/xsd/assembly-1.1.1.xsd), [https://maven.apache.org/xsd/component-1.1.1.xsd](/xsd/component-1.1.1.xsd) (for version 2.2-beta-4 - 2.2-beta-5)
 - [https://maven.apache.org/xsd/assembly-1.1.0.xsd](/xsd/assembly-1.1.0.xsd), [https://maven.apache.org/xsd/component-1.1.0.xsd](/xsd/component-1.1.0.xsd) (for version 2.2-beta-1 - 2.2-beta-3)
 - [https://maven.apache.org/xsd/assembly-1.0.0.xsd](/xsd/assembly-1.0.0.xsd), [https://maven.apache.org/xsd/component-1.0.0.xsd](/xsd/component-1.0.0.xsd) (for version 2.1 and lower)
+
 ## Usage
 
-General instructions on how to use the Assembly Plugin can be found on the [usage page](./usage.html). Some more specific use cases are described in the examples given below.
+General instructions on how to use the Assembly Plugin are on the [usage page](./usage.html). Some more specific use cases are described in the examples given below.
 
-In case you still have questions regarding the plugin's usage, please have a look at the [FAQ](./faq.html) and feel free to contact the [user mailing list](./mailing-lists.html). The posts to the mailing list are archived and could already contain the answer to your question as part of an older thread. Hence, it is also worth browsing/searching the [mail archive](./mailing-lists.html).
+If you have questions about the plugin's usage, look at the [FAQ](./faq.html) and contact the [user mailing list](./mailing-lists.html). The posts to the mailing list are archived and may already contain the answer to your question. You can browse the [mail archive](./mailing-lists.html).
 
-If you feel the plugin is missing a feature or has a defect, you can file a feature request or bug report in our [issue tracker](./issue-management.html). When creating a new issue, please provide a comprehensive description of your concern. Especially for fixing bugs it is crucial that the developers can reproduce your problem. For this reason, entire debug logs, POMs or most preferably little demo projects attached to the issue are very much appreciated. Of course, patches are welcome, too. Contributors can check out the project from our [source repository](./scm.html) and will find supplementary information in the [guide to helping with Maven](/guides/development/guide-helping.html).
+If the plugin is missing a feature or has a defect, file a feature request or bug report in our [issue tracker](./issue-management.html). When you create a new issue, provide a clear description of your concern. For bug fixes, developers must be able to reproduce your problem. Attach debug logs, POMs, or small demo projects to the issue. Contributors can check out the project from our [source repository](./scm.html) and find information in the [guide to helping with Maven](/guides/development/guide-helping.html).
 
 ## Examples
 
-To provide you with better understanding on some usages of the Assembly Plugin, you can take a look into the examples which can be found [here](./examples/index.html).
+For a deeper understanding of the Assembly Plugin, see the [examples](./examples/index.html).
