@@ -197,7 +197,7 @@ mvn clean package
 
 This will ensure that the output directory (normally, `target`), is removed before building the assembly directory.
 
-**Note:** Because of a quirk in Maven 2.0's execution model relating to aggregator goals and the inheritance hierarchy, we need to explicitly execute the package phase ahead of the assembly invocation, to ensure all modules have been built.
+**Note:** Because of a quirk in Maven's execution model relating to aggregator goals and the inheritance hierarchy, we need to explicitly execute the package phase ahead of the assembly invocation, to ensure all modules have been built.
 
 Examining the Output
 --------------------
