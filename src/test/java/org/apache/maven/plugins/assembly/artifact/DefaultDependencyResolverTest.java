@@ -40,10 +40,12 @@ import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.graph.DefaultDependencyNode;
 import org.eclipse.aether.graph.Dependency;
+import org.eclipse.aether.graph.DependencyFilter;
 import org.eclipse.aether.resolution.DependencyRequest;
 import org.eclipse.aether.resolution.DependencyResult;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -51,6 +53,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -113,21 +116,55 @@ class DefaultDependencyResolverTest {
     @Test
     void getDependencySetResolutionRequirementsNonTransitive() throws Exception {
         final DependencySet ds = new DependencySet();
-        ds.setScope(Artifact.SCOPE_SYSTEM);
+        ds.setScope(Artifact.SCOPE_RUNTIME);
         ds.setUseTransitiveDependencies(false);
 
         final MavenProject project = createMavenProject("main-group", "main-artifact", "1", null);
 
-        Set<Artifact> dependencyArtifacts = new HashSet<>();
-        dependencyArtifacts.add(newArtifact("g.id", "a-id", "1"));
-        Set<Artifact> artifacts = new HashSet<>(dependencyArtifacts);
-        artifacts.add(newArtifact("g.id", "a-id-2", "2"));
-        project.setArtifacts(artifacts);
-        project.setDependencyArtifacts(dependencyArtifacts);
+        Artifact directArtifact = newArtifact("g.id", "direct", "1");
+        DefaultDependencyNode directNode = new DefaultDependencyNode(new Dependency(
+                new org.eclipse.aether.artifact.DefaultArtifact("g.id:direct:1").setFile(new File(".")), "runtime"));
+        DefaultDependencyNode transitiveNode = new DefaultDependencyNode(new Dependency(
+                new org.eclipse.aether.artifact.DefaultArtifact("g.id:transitive:1").setFile(new File(".")),
+                "runtime"));
+        directNode.setChildren(Collections.singletonList(transitiveNode));
+
+        DependencyResult dependencyResult = new DependencyResult(new DependencyRequest());
+        DefaultDependencyNode rootDependencyNode = new DefaultDependencyNode((Dependency) null);
+        rootDependencyNode.setChildren(Collections.singletonList(directNode));
+        dependencyResult.setRoot(rootDependencyNode);
+
+        when(repositorySystem.resolveDependencies(eq(systemSession), any())).thenReturn(dependencyResult);
 
         final ResolutionManagementInfo info = new ResolutionManagementInfo();
         resolver.updateDependencySetResolutionRequirements(systemSession, ds, info, project);
-        assertEquals(dependencyArtifacts, info.getArtifacts());
+        assertEquals(Collections.singleton(directArtifact), info.getArtifacts());
+
+        ArgumentCaptor<DependencyRequest> requestCaptor = ArgumentCaptor.forClass(DependencyRequest.class);
+        verify(repositorySystem).resolveDependencies(eq(systemSession), requestCaptor.capture());
+        DependencyFilter filter = requestCaptor.getValue().getFilter();
+
+        assertTrue(filter.accept(directNode, Collections.singletonList(rootDependencyNode)));
+        assertTrue(filter.accept(directNode, Arrays.asList(directNode, rootDependencyNode)));
+        assertFalse(filter.accept(transitiveNode, Arrays.asList(directNode, rootDependencyNode)));
+        assertFalse(filter.accept(transitiveNode, Arrays.asList(transitiveNode, directNode, rootDependencyNode)));
+    }
+
+    @Test
+    void getDependencySetResolutionRequirementsNonTransitiveWithoutDependencies() throws Exception {
+        final DependencySet ds = new DependencySet();
+        ds.setScope(Artifact.SCOPE_SYSTEM);
+        ds.setUseTransitiveDependencies(false);
+
+        final MavenProject project = createMavenProject("main-group", "empty-pom", "1", null);
+
+        DependencyResult dependencyResult = new DependencyResult(new DependencyRequest());
+        dependencyResult.setRoot(new DefaultDependencyNode((Dependency) null));
+        when(repositorySystem.resolveDependencies(eq(systemSession), any())).thenReturn(dependencyResult);
+
+        final ResolutionManagementInfo info = new ResolutionManagementInfo();
+        resolver.updateDependencySetResolutionRequirements(systemSession, ds, info, project);
+        assertTrue(info.getArtifacts().isEmpty());
     }
 
     @Test
@@ -213,7 +250,6 @@ class DefaultDependencyResolverTest {
         final Artifact pomArtifact = newArtifact(groupId, artifactId, version);
         project.setArtifact(pomArtifact);
         project.setArtifacts(new HashSet<>());
-        project.setDependencyArtifacts(new HashSet<>());
 
         project.setFile(new File(basedir, "pom.xml"));
 
