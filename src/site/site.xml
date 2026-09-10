@@ -19,10 +19,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<project xmlns="http://maven.apache.org/DECORATION/1.0.0"
+<site xmlns="http://maven.apache.org/SITE/2.1.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0
-                      https://maven.apache.org/xsd/decoration-1.0.0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/SITE/2.1.0 https://maven.apache.org/xsd/site-2.1.0.xsd">
 
   <body>
     <menu name="Reference">
@@ -65,4 +64,4 @@ under the License.
       <item name="Using Inline Assembly Descriptors" href="./examples/using-inline-descriptors.html"/>
     </menu>
   </body>
-</project>
+</site>
