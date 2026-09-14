@@ -22,6 +22,11 @@ import org.codehaus.plexus.archiver.ArchiveFinalizer;
 import org.codehaus.plexus.components.io.fileselectors.FileSelector;
 
 /**
- *
+ * Customizes archive contents through selection and finalization callbacks.
+ * <p>Handlers that call APIs removed by Plexus Archiver 5 must migrate and be recompiled against the
+ * version used by this plugin. In particular, use {@code Archiver.getResources()} instead of
+ * {@code Archiver.getFiles()}, and the {@code FileTime} timestamp methods instead of the removed
+ * {@code Date} methods. Assembly's proxy follows the Archiver 5 API and does not provide compatibility
+ * shims for removed methods.</p>
  */
 public interface ContainerDescriptorHandler extends ArchiveFinalizer, FileSelector {}

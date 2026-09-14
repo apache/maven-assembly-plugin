@@ -133,8 +133,7 @@ class AssemblyProxyArchiverTest {
     }
 
     @Test
-    @SuppressWarnings("deprecation")
-    void addDirectoryNoPermsCallAcceptFilesOnlyOnce() throws Exception {
+    void addFileSetNoPermsCallAcceptFilesOnlyOnce() throws Exception {
         final Archiver delegate = new JarArchiver();
 
         final File output = File.createTempFile("junit", null, temporaryFolder);
@@ -154,7 +153,7 @@ class AssemblyProxyArchiverTest {
         Files.write(
                 dir.toPath().resolve("file.txt"), Collections.singletonList("This is a test."), StandardCharsets.UTF_8);
 
-        archiver.addDirectory(dir);
+        archiver.addFileSet(DefaultFileSet.fileSet(dir));
 
         archiver.createArchive();
 
