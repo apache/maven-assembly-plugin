@@ -44,7 +44,8 @@ under the License.
   </contributors>
 
   <prerequisites>
-    <maven>3.6.3</maven>
+    <!-- Earlier Maven versions cannot discover the Java 17 components with their bundled Sisu. -->
+    <maven>3.9.6</maven>
   </prerequisites>
 
   <scm>
@@ -71,7 +72,8 @@ under the License.
   <properties>
     <maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
 
-    <javaVersion>8</javaVersion>
+    <!-- Plexus Archiver 5 requires Java 17, including when hard-link preservation is disabled. -->
+    <javaVersion>17</javaVersion>
     <mdoVersion>2.2.0</mdoVersion>
     <mavenVersion>3.9.16</mavenVersion>
     <slf4jVersion>1.7.36</slf4jVersion>
@@ -190,7 +192,8 @@ under the License.
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-io</artifactId>
-      <version>3.7.0</version>
+      <!-- TODO: use the release containing plexus-io PR #191 when available. -->
+      <version>3.7.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
@@ -201,7 +204,8 @@ under the License.
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-archiver</artifactId>
-      <version>4.14.0</version>
+      <!-- TODO: use the release containing plexus-archiver PR #493 when available. -->
+      <version>5.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -317,7 +321,12 @@ under the License.
           <configuration>
             <requirementsHistories>
               <requirementsHistory>
-                <version>from 3.7.0</version>
+                <version>from 3.8.1</version>
+                <maven>3.9.6</maven>
+                <jdk>17</jdk>
+              </requirementsHistory>
+              <requirementsHistory>
+                <version>from 3.7.0 to 3.8.0</version>
                 <maven>3.6.3</maven>
                 <jdk>8</jdk>
               </requirementsHistory>
@@ -414,6 +423,11 @@ under the License.
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-compress</artifactId>
                 <version>1.28.0</version>
+              </dependency>
+              <dependency>
+                <groupId>org.tukaani</groupId>
+                <artifactId>xz</artifactId>
+                <version>1.12</version>
               </dependency>
               <dependency>
                 <groupId>com.github.luben</groupId>
