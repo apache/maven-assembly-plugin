@@ -77,7 +77,7 @@ try
   boolean found30 = false;
   boolean found40 = false;
 
-  String line = null;
+  line = null;
   while( ( line = br.readLine() ) != null )
   {
     if ( line.endsWith( "spring-aop-3.0.xsd" ) )

@@ -34,6 +34,4 @@ Attributes attrs = mf.getMainAttributes();
 
 String foo = (String) attrs.get( new Attributes.Name( "foo" ) );
 
-System.out.println( "Got foo: " + mode );
-
 return "beer".equals( foo );
