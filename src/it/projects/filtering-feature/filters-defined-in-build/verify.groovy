@@ -33,7 +33,7 @@ try
         return false;
     }
     s = r.readLine();
-    if(!s.contains("escapedString=${project.artifactId}"))
+    if(!s.contains('escapedString=${project.artifactId}'))
     {
         System.out.println("file-1.properties did not escape filtering");
         return false;

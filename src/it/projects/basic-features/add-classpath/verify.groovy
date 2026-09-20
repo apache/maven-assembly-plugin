@@ -34,6 +34,4 @@ Attributes attrs = mf.getMainAttributes();
 
 String classPath = (String) attrs.get( Attributes.Name.CLASS_PATH );
 
-System.out.println( "Got Main-Class: " + mainClass );
-
 return  classPath.contains("plexus-utils");

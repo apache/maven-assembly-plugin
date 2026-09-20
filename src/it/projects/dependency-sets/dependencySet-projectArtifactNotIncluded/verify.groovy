@@ -19,7 +19,7 @@
 
 import java.io.*;
 
-if ( basedir == void )
+if ( !binding.hasVariable( "basedir" ) )
 {
   basedir = new File( "." );
 }
