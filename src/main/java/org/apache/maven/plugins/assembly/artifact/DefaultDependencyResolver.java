@@ -93,12 +93,7 @@ public class DefaultDependencyResolver implements DependencyResolver {
         Map<DependencySet, Set<Artifact>> result = new LinkedHashMap<>();
 
         for (DependencySet dependencySet : dependencySets) {
-
-            final MavenProject currentProject = configSource.getProject();
-
             final ResolutionManagementInfo info = new ResolutionManagementInfo();
-            updateDependencySetResolutionRequirements(
-                    configSource.getMavenSession().getRepositorySession(), dependencySet, info, currentProject);
             updateModuleSetResolutionRequirements(moduleSet, dependencySet, info, configSource);
 
             result.put(dependencySet, info.getArtifacts());
@@ -149,13 +144,11 @@ public class DefaultDependencyResolver implements DependencyResolver {
                 }
             }
 
-            if (binaries.isIncludeDependencies()) {
-                updateDependencySetResolutionRequirements(
-                        configSource.getMavenSession().getRepositorySession(),
-                        dependencySet,
-                        requirements,
-                        projects.toArray(new MavenProject[0]));
-            }
+            updateDependencySetResolutionRequirements(
+                    configSource.getMavenSession().getRepositorySession(),
+                    dependencySet,
+                    requirements,
+                    projects.toArray(new MavenProject[0]));
         }
     }
 
