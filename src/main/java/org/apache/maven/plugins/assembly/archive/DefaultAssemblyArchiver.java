@@ -32,6 +32,7 @@ import java.util.Map;
 import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
 import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
 import org.apache.maven.plugins.assembly.archive.archiver.AssemblyProxyArchiver;
+import org.apache.maven.plugins.assembly.archive.archiver.IgnoringEmptyArchiveArchiver;
 import org.apache.maven.plugins.assembly.archive.phase.AssemblyArchiverPhase;
 import org.apache.maven.plugins.assembly.archive.phase.AssemblyArchiverPhaseComparator;
 import org.apache.maven.plugins.assembly.artifact.DependencyResolutionException;
@@ -317,6 +318,9 @@ public class DefaultAssemblyArchiver implements AssemblyArchiver {
                 configSource.getWorkingDirectory());
         if (configSource.isDryRun()) {
             archiver = new DryRunArchiver(archiver, LOGGER);
+        }
+        if (configSource.isIgnoreEmptyAssemblies()) {
+            archiver = new IgnoringEmptyArchiveArchiver(archiver, LOGGER);
         }
 
         archiver.setIgnorePermissions(configSource.isIgnorePermissions());
