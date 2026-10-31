@@ -70,6 +70,7 @@ public class AddDirectoryTask {
 
         final int oldDirMode = archiver.getOverrideDirectoryMode();
         final int oldFileMode = archiver.getOverrideFileMode();
+        final int oldDefaultDirMode = archiver.getDefaultDirectoryMode();
 
         boolean fileModeSet = false;
         boolean dirModeSet = false;
@@ -77,6 +78,10 @@ public class AddDirectoryTask {
         try {
             if (directoryMode != -1) {
                 archiver.setDirectoryMode(directoryMode);
+                // An include pattern that does not match the fileSet root itself (e.g. "*") leaves the
+                // parent directories the archiver creates implicitly for the matched files to fall back to
+                // its defaultDirectoryMode instead of the override set above, so both must be set (MASSEMBLY-852).
+                archiver.setDefaultDirectoryMode(directoryMode);
                 dirModeSet = true;
             }
 
@@ -130,6 +135,7 @@ public class AddDirectoryTask {
         } finally {
             if (dirModeSet) {
                 archiver.setDirectoryMode(oldDirMode);
+                archiver.setDefaultDirectoryMode(oldDefaultDirMode);
             }
 
             if (fileModeSet) {
