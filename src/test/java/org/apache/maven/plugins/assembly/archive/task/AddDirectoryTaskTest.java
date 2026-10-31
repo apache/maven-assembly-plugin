@@ -129,4 +129,35 @@ class AddDirectoryTaskTest {
         verify(archiver).getOverrideDirectoryMode();
         verify(archiver).getOverrideFileMode();
     }
+
+    /**
+     * A directoryMode only takes effect on directory entries that the fileSet pattern matches explicitly.
+     * When an include pattern (e.g. "*") does not match the fileSet root itself, the parent directory entries
+     * the archiver creates implicitly to hold the matched files fall back to its defaultDirectoryMode instead,
+     * so that mode must be set too or those directories keep the archiver's default permissions (MASSEMBLY-852).
+     */
+    @Test
+    void addDirectoryShouldAddDirectoryWithDirModeAndIncludesSetsDefaultDirectoryModeToo() throws Exception {
+        final int dirMode = Integer.parseInt("700", 8);
+        final int defaultDirMode = -1;
+        final int defaultFileMode = -1;
+        final int oldDefaultDirMode = Integer.parseInt("755", 8);
+
+        when(archiver.getOverrideDirectoryMode()).thenReturn(defaultDirMode);
+        when(archiver.getOverrideFileMode()).thenReturn(defaultFileMode);
+        when(archiver.getDefaultDirectoryMode()).thenReturn(oldDefaultDirMode);
+
+        AddDirectoryTask task = new AddDirectoryTask(temporaryFolder);
+        task.setDirectoryMode(dirMode);
+        task.setIncludes(Collections.singletonList("*"));
+        task.setOutputDirectory("dir");
+
+        task.execute(archiver);
+
+        verify(archiver).addFileSet(any(FileSet.class));
+        verify(archiver).setDirectoryMode(dirMode);
+        verify(archiver).setDefaultDirectoryMode(dirMode);
+        verify(archiver).setDirectoryMode(defaultDirMode);
+        verify(archiver).setDefaultDirectoryMode(oldDefaultDirMode);
+    }
 }
