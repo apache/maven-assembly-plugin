@@ -19,7 +19,7 @@ package fr.husta.test.assembly;
  */
 
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,13 +27,13 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import org.apache.commons.io.IOUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class JarWithDependenciesTest
+class JarWithDependenciesTest
 {
 
     @Test
-    public void checkMetaInfContent() throws IOException
+    void checkMetaInfContent() throws IOException
     {
         // check META-INF/services/java.sql.Driver exists
         JarFile jar = new JarFile("target/issue-mvn-assembly-plugin-730-jar-with-dependencies.jar");
