@@ -35,7 +35,7 @@ The Shared Assembly Descriptor Project
 
 Here's what the directory structure for that project looks like:
 
-```unknown
+```text
 my-assembly-descriptor
     +-- src
     |   `-- main

@@ -136,7 +136,7 @@ Examining the Output
 
 When the Maven execution completes, the following directory structure should be left:
 
-```unknown
+```text
 target/parent-1.0-src/
 `-- sources
     `-- child1

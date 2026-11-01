@@ -133,7 +133,7 @@ mvn package
 
 When this build completes, you should see a file in the `target` directory with a name similar to the following:
 
-```unknown
+```text
 target/sample-1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
 
@@ -177,7 +177,7 @@ To accommodate this, the Assembly Plugin supports configuration of an `<archive>
 
 If we add this configuration to the `single` goal example above and rebuild, we will see an entry like this in the `META-INF/MANIFEST.MF` file of the resulting JAR:
 
-```unknown
+```text
 [...]
 Main-Class: org.sample.App
 ```
