@@ -235,6 +235,14 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     private boolean ignoreMissingDescriptor;
 
     /**
+     * Set to true in order to not fail the build when an assembly ends up with no content, for example because a
+     * module inheriting a shared assembly configuration has nothing matching the descriptor. The assembly is
+     * skipped instead of failing with an empty archive error.
+     */
+    @Parameter(property = "assembly.ignoreEmptyAssemblies", defaultValue = "false")
+    private boolean ignoreEmptyAssemblies;
+
+    /**
      * This is a set of instructions to the archive builder, especially for building .jar files. It enables you to
      * specify a Manifest file for the jar, in addition to other options. See
      * <a href="http://maven.apache.org/shared/maven-archiver/index.html">Maven Archiver Reference</a>.
@@ -749,6 +757,11 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     @Override
     public boolean isIgnoreMissingDescriptor() {
         return ignoreMissingDescriptor;
+    }
+
+    @Override
+    public boolean isIgnoreEmptyAssemblies() {
+        return ignoreEmptyAssemblies;
     }
 
     @Override

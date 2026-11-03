@@ -102,6 +102,8 @@ public class PojoConfigSource implements AssemblerConfigurationSource {
 
     private boolean isIgnoreMissingDescriptor;
 
+    private boolean isIgnoreEmptyAssemblies;
+
     private MavenSession mavenSession;
 
     private FixedStringSearchInterpolator rootInterpolator = FixedStringSearchInterpolator.empty();
@@ -309,6 +311,14 @@ public class PojoConfigSource implements AssemblerConfigurationSource {
 
     public void setIgnoreMissingDescriptor(boolean isIgnoreMissingDescriptor) {
         this.isIgnoreMissingDescriptor = isIgnoreMissingDescriptor;
+    }
+
+    public boolean isIgnoreEmptyAssemblies() {
+        return isIgnoreEmptyAssemblies;
+    }
+
+    public void setIgnoreEmptyAssemblies(boolean isIgnoreEmptyAssemblies) {
+        this.isIgnoreEmptyAssemblies = isIgnoreEmptyAssemblies;
     }
 
     public MavenSession getMavenSession() {

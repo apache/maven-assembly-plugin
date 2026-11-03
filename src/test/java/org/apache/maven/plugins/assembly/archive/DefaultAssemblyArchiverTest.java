@@ -316,6 +316,65 @@ public class DefaultAssemblyArchiverTest {
     }
 
     @Test
+    void createArchiverShouldIgnoreEmptyAssemblyWhenConfigured() throws Exception {
+        final ZipArchiver archiver = new ZipArchiver();
+
+        when(archiverManager.getArchiver("zip")).thenReturn(archiver);
+
+        final AssemblerConfigurationSource configSource = mock(AssemblerConfigurationSource.class);
+        when(configSource.getOverrideGid()).thenReturn(0);
+        when(configSource.getOverrideGroupName()).thenReturn("root");
+        when(configSource.getOverrideUid()).thenReturn(0);
+        when(configSource.getOverrideUserName()).thenReturn("root");
+        when(configSource.getWorkingDirectory()).thenReturn(new File("."));
+        when(configSource.isIgnorePermissions()).thenReturn(true);
+        when(configSource.isRecompressZippedFiles()).thenReturn(false);
+        when(configSource.isIgnoreEmptyAssemblies()).thenReturn(true);
+
+        final DefaultAssemblyArchiver subject = createSubject(new ArrayList<>());
+
+        final Archiver result = subject.createArchiver("zip", false, null, configSource, null, null);
+
+        final File destFile = newFolder(temporaryFolder, "ignored-empty")
+                .toPath()
+                .resolve("out.zip")
+                .toFile();
+        result.setDestFile(destFile);
+
+        result.createArchive();
+
+        assertFalse(destFile.exists(), "no archive should have been produced for an empty assembly");
+    }
+
+    @Test
+    void createArchiverShouldFailOnEmptyAssemblyByDefault() throws Exception {
+        final ZipArchiver archiver = new ZipArchiver();
+
+        when(archiverManager.getArchiver("zip")).thenReturn(archiver);
+
+        final AssemblerConfigurationSource configSource = mock(AssemblerConfigurationSource.class);
+        when(configSource.getOverrideGid()).thenReturn(0);
+        when(configSource.getOverrideGroupName()).thenReturn("root");
+        when(configSource.getOverrideUid()).thenReturn(0);
+        when(configSource.getOverrideUserName()).thenReturn("root");
+        when(configSource.getWorkingDirectory()).thenReturn(new File("."));
+        when(configSource.isIgnorePermissions()).thenReturn(true);
+        when(configSource.isRecompressZippedFiles()).thenReturn(false);
+
+        final DefaultAssemblyArchiver subject = createSubject(new ArrayList<>());
+
+        final Archiver result = subject.createArchiver("zip", false, null, configSource, null, null);
+
+        final File destFile = newFolder(temporaryFolder, "failing-empty")
+                .toPath()
+                .resolve("out.zip")
+                .toFile();
+        result.setDestFile(destFile);
+
+        assertThrows(ArchiverException.class, result::createArchive);
+    }
+
+    @Test
     void createTarArchiverShouldNotInitializeCompression() throws Exception {
         final TestTarArchiver archiver = new TestTarArchiver();
 
