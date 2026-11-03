@@ -69,6 +69,10 @@ under the License.
   </distributionManagement>
 
   <properties>
+    <!-- the JUnit version maven-parent 50 manages -->
+    <versions.junit>5.14.4</versions.junit>
+    <!-- the name maven-parent 50 and older read; remove with the parent update -->
+    <versions.junit5>${versions.junit}</versions.junit5>
 
     <mdoVersion>2.2.0</mdoVersion>
     <mavenVersion>3.10.0</mavenVersion>
@@ -403,7 +407,7 @@ under the License.
             <configuration>
               <showVersion>true</showVersion>
               <scriptVariables>
-                <scriptVarVersionJunit>${versions.junit5}</scriptVarVersionJunit>
+                <scriptVarVersionJunit>${versions.junit}</scriptVarVersionJunit>
               </scriptVariables>
             </configuration>
             <dependencies>
