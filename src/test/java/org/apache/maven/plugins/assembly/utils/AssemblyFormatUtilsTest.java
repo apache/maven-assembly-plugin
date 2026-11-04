@@ -33,16 +33,24 @@ import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.interpolation.fixed.FixedStringSearchInterpolator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.slf4j.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @MockitoSettings(strictness = Strictness.WARN)
@@ -744,5 +752,57 @@ class AssemblyFormatUtilsTest {
         FixedStringSearchInterpolator interpolator = AssemblyFormatUtils.artifactInterpolator(artifact);
         assertEquals("a/b/c", interpolator.interpolate("${artifact.groupIdPath}"));
         assertEquals("a/b/c/artifactId.jar", interpolator.interpolate("${artifact.groupIdPath}/${artifact.file.name}"));
+    }
+
+    @Test
+    @DisabledOnOs(OS.WINDOWS)
+    void warnForPlatformSpecificsWarnsAboutUnixRootReferenceOnNonWindows() {
+        Logger logger = mock(Logger.class);
+
+        AssemblyFormatUtils.warnForPlatformSpecifics(logger, "/adir");
+
+        verify(logger).warn(contains("The assembly descriptor contains a *nix-specific root-relative reference"));
+        verify(logger, never()).error(anyString());
+    }
+
+    @Test
+    @DisabledOnOs(OS.WINDOWS)
+    void warnForPlatformSpecificsReportsDriveLetterAsErrorOnNonWindows() {
+        Logger logger = mock(Logger.class);
+
+        AssemblyFormatUtils.warnForPlatformSpecifics(logger, "c:\\adir");
+
+        verify(logger).error(contains("the assembly descriptor contains a Windows-specific directory reference"));
+        verify(logger, never()).warn(anyString());
+    }
+
+    @Test
+    @EnabledOnOs(OS.WINDOWS)
+    void warnForPlatformSpecificsReportsUnixRootReferenceAsErrorOnWindows() {
+        Logger logger = mock(Logger.class);
+
+        AssemblyFormatUtils.warnForPlatformSpecifics(logger, "/adir");
+
+        verify(logger).error(contains("the assembly descriptor contains a *nix-specific root-relative reference"));
+    }
+
+    @Test
+    @EnabledOnOs(OS.WINDOWS)
+    void warnForPlatformSpecificsWarnsAboutDriveLetterOnWindows() {
+        Logger logger = mock(Logger.class);
+
+        AssemblyFormatUtils.warnForPlatformSpecifics(logger, "c:\\adir");
+
+        verify(logger).warn(contains("The assembly descriptor contains a Windows-specific directory reference"));
+    }
+
+    @Test
+    void warnForPlatformSpecificsIsSilentForPortableRelativePath() {
+        Logger logger = mock(Logger.class);
+
+        AssemblyFormatUtils.warnForPlatformSpecifics(logger, "adir");
+        AssemblyFormatUtils.warnForPlatformSpecifics(logger, null);
+
+        verifyNoInteractions(logger);
     }
 }
