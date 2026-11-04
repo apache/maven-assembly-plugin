@@ -47,6 +47,7 @@ under the License.
         <configuration>
           <descriptors>
             <descriptor>src/assemble/bin.xml</descriptor>
+            <descriptor>src/assemble/bin-mixed.xml</descriptor>
           </descriptors>
         </configuration>
         

@@ -17,9 +17,16 @@
  * under the License.
  */
 
-import java.io.*;
+import java.util.zip.ZipFile
 
-// verify that the ear is created
-result = new File( basedir, "target/massembly-345-1-bin.ear" ).exists();
+// archiverConfig <appxml> is the application.xml of the ear
+File ear = new File( basedir, "target/massembly-345-1-bin.ear" )
+assert ear.exists() : "Missing " + ear
 
-return result;
+new ZipFile( ear ).withCloseable { z ->
+    def entry = z.getEntry( "META-INF/application.xml" )
+    assert entry != null : "META-INF/application.xml is missing from the ear"
+    String actual = z.getInputStream( entry ).getText( "UTF-8" )
+    String configured = new File( basedir, "src/main/resources/application.xml" ).getText( "UTF-8" )
+    assert actual.replace( "\r\n", "\n" ) == configured.replace( "\r\n", "\n" ) : "application.xml differs from the configured appxml"
+}

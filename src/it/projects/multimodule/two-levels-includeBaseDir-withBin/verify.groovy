@@ -23,3 +23,8 @@ String rootDir = finalName + "/modules/"
 assert new File( basedir, rootDir + "child-level1-project1-1.0-SNAPSHOT.jar" ).exists()
 
 assert new File( basedir, rootDir + "child-level2-project1-1.0-SNAPSHOT.jar" ).exists()
+// the "src" descriptor runs in the same build: sources of every module, nested modules included
+String srcRoot = "assembly/target/assembly-1.0-SNAPSHOT-src/assembly-1.0-SNAPSHOT/modules/"
+assert new File( basedir, srcRoot + "child-level1-project1/pom.xml" ).exists()
+assert new File( basedir, srcRoot + "child-level1-project2/pom.xml" ).exists()
+assert new File( basedir, srcRoot + "child-level2-project1/pom.xml" ).exists()

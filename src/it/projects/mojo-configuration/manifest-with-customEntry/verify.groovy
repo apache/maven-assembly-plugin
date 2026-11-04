@@ -36,4 +36,12 @@ String mode = (String) attrs.get( new Attributes.Name( "mode" ) );
 
 System.out.println( "Got mode: " + mode );
 
-return "development".equals( mode );
+assert "development".equals( mode ) : "Manifest entry mode: " + mode;
+
+String mainClass = (String) attrs.get( Attributes.Name.MAIN_CLASS );
+
+System.out.println( "Got Main-Class: " + mainClass );
+
+assert "test.App".equals( mainClass ) : "Manifest Main-Class: " + mainClass;
+
+return true;
