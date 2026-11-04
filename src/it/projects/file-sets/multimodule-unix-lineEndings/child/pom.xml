@@ -38,6 +38,7 @@ under the License.
         <configuration>
           <descriptors>
             <descriptor>src/main/assembly/src.xml</descriptor>
+            <descriptor>src/main/assembly/src-crlf.xml</descriptor>
           </descriptors>
         </configuration>
         <executions>

@@ -45,6 +45,32 @@ under the License.
       <artifactId>maven-jar-plugin</artifactId>
       <version>3.0.0</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.maven.wagon</groupId>
+      <artifactId>wagon-provider-api</artifactId>
+      <version> 1.0-beta-4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.wagon</groupId>
+      <artifactId>wagon-webdav-jackrabbit</artifactId>
+      <version>1.0-beta-4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.reporting</groupId>
+      <artifactId>maven-reporting-impl</artifactId>
+      <version>3.0.0</version>
+      <exclusions>
+        <exclusion>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>commons-vfs</groupId>
+      <artifactId>commons-vfs</artifactId>
+      <version> 1.0</version>
+    </dependency>
   </dependencies>
   
   <build>
@@ -61,6 +87,7 @@ under the License.
             <configuration>
               <descriptors>
                 <descriptor>src/main/assembly/bin.xml</descriptor>
+                <descriptor>src/main/assembly/bin-multiple.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>

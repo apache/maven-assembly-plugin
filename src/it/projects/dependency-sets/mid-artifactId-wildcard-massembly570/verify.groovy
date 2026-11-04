@@ -24,3 +24,10 @@ assert cleanPluginJar.exists() : 'Missing maven-clean-plugin (should be included
 
 def jarPluginJar = new File( dir, "maven-jar-plugin-3.0.0.jar")
 assert jarPluginJar.exists() : 'Missing maven-jar-plugin (should be included via wildcard pattern).'
+
+// MASSEMBLY-241: several wildcard includes in one dependencySet (second descriptor, assembly id "multiple")
+File multipleDir = new File( basedir, "target/mid-artifactId-wildcard-massembly570-1-multiple/maven-libs" )
+def wagonProviderJar = new File( multipleDir, 'wagon-provider-api-1.0-beta-4.jar' )
+assert wagonProviderJar.exists() : 'Wagon provider jar is missing (should be included via include wildcard pattern).'
+def reportingImplJar = new File( multipleDir, 'maven-reporting-impl-3.0.0.jar' )
+assert reportingImplJar.exists() : 'Reporting implementation jar is missing (should be included via include wildcard pattern).'

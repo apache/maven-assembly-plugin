@@ -17,36 +17,27 @@
  * under the License.
  */
 
-File f = new File( basedir, "child/target/child-1-src/test.txt" );
+import java.nio.charset.StandardCharsets
+import java.nio.file.Files
 
-if ( !f.exists() )
+// the unix descriptor (assembly id "src") and the crlf descriptor (assembly id "src-crlf") run in the same build
+for ( String name : [ "test.txt", "mac2win.txt" ] )
 {
-    System.out.println( "Filtered file from file-set: " + f + " is missing." );
-    return false;
+    File file = new File( basedir, "child/target/child-1-src/" + name )
+    assert file.exists() : "Filtered file from file-set: " + file + " is missing."
+
+    String actual = new String( Files.readAllBytes( file.toPath() ), StandardCharsets.UTF_8 )
+    assert actual == "1\nchild" :
+            "Contents of " + name + ": '" + actual + "' should contain exactly one unix newline: '\\n'."
 }
 
-StringBuffer sb = new StringBuffer();
-
-FileReader reader = new FileReader( f );
-char[] cbuf = new char[16];
-int read = -1;
-while( ( read = reader.read( cbuf ) ) > -1 )
+for ( String name : [ "test.txt", "mac2win.txt" ] )
 {
-    sb.append( cbuf, 0, read );
-}
+    File file = new File( basedir, "child/target/child-1-src-crlf/" + name )
+    assert file.exists() : "Filtered file from file-set: " + file + " is missing."
 
-reader.close();
-
-System.out.println( "Contents of test.txt: '" + sb.toString() + "' should contain the unix newline: '\\n'." );
-
-if ( sb.toString().indexOf( "1\nchild" ) == -1 )
-{
-    System.out.println( "test.txt has wrong line ending" );
-    return false;
+    String actual = new String( Files.readAllBytes( file.toPath() ), StandardCharsets.UTF_8 )
+    assert actual == "1\r\nchild" :
+            "Contents of " + name + ": '" + actual + "' should contain exactly one windows newline: '\\r\\n'."
 }
-if ( sb.toString().indexOf( "child\n" ) > -1 )
-{
-    System.out.println( "test.txt has an extra line ending at the end of the file" );
-    return false;
-}
-return true;
+return true
