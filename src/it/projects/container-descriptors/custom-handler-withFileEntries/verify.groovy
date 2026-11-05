@@ -17,6 +17,8 @@
  * under the License.
  */
 
+// The aggregated content of file.txt is not asserted: the aggregate is written before the fileSet entries are
+// added, see https://github.com/apache/maven-assembly-plugin/issues/1024
 // "bin" lists both files as <file> entries, "bin-mixed" lists one as <file> and the other as <fileSet>
 for ( String assemblyId : [ "bin", "bin-mixed" ] )
 {
