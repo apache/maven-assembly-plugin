@@ -351,6 +351,8 @@ public class AddDependencySetsTask {
         // omit the last char if ends with / or \\
         if (outputDirectory.endsWith("/") || outputDirectory.endsWith("\\")) {
             target = outputDirectory + destName;
+        } else if (outputDirectory.isEmpty()) {
+            target = destName;
         } else {
             target = outputDirectory + "/" + destName;
         }
