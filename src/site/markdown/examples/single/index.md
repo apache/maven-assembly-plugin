@@ -31,6 +31,7 @@ A Single Project is a project whose assemblies do not use &lt;moduleSets&gt;.
 The examples below may help you in creating assemblies for your single projects.
 
 - [Filtering Some Distribution Files](./filtering-some-distribution-files.html)
+- [Preserving TAR Hard Links](./preserving-tar-hard-links.html)
 - [Including/Excluding Artifacts](./including-and-excluding-artifacts.html)
 - [Using Component Descriptors](./using-components.html)
 - [Using Container Descriptor Handlers](./using-container-descriptor-handlers.html)

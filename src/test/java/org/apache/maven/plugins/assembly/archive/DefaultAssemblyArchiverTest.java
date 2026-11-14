@@ -205,6 +205,31 @@ public class DefaultAssemblyArchiverTest {
         verify(archiverManager).getArchiver("dummy");
     }
 
+    /** Verifies that the existing reflective configuration can enable and explicitly disable TAR hard links. */
+    @Test
+    void createArchiverShouldConfigureHardLinkPreservation() throws Exception {
+        for (boolean preserve : new boolean[] {true, false}) {
+            final TarArchiver tarArchiver = new TarArchiver();
+            // Start from the opposite value so both configuration values must reach the real setter.
+            tarArchiver.setPreserveHardLinks(!preserve);
+            when(archiverManager.getArchiver("tar")).thenReturn(tarArchiver);
+
+            final AssemblerConfigurationSource configSource = mock(AssemblerConfigurationSource.class);
+            when(configSource.getProject()).thenReturn(new MavenProject(new Model()));
+            when(configSource.getTarLongFileMode()).thenReturn(TarLongFileMode.fail.toString());
+            when(configSource.getWorkingDirectory()).thenReturn(temporaryFolder);
+            when(configSource.getArchiverConfig())
+                    .thenReturn(
+                            "<archiverConfig><preserveHardLinks>" + preserve + "</preserveHardLinks></archiverConfig>");
+            setupInterpolators(configSource);
+
+            createSubject(Collections.emptyList())
+                    .createArchiver("tar", false, "finalName", configSource, Collections.emptyList(), null);
+
+            assertEquals(preserve, tarArchiver.isPreserveHardLinks());
+        }
+    }
+
     @Test
     void createArchiverShouldCreateTarArchiverWithNoCompression() throws Exception {
         final TestTarArchiver ttArchiver = new TestTarArchiver();
@@ -225,6 +250,7 @@ public class DefaultAssemblyArchiverTest {
         subject.createArchiver("tar", false, "finalName", configSource, null, null);
 
         assertNull(ttArchiver.compressionMethod);
+        assertFalse(ttArchiver.isPreserveHardLinks());
         assertEquals(TarLongFileMode.fail, ttArchiver.longFileMode);
 
         // result of easymock migration, should be assert of expected result instead of verifying methodcalls
