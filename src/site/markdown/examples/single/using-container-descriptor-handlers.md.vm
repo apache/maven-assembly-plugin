@@ -89,6 +89,38 @@ The plugin comes with several handlers already defined.
 &lt;/assembly&gt;</code></pre></dd>
 </dl>
 
+## Migrating custom handlers to Plexus Archiver 5
+
+Assembly 3.8.1-SNAPSHOT uses Plexus Archiver 5, which removes deprecated methods
+from the `Archiver` interface. Existing custom handlers that call these methods
+**must update their source and be recompiled** against this Assembly version.
+
+A handler compiled against Archiver 4 can otherwise fail with `NoSuchMethodError`
+when invoking `Archiver.getFiles()` or `Archiver.setLastModifiedDate(Date)`.
+`AssemblyProxyArchiver` follows the Archiver 5 API and provides no compatibility
+shims for these removed methods. Handlers should use the current `Archiver`
+interface rather than cast to Assembly's concrete proxy.
+
+| Removed interface API | Replacement |
+| --- | --- |
+| `getFiles()` | Iterate `getResources()`; construct a map explicitly if needed. |
+| `setLastModifiedDate(Date)` | `setLastModifiedTime(FileTime)`; use `FileTime.fromMillis(date.getTime())`, or `null` to retain source timestamps. |
+| `getLastModifiedDate()` | `getLastModifiedTime()`; handle `null` before converting with `new Date(time.toMillis())`. |
+| `configureReproducible(Date)` | `configureReproducibleBuild(FileTime)` with a non-null timestamp. |
+| `addDirectory(File, ...)` | Configure a `DefaultFileSet` and call `addFileSet(FileSet)`. |
+| `addArchivedFileSet(File, ...)` | Configure a `DefaultArchivedFileSet` and call `addArchivedFileSet(ArchivedFileSet)`. |
+| `isUseJvmChmod()` / `setUseJvmChmod(boolean)` | Remove these calls; permission changes use the JVM. |
+
+Resource iteration preserves archive order and can return directories, symbolic
+links, and repeated names. Unlike the old map, it does not collapse duplicate
+names. A replacement map should honor `getIncludeEmptyDirs()`, include regular
+files when that setting is false, and retain the last entry for each repeated
+name to reproduce the old map view.
+
+After migrating, test the handler through its `finalizeArchiveCreation(Archiver)`
+callback with the plugin's dependencies. Tests of concrete proxy calls alone do
+not verify the interface calls made by a custom handler.
+
 Custom container descriptor handlers
 ------------------------------------
 

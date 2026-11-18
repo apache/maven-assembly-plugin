@@ -26,4 +26,5 @@ jobs:
     name: Verify
     uses: apache/maven-gh-actions-shared/.github/workflows/maven-verify.yml@v5
     with:
+      jdk-matrix: '[ "17", "21", "25" ]'
       maven4-enabled: true

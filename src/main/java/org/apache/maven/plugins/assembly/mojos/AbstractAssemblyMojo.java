@@ -310,7 +310,11 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
      * <pre>
      * &lt;appxml&gt;${project.basedir}/somepath/app.xml&lt;/appxml&gt;
      * </pre>
-     * <p/>
+     * <p>For TAR and compressed TAR formats, hard-link preservation can be enabled with
+     * {@code <preserveHardLinks>true</preserveHardLinks>}. It is disabled by default.
+     * Eligible, untransformed files with the same hard-link identity and compatible output metadata share one
+     * payload; subsequent entries refer to the earlier entry's final archive name. Filtering and line-ending
+     * transformations keep contents independent. Configure this option only on executions producing TAR formats.</p>
      *
      * @since 2.2-beta-3
      */

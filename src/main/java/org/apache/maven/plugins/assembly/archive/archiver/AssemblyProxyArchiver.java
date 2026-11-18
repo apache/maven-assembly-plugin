@@ -27,12 +27,9 @@ import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.maven.plugins.assembly.filter.ContainerDescriptorHandler;
-import org.codehaus.plexus.archiver.ArchiveEntry;
 import org.codehaus.plexus.archiver.ArchiveFinalizer;
 import org.codehaus.plexus.archiver.ArchivedFileSet;
 import org.codehaus.plexus.archiver.Archiver;
@@ -40,7 +37,6 @@ import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.FileSet;
 import org.codehaus.plexus.archiver.FinalizerEnabled;
 import org.codehaus.plexus.archiver.ResourceIterator;
-import org.codehaus.plexus.archiver.util.DefaultArchivedFileSet;
 import org.codehaus.plexus.archiver.util.DefaultFileSet;
 import org.codehaus.plexus.components.io.fileselectors.FileInfo;
 import org.codehaus.plexus.components.io.fileselectors.FileSelector;
@@ -56,6 +52,9 @@ import org.slf4j.LoggerFactory;
  * <li>prefixing (where all paths have a set global prefix prepended before addition)</li>
  * <li>duplication checks on archive additions (for archive-file path + prefix)</li>
  * </ul>
+ * <p>This proxy follows the Plexus Archiver 5 {@link Archiver} API. Custom handlers using removed methods
+ * must migrate to the resource, file-set and {@link FileTime} APIs and be recompiled, even when hard-link
+ * preservation is disabled.</p>
  *
  * @author jdcasey
  *
@@ -74,11 +73,6 @@ public class AssemblyProxyArchiver implements Archiver {
     private FileSelector[] selectors;
 
     private boolean forced;
-
-    /**
-     * @since 2.2
-     */
-    private boolean useJvmChmod;
 
     public AssemblyProxyArchiver(
             final String rootPrefix,
@@ -125,123 +119,9 @@ public class AssemblyProxyArchiver implements Archiver {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Deprecated
-    public void addArchivedFileSet(
-            final File archiveFile, final String prefix, final String[] includes, final String[] excludes) {
-        inPublicApi.set(Boolean.TRUE);
-        try {
-            final DefaultArchivedFileSet fs = new DefaultArchivedFileSet(archiveFile);
-
-            fs.setIncludes(includes);
-            fs.setExcludes(excludes);
-            fs.setPrefix(rootPrefix + prefix);
-            fs.setFileSelectors(selectors);
-
-            debug("Adding archived file-set in: " + archiveFile + " to archive location: " + fs.getPrefix());
-
-            delegate.addArchivedFileSet(fs);
-        } finally {
-            inPublicApi.remove();
-        }
-    }
-
     private void debug(final String message) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(message);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Deprecated
-    public void addArchivedFileSet(final File archiveFile, final String prefix) {
-        inPublicApi.set(Boolean.TRUE);
-        try {
-            final DefaultArchivedFileSet fs = new DefaultArchivedFileSet(archiveFile);
-
-            fs.setPrefix(rootPrefix + prefix);
-            fs.setFileSelectors(selectors);
-
-            debug("Adding archived file-set in: " + archiveFile + " to archive location: " + fs.getPrefix());
-
-            delegate.addArchivedFileSet(fs);
-        } finally {
-            inPublicApi.remove();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Deprecated
-    public void addArchivedFileSet(final File archiveFile, final String[] includes, final String[] excludes) {
-        inPublicApi.set(Boolean.TRUE);
-        try {
-            final DefaultArchivedFileSet fs = new DefaultArchivedFileSet(archiveFile);
-
-            fs.setIncludes(includes);
-            fs.setExcludes(excludes);
-            fs.setPrefix(rootPrefix);
-            fs.setFileSelectors(selectors);
-
-            debug("Adding archived file-set in: " + archiveFile + " to archive location: " + fs.getPrefix());
-
-            delegate.addArchivedFileSet(fs);
-        } finally {
-            inPublicApi.remove();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Deprecated
-    public void addArchivedFileSet(final File archiveFile) {
-        inPublicApi.set(Boolean.TRUE);
-        try {
-            final DefaultArchivedFileSet fs = new DefaultArchivedFileSet(archiveFile);
-
-            fs.setPrefix(rootPrefix);
-            fs.setFileSelectors(selectors);
-
-            debug("Adding archived file-set in: " + archiveFile + " to archive location: " + fs.getPrefix());
-
-            delegate.addArchivedFileSet(fs);
-        } finally {
-            inPublicApi.remove();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Deprecated
-    public void addDirectory(
-            final File directory, final String prefix, final String[] includes, final String[] excludes) {
-        inPublicApi.set(Boolean.TRUE);
-        try {
-            final DefaultFileSet fs = new DefaultFileSet();
-
-            fs.setDirectory(directory);
-            fs.setIncludes(includes);
-            fs.setExcludes(excludes);
-            fs.setPrefix(rootPrefix + prefix);
-            fs.setFileSelectors(selectors);
-
-            debug("Adding directory file-set in: " + directory + " to archive location: " + fs.getPrefix());
-
-            doAddFileSet(fs);
-        } finally {
-            inPublicApi.remove();
         }
     }
 
@@ -266,74 +146,6 @@ public class AssemblyProxyArchiver implements Archiver {
         inPublicApi.set(Boolean.TRUE);
         try {
             delegate.addSymlink(symlinkName, permissions, symlinkDestination);
-        } finally {
-            inPublicApi.remove();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Deprecated
-    public void addDirectory(final File directory, final String prefix) {
-        inPublicApi.set(Boolean.TRUE);
-        try {
-            final DefaultFileSet fs = new DefaultFileSet();
-
-            fs.setDirectory(directory);
-            fs.setPrefix(rootPrefix + prefix);
-            fs.setFileSelectors(selectors);
-
-            debug("Adding directory file-set in: " + directory + " to archive location: " + fs.getPrefix());
-
-            doAddFileSet(fs);
-        } finally {
-            inPublicApi.remove();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Deprecated
-    public void addDirectory(final File directory, final String[] includes, final String[] excludes) {
-        inPublicApi.set(Boolean.TRUE);
-        try {
-            final DefaultFileSet fs = new DefaultFileSet();
-
-            fs.setDirectory(directory);
-            fs.setIncludes(includes);
-            fs.setExcludes(excludes);
-            fs.setPrefix(rootPrefix);
-            fs.setFileSelectors(selectors);
-
-            debug("Adding directory file-set in: " + directory + " to archive location: " + fs.getPrefix());
-
-            doAddFileSet(fs);
-        } finally {
-            inPublicApi.remove();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Deprecated
-    public void addDirectory(final File directory) {
-        inPublicApi.set(Boolean.TRUE);
-        try {
-            final DefaultFileSet fs = new DefaultFileSet();
-
-            fs.setDirectory(directory);
-            fs.setPrefix(rootPrefix);
-            fs.setFileSelectors(selectors);
-
-            debug("Adding directory file-set in: " + directory + " to archive location: " + fs.getPrefix());
-
-            doAddFileSet(fs);
         } finally {
             inPublicApi.remove();
         }
@@ -460,17 +272,6 @@ public class AssemblyProxyArchiver implements Archiver {
         inPublicApi.set(Boolean.TRUE);
         try {
             delegate.setDestFile(destFile);
-        } finally {
-            inPublicApi.remove();
-        }
-    }
-
-    @Override
-    @SuppressWarnings({"deprecation"})
-    public Map<String, ArchiveEntry> getFiles() {
-        inPublicApi.set(Boolean.TRUE);
-        try {
-            return delegate.getFiles();
         } finally {
             inPublicApi.remove();
         }
@@ -785,24 +586,6 @@ public class AssemblyProxyArchiver implements Archiver {
      * {@inheritDoc}
      */
     @Override
-    @Deprecated
-    public boolean isUseJvmChmod() {
-        return useJvmChmod;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Deprecated
-    public void setUseJvmChmod(final boolean useJvmChmod) {
-        this.useJvmChmod = useJvmChmod;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public boolean isIgnorePermissions() {
         return delegate.isIgnorePermissions();
     }
@@ -850,26 +633,8 @@ public class AssemblyProxyArchiver implements Archiver {
     }
 
     @Override
-    @Deprecated
-    public void setLastModifiedDate(Date lastModifiedDate) {
-        delegate.setLastModifiedDate(lastModifiedDate);
-    }
-
-    @Override
-    @Deprecated
-    public Date getLastModifiedDate() {
-        return delegate.getLastModifiedDate();
-    }
-
-    @Override
     public void setFilenameComparator(Comparator<String> filenameComparator) {
         delegate.setFilenameComparator(filenameComparator);
-    }
-
-    @Override
-    @Deprecated
-    public void configureReproducible(Date outputTimestamp) {
-        delegate.configureReproducible(outputTimestamp);
     }
 
     @Override
