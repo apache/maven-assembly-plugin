@@ -181,7 +181,7 @@ public class AddDependencySetsTask {
     }
 
     private boolean isContentModifyingOption(UnpackOptions opts) {
-        return (opts.isFiltered() || opts.getLineEnding() != null);
+        return opts.isFiltered() || opts.getLineEnding() != null;
     }
 
     private void checkMultiArtifactOutputConfig(final DependencySet dependencySet) {

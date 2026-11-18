@@ -99,7 +99,7 @@ public class AssemblyInterpolator {
     }
 
     public static void checkErrors(AssemblyId assemblyId, InterpolationState interpolationState, Logger logger) {
-        if (interpolationState.asList() != null && interpolationState.asList().size() > 0 && logger.isDebugEnabled()) {
+        if (interpolationState.asList() != null && !interpolationState.asList().isEmpty() && logger.isDebugEnabled()) {
             final StringBuilder sb = new StringBuilder();
 
             sb.append("One or more minor errors occurred while interpolating the assembly with ID: ")
