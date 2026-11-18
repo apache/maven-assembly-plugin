@@ -88,7 +88,7 @@ public class ReaderFormatter {
 
     private static boolean isForbiddenFiletypes(PlexusIoResource plexusIoResource) {
         String fileName = plexusIoResource.getName().toLowerCase();
-        return (fileName.endsWith(".zip") || fileName.endsWith(".jar"));
+        return fileName.endsWith(".zip") || fileName.endsWith(".jar");
     }
 
     private static void checkifFileTypeIsAppropriateForLineEndingTransformation(PlexusIoResource plexusIoResource)

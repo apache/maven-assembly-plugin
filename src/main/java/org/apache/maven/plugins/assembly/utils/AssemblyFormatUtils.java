@@ -441,10 +441,10 @@ public final class AssemblyFormatUtils {
     }
 
     static boolean isWindowsPath(String destDirectory) {
-        return (destDirectory != null && destDirectory.length() >= 2 && destDirectory.charAt(1) == ':');
+        return destDirectory != null && destDirectory.length() >= 2 && destDirectory.charAt(1) == ':';
     }
 
     static boolean isUnixRootReference(String destDirectory) {
-        return (destDirectory != null && destDirectory.startsWith("/"));
+        return destDirectory != null && destDirectory.startsWith("/");
     }
 }

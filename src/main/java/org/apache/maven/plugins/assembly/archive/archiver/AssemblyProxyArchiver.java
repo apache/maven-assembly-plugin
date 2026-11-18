@@ -98,7 +98,7 @@ public class AssemblyProxyArchiver implements Archiver {
 
         final List<FileSelector> selectors = new ArrayList<>();
 
-        FinalizerEnabled finalizer = (delegate instanceof FinalizerEnabled) ? (FinalizerEnabled) delegate : null;
+        FinalizerEnabled finalizer = delegate instanceof FinalizerEnabled ? (FinalizerEnabled) delegate : null;
 
         if (containerDescriptorHandlers != null) {
             for (final ContainerDescriptorHandler handler : containerDescriptorHandlers) {

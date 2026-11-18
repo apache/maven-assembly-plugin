@@ -23,7 +23,7 @@ import org.apache.maven.plugins.assembly.model.Assembly;
 /**
  *
  */
-public class AssemblyId {
+public final class AssemblyId {
     private final String id;
 
     private AssemblyId(String id) {

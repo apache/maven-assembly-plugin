@@ -78,15 +78,15 @@ final class MessageLevels {
         Arrays.fill(states, false);
 
         switch (maxMessageLevel) {
-            case (LEVEL_DEBUG):
+            case LEVEL_DEBUG:
                 states[LEVEL_DEBUG] = true;
-            case (LEVEL_INFO):
+            case LEVEL_INFO:
                 states[LEVEL_INFO] = true;
-            case (LEVEL_WARNING):
+            case LEVEL_WARNING:
                 states[LEVEL_WARNING] = true;
-            case (LEVEL_ERROR):
+            case LEVEL_ERROR:
                 states[LEVEL_ERROR] = true;
-            case (LEVEL_SEVERE):
+            case LEVEL_SEVERE:
                 states[LEVEL_SEVERE] = true;
             default:
         }
