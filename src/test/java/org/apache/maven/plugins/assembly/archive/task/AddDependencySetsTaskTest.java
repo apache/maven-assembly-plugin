@@ -270,6 +270,54 @@ class AddDependencySetsTaskTest {
         verifyOneDependencyAdded("out", true);
     }
 
+    @Test
+    void addNonArchiveDependencyWithEmptyOutputDirectoryShouldNotPrefixTargetWithSlash() throws Exception {
+        // a "pom" type dependency is routed through addNonArchiveDependency (MASSEMBLY-937): an empty
+        // outputDirectory means "root of the archive", so the target must not get a leading slash from
+        // a naive outputDirectory + "/" + name concatenation.
+        final MavenProject project = new MavenProject(new Model());
+
+        final DependencySet ds = new DependencySet();
+        ds.setOutputDirectory("");
+        ds.setOutputFileNameMapping("artifact");
+        ds.setScope(Artifact.SCOPE_COMPILE);
+
+        final MavenSession session = mock(MavenSession.class);
+        when(session.getProjectBuildingRequest()).thenReturn(new DefaultProjectBuildingRequest());
+        when(session.getUserProperties()).thenReturn(new Properties());
+        when(session.getSystemProperties()).thenReturn(new Properties());
+
+        final AssemblerConfigurationSource configSource = mock(AssemblerConfigurationSource.class);
+        when(configSource.getMavenSession()).thenReturn(session);
+        when(configSource.getProject()).thenReturn(project);
+
+        Artifact artifact = mock(Artifact.class);
+        final File artifactFile = File.createTempFile("junit", null, temporaryFolder);
+        when(artifact.getFile()).thenReturn(artifactFile);
+        when(artifact.getGroupId()).thenReturn("GROUPID");
+        when(artifact.getType()).thenReturn("pom");
+
+        final Archiver archiver = mock(Archiver.class);
+
+        final MavenProject depProject = new MavenProject(new Model());
+        depProject.setGroupId("GROUPID");
+
+        ProjectBuildingResult pbr = mock(ProjectBuildingResult.class);
+        when(pbr.getProject()).thenReturn(depProject);
+
+        final ProjectBuilder projectBuilder = mock(ProjectBuilder.class);
+        when(projectBuilder.build(any(Artifact.class), any(ProjectBuildingRequest.class)))
+                .thenReturn(pbr);
+
+        final AddDependencySetsTask task = new AddDependencySetsTask(
+                Collections.singletonList(ds), Collections.singleton(artifact), project, projectBuilder);
+        DefaultAssemblyArchiverTest.setupInterpolators(configSource, project);
+
+        task.addDependencySet(ds, archiver, configSource);
+
+        verify(archiver).addFile(artifactFile, "artifact");
+    }
+
     private void verifyOneDependencyAdded(final String outputLocation, final boolean unpack)
             throws AssemblyFormattingException, ArchiverException, ArchiveCreationException, IOException,
                     InvalidAssemblerConfigurationException, ProjectBuildingException {
