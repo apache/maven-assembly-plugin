@@ -145,16 +145,18 @@ public class AddDependencySetsTask {
                 : null;
 
         for (final Artifact depArtifact : dependencyArtifacts) {
-            ProjectBuildingRequest pbr = getProjectBuildingRequest(configSource);
-            MavenProject depProject;
-            try {
-                ProjectBuildingResult build = projectBuilder1.build(depArtifact, pbr);
-                depProject = build.getProject();
-            } catch (final ProjectBuildingException e) {
-                LOGGER.debug("Error retrieving POM of module-dependency: " + depArtifact.getId() + "; Reason: "
-                        + e.getMessage() + "\n\nBuilding stub project instance.");
+            MavenProject depProject = findReactorProject(configSource.getReactorProjects(), depArtifact);
+            if (depProject == null) {
+                ProjectBuildingRequest pbr = getProjectBuildingRequest(configSource);
+                try {
+                    ProjectBuildingResult build = projectBuilder1.build(depArtifact, pbr);
+                    depProject = build.getProject();
+                } catch (final ProjectBuildingException | IllegalArgumentException e) {
+                    LOGGER.debug("Error retrieving POM of module-dependency: " + depArtifact.getId() + "; Reason: "
+                            + e.getMessage() + "\n\nBuilding stub project instance.");
 
-                depProject = buildProjectStub(depArtifact);
+                    depProject = buildProjectStub(depArtifact);
+                }
             }
 
             if (NON_ARCHIVE_DEPENDENCY_TYPES.contains(depArtifact.getType())) {
@@ -163,6 +165,19 @@ public class AddDependencySetsTask {
                 addNormalArtifact(dependencySet, depArtifact, depProject, archiver, configSource, fileSetTransformers);
             }
         }
+    }
+
+    private MavenProject findReactorProject(List<MavenProject> reactorProjects, Artifact artifact) {
+        if (reactorProjects != null) {
+            for (MavenProject candidate : reactorProjects) {
+                if (candidate.getGroupId().equals(artifact.getGroupId())
+                        && candidate.getArtifactId().equals(artifact.getArtifactId())
+                        && candidate.getVersion().equals(artifact.getVersion())) {
+                    return candidate;
+                }
+            }
+        }
+        return null;
     }
 
     private ProjectBuildingRequest getProjectBuildingRequest(AssemblerConfigurationSource configSource) {
