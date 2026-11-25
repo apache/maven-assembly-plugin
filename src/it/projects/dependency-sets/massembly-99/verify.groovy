@@ -17,8 +17,6 @@
  * under the License.
  */
 
-
-
 assert new File(basedir, "assembly/target/assembly-1.0-SNAPSHOT-bin/lib/jdom.jar").exists()
 assert new File(basedir, "assembly/target/assembly-1.0-SNAPSHOT-bin/lib/velocity.jar").exists()
 

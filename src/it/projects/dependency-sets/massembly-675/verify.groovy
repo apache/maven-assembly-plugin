@@ -17,8 +17,6 @@
  * under the License.
  */
 
-
-
 assert new File(basedir, "target/massembly-675-1-bin/massembly-675-1.jar").exists()
 assert new File(basedir, "target/massembly-675-1-bin/closure-compiler-v20131014.jar").exists()
 

@@ -17,8 +17,6 @@
  * under the License.
  */
 
-import java.io.*
-
 boolean result = true
 
 try {

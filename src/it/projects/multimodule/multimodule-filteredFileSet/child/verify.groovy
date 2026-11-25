@@ -17,8 +17,6 @@
  * under the License.
  */
 
-import java.io.*
-
 try {
     String javaVersion = System.getProperty("java.version")
     File a = new File(basedir, "target/parent-1.0-bin/a/filtered.txt")

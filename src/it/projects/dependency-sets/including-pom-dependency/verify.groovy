@@ -17,8 +17,6 @@
  * under the License.
  */
 
-
-
 // verify that transitive deps of the POM dep were included.
 assert new File(basedir, "target/including-pom-dependency-1.0-SNAPSHOT-bin/lib/plexus-utils").exists()
 assert new File(basedir, "target/including-pom-dependency-1.0-SNAPSHOT-bin/lib/classworlds").exists()

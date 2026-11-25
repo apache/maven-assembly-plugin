@@ -17,8 +17,6 @@
  * under the License.
  */
 
-
-
 assert new File(basedir, "assembly/target/assembly-1.0-bin/lib/child1.jar").exists()
 assert new File(basedir, "assembly/target/assembly-1.0-bin/lib/child3.jar").exists()
 
