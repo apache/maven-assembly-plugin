@@ -17,8 +17,6 @@
  * under the License.
  */
 
-
-
 // verify that transitive deps of the POM dep were included.
 assert new File(basedir, "target/including-sar-dependency-1.0-SNAPSHOT-bin/lib/xmlrpc").exists()
 assert new File(basedir, "target/including-sar-dependency-1.0-SNAPSHOT-bin/lib/plexus-xmlrpc").exists()

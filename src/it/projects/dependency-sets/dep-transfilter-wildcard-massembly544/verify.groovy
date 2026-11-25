@@ -17,7 +17,6 @@
  * under the License.
  */
 
-
 File dir = new File(basedir, "target/dep-transfilter-wildcard-massembly544-1-bin/maven-libs")
 File[] files = [
     new File(dir, "wagon-webdav-jackrabbit-1.0-beta-4.jar"),

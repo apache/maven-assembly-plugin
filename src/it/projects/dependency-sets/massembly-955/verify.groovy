@@ -17,7 +17,5 @@
  * under the License.
  */
 
-
-
 assert new File(basedir, "target/massembly-955-1-bin/teiid-10.0.5-jdbc.jar").exists()
 assert new File(basedir, "target/massembly-955-1-bin/jython-standalone-2.7.2.jar").exists()

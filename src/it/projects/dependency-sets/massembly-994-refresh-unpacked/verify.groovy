@@ -17,7 +17,6 @@
  * under the License.
  */
 
-
 File testProperties = new File(basedir, "child2/target/child2-1.0-SNAPSHOT-dir/test.properties")
 assert testProperties.exists()
 assert testProperties.text.contains('testValue=value2')

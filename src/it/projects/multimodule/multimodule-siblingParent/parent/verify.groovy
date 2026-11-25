@@ -17,8 +17,6 @@
  * under the License.
  */
 
-
-
 assert new File(basedir, "target/parent-1-src/sources/child1/pom.xml").exists()
 
 assert new File(basedir, "target/parent-1-src/sources/child2/pom.xml").exists()
