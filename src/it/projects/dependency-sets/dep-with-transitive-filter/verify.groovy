@@ -17,19 +17,9 @@
  * under the License.
  */
 
-import java.io.*;
-
 File wagonJackrabbitJar = new File( basedir, "target/project-1-bin/maven-libs/wagon-webdav-jackrabbit-1.0-beta-4.jar" );
 File xercesMinimalJar = new File( basedir, "target/project-1-bin/maven-libs/xercesMinimal-1.9.6.2.jar" );
 
-if ( !wagonJackrabbitJar.exists() )
-{
-    System.out.println( "Wagon provider jar is missing (should be included via include wildcard pattern)." );
-}
+assert wagonJackrabbitJar.exists() : "Wagon provider jar is missing (should be included via include wildcard pattern).";
 
-if ( !xercesMinimalJar.exists() )
-{
-    System.out.println( "Xerces minimal jar (from nekohtml, brought in by wagon jackrabbit provider) is missing (should be included via include wildcard pattern)." );
-}
-
-return wagonJackrabbitJar.exists() && xercesMinimalJar.exists();
+assert xercesMinimalJar.exists() : "Xerces minimal jar (from nekohtml, brought in by wagon jackrabbit provider) is missing (should be included via include wildcard pattern).";

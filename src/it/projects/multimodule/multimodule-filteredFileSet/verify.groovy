@@ -17,25 +17,8 @@
  * under the License.
  */
 
-import java.io.*;
+String osVersion = System.getProperty( "os.version" );
+File a = new File( basedir, "target/parent-1.0-bin/child/a/filtered.txt");
 
-try
-{
-  String osVersion = System.getProperty( "os.version" );
-  File a = new File( basedir, "target/parent-1.0-bin/child/a/filtered.txt");
-  
-  BufferedReader r = new BufferedReader(new FileReader(a));
-  String line = r.readLine();
-  if ( ! line.endsWith( osVersion ) )
-  {
-    System.out.println( "Expected OS version: " + osVersion );
-    System.out.println( "Line was: " + line );
-    return false;
-  }
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-}
-
-return true;
+String line = a.withReader( "UTF-8" ) { it.readLine() };
+assert line.endsWith( osVersion ) : "Expected OS version: " + osVersion + "\nLine was: " + line;

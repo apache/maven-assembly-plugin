@@ -17,41 +17,15 @@
  * under the License.
  */
 
-import java.io.*;
-import java.net.*;
 import java.util.zip.*;
 
-boolean result = true;
 
-try
-{
-    File zipFile = new File( basedir, "child2/target/project2-0.0.1-SNAPSHOT-deployable.zip" );
-    
-    if ( !zipFile.exists() || zipFile.isDirectory() )
-    {
-        System.err.println( "zip-file is missing or a directory." );
-        result = false;
-    }
-    
-    ZipFile zf = new ZipFile( zipFile );
-    
-    if ( zf.getEntry( "project2-0.0.1-SNAPSHOT/empty.properties" ) == null )
-    {
-        System.err.println( "empty.properties entry is missing." );
-        result = false;
-    }
-    
-    if ( zf.getEntry( "project2-0.0.1-SNAPSHOT/bin/start.sh" ) == null )
-    {
-        System.err.println( "start.sh entry is missing." );
-        result = false;
-    }
-    
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-    result = false;
-}
+File zipFile = new File( basedir, "child2/target/project2-0.0.1-SNAPSHOT-deployable.zip" );
 
-return result;
+assert zipFile.exists() && !zipFile.isDirectory() : "zip-file is missing or a directory.";
+
+ZipFile zf = new ZipFile( zipFile );
+
+assert zf.getEntry( "project2-0.0.1-SNAPSHOT/empty.properties" ) != null : "empty.properties entry is missing.";
+
+assert zf.getEntry( "project2-0.0.1-SNAPSHOT/bin/start.sh" ) != null : "start.sh entry is missing.";

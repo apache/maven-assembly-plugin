@@ -17,20 +17,4 @@
  * under the License.
  */
 
-import java.io.*;
-import java.net.*;
-import java.util.jar.*;
-
-boolean result = true;
-
-try
-{
-    result = new File( basedir, "target/my-final-name-bin/my-final-name/root/bin.xml" ).exists();
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-    result = false;
-}
-
-return result;
+assert new File( basedir, "target/my-final-name-bin/my-final-name/root/bin.xml" ).exists();

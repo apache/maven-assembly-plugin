@@ -19,9 +19,6 @@
 
 import java.io.File;
 
-boolean result = true;
 
-result = result && new File( basedir, "child1/target/child1-1.0-SNAPSHOT-bin/lib/junit-jupiter-api.jar" ).exists();
-result = result && new File( basedir, "child2/target/child2-1.0-SNAPSHOT-bin/lib/junit-jupiter-api.jar" ).exists();
-
-return result;
+assert new File( basedir, "child1/target/child1-1.0-SNAPSHOT-bin/lib/junit-jupiter-api.jar" ).exists();
+assert new File( basedir, "child2/target/child2-1.0-SNAPSHOT-bin/lib/junit-jupiter-api.jar" ).exists();

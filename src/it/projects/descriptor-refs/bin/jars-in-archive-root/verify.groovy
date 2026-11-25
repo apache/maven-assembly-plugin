@@ -17,45 +17,24 @@
  * under the License.
  */
 
-import java.io.*;
-import java.net.*;
 import java.util.zip.*;
 
-boolean result = true;
 
 String basename = "jars-in-archive-root-1.0-SNAPSHOT";
 
-try
-{
-    File zipFile = new File( basedir, "target/" + basename + "-bin.zip" );
-    
-    System.out.println( "Checking for existence and file-ishness of: " + zipFile );
-    
-    if ( !zipFile.exists() || zipFile.isDirectory() )
-    {
-        System.err.println( "zip file is missing or a directory." );
-        return false;
-    }
-    
-    System.out.println( "Creating zipFile instance." );
-    
-    ZipFile zf = new ZipFile( zipFile );
-    
-    System.out.println( "Looking for project-artifact jar zip entry." );
-    
-    ZipEntry je = zf.getEntry( basename + "/" + basename + ".jar" ); 
+File zipFile = new File( basedir, "target/" + basename + "-bin.zip" );
 
-    if ( je == null )
-    {
-        System.out.println( "project artifact is missing from archive root dir." );
-        result = false;
-    }
+System.out.println( "Checking for existence and file-ishness of: " + zipFile );
+
+assert zipFile.exists() && !zipFile.isDirectory() : "zip file is missing or a directory.";
+
+System.out.println( "Creating zipFile instance." );
+
+ZipFile zf = new ZipFile( zipFile );
+
+System.out.println( "Looking for project-artifact jar zip entry." );
+
+ZipEntry je = zf.getEntry( basename + "/" + basename + ".jar" ); 
+
+assert je != null : "project artifact is missing from archive root dir.";
    
-}
-catch( IOException e )
-{
-    e.printStackTrace( System.out );
-    result = false;
-}
-
-return result;

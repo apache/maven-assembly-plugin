@@ -17,56 +17,14 @@
  * under the License.
  */
 
-import java.io.*;
 import java.util.jar.*;
 
-try
-{
-  boolean fooFound = false;
-  boolean barFound = false;
-  
-  JarFile file = new JarFile( new File( basedir, "child2/target/child2-1.0-SNAPSHOT-bin.jar" ) );
-  JarEntry entry = file.getEntry( "META-INF/services/test.Test" );
-  if ( entry == null )
-  {
-    return false;
-  }
-  
-  BufferedReader br = new BufferedReader( new InputStreamReader( file.getInputStream( entry ) ) );
-  
-  String line = null;
-  while( ( line = br.readLine() ) != null )
-  {
-    if ( line.equals( "test.Foo" ) )
-    {
-      fooFound = true;
-    }
-    else if ( line.equals( "test.Bar" ) )
-    {
-      barFound = true;
-    }
-    
-    if ( fooFound && barFound )
-    {
-      break;
-    }
-  }
-  
-  if ( !fooFound )
-  {
-    System.out.println( "Cannot find entry 'test.Foo' in: " + entry.getName() );
-  }
-  
-  if ( !barFound )
-  {
-    System.out.println( "Cannot find entry 'test.Bar' in: " + entry.getName() );
-  }
-  
-  return fooFound && barFound;
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-}
+JarFile file = new JarFile( new File( basedir, "child2/target/child2-1.0-SNAPSHOT-bin.jar" ) );
+JarEntry entry = file.getEntry( "META-INF/services/test.Test" );
+assert entry != null : "Entry META-INF/services/test.Test is missing";
 
-return false;
+List lines = file.getInputStream( entry ).withCloseable { it.readLines( "UTF-8" ) };
+
+assert lines.contains( "test.Foo" ) : "Cannot find entry 'test.Foo' in: " + entry.getName();
+
+assert lines.contains( "test.Bar" ) : "Cannot find entry 'test.Bar' in: " + entry.getName();

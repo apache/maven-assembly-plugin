@@ -17,10 +17,7 @@
  * under the License.
  */
 
-import java.io.*;
 import java.util.jar.*;
-import java.util.*;
-import java.net.*;
 
 File file = new File( basedir, "target/test-1.0-full.jar" );
 
@@ -34,4 +31,4 @@ Attributes attrs = mf.getMainAttributes();
 
 String classPath = (String) attrs.get( Attributes.Name.CLASS_PATH );
 
-return  classPath.contains("plexus-utils");
+assert classPath.contains("plexus-utils");

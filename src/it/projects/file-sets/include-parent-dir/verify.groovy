@@ -17,6 +17,4 @@
  * under the License.
  */
 
-import java.io.*;
-
-return new File( basedir, "child/target/child-1.0-SNAPSHOT-parent/child/pom.xml" ).exists();
+assert new File( basedir, "child/target/child-1.0-SNAPSHOT-parent/child/pom.xml" ).exists();

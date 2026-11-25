@@ -17,14 +17,6 @@
  * under the License.
  */
 
-import java.io.*;
-
 File a = new File( basedir, "child/target/child-1.0-bin/a/file.txt");
 
-if ( !a.exists() || !a.isFile() )
-{
-  System.out.println( "Missing test file: " + a );
-  return false;
-}
-
-return true;
+assert a.exists() && a.isFile() : "Missing test file: " + a;

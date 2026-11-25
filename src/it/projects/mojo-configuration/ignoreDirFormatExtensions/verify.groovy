@@ -17,27 +17,9 @@
  * under the License.
  */
 
-import java.io.*;
-
 File src = new File( basedir, "target/ignoreDirFormatExtensions-1-src/pom.xml" );
 File src2 = new File( basedir, "target/ignoreDirFormatExtensions-1-src2.dir/pom.xml" );
 
-{
-    File f = src;
+assert src.exists() : "Project assembly directory is missing. Check-file was: " + src;
 
-    if ( !f.exists() )
-    {
-        System.out.println( "Project assembly directory is missing. Check-file was: " + f );
-    }
-}
-
-{
-    File f = src2;
-
-    if ( !f.exists() )
-    {
-        System.out.println( "Project assembly directory is missing. Check-file was: " + f );
-    }
-}
-
-return src.exists() && src2.exists();
+assert src2.exists() : "Project assembly directory is missing. Check-file was: " + src2;

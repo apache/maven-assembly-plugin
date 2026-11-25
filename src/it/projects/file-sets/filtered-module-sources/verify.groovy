@@ -17,22 +17,10 @@
  * under the License.
  */
 
-import java.io.*;
-
 File f = new File( basedir, "target/parent-1-src/child/test.txt" );
 
-if ( !f.exists() )
-{
-    System.out.println( "Filtered file from file-set: " + f + " is missing." );
-    return false;
-}
+assert f.exists() : "Filtered file from file-set: " + f + " is missing.";
 
-String line = null;
+String line = f.withReader( "UTF-8" ) { it.readLine() };
 
-BufferedReader reader = new BufferedReader( new FileReader( f ) );
-line = reader.readLine();
-reader.close();
-
-System.out.println( "First line of test.txt: '" + line + "' should equal the project version: '1'." );
-
-return "1".equals( line.trim() );
+assert "1".equals( line.trim() ) : "First line of test.txt: '" + line + "' should equal the project version: '1'.";

@@ -17,14 +17,10 @@
  * under the License.
  */
 
-import java.io.*;
 
-boolean result = true;
 
 // verify that transitive deps of the POM dep were included.
-result = result && new File( basedir, "target/including-sar-dependency-1.0-SNAPSHOT-bin/lib/xmlrpc" ).exists();
-result = result && new File( basedir, "target/including-sar-dependency-1.0-SNAPSHOT-bin/lib/plexus-xmlrpc" ).exists();
+assert new File( basedir, "target/including-sar-dependency-1.0-SNAPSHOT-bin/lib/xmlrpc" ).exists();
+assert new File( basedir, "target/including-sar-dependency-1.0-SNAPSHOT-bin/lib/plexus-xmlrpc" ).exists();
 
-result = result && new File( basedir, "target/including-sar-dependency-1.0-SNAPSHOT-bin/lib/plexus-appserver-service-xmlrpc/lib/commons-codec-1.3.jar" ).exists();
-
-return result;
+assert new File( basedir, "target/including-sar-dependency-1.0-SNAPSHOT-bin/lib/plexus-appserver-service-xmlrpc/lib/commons-codec-1.3.jar" ).exists();

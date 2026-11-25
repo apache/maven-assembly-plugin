@@ -17,34 +17,12 @@
  * under the License.
  */
 
-import java.io.*;
-import java.net.*;
 import java.util.jar.*;
 
-boolean result = true;
+File f = new File( basedir, "target/relative-project-paths-1.0-src.jar" );
+assert f.exists() : "jar is missing";
 
-try
-{
-    File f = new File( basedir, "target/relative-project-paths-1.0-src.jar" );
-    if ( !f.exists() )
-    {
-        System.out.println( "jar is missing" );
-        return false;
-    }
+JarFile jf = new JarFile( f );
+JarEntry je = jf.getEntry( "pom.xml" );
 
-    JarFile jf = new JarFile( f );
-    JarEntry je = jf.getEntry( "pom.xml" );
-
-    if ( je == null )
-    {
-        System.out.println( "pom.xml entry in jar is missing" );
-        return false;
-    }
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-    result = false;
-}
-
-return result;
+assert je != null : "pom.xml entry in jar is missing";

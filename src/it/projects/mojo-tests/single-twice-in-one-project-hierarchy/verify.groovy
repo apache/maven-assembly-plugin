@@ -19,9 +19,6 @@
 
 import java.io.File;
 
-boolean result = true;
 
-result = result && new File( basedir, "target/first-bin/lib/junit-jupiter-api.jar" ).exists();
-result = result && new File( basedir, "target/second-bin/lib/junit-jupiter-api.jar" ).exists();
-
-return result;
+assert new File( basedir, "target/first-bin/lib/junit-jupiter-api.jar" ).exists();
+assert new File( basedir, "target/second-bin/lib/junit-jupiter-api.jar" ).exists();

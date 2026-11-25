@@ -17,136 +17,83 @@
  * under the License.
  */
 
-import java.io.*;
-import java.net.*;
 import java.util.zip.*;
 
-boolean result = true;
 
 String basename = "multimodule-sources-copied-1.0-SNAPSHOT";
 
-try
-{
-    File zipFile = new File( basedir, "target/" + basename + "-project.zip" );
-    
-    System.out.println( "Checking for existence and file-ishness of: " + zipFile );
-    
-    if ( !zipFile.exists() || zipFile.isDirectory() )
-    {
-        System.err.println( "zip file is missing or a directory." );
-        return false;
-    }
-    
-    System.out.println( "Creating zipFile instance." );
-    
-    ZipFile zf = new ZipFile( zipFile );
-    
-    String childPath = basename + "/child1";
-    
-    System.out.println( "Checking child1 project files..." );
-    
-    System.out.println( "Looking for project source file." );
-    
-    ZipEntry je = zf.getEntry( childPath + "/src/main/java/test/App.java" ); 
+File zipFile = new File( basedir, "target/" + basename + "-project.zip" );
 
-    if ( je == null )
-    {
-        System.out.println( childPath + " source file missing." );
-        result = false;
-    }
+System.out.println( "Checking for existence and file-ishness of: " + zipFile );
+
+assert zipFile.exists() && !zipFile.isDirectory() : "zip file is missing or a directory.";
+
+System.out.println( "Creating zipFile instance." );
+
+ZipFile zf = new ZipFile( zipFile );
+
+String childPath = basename + "/child1";
+
+System.out.println( "Checking child1 project files..." );
+
+System.out.println( "Looking for project source file." );
+
+ZipEntry je = zf.getEntry( childPath + "/src/main/java/test/App.java" ); 
+
+assert je != null : childPath + " source file missing.";
    
-    System.out.println( "Looking for project test-source file." );
-    
-    je = null;
-    je = zf.getEntry( childPath + "/src/test/java/test/AppTest.java" ); 
+System.out.println( "Looking for project test-source file." );
 
-    if ( je == null )
-    {
-        System.out.println( childPath + " test-source file missing." );
-        result = false;
-    }
+je = null;
+je = zf.getEntry( childPath + "/src/test/java/test/AppTest.java" ); 
+
+assert je != null : childPath + " test-source file missing.";
    
-    System.out.println( "Looking for pom.xml file." );
-    
-    je = null;
-    je = zf.getEntry( childPath + "/pom.xml" ); 
+System.out.println( "Looking for pom.xml file." );
 
-    if ( je == null )
-    {
-        System.out.println( childPath + " POM missing." );
-        result = false;
-    }
+je = null;
+je = zf.getEntry( childPath + "/pom.xml" ); 
+
+assert je != null : childPath + " POM missing.";
    
-    je = null;
-    je = zf.getEntry( childPath + "/target/child1-1.0-SNAPSHOT.jar" ); 
+je = null;
+je = zf.getEntry( childPath + "/target/child1-1.0-SNAPSHOT.jar" ); 
 
-    if ( je != null )
-    {
-        System.out.println( childPath + " target directory should not be included." );
-        result = false;
-    }
+assert je == null : childPath + " target directory should not be included.";
    
-    childPath = basename + "/child2";
-    
-    System.out.println( "Checking child2 project files..." );
-    
-    System.out.println( "Looking for project source file." );
-    
-    je = null;
-    je = zf.getEntry( childPath + "/src/main/java/test/App.java" ); 
+childPath = basename + "/child2";
 
-    if ( je == null )
-    {
-        System.out.println( childPath + " source file missing." );
-        result = false;
-    }
+System.out.println( "Checking child2 project files..." );
+
+System.out.println( "Looking for project source file." );
+
+je = null;
+je = zf.getEntry( childPath + "/src/main/java/test/App.java" ); 
+
+assert je != null : childPath + " source file missing.";
    
-    System.out.println( "Looking for project test-source file." );
-    
-    je = null;
-    je = zf.getEntry( childPath + "/src/test/java/test/AppTest.java" ); 
+System.out.println( "Looking for project test-source file." );
 
-    if ( je == null )
-    {
-        System.out.println( childPath + " test-source file missing." );
-        result = false;
-    }
+je = null;
+je = zf.getEntry( childPath + "/src/test/java/test/AppTest.java" ); 
+
+assert je != null : childPath + " test-source file missing.";
    
-    System.out.println( "Looking for pom.xml file." );
-    
-    je = null;
-    je = zf.getEntry( childPath + "/pom.xml" ); 
+System.out.println( "Looking for pom.xml file." );
 
-    if ( je == null )
-    {
-        System.out.println( childPath + " POM missing." );
-        result = false;
-    }
+je = null;
+je = zf.getEntry( childPath + "/pom.xml" ); 
+
+assert je != null : childPath + " POM missing.";
    
-    je = null;
-    je = zf.getEntry( childPath + "/target/child2-1.0-SNAPSHOT.jar" ); 
+je = null;
+je = zf.getEntry( childPath + "/target/child2-1.0-SNAPSHOT.jar" ); 
 
-    if ( je != null )
-    {
-        System.out.println( childPath + " target directory should not be included." );
-        result = false;
-    }
+assert je == null : childPath + " target directory should not be included.";
    
-    System.out.println( "Looking for main pom.xml file." );
-    
-    je = null;
-    je = zf.getEntry( basename + "/pom.xml" ); 
+System.out.println( "Looking for main pom.xml file." );
 
-    if ( je == null )
-    {
-        System.out.println( "project POM missing." );
-        result = false;
-    }
-}
-catch( IOException e )
-{
-    e.printStackTrace( System.out );
-    result = false;
-}
+je = null;
+je = zf.getEntry( basename + "/pom.xml" ); 
 
-return result;
+assert je != null : "project POM missing.";

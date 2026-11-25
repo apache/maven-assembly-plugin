@@ -17,5 +17,5 @@
  * under the License.
  */
 
-return !new java.io.File( basedir, "target/parent-1-src/src/main/assembly/src.xml" ).exists() &&
+assert !new java.io.File( basedir, "target/parent-1-src/src/main/assembly/src.xml" ).exists() &&
        new java.io.File( basedir, "target/parent-1-src.zip" ) .exists();

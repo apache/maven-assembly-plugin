@@ -17,38 +17,17 @@
  * under the License.
  */
 
-import java.io.*;
-import java.net.*;
 import java.util.zip.*;
 
 
 
-boolean result = true;
 
-try
-{
-    File zipFile = new File( basedir, "target/project2-0.0.1-SNAPSHOT-bin.zip" );
-    
-    if ( !zipFile.exists() || zipFile.isDirectory() )
-    {
-        System.err.println( "zip-file is missing or a directory." );
-        result = false;
-    }
-    
-    ZipFile zf = new ZipFile( zipFile );
+File zipFile = new File( basedir, "target/project2-0.0.1-SNAPSHOT-bin.zip" );
 
-    ZipEntry ze = zf.getEntry( "spring-0.0.1-SNAPSHOT/lib/project2-0.0.1-SNAPSHOT.jar" );
-    if ( ze == null )
-    {
-        System.err.println( "filename is incorrect" );
-        result = false;
-    }
-    zf.close();
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-    result = false;
-}
+assert zipFile.exists() && !zipFile.isDirectory() : "zip-file is missing or a directory.";
 
-return result;
+ZipFile zf = new ZipFile( zipFile );
+
+ZipEntry ze = zf.getEntry( "spring-0.0.1-SNAPSHOT/lib/project2-0.0.1-SNAPSHOT.jar" );
+assert ze != null : "filename is incorrect";
+zf.close();

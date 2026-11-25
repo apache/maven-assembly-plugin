@@ -17,21 +17,9 @@
  * under the License.
  */
 
-import java.io.*;
-
 File f = new File( basedir, "child/target/child-1.0-bundle/maven-plugin-api-2.2.1.jar" );
 File f2 = new File( basedir, "child/target/child-1.0-bundle/maven-plugin-api-2.0.6.jar" );
 
-if ( !f.exists() || !f.isFile() )
-{
-  System.out.println( f + " does not exist or is not a file." );
-  return false;
-}
+assert f.exists() && f.isFile() : f + " does not exist or is not a file.";
 
-if ( f2.exists() )
-{
-  System.out.println( f2 + " should NOT have been included." );
-  return false;
-}
-
-return true;
+assert !f2.exists() : f2 + " should NOT have been included.";

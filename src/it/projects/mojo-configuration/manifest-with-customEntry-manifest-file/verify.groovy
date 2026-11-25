@@ -17,10 +17,7 @@
  * under the License.
  */
 
-import java.io.*;
 import java.util.jar.*;
-import java.util.*;
-import java.net.*;
 
 File file = new File( basedir, "target/manifest-with-customEntry-manifest-file-1-webbundle.jar" );
 
@@ -34,4 +31,4 @@ Attributes attrs = mf.getMainAttributes();
 
 String foo = (String) attrs.get( new Attributes.Name( "foo" ) );
 
-return "beer".equals( foo );
+assert "beer".equals( foo );

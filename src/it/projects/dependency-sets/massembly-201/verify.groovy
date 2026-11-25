@@ -17,25 +17,12 @@
  * under the License.
  */
 
-import java.io.*;
-
 File main = new File( basedir, "target/massembly-201-1-bin/maven-model-2.0.9.jar" );
 File sources = new File( basedir, "target/massembly-201-1-bin/maven-model-2.0.9-sources.jar" );
 File javadocs = new File( basedir, "target/massembly-201-1-bin/maven-model-2.0.9-javadoc.jar" );
 
-if ( !main.exists() )
-{
-    System.out.println( "Main (unclassified) dependency jar is missing: " + main );
-}
+assert main.exists() : "Main (unclassified) dependency jar is missing: " + main;
 
-if ( !sources.exists() )
-{
-    System.out.println( "Sources dependency jar is missing: " + sources );
-}
+assert sources.exists() : "Sources dependency jar is missing: " + sources;
 
-if ( !javadocs.exists() )
-{
-    System.out.println( "JavaDocs dependency jar is missing: " + javadocs );
-}
-
-return main.exists() && sources.exists() && javadocs.exists();
+assert javadocs.exists() : "JavaDocs dependency jar is missing: " + javadocs;

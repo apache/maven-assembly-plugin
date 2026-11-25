@@ -17,10 +17,7 @@
  * under the License.
  */
 
-import java.io.*;
 import java.util.jar.*;
-import java.util.*;
-import java.net.*;
 
 File file = new File( basedir, "target/manifest-with-customEntry-1-jar-with-dependencies.jar" );
 
@@ -43,5 +40,3 @@ String mainClass = (String) attrs.get( Attributes.Name.MAIN_CLASS );
 System.out.println( "Got Main-Class: " + mainClass );
 
 assert "test.App".equals( mainClass ) : "Manifest Main-Class: " + mainClass;
-
-return true;

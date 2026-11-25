@@ -17,11 +17,6 @@
  * under the License.
  */
 
-import java.io.*;
-import java.util.zip.*;
-
 File f = new File( basedir, "descriptor/target/distribution-0.0.1-SNAPSHOT-client/dir2/classworlds-1.1.jar" );
 
-return !f.exists();
-
-
+assert !f.exists();

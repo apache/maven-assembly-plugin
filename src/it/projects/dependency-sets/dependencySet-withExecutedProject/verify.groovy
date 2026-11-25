@@ -17,20 +17,4 @@
  * under the License.
  */
 
-import java.io.*;
-import java.net.*;
-import java.util.jar.*;
-
-boolean result = true;
-
-try
-{
-    result = new File( basedir, "child2/target/child2-1.0-SNAPSHOT-bin/lib/child1.jar" ).exists();   
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-    result = false;
-}
-
-return result;
+assert new File( basedir, "child2/target/child2-1.0-SNAPSHOT-bin/lib/child1.jar" ).exists();

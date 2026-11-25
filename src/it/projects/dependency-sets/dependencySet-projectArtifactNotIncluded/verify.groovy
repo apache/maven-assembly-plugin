@@ -17,8 +17,6 @@
  * under the License.
  */
 
-import java.io.*;
-
 if ( !binding.hasVariable( "basedir" ) )
 {
   basedir = new File( "." );
@@ -28,5 +26,4 @@ File depFile = new File( basedir, "target/dependencySet-projectArtifactNotInclud
 
 File projectArtifactFile = new File( basedir, "target/dependencySet-projectArtifactNotIncluded-1.0-SNAPSHOT-bin/lib/dependencySet-projectArtifactNotIncluded-1.0-SNAPSHOT.war" );
 
-System.out.println( "result: " + ( depFile.exists() && !projectArtifactFile.exists() ) );
-return depFile.exists() && !projectArtifactFile.exists();
+assert depFile.exists() && !projectArtifactFile.exists();

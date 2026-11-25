@@ -17,37 +17,15 @@
  * under the License.
  */
 
-import java.io.*;
 import java.util.Arrays;
 
-boolean result = true;
+assert new File( basedir, "child4/target/child4-1.0-bin/lib/child1.jar" ).exists() : "Child-1 jar is NOT in output!";
 
-if ( !new File( basedir, "child4/target/child4-1.0-bin/lib/child1.jar" ).exists() )
-{
-    System.out.println( "Child-1 jar is NOT in output!" );
-    result = false;
-}
+assert new File( basedir, "child4/target/child4-1.0-bin/lib/child3.jar" ).exists() : "Child-3 jar is NOT in output!";
 
-if ( !new File( basedir, "child4/target/child4-1.0-bin/lib/child3.jar" ).exists() )
-{
-    System.out.println( "Child-3 jar is NOT in output!" );
-    result = false;
-}
-
-if ( new File( basedir, "child4/target/child4-1.0-bin/lib/child2.jar" ).exists() )
-{
-    System.out.println( "Child-2 jar SHOULD NOT BE in output!" );
-    result = false;
-}
+assert !new File( basedir, "child4/target/child4-1.0-bin/lib/child2.jar" ).exists() : "Child-2 jar SHOULD NOT BE in output!";
 
 File libDirectory = new File( basedir, "child4/target/child4-1.0-bin/lib" );
 File[] includedArtifacts = libDirectory.listFiles();
 
-if ( includedArtifacts == null || includedArtifacts.length != 2 )
-{
-    System.out.println( "Only the two selected module artifacts should be present when includeDependencies=false." );
-    System.out.println( "Files found: " + Arrays.toString( includedArtifacts ) );
-    result = false;
-}
-
-return result;
+assert includedArtifacts != null && includedArtifacts.length == 2 : "Only the two selected module artifacts should be present when includeDependencies=false.\nFiles found: " + Arrays.toString( includedArtifacts );

@@ -17,20 +17,4 @@
  * under the License.
  */
 
-import java.io.*;
-import java.net.*;
-import java.util.jar.*;
-
-boolean result = true;
-
-try
-{
-    result = new File( basedir, "target/outputFileNameMapping-withArtifactBaseVersion-1.0-SNAPSHOT-bin/lib/plexus-utils-3.5.1.jar" ).exists();
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-    result = false;
-}
-
-return result;
+assert new File( basedir, "target/outputFileNameMapping-withArtifactBaseVersion-1.0-SNAPSHOT-bin/lib/plexus-utils-3.5.1.jar" ).exists();

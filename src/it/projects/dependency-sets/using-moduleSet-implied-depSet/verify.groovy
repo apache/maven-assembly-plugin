@@ -17,16 +17,11 @@
  * under the License.
  */
 
-import java.io.*;
-
-boolean result = true;
-
-result = result && new File( basedir, "module-b/target/module-b-1.0-SNAPSHOT-bin/modules/jdom-1.0.jar" ).exists();
-result = result && new File( basedir, "module-b/target/module-b-1.0-SNAPSHOT-bin/modules/velocity-1.4.jar" ).exists();
-result = result && new File( basedir, "module-b/target/module-b-1.0-SNAPSHOT-bin/modules/velocity-dep-1.4.jar" ).exists();
-
-result = result && new File( basedir, "module-b/target/module-b-1.0-SNAPSHOT-bin/modules/module-a.jar" ).exists();
-result = result && new File( basedir, "module-b/target/module-b-1.0-SNAPSHOT-bin/modules/module-b.jar" ).exists();
 
 
-return result;
+assert new File( basedir, "module-b/target/module-b-1.0-SNAPSHOT-bin/modules/jdom-1.0.jar" ).exists();
+assert new File( basedir, "module-b/target/module-b-1.0-SNAPSHOT-bin/modules/velocity-1.4.jar" ).exists();
+assert new File( basedir, "module-b/target/module-b-1.0-SNAPSHOT-bin/modules/velocity-dep-1.4.jar" ).exists();
+
+assert new File( basedir, "module-b/target/module-b-1.0-SNAPSHOT-bin/modules/module-a.jar" ).exists();
+assert new File( basedir, "module-b/target/module-b-1.0-SNAPSHOT-bin/modules/module-b.jar" ).exists();

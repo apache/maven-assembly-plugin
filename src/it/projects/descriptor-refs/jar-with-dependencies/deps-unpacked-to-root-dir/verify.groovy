@@ -17,11 +17,8 @@
  * under the License.
  */
 
-import java.io.*;
-import java.net.*;
 import java.util.jar.*;
 
-boolean result = true;
 
 System.out.println( "Creating JarFile java.io.File." )
     

@@ -17,9 +17,6 @@
  * under the License.
  */
 
-import java.io.*;
-import java.util.*;
-import java.util.jar.*;
 import java.util.zip.*;
 
 
@@ -28,9 +25,4 @@ ZipFile zf = new ZipFile( f );
 
 ZipEntry child1InclEntry = zf.getEntry( "my-app-1.0-SNAPSHOT/modules/junit-jupiter-api-" + scriptVarVersionJunit + ".jar" );
 
-if ( child1InclEntry == null )
-{
-    System.out.println( "Expected junit.jar!" );
-    return false;
-}
-return true;
+assert child1InclEntry != null : "Expected junit.jar!";

@@ -17,7 +17,6 @@
  * under the License.
  */
 
-import java.io.*;
 
 File dir = new File( basedir, "target/dep-transfilter-wildcard-massembly544-1-bin/maven-libs" );
 File[] files = [
@@ -27,14 +26,7 @@ File[] files = [
   new File( dir, "doxia-sink-api-1.0-alpha-7.jar" )
 ];
 
-boolean result = true;
 for( int i = 0; i<files.length; i++ )
 {
-    if ( !files[i].exists() )
-    {
-        System.out.println( "Cannot find jar: " + files[i] + " (should be included via transitive pattern)." );
-        result = false;
-    }
+    assert files[i].exists() : "Cannot find jar: " + files[i] + " (should be included via transitive pattern).";
 }
-
-return result;

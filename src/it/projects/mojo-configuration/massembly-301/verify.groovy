@@ -23,34 +23,8 @@ File jar = new File( basedir, base + ".jar" );
 File zip = new File( basedir, base + ".zip" );
 File tgz = new File( basedir, base + ".tar.gz" );
 
-{
-    File f = jar;
-    String type = "main jar";
+assert jar.exists() : "Project main jar is missing in deployment repository. File was: " + jar;
 
-    if ( !f.exists() )
-    {
-        System.out.println( "Project " + type + " is missing in deployment repository. File was: " + f );
-    }
-}
+assert zip.exists() : "Project sources zip is missing in deployment repository. File was: " + zip;
 
-{
-    File f = zip;
-    String type = "sources zip";
-
-    if ( !f.exists() )
-    {
-        System.out.println( "Project " + type + " is missing in deployment repository. File was: " + f );
-    }
-}
-
-{
-    File f = tgz;
-    String type = "sources tar.gz";
-
-    if ( !f.exists() )
-    {
-        System.out.println( "Project " + type + " is missing in deployment repository. File was: " + f );
-    }
-}
-
-return jar.exists() && zip.exists() && tgz.exists();
+assert tgz.exists() : "Project sources tar.gz is missing in deployment repository. File was: " + tgz;

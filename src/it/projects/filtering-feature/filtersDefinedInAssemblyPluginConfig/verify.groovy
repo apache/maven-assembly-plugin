@@ -17,33 +17,7 @@
  * under the License.
  */
 
-import java.io.*;
-import java.net.*;
-import java.util.jar.*;
-
-boolean result = true;
-
-try
-{
-    File file = new File( basedir, "target/parent-1.0-filtered-assembly/file.txt");
-    if(result) {
-        BufferedReader r = new BufferedReader(new FileReader(file));
-        String s = r.readLine();
-        result = s.equals("foo");
-        if(result) {
-            s = r.readLine();
-            if(!s.contains("\\"))
-            {
-                System.out.println("file.txt escaped filtering");
-                return false;
-            }
-        }
-    }
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-    result = false;
-}
-
-return result;
+File file = new File( basedir, "target/parent-1.0-filtered-assembly/file.txt");
+List lines = file.readLines( "UTF-8" );
+assert lines[0].equals( "foo" );
+assert lines[1].contains( "\\" ) : "file.txt escaped filtering";
