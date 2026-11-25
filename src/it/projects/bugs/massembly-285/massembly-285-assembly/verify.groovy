@@ -17,10 +17,10 @@
  * under the License.
  */
 
-import java.io.File;
+import java.io.File
 
 /*
  This is where you verify the results of the assembly build. You may need to check the existence of a file,
  or even peek within a jar file to determine whether the assembly did the right thing.
  */
-return new File( basedir, 'target/${artifactId}-${version}-bin.dir/lib/junit-jupiter-api.jar' ).exists();
+return new File(basedir, 'target/${artifactId}-${version}-bin.dir/lib/junit-jupiter-api.jar').exists()

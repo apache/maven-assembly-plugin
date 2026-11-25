@@ -19,6 +19,6 @@
 
 import java.util.zip.ZipFile
 
-def zipFile = new ZipFile(new File(basedir, "target/massembly-1022-0.0.1-SNAPSHOT-assembly.zip"));
+def zipFile = new ZipFile(new File(basedir, "target/massembly-1022-0.0.1-SNAPSHOT-assembly.zip"))
 assert zipFile.getEntry("slf4j-simple-1.7.36.jar") != null
 assert zipFile.entries().size() == 1

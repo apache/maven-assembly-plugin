@@ -17,5 +17,5 @@
  * under the License.
  */
 
-File f = new File( basedir, "child2/target/child2-1-bin/bar/child1-1.jar" );
-assert f.exists() && f.isFile();
+File f = new File(basedir, "child2/target/child2-1-bin/bar/child1-1.jar")
+assert f.exists() && f.isFile()

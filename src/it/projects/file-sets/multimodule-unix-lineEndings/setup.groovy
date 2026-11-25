@@ -20,6 +20,6 @@
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 
-File input = new File( basedir, "child/src/main/assembly-resources/mac2win.txt" )
-Files.write( input.toPath(), '${project.version}\r${project.artifactId}'.getBytes( StandardCharsets.UTF_8 ) )
+File input = new File(basedir, "child/src/main/assembly-resources/mac2win.txt")
+Files.write(input.toPath(), '${project.version}\r${project.artifactId}'.getBytes(StandardCharsets.UTF_8))
 return true

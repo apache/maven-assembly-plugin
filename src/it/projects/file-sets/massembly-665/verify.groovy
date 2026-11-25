@@ -17,5 +17,5 @@
  * under the License.
  */
 
-assert new File( basedir, "target/massembly-665-1.0-SNAPSHOT-src/bin/aFile.txt" ).exists()
-assert !new File( basedir, "target/massembly-665-1.0-SNAPSHOT-src/conf/aFile.txt" ).exists()
+assert new File(basedir, "target/massembly-665-1.0-SNAPSHOT-src/bin/aFile.txt").exists()
+assert !new File(basedir, "target/massembly-665-1.0-SNAPSHOT-src/conf/aFile.txt").exists()

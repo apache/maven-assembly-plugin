@@ -17,14 +17,16 @@
  * under the License.
  */
 
-import java.util.jar.*;
+import java.util.jar.*
 
-JarFile file = new JarFile( new File( basedir, "child2/target/child2-1.0-SNAPSHOT-bin.jar" ) );
-JarEntry entry = file.getEntry( "META-INF/services/test.Test" );
-assert entry != null : "Entry META-INF/services/test.Test is missing";
+JarFile file = new JarFile(new File(basedir, "child2/target/child2-1.0-SNAPSHOT-bin.jar"))
+JarEntry entry = file.getEntry("META-INF/services/test.Test")
+assert entry != null : "Entry META-INF/services/test.Test is missing"
 
-List lines = file.getInputStream( entry ).withCloseable { it.readLines( "UTF-8" ) };
+List lines = file.getInputStream( entry ).withCloseable {
+    it.readLines( "UTF-8" )
+}
 
-assert lines.contains( "test.Foo" ) : "Cannot find entry 'test.Foo' in: " + entry.getName();
+assert lines.contains( "test.Foo" ) : "Cannot find entry 'test.Foo' in: " + entry.getName()
 
-assert lines.contains( "test.Bar" ) : "Cannot find entry 'test.Bar' in: " + entry.getName();
+assert lines.contains( "test.Bar" ) : "Cannot find entry 'test.Bar' in: " + entry.getName()

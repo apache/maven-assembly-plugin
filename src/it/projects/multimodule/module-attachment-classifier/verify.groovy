@@ -26,12 +26,12 @@ assert attachment.isFile() : "The attached test JAR is missing: ${attachment}"
 
 def moduleArtifacts = modulesDirectory.listFiles()*.name.sort()
 assert moduleArtifacts == ['producer-tests.jar'] :
-        "Expected only the attached test JAR, but found: ${moduleArtifacts}"
+"Expected only the attached test JAR, but found: ${moduleArtifacts}"
 
 def jar = new JarFile(attachment)
 try {
     assert jar.getEntry('attachment-marker.txt') != null :
-            'The selected artifact does not contain the attachment marker.'
+    'The selected artifact does not contain the attachment marker.'
 } finally {
     jar.close()
 }

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-File f = new File( basedir, "child2/target/child2-1-bin/zz/assembly-resources/test.txt" );
+File f = new File(basedir, "child2/target/child2-1-bin/zz/assembly-resources/test.txt")
 
-String line = f.withReader( "UTF-8" ) { it.readLine() };
-assert "Project Version: 1".equals( line ) : "First line of " + f + " was: " + line;
+String line = f.withReader("UTF-8") { it.readLine() }
+assert "Project Version: 1".equals(line) : "First line of " + f + " was: " + line

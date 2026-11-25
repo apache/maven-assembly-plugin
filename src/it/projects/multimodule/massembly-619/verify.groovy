@@ -17,6 +17,6 @@
  * under the License.
  */
 
-File f = new File( basedir, "descriptor/target/distribution-0.0.1-SNAPSHOT-client/dir2/classworlds-1.1.jar" );
+File f = new File(basedir, "descriptor/target/distribution-0.0.1-SNAPSHOT-client/dir2/classworlds-1.1.jar")
 
-assert !f.exists();
+assert !f.exists()

@@ -17,6 +17,6 @@
  * under the License.
  */
 
-File a = new File( basedir, "child/target/child-1.0-bin/a/file.txt");
+File a = new File(basedir, "child/target/child-1.0-bin/a/file.txt")
 
-assert a.exists() && a.isFile() : "Missing test file: " + a;
+assert a.exists() && a.isFile() : "Missing test file: " + a

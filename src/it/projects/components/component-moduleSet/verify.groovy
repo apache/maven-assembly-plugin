@@ -18,13 +18,14 @@
  */
 
 // dependency versions are not part of what is verified: "maven-monitor-2.2.0.jar" becomes "maven-monitor.jar"
-def normalized( File dir )
-{
-    return dir.list().collect { it.replaceAll( /-\d[\w.\-]*\.jar$/, ".jar" ) }.sort()
+def normalized(File dir) {
+    return dir.list().collect {
+        it.replaceAll(/-\d[\w.\-]*\.jar$/, ".jar")
+    }.sort()
 }
 
 // the moduleSet comes from a componentDescriptor and includes only test:child1, with its test dependencies
-File dir = new File( basedir, "child2/target/child2-1-bin" )
+File dir = new File(basedir, "child2/target/child2-1-bin")
 assert dir.isDirectory() : "Missing assembly directory " + dir
 def names = normalized( dir )
 assert names.contains( "child1.jar" ) : "Entries: " + dir.list()

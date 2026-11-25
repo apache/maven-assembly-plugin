@@ -17,26 +17,26 @@
  * under the License.
  */
 
-import java.util.jar.*;
+import java.util.jar.*
 
-File file = new File( basedir, "target/manifest-with-customEntry-1-jar-with-dependencies.jar" );
+File file = new File(basedir, "target/manifest-with-customEntry-1-jar-with-dependencies.jar")
 
-System.out.println( "file: " + file + " exists? " + file.exists() );
+System.out.println("file: " + file + " exists? " + file.exists())
 
-JarFile jarFile = new JarFile( file );
+JarFile jarFile = new JarFile(file)
 
-Manifest mf = jarFile.getManifest();
+Manifest mf = jarFile.getManifest()
 
-Attributes attrs = mf.getMainAttributes();
+Attributes attrs = mf.getMainAttributes()
 
-String mode = (String) attrs.get( new Attributes.Name( "mode" ) );
+String mode = (String) attrs.get(new Attributes.Name("mode"))
 
-System.out.println( "Got mode: " + mode );
+System.out.println("Got mode: " + mode)
 
-assert "development".equals( mode ) : "Manifest entry mode: " + mode;
+assert "development".equals(mode) : "Manifest entry mode: " + mode
 
-String mainClass = (String) attrs.get( Attributes.Name.MAIN_CLASS );
+String mainClass = (String) attrs.get( Attributes.Name.MAIN_CLASS )
 
-System.out.println( "Got Main-Class: " + mainClass );
+System.out.println( "Got Main-Class: " + mainClass )
 
-assert "test.App".equals( mainClass ) : "Manifest Main-Class: " + mainClass;
+assert "test.App".equals( mainClass ) : "Manifest Main-Class: " + mainClass

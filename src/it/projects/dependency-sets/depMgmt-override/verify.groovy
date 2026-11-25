@@ -17,9 +17,9 @@
  * under the License.
  */
 
-File f = new File( basedir, "child/target/child-1.0-bundle/maven-plugin-api-2.2.1.jar" );
-File f2 = new File( basedir, "child/target/child-1.0-bundle/maven-plugin-api-2.0.6.jar" );
+File f = new File(basedir, "child/target/child-1.0-bundle/maven-plugin-api-2.2.1.jar")
+File f2 = new File(basedir, "child/target/child-1.0-bundle/maven-plugin-api-2.0.6.jar")
 
-assert f.exists() && f.isFile() : f + " does not exist or is not a file.";
+assert f.exists() && f.isFile() : f + " does not exist or is not a file."
 
-assert !f2.exists() : f2 + " should NOT have been included.";
+assert !f2.exists() : f2 + " should NOT have been included."

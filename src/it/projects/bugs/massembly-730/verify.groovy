@@ -21,10 +21,14 @@ import java.util.zip.ZipFile
 
 // MASSEMBLY-730: jar-with-dependencies of a project depending on the PostgreSQL driver; the tests that run after
 // packaging (see the pom) ran green, so the jar is complete and holds the driver classes
-File jar = new File( basedir, "target/issue-mvn-assembly-plugin-730-jar-with-dependencies.jar" )
+File jar = new File(basedir, "target/issue-mvn-assembly-plugin-730-jar-with-dependencies.jar")
 assert jar.isFile() : "Missing " + jar
 def names = []
-new ZipFile( jar ).withCloseable { z -> names = Collections.list( z.entries() ).collect { it.name } }
+new ZipFile( jar ).withCloseable { z ->
+    names = Collections.list( z.entries() ).collect {
+        it.name
+    }
+}
 
 assert names.contains( "META-INF/MANIFEST.MF" )
 assert names.contains( "org/postgresql/Driver.class" ) : "The driver is missing from the jar"

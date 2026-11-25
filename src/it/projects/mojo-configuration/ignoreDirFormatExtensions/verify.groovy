@@ -17,9 +17,9 @@
  * under the License.
  */
 
-File src = new File( basedir, "target/ignoreDirFormatExtensions-1-src/pom.xml" );
-File src2 = new File( basedir, "target/ignoreDirFormatExtensions-1-src2.dir/pom.xml" );
+File src = new File(basedir, "target/ignoreDirFormatExtensions-1-src/pom.xml")
+File src2 = new File(basedir, "target/ignoreDirFormatExtensions-1-src2.dir/pom.xml")
 
-assert src.exists() : "Project assembly directory is missing. Check-file was: " + src;
+assert src.exists() : "Project assembly directory is missing. Check-file was: " + src
 
-assert src2.exists() : "Project assembly directory is missing. Check-file was: " + src2;
+assert src2.exists() : "Project assembly directory is missing. Check-file was: " + src2

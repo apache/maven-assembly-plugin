@@ -17,13 +17,12 @@
  * under the License.
  */
 
-if ( !binding.hasVariable( "basedir" ) )
-{
-  basedir = new File( "." );
+if (!binding.hasVariable("basedir")) {
+    basedir = new File(".")
 }
 
-File depFile = new File( basedir, "target/dependencySet-projectArtifactNotIncluded-1.0-SNAPSHOT-bin/lib/commons-logging-1.0.4.jar" );
+File depFile = new File(basedir, "target/dependencySet-projectArtifactNotIncluded-1.0-SNAPSHOT-bin/lib/commons-logging-1.0.4.jar")
 
-File projectArtifactFile = new File( basedir, "target/dependencySet-projectArtifactNotIncluded-1.0-SNAPSHOT-bin/lib/dependencySet-projectArtifactNotIncluded-1.0-SNAPSHOT.war" );
+File projectArtifactFile = new File(basedir, "target/dependencySet-projectArtifactNotIncluded-1.0-SNAPSHOT-bin/lib/dependencySet-projectArtifactNotIncluded-1.0-SNAPSHOT.war")
 
-assert depFile.exists() && !projectArtifactFile.exists();
+assert depFile.exists() && !projectArtifactFile.exists()

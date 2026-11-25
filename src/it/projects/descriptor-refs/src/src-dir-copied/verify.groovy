@@ -17,31 +17,31 @@
  * under the License.
  */
 
-import java.util.zip.*;
+import java.util.zip.*
 
 
-String basename = "src-dir-copied-1.0-SNAPSHOT";
+String basename = "src-dir-copied-1.0-SNAPSHOT"
 
-File zipFile = new File( basedir, "target/" + basename + "-src.zip" );
+File zipFile = new File(basedir, "target/" + basename + "-src.zip")
 
-System.out.println( "Checking for existence and file-ishness of: " + zipFile );
+System.out.println("Checking for existence and file-ishness of: " + zipFile)
 
-assert zipFile.exists() && !zipFile.isDirectory() : "zip file is missing or a directory.";
+assert zipFile.exists() && !zipFile.isDirectory() : "zip file is missing or a directory."
 
-System.out.println( "Creating zipFile instance." );
+System.out.println( "Creating zipFile instance." )
 
-ZipFile zf = new ZipFile( zipFile );
+ZipFile zf = new ZipFile( zipFile )
 
-System.out.println( "Looking for project source file." );
+System.out.println( "Looking for project source file." )
 
-ZipEntry je = zf.getEntry( basename + "/src/main/java/test/App.java" ); 
+ZipEntry je = zf.getEntry( basename + "/src/main/java/test/App.java" )
 
-assert je != null : "project source file missing.";
-   
-System.out.println( "Looking for project test-source file." );
+assert je != null : "project source file missing."
 
-je = null;
-je = zf.getEntry( basename + "/src/test/java/test/AppTest.java" ); 
+System.out.println( "Looking for project test-source file." )
 
-assert je != null : "project test-source file missing.";
-   
+je = null
+je = zf.getEntry( basename + "/src/test/java/test/AppTest.java" )
+
+assert je != null : "project test-source file missing."
+

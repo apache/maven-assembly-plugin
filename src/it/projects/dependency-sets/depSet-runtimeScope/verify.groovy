@@ -17,10 +17,10 @@
  * under the License.
  */
 
-File dir = new File( basedir, "child3/target/child3-1-bin" );
+File dir = new File(basedir, "child3/target/child3-1-bin")
 
-File f = new File( dir, "child1-1.jar" );
-assert f.exists() && f.isFile() : "Could not find dependency file: " + f;
+File f = new File(dir, "child1-1.jar")
+assert f.exists() && f.isFile() : "Could not find dependency file: " + f
 
-f = new File( dir, "child2-2.jar" );
-assert f.exists() && f.isFile() : "Could not find dependency file: " + f;
+f = new File( dir, "child2-2.jar" )
+assert f.exists() && f.isFile() : "Could not find dependency file: " + f

@@ -17,12 +17,12 @@
  * under the License.
  */
 
-File main = new File( basedir, "target/massembly-201-1-bin/maven-model-2.0.9.jar" );
-File sources = new File( basedir, "target/massembly-201-1-bin/maven-model-2.0.9-sources.jar" );
-File javadocs = new File( basedir, "target/massembly-201-1-bin/maven-model-2.0.9-javadoc.jar" );
+File main = new File(basedir, "target/massembly-201-1-bin/maven-model-2.0.9.jar")
+File sources = new File(basedir, "target/massembly-201-1-bin/maven-model-2.0.9-sources.jar")
+File javadocs = new File(basedir, "target/massembly-201-1-bin/maven-model-2.0.9-javadoc.jar")
 
-assert main.exists() : "Main (unclassified) dependency jar is missing: " + main;
+assert main.exists() : "Main (unclassified) dependency jar is missing: " + main
 
-assert sources.exists() : "Sources dependency jar is missing: " + sources;
+assert sources.exists() : "Sources dependency jar is missing: " + sources
 
-assert javadocs.exists() : "JavaDocs dependency jar is missing: " + javadocs;
+assert javadocs.exists() : "JavaDocs dependency jar is missing: " + javadocs

@@ -17,4 +17,4 @@
  * under the License.
  */
 
-assert new File( basedir, "child2/target/child2-1.0-SNAPSHOT-bin/lib/child1.jar" ).exists();
+assert new File(basedir, "child2/target/child2-1.0-SNAPSHOT-bin/lib/child1.jar").exists()

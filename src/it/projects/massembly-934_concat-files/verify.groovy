@@ -22,8 +22,8 @@ def buildDirectory = new File(basedir, 'target')
 
 def dirFile = new File(buildDirectory, 'massembly934-1.0')
 
-assert new File( dirFile, "ab.txt").readLines() == ['file A','boo','file B','boo']
+assert new File(dirFile, "ab.txt").readLines() == ['file A', 'boo', 'file B', 'boo']
 
 def zipFile = new java.util.zip.ZipFile(new File(buildDirectory, 'massembly934-1.0.zip'))
 
-assert zipFile.getInputStream(zipFile.entries().next()).readLines() == ['file A','boo','file B','boo']
+assert zipFile.getInputStream(zipFile.entries().next()).readLines() == ['file A', 'boo', 'file B', 'boo']

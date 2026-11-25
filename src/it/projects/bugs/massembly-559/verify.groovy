@@ -20,14 +20,19 @@
 import java.util.zip.ZipFile
 
 // MASSEMBLY-559: the first dependencySet takes junit:* with transitive dependencies, the second one the direct ones only
-File zip = new File( basedir, "target/test-assembly-transitive-bug-0.0.1-SNAPSHOT.zip" )
+File zip = new File(basedir, "target/test-assembly-transitive-bug-0.0.1-SNAPSHOT.zip")
 assert zip.isFile() : "Missing " + zip
 def names = []
-new ZipFile( zip ).withCloseable { z -> names = Collections.list( z.entries() ).collect { it.name } }
+new ZipFile( zip ).withCloseable { z ->
+    names = Collections.list( z.entries() ).collect {
+        it.name
+    }
+}
 
 String root = "test-assembly-transitive-bug-0.0.1-SNAPSHOT/"
-for ( String dir : [ "junit-only", "no-transitive" ] )
-{
-    def files = names.findAll { it.startsWith( root + dir + "/" ) && !it.endsWith( "/" ) }
-    assert files == [ root + dir + "/junit-dep.jar" ] : dir + " contains " + files
+for ( String dir : ["junit-only", "no-transitive"] ) {
+    def files = names.findAll {
+        it.startsWith( root + dir + "/" ) && !it.endsWith( "/" )
+    }
+    assert files == [root + dir + "/junit-dep.jar"] : dir + " contains " + files
 }

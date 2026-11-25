@@ -16,14 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-String base = "./deploy/org/test/massembly-291/1/massembly-291-1";
+String base = "./deploy/org/test/massembly-291/1/massembly-291-1"
 
-File pom = new File( basedir, base + ".pom" );
-File zip = new File( basedir, base + ".zip" );
-File tgz = new File( basedir, base + ".tar.gz" );
+File pom = new File(basedir, base + ".pom")
+File zip = new File(basedir, base + ".zip")
+File tgz = new File(basedir, base + ".tar.gz")
 
-assert pom.exists() : "Project POM is missing in deployment repository. File was: " + pom;
+assert pom.exists() : "Project POM is missing in deployment repository. File was: " + pom
 
-assert zip.exists() : "Project sources zip is missing in deployment repository. File was: " + zip;
+assert zip.exists() : "Project sources zip is missing in deployment repository. File was: " + zip
 
-assert tgz.exists() : "Project sources tar.gz is missing in deployment repository. File was: " + tgz;
+assert tgz.exists() : "Project sources tar.gz is missing in deployment repository. File was: " + tgz

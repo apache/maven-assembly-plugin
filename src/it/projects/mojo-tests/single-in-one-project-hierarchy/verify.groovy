@@ -17,6 +17,6 @@
  * under the License.
  */
 
-import java.io.File;
+import java.io.File
 
-assert new File( basedir, "target/single-in-one-project-hierarchy-1.0-SNAPSHOT-bin/lib/junit-jupiter-api.jar" ).exists();
+assert new File(basedir, "target/single-in-one-project-hierarchy-1.0-SNAPSHOT-bin/lib/junit-jupiter-api.jar").exists()

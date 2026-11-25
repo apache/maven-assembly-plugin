@@ -21,24 +21,25 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
 import org.apache.commons.compress.archivers.zip.ZipFile
 
 // MASSEMBLY-580: fileMode 0644 and directoryMode 0750 of the dependencySet are applied to the zip entries
-File zip = new File( basedir, "target/project-deploy.zip" )
+File zip = new File(basedir, "target/project-deploy.zip")
 assert zip.isFile() : "Missing " + zip
 
 ZipFile zf = new ZipFile( zip )
-try
-{
+try {
     ZipArchiveEntry dir = zf.getEntry( "webapps/" )
     assert dir != null : "Missing directory entry webapps/"
     assert ( dir.unixMode & 0777 ) == 0750 : "Mode of webapps/: " + Integer.toOctalString( dir.unixMode & 0777 )
 
-    def files = zf.entries.toList().findAll { it.name.startsWith( "webapps/" ) && !it.directory }
-    assert files.any { it.name == "webapps/commons-fileupload.jar" } : "Entries: " + zf.entries.toList()*.name
-    for ( ZipArchiveEntry file : files )
-    {
+    def files = zf.entries.toList().findAll {
+        it.name.startsWith( "webapps/" ) && !it.directory
+    }
+    assert files.any {
+        it.name == "webapps/commons-fileupload.jar"
+    } : "Entries: " + zf.entries.toList()*.name
+    for ( ZipArchiveEntry file : files ) {
         assert ( file.unixMode & 0777 ) == 0644 : "Mode of " + file.name + ": " + Integer.toOctalString( file.unixMode & 0777 )
     }
 }
-finally
-{
+finally {
     zf.close()
 }

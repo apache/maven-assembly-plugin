@@ -17,7 +17,7 @@
  * under the License.
  */
 
-def sourceRelease = new File( basedir, "target/massembly964-0.0.1-SNAPSHOT-source-release.zip" )
+def sourceRelease = new File(basedir, "target/massembly964-0.0.1-SNAPSHOT-source-release.zip")
 
 assert sourceRelease.isFile()
 assert sourceRelease.length() > 0

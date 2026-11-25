@@ -20,7 +20,7 @@
 
 
 // verify that transitive deps of the POM dep were included.
-assert new File( basedir, "target/including-sar-dependency-1.0-SNAPSHOT-bin/lib/xmlrpc" ).exists();
-assert new File( basedir, "target/including-sar-dependency-1.0-SNAPSHOT-bin/lib/plexus-xmlrpc" ).exists();
+assert new File(basedir, "target/including-sar-dependency-1.0-SNAPSHOT-bin/lib/xmlrpc").exists()
+assert new File(basedir, "target/including-sar-dependency-1.0-SNAPSHOT-bin/lib/plexus-xmlrpc").exists()
 
-assert new File( basedir, "target/including-sar-dependency-1.0-SNAPSHOT-bin/lib/plexus-appserver-service-xmlrpc/lib/commons-codec-1.3.jar" ).exists();
+assert new File(basedir, "target/including-sar-dependency-1.0-SNAPSHOT-bin/lib/plexus-appserver-service-xmlrpc/lib/commons-codec-1.3.jar").exists()

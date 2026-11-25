@@ -17,6 +17,6 @@
  * under the License.
  */
 
-File file = new File( basedir, "target/skipAssemblyCLIPropertySet-1.zip" );
+File file = new File(basedir, "target/skipAssemblyCLIPropertySet-1.zip")
 
-assert !file.exists();
+assert !file.exists()

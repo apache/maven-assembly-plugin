@@ -17,9 +17,9 @@
  * under the License.
  */
 
-File dir = new File( basedir, "target/mid-artifactId-wildcard-massembly570-1-bin/maven-libs" );
+File dir = new File(basedir, "target/mid-artifactId-wildcard-massembly570-1-bin/maven-libs")
 
-def cleanPluginJar = new File( dir, "maven-clean-plugin-2.4.1.jar" )
+def cleanPluginJar = new File(dir, "maven-clean-plugin-2.4.1.jar")
 assert cleanPluginJar.exists() : 'Missing maven-clean-plugin (should be included via wildcard pattern).'
 
 def jarPluginJar = new File( dir, "maven-jar-plugin-3.0.0.jar")
@@ -29,6 +29,8 @@ assert jarPluginJar.exists() : 'Missing maven-jar-plugin (should be included via
 // matched without the dependency versions
 File multipleDir = new File( basedir, "target/mid-artifactId-wildcard-massembly570-1-multiple/maven-libs" )
 assert multipleDir.isDirectory() : "Missing assembly directory " + multipleDir
-def names = multipleDir.list().collect { it.replaceAll( /-\d[\w.\-]*\.jar$/, ".jar" ) }
+def names = multipleDir.list().collect {
+    it.replaceAll( /-\d[\w.\-]*\.jar$/, ".jar" )
+}
 assert names.contains( "wagon-provider-api.jar" ) : "Wagon provider jar is missing (should be included via include wildcard pattern): " + names
 assert names.contains( "maven-reporting-impl.jar" ) : "Reporting implementation jar is missing (should be included via include wildcard pattern): " + names

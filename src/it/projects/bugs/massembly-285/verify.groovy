@@ -17,21 +17,19 @@
  * under the License.
  */
 
-import java.util.jar.*;
-import java.util.zip.*;
+import java.util.jar.*
+import java.util.zip.*
 
-File f = new File( basedir, "massembly-285-assembly/target/massembly-285-assembly-1-bin.jar" )
-JarFile jf = new JarFile( f );
+File f = new File(basedir, "massembly-285-assembly/target/massembly-285-assembly-1-bin.jar")
+JarFile jf = new JarFile(f)
 
 String testPath = "tests/App.class"
 
 int jarCount = 0
 
 Enumeration e = jf.entries()
-while( e.hasMoreElements() )
-{
-    if ( testPath.equals( String.valueOf( e.nextElement() ) ) )
-    {
+while(e.hasMoreElements()) {
+    if (testPath.equals(String.valueOf(e.nextElement()))) {
         jarCount++
     }
 }
@@ -45,10 +43,8 @@ ZipFile zf = new ZipFile( f )
 int zipCount = 0
 
 e = zf.entries()
-while( e.hasMoreElements() )
-{
-    if ( testPath.equals( String.valueOf( e.nextElement() ) ) )
-    {
+while( e.hasMoreElements() ) {
+    if ( testPath.equals( String.valueOf( e.nextElement() ) ) ) {
         zipCount++
     }
 }

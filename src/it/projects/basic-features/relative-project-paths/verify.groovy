@@ -17,12 +17,12 @@
  * under the License.
  */
 
-import java.util.jar.*;
+import java.util.jar.*
 
-File f = new File( basedir, "target/relative-project-paths-1.0-src.jar" );
-assert f.exists() : "jar is missing";
+File f = new File(basedir, "target/relative-project-paths-1.0-src.jar")
+assert f.exists() : "jar is missing"
 
-JarFile jf = new JarFile( f );
-JarEntry je = jf.getEntry( "pom.xml" );
+JarFile jf = new JarFile( f )
+JarEntry je = jf.getEntry( "pom.xml" )
 
-assert je != null : "pom.xml entry in jar is missing";
+assert je != null : "pom.xml entry in jar is missing"

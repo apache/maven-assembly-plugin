@@ -17,23 +17,23 @@
  * under the License.
  */
 
-import java.util.zip.*;
+import java.util.zip.*
 
 
-String basename = "no-target-dir-1.0-SNAPSHOT";
+String basename = "no-target-dir-1.0-SNAPSHOT"
 
-File zipFile = new File( basedir, "target/" + basename + "-project.zip" );
+File zipFile = new File(basedir, "target/" + basename + "-project.zip")
 
-System.out.println( "Checking for existence and file-ishness of: " + zipFile );
+System.out.println("Checking for existence and file-ishness of: " + zipFile)
 
-assert zipFile.exists() && !zipFile.isDirectory() : "zip file is missing or a directory.";
+assert zipFile.exists() && !zipFile.isDirectory() : "zip file is missing or a directory."
 
-System.out.println( "Creating zipFile instance." );
+System.out.println( "Creating zipFile instance." )
 
-ZipFile zf = new ZipFile( zipFile );
+ZipFile zf = new ZipFile( zipFile )
 
-System.out.println( "Looking for project classes." );
+System.out.println( "Looking for project classes." )
 
-ZipEntry je = zf.getEntry( basename + "/target/classes/test/App.java" ); 
+ZipEntry je = zf.getEntry( basename + "/target/classes/test/App.java" )
 
-assert je == null : "project classes should not be included.";
+assert je == null : "project classes should not be included."

@@ -22,14 +22,15 @@ import java.util.zip.ZipFile
 def archive = new File(basedir, "distribution/target/distribution-1.0-bin.zip")
 assert archive.isFile()
 
-def expectedFiles = [
-        "distribution-1.0/test-module1-1.0.jar",
-        "distribution-1.0/test-module2-1.0.jar"
-] as Set
+def expectedFiles = ["distribution-1.0/test-module1-1.0.jar", "distribution-1.0/test-module2-1.0.jar"] as Set
 
 def zip = new ZipFile(archive)
 try {
-    def actualFiles = zip.entries().findAll { !it.directory }.collect { it.name } as Set
+    def actualFiles = zip.entries().findAll {
+        !it.directory
+    }.collect {
+        it.name
+    } as Set
     assert actualFiles == expectedFiles
 } finally {
     zip.close()

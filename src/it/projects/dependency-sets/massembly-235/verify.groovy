@@ -17,10 +17,10 @@
  * under the License.
  */
 
-File dir = new File( basedir, "target/massembly235-test-1-release" );
+File dir = new File(basedir, "target/massembly235-test-1-release")
 
-File goodJar = new File( dir, "xmlenc-0.52.jar" );
-File badJar = new File( dir, "xmlenc-0.39.jar" );
+File goodJar = new File(dir, "xmlenc-0.52.jar")
+File badJar = new File(dir, "xmlenc-0.39.jar")
 
-assert goodJar.exists() : "Good version of xmlenc is missing: " + goodJar;
-assert !badJar.exists() : "Bad version of xmlenc should not exist: " + badJar;
+assert goodJar.exists() : "Good version of xmlenc is missing: " + goodJar
+assert !badJar.exists() : "Bad version of xmlenc should not exist: " + badJar

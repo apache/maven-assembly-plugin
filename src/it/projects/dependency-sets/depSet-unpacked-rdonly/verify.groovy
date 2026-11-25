@@ -17,5 +17,5 @@
  * under the License.
  */
 
-File file = new File( basedir, "child2/target/child2-1.0-SNAPSHOT-bin/child1/test.txt" );
-assert file.exists() && file.canRead();
+File file = new File(basedir, "child2/target/child2-1.0-SNAPSHOT-bin/child1/test.txt")
+assert file.exists() && file.canRead()

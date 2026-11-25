@@ -17,57 +17,52 @@
  * under the License.
  */
 
-import java.io.*;
+import java.io.*
 
-boolean result = true;
+boolean result = true
 
-try
-{
-    File a = new File( basedir, "assembly/target/assembly-1-bin/file.txt");
-    File b = new File( basedir, "assembly/target/assembly-1-bin/b/file.txt");
-    
-    if(result && !a.exists() ) {
-        System.out.println( "File: " + a + " should have been generated, but was not." );
-        result = false;
+try {
+    File a = new File(basedir, "assembly/target/assembly-1-bin/file.txt")
+    File b = new File(basedir, "assembly/target/assembly-1-bin/b/file.txt")
+
+    if(result && !a.exists()) {
+        System.out.println("File: " + a + " should have been generated, but was not.")
+        result = false
     }
-    
+
     if(result) {
-        BufferedReader r = new BufferedReader(new FileReader(a));
-        String s = null;
-        
-        boolean foundA = false;
-        boolean foundB = false;
-        while( ( s = r.readLine() ) != null )
-        {
-            if ( s.equals( "file A" ) ) {
-                foundA = true;
+        BufferedReader r = new BufferedReader(new FileReader(a))
+        String s = null
+
+        boolean foundA = false
+        boolean foundB = false
+        while((s = r.readLine()) != null) {
+            if (s.equals("file A")) {
+                foundA = true
             }
-            else if ( s.equals( "file B" ) ) {
-                foundB = true;
+            else if (s.equals("file B")) {
+                foundB = true
             }
-            
-            if ( foundA && foundB )
-            {
-                result = true;
-                break;
+
+            if (foundA && foundB) {
+                result = true
+                break
             }
         }
-        
-        if ( !result )
-        {
-            System.out.println( "File: " + a + " should contain lines:\nfile A\nfile B\n\n ...but didn't." );
+
+        if (!result) {
+            System.out.println("File: " + a + " should contain lines:\nfile A\nfile B\n\n ...but didn't.")
         }
     }
-    
-    if(result && b.exists() ) {
-        System.out.println( "File: " + b + " should not exist, but does." );
-        result = false;
+
+    if(result && b.exists()) {
+        System.out.println("File: " + b + " should not exist, but does.")
+        result = false
     }
 }
-catch( IOException e )
-{
-    e.printStackTrace();
-    result = false;
+catch(IOException e) {
+    e.printStackTrace()
+    result = false
 }
 
-return result;
+return result

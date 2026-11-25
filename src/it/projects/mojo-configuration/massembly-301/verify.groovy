@@ -17,14 +17,14 @@
  * under the License.
  */
 
-String base = "./deploy/org/test/massembly-301/1/massembly-301-1";
+String base = "./deploy/org/test/massembly-301/1/massembly-301-1"
 
-File jar = new File( basedir, base + ".jar" );
-File zip = new File( basedir, base + ".zip" );
-File tgz = new File( basedir, base + ".tar.gz" );
+File jar = new File(basedir, base + ".jar")
+File zip = new File(basedir, base + ".zip")
+File tgz = new File(basedir, base + ".tar.gz")
 
-assert jar.exists() : "Project main jar is missing in deployment repository. File was: " + jar;
+assert jar.exists() : "Project main jar is missing in deployment repository. File was: " + jar
 
-assert zip.exists() : "Project sources zip is missing in deployment repository. File was: " + zip;
+assert zip.exists() : "Project sources zip is missing in deployment repository. File was: " + zip
 
-assert tgz.exists() : "Project sources tar.gz is missing in deployment repository. File was: " + tgz;
+assert tgz.exists() : "Project sources tar.gz is missing in deployment repository. File was: " + tgz

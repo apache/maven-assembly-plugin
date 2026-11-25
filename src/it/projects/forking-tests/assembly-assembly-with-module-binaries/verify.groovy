@@ -17,15 +17,15 @@
  * under the License.
  */
 
-import java.util.zip.*;
+import java.util.zip.*
 
 
-File zipFile = new File( basedir, "child2/target/child2-1.0-SNAPSHOT-bin.zip" );
+File zipFile = new File(basedir, "child2/target/child2-1.0-SNAPSHOT-bin.zip")
 
-assert zipFile.exists() && !zipFile.isDirectory() : "zip-file is missing or a directory.";
+assert zipFile.exists() && !zipFile.isDirectory() : "zip-file is missing or a directory."
 
-ZipFile zf = new ZipFile( zipFile );
+ZipFile zf = new ZipFile( zipFile )
 
-assert zf.getEntry( "child2-1.0-SNAPSHOT/modules/child1.jar" ) != null : "child1 entry is missing.";
+assert zf.getEntry( "child2-1.0-SNAPSHOT/modules/child1.jar" ) != null : "child1 entry is missing."
 
-assert zf.getEntry( "child2-1.0-SNAPSHOT/modules/child2.jar" ) != null : "child2 entry is missing.";
+assert zf.getEntry( "child2-1.0-SNAPSHOT/modules/child2.jar" ) != null : "child2 entry is missing."

@@ -17,4 +17,4 @@
  * under the License.
  */
 
-assert new File( basedir, "target/parent-1.0-src.zip" ).exists() && !new File( basedir, "child/target/child-1.0-src.zip" ).exists();
+assert new File(basedir, "target/parent-1.0-src.zip").exists() && !new File(basedir, "child/target/child-1.0-src.zip").exists()

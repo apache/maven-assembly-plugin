@@ -17,33 +17,33 @@
  * under the License.
  */
 
-import java.util.jar.*;
+import java.util.jar.*
 
 
-System.out.println( "Creating JarFile java.io.File." );
+System.out.println("Creating JarFile java.io.File.")
 
-File jarFile = new File( basedir, "child2/target/child2-1.0-SNAPSHOT-bin.jar" );
+File jarFile = new File(basedir, "child2/target/child2-1.0-SNAPSHOT-bin.jar")
 
-System.out.println( "Checking for existence and file-ishness of: " + jarFile );
+System.out.println("Checking for existence and file-ishness of: " + jarFile)
 
-assert jarFile.exists() && !jarFile.isDirectory() : "jar file is missing or a directory.";
+assert jarFile.exists() && !jarFile.isDirectory() : "jar file is missing or a directory."
 
-System.out.println( "Creating JarFile instance." );
+System.out.println( "Creating JarFile instance." )
 
-JarFile jf = new JarFile( jarFile );
+JarFile jf = new JarFile( jarFile )
 
-System.out.println( "Looking for 'classes1/test/App.class' jar entry." );
+System.out.println( "Looking for 'classes1/test/App.class' jar entry." )
 
-assert jf.getEntry( "classes1/test/App.class" ) != null : "classes1/test/App.class entry is missing.";
+assert jf.getEntry( "classes1/test/App.class" ) != null : "classes1/test/App.class entry is missing."
 
-System.out.println( "Looking for absence of 'classes1/test/App2.class' jar entry." );
+System.out.println( "Looking for absence of 'classes1/test/App2.class' jar entry." )
 
-assert jf.getEntry( "classes1/test/App2.class" ) == null : "classes1/test/App2.class should not be present.";
+assert jf.getEntry( "classes1/test/App2.class" ) == null : "classes1/test/App2.class should not be present."
 
-System.out.println( "Looking for 'classes2/test/App2.class' jar entry." );
+System.out.println( "Looking for 'classes2/test/App2.class' jar entry." )
 
-assert jf.getEntry( "classes2/test/App2.class" ) != null : "classes2/test/App2.class entry is missing.";
+assert jf.getEntry( "classes2/test/App2.class" ) != null : "classes2/test/App2.class entry is missing."
 
-System.out.println( "Looking for absence of 'classes2/test/App.class' jar entry." );
+System.out.println( "Looking for absence of 'classes2/test/App.class' jar entry." )
 
-assert jf.getEntry( "classes2/test/App.class" ) == null : "classes2/test/App.class should not be present.";
+assert jf.getEntry( "classes2/test/App.class" ) == null : "classes2/test/App.class should not be present."

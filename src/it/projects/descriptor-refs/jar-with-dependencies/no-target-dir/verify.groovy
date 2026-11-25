@@ -17,23 +17,23 @@
  * under the License.
  */
 
-import java.util.jar.*;
+import java.util.jar.*
 
 
-System.out.println( "Creating JarFile java.io.File." );
+System.out.println("Creating JarFile java.io.File.")
 
-File jarFile = new File( basedir, "target/jar-with-dependencies-no-target-dir-1.0-SNAPSHOT-jar-with-dependencies.jar" );
+File jarFile = new File(basedir, "target/jar-with-dependencies-no-target-dir-1.0-SNAPSHOT-jar-with-dependencies.jar")
 
-System.out.println( "Checking for existence and file-ishness of: " + jarFile );
+System.out.println("Checking for existence and file-ishness of: " + jarFile)
 
-assert jarFile.exists() && !jarFile.isDirectory() : "jar file is missing or a directory.";
+assert jarFile.exists() && !jarFile.isDirectory() : "jar file is missing or a directory."
 
-System.out.println( "Creating JarFile instance." );
+System.out.println( "Creating JarFile instance." )
 
-JarFile jf = new JarFile( jarFile );
+JarFile jf = new JarFile( jarFile )
 
-assert jf.getEntry( "test/App.class" ) != null : "App class is missing.";
+assert jf.getEntry( "test/App.class" ) != null : "App class is missing."
 
-System.out.println( "Looking for absence of 'target/classes/test/App.class' jar entry." );
+System.out.println( "Looking for absence of 'target/classes/test/App.class' jar entry." )
 
-assert jf.getEntry( "target/classes/test/App.class" ) == null : "target directory should not be present.";
+assert jf.getEntry( "target/classes/test/App.class" ) == null : "target directory should not be present."

@@ -17,10 +17,10 @@
  * under the License.
  */
 
-File f = new File( basedir, "child/target/child-1-src/test.txt" );
+File f = new File(basedir, "child/target/child-1-src/test.txt")
 
-assert f.exists() : "Filtered file from file-set: " + f + " is missing.";
+assert f.exists() : "Filtered file from file-set: " + f + " is missing."
 
-String line = f.withReader( "UTF-8" ) { it.readLine() };
+String line = f.withReader( "UTF-8" ) { it.readLine() }
 
-assert "1".equals( line.trim() ) : "First line of test.txt: '" + line + "' should equal the project version: '1'.";
+assert "1".equals( line.trim() ) : "First line of test.txt: '" + line + "' should equal the project version: '1'."

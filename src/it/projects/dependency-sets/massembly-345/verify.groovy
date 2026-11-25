@@ -20,7 +20,7 @@
 import java.util.zip.ZipFile
 
 // archiverConfig <appxml> is the application.xml of the ear
-File ear = new File( basedir, "target/massembly-345-1-bin.ear" )
+File ear = new File(basedir, "target/massembly-345-1-bin.ear")
 assert ear.exists() : "Missing " + ear
 
 new ZipFile( ear ).withCloseable { z ->

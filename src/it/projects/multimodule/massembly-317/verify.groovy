@@ -18,12 +18,13 @@
  */
 
 // dependency versions are not part of what is verified: "maven-monitor-2.2.0.jar" becomes "maven-monitor.jar"
-def normalized( File dir )
-{
-    return dir.list().collect { it.replaceAll( /-\d[\w.\-]*\.jar$/, ".jar" ) }.sort()
+def normalized(File dir) {
+    return dir.list().collect {
+        it.replaceAll(/-\d[\w.\-]*\.jar$/, ".jar")
+    }.sort()
 }
 
 // binaries of every module plus the junit-jupiter-api dependency, selected by useStrictFiltering
-File dir = new File( basedir, "target/my-app-1.0-SNAPSHOT-bin/my-app-1.0-SNAPSHOT/server/default" )
+File dir = new File(basedir, "target/my-app-1.0-SNAPSHOT-bin/my-app-1.0-SNAPSHOT/server/default")
 assert dir.isDirectory() : "Missing assembly directory " + dir
-assert normalized( dir ) == [ "junit-jupiter-api.jar", "my-app-module1.jar", "my-app-module2.jar" ] : "Entries: " + dir.list()
+assert normalized( dir ) == ["junit-jupiter-api.jar", "my-app-module1.jar", "my-app-module2.jar"] : "Entries: " + dir.list()

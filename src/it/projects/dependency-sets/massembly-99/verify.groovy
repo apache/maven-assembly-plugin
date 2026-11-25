@@ -19,8 +19,8 @@
 
 
 
-assert new File( basedir, "assembly/target/assembly-1.0-SNAPSHOT-bin/lib/jdom.jar" ).exists();
-assert new File( basedir, "assembly/target/assembly-1.0-SNAPSHOT-bin/lib/velocity.jar" ).exists();
+assert new File(basedir, "assembly/target/assembly-1.0-SNAPSHOT-bin/lib/jdom.jar").exists()
+assert new File(basedir, "assembly/target/assembly-1.0-SNAPSHOT-bin/lib/velocity.jar").exists()
 
-assert new File( basedir, "assembly/target/assembly-1.0-SNAPSHOT-bin/modules/module-a.jar" ).exists();
-assert new File( basedir, "assembly/target/assembly-1.0-SNAPSHOT-bin/modules/module-b.jar" ).exists();
+assert new File(basedir, "assembly/target/assembly-1.0-SNAPSHOT-bin/modules/module-a.jar").exists()
+assert new File(basedir, "assembly/target/assembly-1.0-SNAPSHOT-bin/modules/module-b.jar").exists()

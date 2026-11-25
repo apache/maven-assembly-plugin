@@ -17,18 +17,18 @@
  * under the License.
  */
 
-import java.util.jar.*;
+import java.util.jar.*
 
-File file = new File( basedir, "target/manifest-with-customEntry-manifest-file-1-webbundle.jar" );
+File file = new File(basedir, "target/manifest-with-customEntry-manifest-file-1-webbundle.jar")
 
-System.out.println( "file: " + file + " exists? " + file.exists() );
+System.out.println("file: " + file + " exists? " + file.exists())
 
-JarFile jarFile = new JarFile( file );
+JarFile jarFile = new JarFile(file)
 
-Manifest mf = jarFile.getManifest();
+Manifest mf = jarFile.getManifest()
 
-Attributes attrs = mf.getMainAttributes();
+Attributes attrs = mf.getMainAttributes()
 
-String foo = (String) attrs.get( new Attributes.Name( "foo" ) );
+String foo = (String) attrs.get(new Attributes.Name("foo"))
 
-assert "beer".equals( foo );
+assert "beer".equals(foo)

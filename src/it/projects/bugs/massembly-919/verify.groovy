@@ -17,21 +17,20 @@
  * under the License.
  */
 
-import java.util.zip.*;
+import java.util.zip.*
 
-File zipFile = new File( basedir, "bundle/target/project-bundle-0.0.1-SNAPSHOT-bin.zip" )
+File zipFile = new File(basedir, "bundle/target/project-bundle-0.0.1-SNAPSHOT-bin.zip")
 
 assert zipFile.isFile() : "zip-file is missing or a directory."
 
 ZipFile zf = new ZipFile( zipFile )
 try {
     zes = zf.entries()
-    while(zes.hasMoreElements())
-    {
+    while(zes.hasMoreElements()) {
         ZipEntry ze = zes.nextElement()
         assert !ze.getName().contains("maven-assembly-plugin") : "filename '${ze.name}' is incorrect"
     }
 }
 finally {
-  zf.close()
+    zf.close()
 }
