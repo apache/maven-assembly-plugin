@@ -17,7 +17,5 @@
  * under the License.
  */
 
-import java.io.*;
-
 File file = new File( basedir, "child2/target/child2-1.0-SNAPSHOT-bin/child1/test.txt" );
-return file.exists() && file.canRead();
+assert file.exists() && file.canRead();

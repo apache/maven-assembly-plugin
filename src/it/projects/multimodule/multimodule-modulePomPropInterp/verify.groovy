@@ -17,7 +17,5 @@
  * under the License.
  */
 
-import java.io.*;
-
 File f = new File( basedir, "child2/target/child2-1-bin/bar/child1" );
-return f.exists() && f.isDirectory();
+assert f.exists() && f.isDirectory();

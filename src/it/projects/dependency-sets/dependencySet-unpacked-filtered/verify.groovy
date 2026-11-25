@@ -17,21 +17,7 @@
  * under the License.
  */
 
-import java.io.*;
+File f = new File( basedir, "child2/target/child2-1-bin/zz/assembly-resources/test.txt" );
 
-try
-{
-    File f = new File( basedir, "child2/target/child2-1-bin/zz/assembly-resources/test.txt" );
-    
-    BufferedReader r = new BufferedReader( new FileReader( f ) );
-    if ( r.readLine().equals( "Project Version: 1" ) )
-    {
-      return true;
-    }
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-}
-
-return false;
+String line = f.withReader( "UTF-8" ) { it.readLine() };
+assert "Project Version: 1".equals( line ) : "First line of " + f + " was: " + line;

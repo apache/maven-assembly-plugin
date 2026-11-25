@@ -17,57 +17,24 @@
  * under the License.
  */
 
-import java.io.*;
-import java.net.*;
-import java.util.jar.*;
+File dir = new File( basedir, "target/include-project-attachments-1.0-SNAPSHOT-bin" );
 
-boolean result = true;
+System.out.println( "Checking for existence and file-ishness of: " + dir );
 
-try
-{
-    File dir = new File( basedir, "target/include-project-attachments-1.0-SNAPSHOT-bin" );
-    
-    System.out.println( "Checking for existence and file-ishness of: " + dir );
-    
-    if ( !dir.exists() || !dir.isDirectory() )
-    {
-        System.err.println( "assembled directory is missing or not a directory." );
-        return false;
-    }
-    
-    File projectArtifact = new File( dir, "lib/include-project-attachments-1.0-SNAPSHOT.jar" );
-    
-    System.out.println( "Looking for 'lib/include-project-attachments-1.0-SNAPSHOT.jar file in assembly." );
-    
-    if ( !projectArtifact.exists() )
-    {
-        System.err.println( "project-attachments entry is missing." );
-        return false;
-    }
-    
-    File attachment = new File( dir, "lib/include-project-attachments-1.0-SNAPSHOT-src.zip" );
-    
-    System.out.println( "Looking for 'lib/include-project-attachments-1.0-SNAPSHOT-src.zip file in assembly." );
-    
-    if ( !attachment.exists() )
-    {
-        System.err.println( "project attachment entry is missing." );
-        return false;
-    }
-    
-    System.out.println( "Looking for absence of 'lib/junit-jupiter-api.jar' jar entry." );
-    
-    if ( new File( dir, "lib/junit-jupiter-api-6.0.0.jar" ).exists() )
-    {
-        System.err.println( "junit jar should not be present." );
-        return false;
-    }
-    
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-    result = false;
-}
+assert dir.exists() && dir.isDirectory() : "assembled directory is missing or not a directory.";
 
-return result;
+File projectArtifact = new File( dir, "lib/include-project-attachments-1.0-SNAPSHOT.jar" );
+
+System.out.println( "Looking for 'lib/include-project-attachments-1.0-SNAPSHOT.jar file in assembly." );
+
+assert projectArtifact.exists() : "project-attachments entry is missing.";
+
+File attachment = new File( dir, "lib/include-project-attachments-1.0-SNAPSHOT-src.zip" );
+
+System.out.println( "Looking for 'lib/include-project-attachments-1.0-SNAPSHOT-src.zip file in assembly." );
+
+assert attachment.exists() : "project attachment entry is missing.";
+
+System.out.println( "Looking for absence of 'lib/junit-jupiter-api.jar' jar entry." );
+
+assert !new File( dir, "lib/junit-jupiter-api-6.0.0.jar" ).exists() : "junit jar should not be present.";

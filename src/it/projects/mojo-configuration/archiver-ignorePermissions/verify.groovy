@@ -17,25 +17,10 @@
  * under the License.
  */
 
-import java.io.*;
-import java.util.jar.*;
-import java.util.*;
-import java.net.*;
-
 // minimal tests; the big thing here is that ignoring permissions doesn't stop the assembly from running...
 File pom = new File( basedir, "target/parent-1-bin/parent-1/pom.xml" );
 
-if ( !pom.exists() || !pom.isFile() )
-{
-  System.out.println( "POM was not included in assembly." );
-  return false;
-}
+assert pom.exists() && pom.isFile() : "POM was not included in assembly.";
 
 File junitJar = new File( basedir, "target/parent-1-bin/parent-1/lib/junit-jupiter-api-" + scriptVarVersionJunit + ".jar" );
-if ( !junitJar.exists() && !junitJar.isFile() )
-{
-  System.out.println( "JUnit jar was not included in assembly." );
-  return false;
-}
-
-return true;
+assert junitJar.exists() || junitJar.isFile() : "JUnit jar was not included in assembly.";

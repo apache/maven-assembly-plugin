@@ -17,21 +17,9 @@
  * under the License.
  */
 
-import java.io.*;
-
 File f = new File( basedir, "target/test-1-bin/unprefixed/maven-assembly-plugin.jar" );
 File f2 = new File( basedir, "target/test-1-bin/prefixed/maven-assembly-plugin.jar" );
 
-if ( !f.exists() || !f.isFile() )
-{
-    System.out.println( "File: " + f + " doesn't exist, or isn't a file." );
-    return false;
-}
+assert f.exists() && f.isFile() : "File: " + f + " doesn't exist, or isn't a file.";
 
-if ( !f2.exists() || !f2.isFile() )
-{
-    System.out.println( "File: " + f2 + " doesn't exist, or isn't a file." );
-    return false;
-}
-
-return true;
+assert f2.exists() && f2.isFile() : "File: " + f2 + " doesn't exist, or isn't a file.";

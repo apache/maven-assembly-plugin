@@ -17,41 +17,22 @@
  * under the License.
  */
 
-import java.io.*;
 import java.util.zip.*;
 
 ZipFile zf = new ZipFile( new File( basedir, "assembly/target/assembly-1-bin.zip" ) );
 
 ZipEntry child1InclEntry = zf.getEntry( "child1/org/test/child1/App2.class" );
 
-if ( child1InclEntry == null )
-{
-    System.out.println( "Included file from child1 not found." );
-    return false;
-}
+assert child1InclEntry != null : "Included file from child1 not found.";
 
 ZipEntry child1ExclEntry = zf.getEntry( "child1/org/test/child1/App.class" );
 
-if ( child1ExclEntry != null )
-{
-    System.out.println( "Non-included file from child1 should not be present, but was found." );
-    return false;
-}
+assert child1ExclEntry == null : "Non-included file from child1 should not be present, but was found.";
 
 ZipEntry child2InclEntry = zf.getEntry( "child2/org/test/child2/App.class" );
 
-if ( child2InclEntry == null )
-{
-    System.out.println( "Included file from child2 not found." );
-    return false;
-}
+assert child2InclEntry != null : "Included file from child2 not found.";
 
 ZipEntry child2ExclEntry = zf.getEntry( "child2/org/test/other/App.class" );
 
-if ( child2ExclEntry != null )
-{
-    System.out.println( "Non-included file from child2 should not be present, but was found." );
-    return false;
-}
-
-return true;
+assert child2ExclEntry == null : "Non-included file from child2 should not be present, but was found.";

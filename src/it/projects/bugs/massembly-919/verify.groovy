@@ -17,7 +17,6 @@
  * under the License.
  */
 
-import java.net.*;
 import java.util.zip.*;
 
 File zipFile = new File( basedir, "bundle/target/project-bundle-0.0.1-SNAPSHOT-bin.zip" )

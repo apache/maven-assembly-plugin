@@ -17,74 +17,33 @@
  * under the License.
  */
 
-import java.io.*;
-import java.net.*;
 import java.util.jar.*;
 
-boolean result = true;
 
-try
-{
-    File f = new File( basedir, "target/parent-1.0-src.jar" );
-    if ( !f.exists() )
-    {
-        System.out.println( "jar is missing" );
-        return false;
-    }
+File f = new File( basedir, "target/parent-1.0-src.jar" );
+assert f.exists() : "jar is missing";
 
-    JarFile jf = new JarFile( f );
-    JarEntry je = jf.getEntry( "parent-1.0/src/main/java/org/test/target/file.properties" );
+JarFile jf = new JarFile( f );
+JarEntry je = jf.getEntry( "parent-1.0/src/main/java/org/test/target/file.properties" );
 
-    if ( je == null )
-    {
-        System.out.println( "sources for org.test.target package in parent project are missing from jar" );
-        return false;
-    }
+assert je != null : "sources for org.test.target package in parent project are missing from jar";
 
-    je = jf.getEntry( "parent-1.0/child/src/main/resources/target/file.txt" );
+je = jf.getEntry( "parent-1.0/child/src/main/resources/target/file.txt" );
 
-    if ( je == null )
-    {
-        System.out.println( "target/file.txt in child resources is missing from the jar." );
-        return false;
-    }
+assert je != null : "target/file.txt in child resources is missing from the jar.";
 
-    je = jf.getEntry( "parent-1.0/target/omit.txt" );
+je = jf.getEntry( "parent-1.0/target/omit.txt" );
 
-    if ( je != null )
-    {
-        System.out.println( "target/omit.txt in parent project was included the jar." );
-        return false;
-    }
+assert je == null : "target/omit.txt in parent project was included the jar.";
 
-    je = jf.getEntry( "parent-1.0/child/target/omit.txt" );
+je = jf.getEntry( "parent-1.0/child/target/omit.txt" );
 
-    if ( je != null )
-    {
-        System.out.println( "target/omit.txt in child project was included the jar." );
-        return false;
-    }
+assert je == null : "target/omit.txt in child project was included the jar.";
 
-    je = jf.getEntry( "parent-1.0/target/classes/src/omit.txt" );
+je = jf.getEntry( "parent-1.0/target/classes/src/omit.txt" );
 
-    if ( je != null )
-    {
-        System.out.println( "target/classes/src/omit.txt in parent project was included the jar." );
-        return false;
-    }
+assert je == null : "target/classes/src/omit.txt in parent project was included the jar.";
 
-    je = jf.getEntry( "parent-1.0/child/target/classes/src/omit.txt" );
+je = jf.getEntry( "parent-1.0/child/target/classes/src/omit.txt" );
 
-    if ( je != null )
-    {
-        System.out.println( "target/classes/src/omit.txt in child project was included the jar." );
-        return false;
-    }
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-    result = false;
-}
-
-return result;
+assert je == null : "target/classes/src/omit.txt in child project was included the jar.";

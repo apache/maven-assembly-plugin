@@ -17,11 +17,7 @@
  * under the License.
  */
 
-import java.io.*;
 
-boolean result = true;
 
-result = result && new File( basedir, "target/massembly-955-1-bin/teiid-10.0.5-jdbc.jar" ).exists();
-result = result && new File( basedir, "target/massembly-955-1-bin/jython-standalone-2.7.2.jar" ).exists();
-
-return result;
+assert new File( basedir, "target/massembly-955-1-bin/teiid-10.0.5-jdbc.jar" ).exists();
+assert new File( basedir, "target/massembly-955-1-bin/jython-standalone-2.7.2.jar" ).exists();

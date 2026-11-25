@@ -17,41 +17,15 @@
  * under the License.
  */
 
-import java.io.*;
-import java.net.*;
 import java.util.zip.*;
 
-boolean result = true;
 
-try
-{
-    File zipFile = new File( basedir, "child2/target/child2-1.0-SNAPSHOT-bin.zip" );
-    
-    if ( !zipFile.exists() || zipFile.isDirectory() )
-    {
-        System.err.println( "zip-file is missing or a directory." );
-        result = false;
-    }
-    
-    ZipFile zf = new ZipFile( zipFile );
-    
-    if ( zf.getEntry( "child2-1.0-SNAPSHOT/modules/child1.jar" ) == null )
-    {
-        System.err.println( "child1 entry is missing." );
-        result = false;
-    }
-    
-    if ( zf.getEntry( "child2-1.0-SNAPSHOT/modules/child2.jar" ) == null )
-    {
-        System.err.println( "child2 entry is missing." );
-        result = false;
-    }
-    
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-    result = false;
-}
+File zipFile = new File( basedir, "child2/target/child2-1.0-SNAPSHOT-bin.zip" );
 
-return result;
+assert zipFile.exists() && !zipFile.isDirectory() : "zip-file is missing or a directory.";
+
+ZipFile zf = new ZipFile( zipFile );
+
+assert zf.getEntry( "child2-1.0-SNAPSHOT/modules/child1.jar" ) != null : "child1 entry is missing.";
+
+assert zf.getEntry( "child2-1.0-SNAPSHOT/modules/child2.jar" ) != null : "child2 entry is missing.";

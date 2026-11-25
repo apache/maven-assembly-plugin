@@ -17,20 +17,4 @@
  * under the License.
  */
 
-import java.io.*;
-import java.net.*;
-import java.util.jar.*;
-
-boolean result = true;
-
-try
-{
-    result = new File( basedir, "target/parent-1.0-src.zip" ).exists() && !new File( basedir, "child/target/child-1.0-src.zip" ).exists();   
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-    result = false;
-}
-
-return result;
+assert new File( basedir, "target/parent-1.0-src.zip" ).exists() && !new File( basedir, "child/target/child-1.0-src.zip" ).exists();

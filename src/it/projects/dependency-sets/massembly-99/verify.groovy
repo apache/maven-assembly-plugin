@@ -17,15 +17,10 @@
  * under the License.
  */
 
-import java.io.*;
-
-boolean result = true;
-
-result = result && new File( basedir, "assembly/target/assembly-1.0-SNAPSHOT-bin/lib/jdom.jar" ).exists();
-result = result && new File( basedir, "assembly/target/assembly-1.0-SNAPSHOT-bin/lib/velocity.jar" ).exists();
-
-result = result && new File( basedir, "assembly/target/assembly-1.0-SNAPSHOT-bin/modules/module-a.jar" ).exists();
-result = result && new File( basedir, "assembly/target/assembly-1.0-SNAPSHOT-bin/modules/module-b.jar" ).exists();
 
 
-return result;
+assert new File( basedir, "assembly/target/assembly-1.0-SNAPSHOT-bin/lib/jdom.jar" ).exists();
+assert new File( basedir, "assembly/target/assembly-1.0-SNAPSHOT-bin/lib/velocity.jar" ).exists();
+
+assert new File( basedir, "assembly/target/assembly-1.0-SNAPSHOT-bin/modules/module-a.jar" ).exists();
+assert new File( basedir, "assembly/target/assembly-1.0-SNAPSHOT-bin/modules/module-b.jar" ).exists();

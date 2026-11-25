@@ -17,14 +17,10 @@
  * under the License.
  */
 
-import java.io.*;
-
 File dir = new File( basedir, "target/massembly235-test-1-release" );
 
 File goodJar = new File( dir, "xmlenc-0.52.jar" );
 File badJar = new File( dir, "xmlenc-0.39.jar" );
 
-System.out.println( "Good version of xmlenc exists? " + goodJar.exists() );
-System.out.println( "Bad version of xmlenc doesn't exist? " + (!badJar.exists()) );
-
-return goodJar.exists() && !badJar.exists();
+assert goodJar.exists() : "Good version of xmlenc is missing: " + goodJar;
+assert !badJar.exists() : "Bad version of xmlenc should not exist: " + badJar;

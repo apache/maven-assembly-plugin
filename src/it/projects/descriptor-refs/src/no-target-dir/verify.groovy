@@ -17,44 +17,23 @@
  * under the License.
  */
 
-import java.io.*;
-import java.net.*;
 import java.util.zip.*;
 
-boolean result = true;
 
 String basename = "no-target-dir-1.0-SNAPSHOT";
 
-try
-{
-    File zipFile = new File( basedir, "target/" + basename + "-src.zip" );
-    
-    System.out.println( "Checking for existence and file-ishness of: " + zipFile );
-    
-    if ( !zipFile.exists() || zipFile.isDirectory() )
-    {
-        System.err.println( "zip file is missing or a directory." );
-        return false;
-    }
-    
-    System.out.println( "Creating zipFile instance." );
-    
-    ZipFile zf = new ZipFile( zipFile );
-    
-    System.out.println( "Looking for project classes." );
-    
-    ZipEntry je = zf.getEntry( basename + "/target/classes/test/App.class" ); 
+File zipFile = new File( basedir, "target/" + basename + "-src.zip" );
 
-    if ( je != null )
-    {
-        System.out.println( "project classes should not be present." );
-        result = false;
-    }
-}
-catch( IOException e )
-{
-    e.printStackTrace( System.out );
-    result = false;
-}
+System.out.println( "Checking for existence and file-ishness of: " + zipFile );
 
-return result;
+assert zipFile.exists() && !zipFile.isDirectory() : "zip file is missing or a directory.";
+
+System.out.println( "Creating zipFile instance." );
+
+ZipFile zf = new ZipFile( zipFile );
+
+System.out.println( "Looking for project classes." );
+
+ZipEntry je = zf.getEntry( basename + "/target/classes/test/App.class" ); 
+
+assert je == null : "project classes should not be present.";

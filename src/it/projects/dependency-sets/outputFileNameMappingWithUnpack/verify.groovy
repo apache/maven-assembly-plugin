@@ -17,23 +17,11 @@
  * under the License.
  */
 
-import java.io.*;
-
 // verify that the ear is created
 File dirWithMapping = new File( basedir, "target/project-1-bin/some_directory/junit.jar/" );
 
-if ( dirWithMapping.exists() )
-{
-    System.out.println( "<outputFileNameMapping> should NOT be used when unpack == true." );
-    return false;
-}
+assert !dirWithMapping.exists() : "<outputFileNameMapping> should NOT be used when unpack == true.";
 
 File dir = new File( basedir, "target/project-1-bin/some_directory/junit/framework/TestCase.class" );
 
-if ( !dir.exists() )
-{
-    System.out.println( "Expected unpacked class does not exist in the appropriate outputDirectory within the assembly." );
-    return false;
-}
-
-return true;
+assert dir.exists() : "Expected unpacked class does not exist in the appropriate outputDirectory within the assembly.";

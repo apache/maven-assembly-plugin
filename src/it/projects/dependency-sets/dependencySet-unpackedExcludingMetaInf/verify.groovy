@@ -17,59 +17,29 @@
  * under the License.
  */
 
-import java.io.*;
-import java.net.*;
 import java.util.jar.*;
 
-boolean result = true;
 
-try
-{
-    System.out.println( "Creating JarFile java.io.File." );
-    
-    File jarFile = new File( basedir, "child2/target/child2-1.0-SNAPSHOT-bin.jar" );
-    
-    System.out.println( "Checking for existence and file-ishness of: " + jarFile );
-    
-    if ( !jarFile.exists() || jarFile.isDirectory() )
-    {
-        System.err.println( "jar file is missing or a directory." );
-        return false;
-    }
-    
-    System.out.println( "Creating JarFile instance." );
-    
-    JarFile jf = new JarFile( jarFile );
-    
-    System.out.println( "Looking for 'child1/' jar entry." );
-    
-    if ( jf.getEntry( "child1/" ) == null )
-    {
-        System.err.println( "child1 entry is missing." );
-        result = false;
-    }
+System.out.println( "Creating JarFile java.io.File." );
 
-    System.out.println( "Looking for 'child1/META-INF' jar entry (should not exist)." );
-    
-    if ( jf.getEntry( "child1/META-INF" ) != null )
-    {
-        System.err.println( "child1/META-INF entry should not be present." );
-        result = false;
-    }
-    
-    System.out.println( "Looking for absence of 'junit/' jar entry." );
-    
-    if ( jf.getEntry( "junit" ) != null )
-    {
-        System.err.println( "junit jar should not be present." );
-        result = false;
-    }
-    
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-    result = false;
-}
+File jarFile = new File( basedir, "child2/target/child2-1.0-SNAPSHOT-bin.jar" );
 
-return result;
+System.out.println( "Checking for existence and file-ishness of: " + jarFile );
+
+assert jarFile.exists() && !jarFile.isDirectory() : "jar file is missing or a directory.";
+
+System.out.println( "Creating JarFile instance." );
+
+JarFile jf = new JarFile( jarFile );
+
+System.out.println( "Looking for 'child1/' jar entry." );
+
+assert jf.getEntry( "child1/" ) != null : "child1 entry is missing.";
+
+System.out.println( "Looking for 'child1/META-INF' jar entry (should not exist)." );
+
+assert jf.getEntry( "child1/META-INF" ) == null : "child1/META-INF entry should not be present.";
+
+System.out.println( "Looking for absence of 'junit/' jar entry." );
+
+assert jf.getEntry( "junit" ) == null : "junit jar should not be present.";

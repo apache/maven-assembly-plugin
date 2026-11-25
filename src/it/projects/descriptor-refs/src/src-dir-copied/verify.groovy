@@ -17,56 +17,31 @@
  * under the License.
  */
 
-import java.io.*;
-import java.net.*;
 import java.util.zip.*;
 
-boolean result = true;
 
 String basename = "src-dir-copied-1.0-SNAPSHOT";
 
-try
-{
-    File zipFile = new File( basedir, "target/" + basename + "-src.zip" );
-    
-    System.out.println( "Checking for existence and file-ishness of: " + zipFile );
-    
-    if ( !zipFile.exists() || zipFile.isDirectory() )
-    {
-        System.err.println( "zip file is missing or a directory." );
-        return false;
-    }
-    
-    System.out.println( "Creating zipFile instance." );
-    
-    ZipFile zf = new ZipFile( zipFile );
-    
-    System.out.println( "Looking for project source file." );
-    
-    ZipEntry je = zf.getEntry( basename + "/src/main/java/test/App.java" ); 
+File zipFile = new File( basedir, "target/" + basename + "-src.zip" );
 
-    if ( je == null )
-    {
-        System.out.println( "project source file missing." );
-        result = false;
-    }
+System.out.println( "Checking for existence and file-ishness of: " + zipFile );
+
+assert zipFile.exists() && !zipFile.isDirectory() : "zip file is missing or a directory.";
+
+System.out.println( "Creating zipFile instance." );
+
+ZipFile zf = new ZipFile( zipFile );
+
+System.out.println( "Looking for project source file." );
+
+ZipEntry je = zf.getEntry( basename + "/src/main/java/test/App.java" ); 
+
+assert je != null : "project source file missing.";
    
-    System.out.println( "Looking for project test-source file." );
-    
-    je = null;
-    je = zf.getEntry( basename + "/src/test/java/test/AppTest.java" ); 
+System.out.println( "Looking for project test-source file." );
 
-    if ( je == null )
-    {
-        System.out.println( "project test-source file missing." );
-        result = false;
-    }
+je = null;
+je = zf.getEntry( basename + "/src/test/java/test/AppTest.java" ); 
+
+assert je != null : "project test-source file missing.";
    
-}
-catch( IOException e )
-{
-    e.printStackTrace( System.out );
-    result = false;
-}
-
-return result;

@@ -17,31 +17,10 @@
  * under the License.
  */
 
-import java.io.*;
+File dir = new File( basedir, "child3/target/child3-1-bin" );
 
-try
-{
-    File dir = new File( basedir, "child3/target/child3-1-bin" );
-    
-    File f = new File( dir, "1/child1-1.jar" );
-    if ( !f.exists() || !f.isFile() )
-    {
-      System.out.println( "Could not find dependency file: " + f );
-      return false;
-    }
-    
-    f = new File( dir, "2/child2-2.jar" );
-    if ( !f.exists() || !f.isFile() )
-    {
-      System.out.println( "Could not find dependency file: " + f );
-      return false;
-    }
-    
-    return true;
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-}
+File f = new File( dir, "1/child1-1.jar" );
+assert f.exists() && f.isFile() : "Could not find dependency file: " + f;
 
-return false;
+f = new File( dir, "2/child2-2.jar" );
+assert f.exists() && f.isFile() : "Could not find dependency file: " + f;

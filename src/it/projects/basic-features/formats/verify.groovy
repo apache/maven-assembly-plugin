@@ -17,155 +17,51 @@
  * under the License.
  */
 
-import java.io.*;
-import java.net.*;
-import java.util.jar.*;
+File assembly = new File( basedir, "target/assemblies/format-test-1.0" );
+assert assembly.exists();
+assert assembly.isDirectory();
+assert new File( assembly, "TODO.txt" ).exists();
 
-boolean result = true;
+assembly = new File( basedir, "target/assemblies/format-test-1.0.zip" );
+assert assembly.exists();
+assert assembly.isFile();
 
-try
-{
-    File assembly = new File( basedir, "target/assemblies/format-test-1.0" );
-    result = result && assembly.exists();
-    result = result && assembly.isDirectory();
-    result = result && new File( assembly, "TODO.txt" ).exists();
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-    result = false;
-}
+assembly = new File( basedir, "target/assemblies/format-test-1.0.tar" );
+assert assembly.exists();
+assert assembly.isFile();
 
-try
-{
-    File assembly = new File( basedir, "target/assemblies/format-test-1.0.zip" );
-    result = result && assembly.exists();
-    result = result && assembly.isFile();
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-    result = false;
-}
+assembly = new File( basedir, "target/assemblies/format-test-1.0.tar.gz" );
+assert assembly.exists();
+assert assembly.isFile();
 
-try
-{
-    File assembly = new File( basedir, "target/assemblies/format-test-1.0.tar" );
-    result = result && assembly.exists();
-    result = result && assembly.isFile();
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-    result = false;
-}
+assembly = new File( basedir, "target/assemblies/format-test-1.0.tgz" );
+assert assembly.exists();
+assert assembly.isFile();
 
-try
-{
-    File assembly = new File( basedir, "target/assemblies/format-test-1.0.tar.gz" );
-    result = result && assembly.exists();
-    result = result && assembly.isFile();
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-    result = false;
-}
+assembly = new File( basedir, "target/assemblies/format-test-1.0.tar.bz2" );
+assert assembly.exists();
+assert assembly.isFile();
 
-try
-{
-    File assembly = new File( basedir, "target/assemblies/format-test-1.0.tgz" );
-    result = result && assembly.exists();
-    result = result && assembly.isFile();
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-    result = false;
-}
+assembly = new File( basedir, "target/assemblies/format-test-1.0.tbz2" );
+assert assembly.exists();
+assert assembly.isFile();
 
-try
-{
-    File assembly = new File( basedir, "target/assemblies/format-test-1.0.tar.bz2" );
-    result = result && assembly.exists();
-    result = result && assembly.isFile();
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-    result = false;
-}
+assembly = new File( basedir, "target/assemblies/format-test-1.0.jar" );
+assert assembly.exists();
+assert assembly.isFile();
 
-try
-{
-    File assembly = new File( basedir, "target/assemblies/format-test-1.0.tbz2" );
-    result = result && assembly.exists();
-    result = result && assembly.isFile();
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-    result = false;
-}
+assembly = new File( basedir, "target/assemblies/format-test-1.0.war" );
+assert assembly.exists();
+assert assembly.isFile();
 
-try
-{
-    File assembly = new File( basedir, "target/assemblies/format-test-1.0.jar" );
-    result = result && assembly.exists();
-    result = result && assembly.isFile();
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-    result = false;
-}
+assembly = new File( basedir, "target/assemblies/format-test-1.0.tar.snappy" );
+assert assembly.exists();
+assert assembly.isFile();
 
-try
-{
-    File assembly = new File( basedir, "target/assemblies/format-test-1.0.war" );
-    result = result && assembly.exists();
-    result = result && assembly.isFile();
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-    result = false;
-}
+assembly = new File( basedir, "target/assemblies/format-test-1.0.tar.xz" );
+assert assembly.exists();
+assert assembly.isFile();
 
-try
-{
-    File assembly = new File( basedir, "target/assemblies/format-test-1.0.tar.snappy" );
-    result = result && assembly.exists();
-    result = result && assembly.isFile();
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-    result = false;
-}
-
-try
-{
-    File assembly = new File( basedir, "target/assemblies/format-test-1.0.tar.xz" );
-    result = result && assembly.exists();
-    result = result && assembly.isFile();
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-    result = false;
-}
-
-try
-{
-    File assembly = new File( basedir, "target/assemblies/format-test-1.0.txz" );
-    result = result && assembly.exists();
-    result = result && assembly.isFile();
-}
-catch( IOException e )
-{
-    e.printStackTrace();
-    result = false;
-}
-
-return result;
+assembly = new File( basedir, "target/assemblies/format-test-1.0.txz" );
+assert assembly.exists();
+assert assembly.isFile();

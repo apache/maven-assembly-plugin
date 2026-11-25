@@ -17,10 +17,7 @@
  * under the License.
  */
 
-import java.io.*;
 import java.util.jar.*;
-import java.util.*;
-import java.net.*;
 
 File file = new File( basedir, "target/no-appendAssemblyId-no-classifier-1.jar" );
 
@@ -30,4 +27,4 @@ JarFile jarFile = new JarFile( file );
 
 JarEntry entry = jarFile.getEntry( "org/apache/maven/plugins/assembly/mojos/AbstractAssemblyMojo.class" );
 
-return entry != null;
+assert entry != null;

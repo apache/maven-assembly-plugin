@@ -17,11 +17,6 @@
  * under the License.
  */
 
-import java.io.*;
-import java.util.jar.*;
-import java.util.*;
-import java.net.*;
-
 File file = new File( basedir, "target/skipAssemblyCLIPropertySet-1.zip" );
 
-return !file.exists();
+assert !file.exists();

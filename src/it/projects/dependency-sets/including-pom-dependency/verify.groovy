@@ -17,19 +17,15 @@
  * under the License.
  */
 
-import java.io.*;
 
-boolean result = true;
 
 // verify that transitive deps of the POM dep were included.
-result = result && new File( basedir, "target/including-pom-dependency-1.0-SNAPSHOT-bin/lib/plexus-utils" ).exists();
-result = result && new File( basedir, "target/including-pom-dependency-1.0-SNAPSHOT-bin/lib/classworlds" ).exists();
-result = result && new File( basedir, "target/including-pom-dependency-1.0-SNAPSHOT-bin/lib/junit" ).exists();
+assert new File( basedir, "target/including-pom-dependency-1.0-SNAPSHOT-bin/lib/plexus-utils" ).exists();
+assert new File( basedir, "target/including-pom-dependency-1.0-SNAPSHOT-bin/lib/classworlds" ).exists();
+assert new File( basedir, "target/including-pom-dependency-1.0-SNAPSHOT-bin/lib/junit" ).exists();
 
 // verify that the POM dep was included without extracting.
-result = result && new File( basedir, "target/including-pom-dependency-1.0-SNAPSHOT-bin/lib/plexus-container-default.pom" ).exists();
+assert new File( basedir, "target/including-pom-dependency-1.0-SNAPSHOT-bin/lib/plexus-container-default.pom" ).exists();
 
 // verify that the jar associated with the POM dep wasn't included either.
-result = result && !new File( basedir, "target/including-pom-dependency-1.0-SNAPSHOT-bin/lib/plexus-container-default" ).exists();
-
-return result;
+assert !new File( basedir, "target/including-pom-dependency-1.0-SNAPSHOT-bin/lib/plexus-container-default" ).exists();

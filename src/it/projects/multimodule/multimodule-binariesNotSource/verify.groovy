@@ -17,13 +17,9 @@
  * under the License.
  */
 
-import java.io.*;
 
-boolean result = true;
 
-result = result && new File( basedir, "assembly/target/assembly-1.0-bin/lib/child1.jar" ).exists();
-result = result && new File( basedir, "assembly/target/assembly-1.0-bin/lib/child3.jar" ).exists();
+assert new File( basedir, "assembly/target/assembly-1.0-bin/lib/child1.jar" ).exists();
+assert new File( basedir, "assembly/target/assembly-1.0-bin/lib/child3.jar" ).exists();
 
-result = result && !new File( basedir, "assembly/target/assembly-1.0-bin/lib/child2.jar" ).exists();
-
-return result;
+assert !new File( basedir, "assembly/target/assembly-1.0-bin/lib/child2.jar" ).exists();
