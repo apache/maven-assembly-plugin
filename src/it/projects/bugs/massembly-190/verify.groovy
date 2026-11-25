@@ -17,9 +17,9 @@
  * under the License.
  */
 
-File child1Codec = new File( basedir, "child-3/target/child-3-1-bin/child-1/commons-codec-1.3.jar" );
-File child2Codec = new File( basedir, "child-3/target/child-3-1-bin/child-2/commons-codec-1.3.jar" );
+File child1Codec = new File(basedir, "child-3/target/child-3-1-bin/child-1/commons-codec-1.3.jar")
+File child2Codec = new File(basedir, "child-3/target/child-3-1-bin/child-2/commons-codec-1.3.jar")
 
-assert child1Codec.exists() : "commons-codec dependency in child-1 module is either missing or is the wrong version. File missing: " + child1Codec;
+assert child1Codec.exists() : "commons-codec dependency in child-1 module is either missing or is the wrong version. File missing: " + child1Codec
 
-assert child2Codec.exists() : "commons-codec dependency in child-2 module is either missing or is the wrong version. File missing: " + child2Codec;
+assert child2Codec.exists() : "commons-codec dependency in child-2 module is either missing or is the wrong version. File missing: " + child2Codec

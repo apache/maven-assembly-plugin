@@ -20,8 +20,8 @@
 import java.util.zip.ZipFile
 
 [
-        'first': 'first.txt',
-        'second': 'second.txt'
+    'first': 'first.txt',
+    'second': 'second.txt'
 ].each { id, entry ->
     File archive = new File(basedir, "target/descriptors-cli-property-1-${id}.zip")
     assert archive.isFile()

@@ -21,23 +21,21 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 
 // the unix descriptor (assembly id "src") and the crlf descriptor (assembly id "src-crlf") run in the same build
-for ( String name : [ "test.txt", "mac2win.txt" ] )
-{
-    File file = new File( basedir, "child/target/child-1-src/" + name )
+for (String name : ["test.txt", "mac2win.txt"]) {
+    File file = new File(basedir, "child/target/child-1-src/" + name)
     assert file.exists() : "Filtered file from file-set: " + file + " is missing."
 
-    String actual = new String( Files.readAllBytes( file.toPath() ), StandardCharsets.UTF_8 )
+    String actual = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8)
     assert actual == "1\nchild" :
-            "Contents of " + name + ": '" + actual + "' should contain exactly one unix newline: '\\n'."
+    "Contents of " + name + ": '" + actual + "' should contain exactly one unix newline: '\\n'."
 }
 
-for ( String name : [ "test.txt", "mac2win.txt" ] )
-{
-    File file = new File( basedir, "child/target/child-1-src-crlf/" + name )
+for (String name : ["test.txt", "mac2win.txt"]) {
+    File file = new File(basedir, "child/target/child-1-src-crlf/" + name)
     assert file.exists() : "Filtered file from file-set: " + file + " is missing."
 
-    String actual = new String( Files.readAllBytes( file.toPath() ), StandardCharsets.UTF_8 )
+    String actual = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8)
     assert actual == "1\r\nchild" :
-            "Contents of " + name + ": '" + actual + "' should contain exactly one windows newline: '\\r\\n'."
+    "Contents of " + name + ": '" + actual + "' should contain exactly one windows newline: '\\r\\n'."
 }
 return true

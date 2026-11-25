@@ -17,9 +17,9 @@
  * under the License.
  */
 
-File f = new File( basedir, "target/test-1-bin/unprefixed/maven-assembly-plugin.jar" );
-File f2 = new File( basedir, "target/test-1-bin/prefixed/maven-assembly-plugin.jar" );
+File f = new File(basedir, "target/test-1-bin/unprefixed/maven-assembly-plugin.jar")
+File f2 = new File(basedir, "target/test-1-bin/prefixed/maven-assembly-plugin.jar")
 
-assert f.exists() && f.isFile() : "File: " + f + " doesn't exist, or isn't a file.";
+assert f.exists() && f.isFile() : "File: " + f + " doesn't exist, or isn't a file."
 
-assert f2.exists() && f2.isFile() : "File: " + f2 + " doesn't exist, or isn't a file.";
+assert f2.exists() && f2.isFile() : "File: " + f2 + " doesn't exist, or isn't a file."

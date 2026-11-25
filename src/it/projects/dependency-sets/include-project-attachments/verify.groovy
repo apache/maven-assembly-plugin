@@ -17,24 +17,24 @@
  * under the License.
  */
 
-File dir = new File( basedir, "target/include-project-attachments-1.0-SNAPSHOT-bin" );
+File dir = new File(basedir, "target/include-project-attachments-1.0-SNAPSHOT-bin")
 
-System.out.println( "Checking for existence and file-ishness of: " + dir );
+System.out.println("Checking for existence and file-ishness of: " + dir)
 
-assert dir.exists() && dir.isDirectory() : "assembled directory is missing or not a directory.";
+assert dir.exists() && dir.isDirectory() : "assembled directory is missing or not a directory."
 
-File projectArtifact = new File( dir, "lib/include-project-attachments-1.0-SNAPSHOT.jar" );
+File projectArtifact = new File( dir, "lib/include-project-attachments-1.0-SNAPSHOT.jar" )
 
-System.out.println( "Looking for 'lib/include-project-attachments-1.0-SNAPSHOT.jar file in assembly." );
+System.out.println( "Looking for 'lib/include-project-attachments-1.0-SNAPSHOT.jar file in assembly." )
 
-assert projectArtifact.exists() : "project-attachments entry is missing.";
+assert projectArtifact.exists() : "project-attachments entry is missing."
 
-File attachment = new File( dir, "lib/include-project-attachments-1.0-SNAPSHOT-src.zip" );
+File attachment = new File( dir, "lib/include-project-attachments-1.0-SNAPSHOT-src.zip" )
 
-System.out.println( "Looking for 'lib/include-project-attachments-1.0-SNAPSHOT-src.zip file in assembly." );
+System.out.println( "Looking for 'lib/include-project-attachments-1.0-SNAPSHOT-src.zip file in assembly." )
 
-assert attachment.exists() : "project attachment entry is missing.";
+assert attachment.exists() : "project attachment entry is missing."
 
-System.out.println( "Looking for absence of 'lib/junit-jupiter-api.jar' jar entry." );
+System.out.println( "Looking for absence of 'lib/junit-jupiter-api.jar' jar entry." )
 
-assert !new File( dir, "lib/junit-jupiter-api-6.0.0.jar" ).exists() : "junit jar should not be present.";
+assert !new File( dir, "lib/junit-jupiter-api-6.0.0.jar" ).exists() : "junit jar should not be present."

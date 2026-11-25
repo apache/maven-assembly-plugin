@@ -19,12 +19,12 @@
 
 
 
-assert new File( basedir, "target/massembly-675-1-bin/massembly-675-1.jar" ).exists();
-assert new File( basedir, "target/massembly-675-1-bin/closure-compiler-v20131014.jar" ).exists();
+assert new File(basedir, "target/massembly-675-1-bin/massembly-675-1.jar").exists()
+assert new File(basedir, "target/massembly-675-1-bin/closure-compiler-v20131014.jar").exists()
 
 // assert that all the transitive dependencies of closure-compiler were excluded
-assert !new File( basedir, "target/massembly-675-1-bin/args4j-2.0.16.jar" ).exists();
-assert !new File( basedir, "target/massembly-675-1-bin/json-20090211.jar" ).exists();
-assert !new File( basedir, "target/massembly-675-1-bin/protobuf-java-2.4.1.jar" ).exists();
-assert !new File( basedir, "target/massembly-675-1-bin/jsr305-1.3.9.jar" ).exists();
-assert !new File( basedir, "target/massembly-675-1-bin/guava-15.0.jar" ).exists();
+assert !new File(basedir, "target/massembly-675-1-bin/args4j-2.0.16.jar").exists()
+assert !new File(basedir, "target/massembly-675-1-bin/json-20090211.jar").exists()
+assert !new File(basedir, "target/massembly-675-1-bin/protobuf-java-2.4.1.jar").exists()
+assert !new File(basedir, "target/massembly-675-1-bin/jsr305-1.3.9.jar").exists()
+assert !new File(basedir, "target/massembly-675-1-bin/guava-15.0.jar").exists()

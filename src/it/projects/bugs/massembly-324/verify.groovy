@@ -20,14 +20,28 @@
 import java.util.zip.ZipFile
 
 // MASSEMBLY-324: runtime dependencies end up in WEB-INF/lib below the base directory spring-<version>
-File zip = new File( basedir, "target/project2-0.0.1-SNAPSHOT-bin.zip" )
+File zip = new File(basedir, "target/project2-0.0.1-SNAPSHOT-bin.zip")
 assert zip.isFile() : "Missing " + zip
 def names = []
-new ZipFile( zip ).withCloseable { z -> names = Collections.list( z.entries() ).collect { it.name } }
+new ZipFile( zip ).withCloseable { z ->
+    names = Collections.list( z.entries() ).collect {
+        it.name
+    }
+}
 
 String lib = "spring-0.0.1-SNAPSHOT/WEB-INF/lib/"
-def libFiles = names.findAll { it.startsWith( lib ) && !it.endsWith( "/" ) }.collect { it.substring( lib.length() ) }
-assert libFiles.any { it ==~ /maven-shared-io-.*\.jar/ } : "maven-shared-io is missing from WEB-INF/lib: " + names
+def libFiles = names.findAll {
+    it.startsWith( lib ) && !it.endsWith( "/" )
+}.collect {
+    it.substring( lib.length() )
+}
+assert libFiles.any {
+    it ==~ /maven-shared-io-.*\.jar/
+} : "maven-shared-io is missing from WEB-INF/lib: " + names
 assert libFiles.contains( "project2-0.0.1-SNAPSHOT.jar" ) : "The project artifact is missing from WEB-INF/lib: " + names
-assert !libFiles.any { it.contains( "/" ) } : "Unexpected nested entries in WEB-INF/lib: " + libFiles
-assert names.every { it.startsWith( "spring-0.0.1-SNAPSHOT/" ) } : "Entries outside of the base directory: " + names
+assert !libFiles.any {
+    it.contains( "/" )
+} : "Unexpected nested entries in WEB-INF/lib: " + libFiles
+assert names.every {
+    it.startsWith( "spring-0.0.1-SNAPSHOT/" )
+} : "Entries outside of the base directory: " + names

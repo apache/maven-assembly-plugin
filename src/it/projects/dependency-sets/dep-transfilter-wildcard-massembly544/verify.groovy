@@ -18,15 +18,14 @@
  */
 
 
-File dir = new File( basedir, "target/dep-transfilter-wildcard-massembly544-1-bin/maven-libs" );
+File dir = new File(basedir, "target/dep-transfilter-wildcard-massembly544-1-bin/maven-libs")
 File[] files = [
-  new File( dir, "wagon-webdav-jackrabbit-1.0-beta-4.jar" ),
-  new File( dir, "xercesMinimal-1.9.6.2.jar" ),
-  new File( dir, "maven-reporting-api-2.0.4.jar" ),
-  new File( dir, "doxia-sink-api-1.0-alpha-7.jar" )
-];
+    new File(dir, "wagon-webdav-jackrabbit-1.0-beta-4.jar"),
+    new File(dir, "xercesMinimal-1.9.6.2.jar"),
+    new File(dir, "maven-reporting-api-2.0.4.jar"),
+    new File(dir, "doxia-sink-api-1.0-alpha-7.jar")
+]
 
-for( int i = 0; i<files.length; i++ )
-{
-    assert files[i].exists() : "Cannot find jar: " + files[i] + " (should be included via transitive pattern).";
+for(int i = 0; i<files.length; i++) {
+    assert files[i].exists() : "Cannot find jar: " + files[i] + " (should be included via transitive pattern)."
 }

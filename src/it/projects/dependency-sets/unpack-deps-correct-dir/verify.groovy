@@ -17,10 +17,10 @@
  * under the License.
  */
 
-import java.util.zip.*;
+import java.util.zip.*
 
-ZipFile zf = new ZipFile( new File( basedir, "target/assembly-plugin-bug-demo-1.0-SNAPSHOT-my-assembly.zip" ) );
+ZipFile zf = new ZipFile(new File(basedir, "target/assembly-plugin-bug-demo-1.0-SNAPSHOT-my-assembly.zip"))
 
-ZipEntry child1InclEntry = zf.getEntry( "assembly-plugin-bug-demo-1.0-SNAPSHOT/deps/META-INF/maven/org.apache.maven.skins/maven-default-skin/pom.xml" );
+ZipEntry child1InclEntry = zf.getEntry("assembly-plugin-bug-demo-1.0-SNAPSHOT/deps/META-INF/maven/org.apache.maven.skins/maven-default-skin/pom.xml")
 
-assert child1InclEntry != null : "Incorrect path of unpacked jar file";
+assert child1InclEntry != null : "Incorrect path of unpacked jar file"

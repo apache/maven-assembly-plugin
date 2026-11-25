@@ -17,12 +17,12 @@
  * under the License.
  */
 
-import java.util.zip.*;
+import java.util.zip.*
 
 
-File f = new File( basedir, "target/my-app-1.0-SNAPSHOT-bin.zip" );
-ZipFile zf = new ZipFile( f );
+File f = new File(basedir, "target/my-app-1.0-SNAPSHOT-bin.zip")
+ZipFile zf = new ZipFile(f)
 
-ZipEntry child1InclEntry = zf.getEntry( "my-app-1.0-SNAPSHOT/modules/junit-jupiter-api-" + scriptVarVersionJunit + ".jar" );
+ZipEntry child1InclEntry = zf.getEntry("my-app-1.0-SNAPSHOT/modules/junit-jupiter-api-" + scriptVarVersionJunit + ".jar")
 
-assert child1InclEntry != null : "Expected junit.jar!";
+assert child1InclEntry != null : "Expected junit.jar!"

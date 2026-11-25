@@ -18,6 +18,6 @@
  */
 
 // src/assemble/bin.xml is found by scanning descriptorSourceDirectory; readme.txt next to it is not a descriptor
-File dir = new File( basedir, "target/parent-1.0-bindir" )
+File dir = new File(basedir, "target/parent-1.0-bindir")
 assert dir.isDirectory() : "Assembly of the scanned descriptor is missing: " + dir
 assert new File( dir, "commons-logging.jar" ).isFile()

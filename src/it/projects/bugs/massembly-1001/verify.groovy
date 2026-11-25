@@ -25,7 +25,7 @@ assert archive.isFile() : "The assembly archive is missing: ${archive}"
 def zip = new ZipFile(archive)
 try {
     assert zip.getEntry('documentation/site-marker.txt') != null :
-            'The attached site artifact was not unpacked into the assembly.'
+    'The attached site artifact was not unpacked into the assembly.'
 } finally {
     zip.close()
 }

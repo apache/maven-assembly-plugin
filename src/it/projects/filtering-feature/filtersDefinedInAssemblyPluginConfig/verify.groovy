@@ -17,7 +17,7 @@
  * under the License.
  */
 
-File file = new File( basedir, "target/parent-1.0-filtered-assembly/file.txt");
-List lines = file.readLines( "UTF-8" );
-assert lines[0].equals( "foo" );
-assert lines[1].contains( "\\" ) : "file.txt escaped filtering";
+File file = new File(basedir, "target/parent-1.0-filtered-assembly/file.txt")
+List lines = file.readLines("UTF-8")
+assert lines[0].equals("foo")
+assert lines[1].contains("\\") : "file.txt escaped filtering"

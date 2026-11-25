@@ -17,51 +17,51 @@
  * under the License.
  */
 
-File assembly = new File( basedir, "target/assemblies/format-test-1.0" );
-assert assembly.exists();
-assert assembly.isDirectory();
-assert new File( assembly, "TODO.txt" ).exists();
+File assembly = new File(basedir, "target/assemblies/format-test-1.0")
+assert assembly.exists()
+assert assembly.isDirectory()
+assert new File(assembly, "TODO.txt").exists()
 
-assembly = new File( basedir, "target/assemblies/format-test-1.0.zip" );
-assert assembly.exists();
-assert assembly.isFile();
+assembly = new File(basedir, "target/assemblies/format-test-1.0.zip")
+assert assembly.exists()
+assert assembly.isFile()
 
-assembly = new File( basedir, "target/assemblies/format-test-1.0.tar" );
-assert assembly.exists();
-assert assembly.isFile();
+assembly = new File(basedir, "target/assemblies/format-test-1.0.tar")
+assert assembly.exists()
+assert assembly.isFile()
 
-assembly = new File( basedir, "target/assemblies/format-test-1.0.tar.gz" );
-assert assembly.exists();
-assert assembly.isFile();
+assembly = new File(basedir, "target/assemblies/format-test-1.0.tar.gz")
+assert assembly.exists()
+assert assembly.isFile()
 
-assembly = new File( basedir, "target/assemblies/format-test-1.0.tgz" );
-assert assembly.exists();
-assert assembly.isFile();
+assembly = new File(basedir, "target/assemblies/format-test-1.0.tgz")
+assert assembly.exists()
+assert assembly.isFile()
 
-assembly = new File( basedir, "target/assemblies/format-test-1.0.tar.bz2" );
-assert assembly.exists();
-assert assembly.isFile();
+assembly = new File(basedir, "target/assemblies/format-test-1.0.tar.bz2")
+assert assembly.exists()
+assert assembly.isFile()
 
-assembly = new File( basedir, "target/assemblies/format-test-1.0.tbz2" );
-assert assembly.exists();
-assert assembly.isFile();
+assembly = new File(basedir, "target/assemblies/format-test-1.0.tbz2")
+assert assembly.exists()
+assert assembly.isFile()
 
-assembly = new File( basedir, "target/assemblies/format-test-1.0.jar" );
-assert assembly.exists();
-assert assembly.isFile();
+assembly = new File(basedir, "target/assemblies/format-test-1.0.jar")
+assert assembly.exists()
+assert assembly.isFile()
 
-assembly = new File( basedir, "target/assemblies/format-test-1.0.war" );
-assert assembly.exists();
-assert assembly.isFile();
+assembly = new File(basedir, "target/assemblies/format-test-1.0.war")
+assert assembly.exists()
+assert assembly.isFile()
 
-assembly = new File( basedir, "target/assemblies/format-test-1.0.tar.snappy" );
-assert assembly.exists();
-assert assembly.isFile();
+assembly = new File(basedir, "target/assemblies/format-test-1.0.tar.snappy")
+assert assembly.exists()
+assert assembly.isFile()
 
-assembly = new File( basedir, "target/assemblies/format-test-1.0.tar.xz" );
-assert assembly.exists();
-assert assembly.isFile();
+assembly = new File(basedir, "target/assemblies/format-test-1.0.tar.xz")
+assert assembly.exists()
+assert assembly.isFile()
 
-assembly = new File( basedir, "target/assemblies/format-test-1.0.txz" );
-assert assembly.exists();
-assert assembly.isFile();
+assembly = new File(basedir, "target/assemblies/format-test-1.0.txz")
+assert assembly.exists()
+assert assembly.isFile()

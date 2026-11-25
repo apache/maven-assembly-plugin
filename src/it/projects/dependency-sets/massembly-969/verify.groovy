@@ -16,27 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-def expectedFilenames = [ "javafx-base-26.jar",
-  "javafx-controls-26-linux.jar",
-  "javafx-media-26-linux.jar",
-  "javafx-web-26.jar",
-  "javafx-base-26-linux.jar",
-  "javafx-graphics-26-linux.jar",
-  "javafx-swing-26.jar",
-  "javafx-web-26-linux.jar",
-  "javafx-controls-26.jar",
-  "javafx-media-26.jar",
-  "javafx-swing-26-linux.jar"
+def expectedFilenames = [
+    "javafx-base-26.jar",
+    "javafx-controls-26-linux.jar",
+    "javafx-media-26-linux.jar",
+    "javafx-web-26.jar",
+    "javafx-base-26-linux.jar",
+    "javafx-graphics-26-linux.jar",
+    "javafx-swing-26.jar",
+    "javafx-web-26-linux.jar",
+    "javafx-controls-26.jar",
+    "javafx-media-26.jar",
+    "javafx-swing-26-linux.jar"
 ]
 
-File assemblyBasedir = new File( basedir, "target/massembly-969-1-bin/" )
+File assemblyBasedir = new File(basedir, "target/massembly-969-1-bin/")
 
 assert assemblyBasedir.listFiles().length == expectedFilenames.size()
 
-for ( fileName in expectedFilenames )
-{
-  File file = new File( assemblyBasedir, fileName )
-  assert file.isFile() // exists and is file
+for (fileName in expectedFilenames) {
+    File file = new File(assemblyBasedir, fileName)
+    assert file.isFile() // exists and is file
 }
 
 // defined set vs listed set: same cardinality and all present: OK

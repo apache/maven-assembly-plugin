@@ -18,6 +18,6 @@
  */
 
 // ${artifact.artifactId}.${artifact.extension} drops the version from the file name
-File dir = new File( basedir, "target/parent-1.0-bindir" )
+File dir = new File(basedir, "target/parent-1.0-bindir")
 assert dir.isDirectory() : "Missing assembly directory " + dir
-assert dir.list().sort() == [ "commons-logging.jar" ] : "Entries: " + dir.list()
+assert dir.list().sort() == ["commons-logging.jar"] : "Entries: " + dir.list()

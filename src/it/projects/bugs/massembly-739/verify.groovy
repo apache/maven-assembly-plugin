@@ -21,21 +21,18 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
 import org.apache.commons.compress.archivers.zip.ZipFile
 
 // MASSEMBLY-739: directory entries of the zip got mode 000, which makes the extracted directories unusable
-File zip = new File( basedir, "target/assembly-739-bug-1.0.0-SNAPSHOT-conapp.zip" )
+File zip = new File(basedir, "target/assembly-739-bug-1.0.0-SNAPSHOT-conapp.zip")
 assert zip.isFile() : "Missing " + zip
 
 ZipFile zf = new ZipFile( zip )
-try
-{
+try {
     def dirs = zf.entries.toList().findAll { it.directory }
-    assert dirs*.name.containsAll( [ "assembly-739-bug-1.0.0-SNAPSHOT/lib/", "assembly-739-bug-1.0.0-SNAPSHOT/bin/" ] ) : "Entries: " + zf.entries.toList()*.name
-    for ( ZipArchiveEntry dir : dirs )
-    {
+    assert dirs*.name.containsAll( ["assembly-739-bug-1.0.0-SNAPSHOT/lib/", "assembly-739-bug-1.0.0-SNAPSHOT/bin/"] ) : "Entries: " + zf.entries.toList()*.name
+    for ( ZipArchiveEntry dir : dirs ) {
         // the exact bits depend on the umask of the build; the owner has to be able to enter and list the directory
         assert ( dir.unixMode & 0700 ) == 0700 : "Mode of " + dir.name + ": " + Integer.toOctalString( dir.unixMode & 0777 )
     }
 }
-finally
-{
+finally {
     zf.close()
 }

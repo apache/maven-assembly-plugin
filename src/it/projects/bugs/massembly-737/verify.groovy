@@ -20,10 +20,14 @@
 import java.util.zip.ZipFile
 
 // MASSEMBLY-737: a war assembled from the unpacked project artifact (which is a war itself) keeps WEB-INF/web.xml
-File war = new File( basedir, "target/massembly-737-0.0.1-SNAPSHOT-deployable.war" )
+File war = new File(basedir, "target/massembly-737-0.0.1-SNAPSHOT-deployable.war")
 assert war.isFile() : "Missing " + war
 def names = []
-new ZipFile( war ).withCloseable { z -> names = Collections.list( z.entries() ).collect { it.name } }
+new ZipFile( war ).withCloseable { z ->
+    names = Collections.list( z.entries() ).collect {
+        it.name
+    }
+}
 
 assert names.contains( "WEB-INF/web.xml" ) : "Entries: " + names
 assert names.contains( "META-INF/MANIFEST.MF" )

@@ -18,13 +18,14 @@
  */
 
 // dependency versions are not part of what is verified: "maven-monitor-2.2.0.jar" becomes "maven-monitor.jar"
-def normalized( File dir )
-{
-    return dir.list().collect { it.replaceAll( /-\d[\w.\-]*\.jar$/, ".jar" ) }.sort()
+def normalized(File dir) {
+    return dir.list().collect {
+        it.replaceAll(/-\d[\w.\-]*\.jar$/, ".jar")
+    }.sort()
 }
 
 // the dependencySet comes from a componentDescriptor, scope test selects the test dependency and its dependencies
-File dir = new File( basedir, "target/parent-1-bin/parent-1" )
+File dir = new File(basedir, "target/parent-1-bin/parent-1")
 assert dir.isDirectory() : "Missing assembly directory " + dir
 def names = normalized( dir )
 assert names.contains( "junit-jupiter-api.jar" ) : "Entries: " + dir.list()

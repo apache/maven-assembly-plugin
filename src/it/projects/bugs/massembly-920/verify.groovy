@@ -20,7 +20,7 @@
 
 import java.util.jar.*
 
-def jarWithDeps = new JarFile(new File( basedir, 'target/massembly-920-0.0.1-SNAPSHOT-jar.jar'))
+def jarWithDeps = new JarFile(new File(basedir, 'target/massembly-920-0.0.1-SNAPSHOT-jar.jar'))
 
 
 def entry = jarWithDeps.getEntry('META-INF/services/org/apache/camel/TypeConverterLoader')

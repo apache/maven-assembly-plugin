@@ -17,8 +17,8 @@
  * under the License.
  */
 
-import java.io.File;
+import java.io.File
 
 
-assert new File( basedir, "target/first-bin/lib/junit-jupiter-api.jar" ).exists();
-assert new File( basedir, "target/second-bin/lib/junit-jupiter-api.jar" ).exists();
+assert new File(basedir, "target/first-bin/lib/junit-jupiter-api.jar").exists()
+assert new File(basedir, "target/second-bin/lib/junit-jupiter-api.jar").exists()

@@ -18,9 +18,9 @@
  */
 
 // minimal tests; the big thing here is that ignoring permissions doesn't stop the assembly from running...
-File pom = new File( basedir, "target/parent-1-bin/parent-1/pom.xml" );
+File pom = new File(basedir, "target/parent-1-bin/parent-1/pom.xml")
 
-assert pom.exists() && pom.isFile() : "POM was not included in assembly.";
+assert pom.exists() && pom.isFile() : "POM was not included in assembly."
 
-File junitJar = new File( basedir, "target/parent-1-bin/parent-1/lib/junit-jupiter-api-" + scriptVarVersionJunit + ".jar" );
-assert junitJar.exists() || junitJar.isFile() : "JUnit jar was not included in assembly.";
+File junitJar = new File( basedir, "target/parent-1-bin/parent-1/lib/junit-jupiter-api-" + scriptVarVersionJunit + ".jar" )
+assert junitJar.exists() || junitJar.isFile() : "JUnit jar was not included in assembly."

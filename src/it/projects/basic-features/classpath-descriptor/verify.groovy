@@ -23,28 +23,28 @@ import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream
 
 // the "src" descriptorRef is built in three formats; each archive holds the project sources under test-1.0/
-def tarNames( InputStream compressed )
-{
+def tarNames(InputStream compressed) {
     def names = []
-    TarArchiveInputStream tar = new TarArchiveInputStream( compressed )
-    try
-    {
-        for ( def entry = tar.nextTarEntry; entry != null; entry = tar.nextTarEntry )
-        {
+    TarArchiveInputStream tar = new TarArchiveInputStream(compressed)
+    try {
+        for (def entry = tar.nextTarEntry; entry != null; entry = tar.nextTarEntry) {
             names << entry.name
         }
     }
-    finally
-    {
+    finally {
         tar.close()
     }
     return names
 }
 
-File zip = new File( basedir, "target/test-1.0-src.zip" )
+File zip = new File(basedir, "target/test-1.0-src.zip")
 assert zip.isFile() : "Missing " + zip
 def zipNames = []
-new ZipFile( zip ).withCloseable { z -> zipNames = Collections.list( z.entries() ).collect { it.name } }
+new ZipFile( zip ).withCloseable { z ->
+    zipNames = Collections.list( z.entries() ).collect {
+        it.name
+    }
+}
 assert zipNames.contains( "test-1.0/pom.xml" ) : "zip entries: " + zipNames
 
 File tgz = new File( basedir, "target/test-1.0-src.tar.gz" )

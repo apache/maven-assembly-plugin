@@ -17,18 +17,18 @@
  * under the License.
  */
 
-import java.util.jar.*;
+import java.util.jar.*
 
-File file = new File( basedir, "target/test-1.0-full.jar" );
+File file = new File(basedir, "target/test-1.0-full.jar")
 
-System.out.println( "file: " + file + " exists? " + file.exists() );
+System.out.println("file: " + file + " exists? " + file.exists())
 
-JarFile jarFile = new JarFile( file );
+JarFile jarFile = new JarFile(file)
 
-Manifest mf = jarFile.getManifest();
+Manifest mf = jarFile.getManifest()
 
-Attributes attrs = mf.getMainAttributes();
+Attributes attrs = mf.getMainAttributes()
 
-String classPath = (String) attrs.get( Attributes.Name.CLASS_PATH );
+String classPath = (String) attrs.get(Attributes.Name.CLASS_PATH)
 
-assert classPath.contains("plexus-utils");
+assert classPath.contains("plexus-utils")

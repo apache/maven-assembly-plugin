@@ -17,10 +17,10 @@
  * under the License.
  */
 
-import java.util.zip.*;
+import java.util.zip.*
 
-ZipFile zf = new ZipFile( new File( basedir, "target/bug-test-1.0-SNAPSHOT-deploy-zip.zip" ) );
+ZipFile zf = new ZipFile(new File(basedir, "target/bug-test-1.0-SNAPSHOT-deploy-zip.zip"))
 
-ZipEntry child1InclEntry = zf.getEntry( "bug-test-1.0-SNAPSHOT/dir2/classworlds-1.1.jar" );
+ZipEntry child1InclEntry = zf.getEntry("bug-test-1.0-SNAPSHOT/dir2/classworlds-1.1.jar")
 
-assert child1InclEntry == null : "Unexpected file in jar !";
+assert child1InclEntry == null : "Unexpected file in jar !"

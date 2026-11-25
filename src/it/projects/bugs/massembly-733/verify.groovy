@@ -17,4 +17,4 @@
  * under the License.
  */
 
-assert new File( basedir, "target/my-final-name-bin/my-final-name/root/bin.xml" ).exists();
+assert new File(basedir, "target/my-final-name-bin/my-final-name/root/bin.xml").exists()

@@ -21,10 +21,7 @@ import java.util.jar.JarEntry
 import java.util.jar.JarFile
 import java.util.jar.Attributes
 
-def expectedJarEntries = [
-        "org/apache/commons/io/IOUtils.class",
-        "test/App.class"
-]
+def expectedJarEntries = ["org/apache/commons/io/IOUtils.class", "test/App.class"]
 
 File file = new File(basedir, "target/main-class-and-dependencies-1-jar-with-dependencies.jar")
 assert file.isFile(): "jar file is missing or a directory."

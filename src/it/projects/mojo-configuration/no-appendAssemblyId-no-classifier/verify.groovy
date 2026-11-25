@@ -17,14 +17,14 @@
  * under the License.
  */
 
-import java.util.jar.*;
+import java.util.jar.*
 
-File file = new File( basedir, "target/no-appendAssemblyId-no-classifier-1.jar" );
+File file = new File(basedir, "target/no-appendAssemblyId-no-classifier-1.jar")
 
-System.out.println( "file: " + file + " exists? " + file.exists() );
+System.out.println("file: " + file + " exists? " + file.exists())
 
-JarFile jarFile = new JarFile( file );
+JarFile jarFile = new JarFile(file)
 
-JarEntry entry = jarFile.getEntry( "org/apache/maven/plugins/assembly/mojos/AbstractAssemblyMojo.class" );
+JarEntry entry = jarFile.getEntry("org/apache/maven/plugins/assembly/mojos/AbstractAssemblyMojo.class")
 
-assert entry != null;
+assert entry != null

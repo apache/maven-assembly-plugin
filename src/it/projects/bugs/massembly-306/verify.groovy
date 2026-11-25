@@ -20,10 +20,16 @@
 import java.util.zip.ZipFile
 
 // MASSEMBLY-306: log4j-api is declared as a version range with scope provided, so jar-with-dependencies leaves it out
-File jar = new File( basedir, "target/massembly-306-1-jar-with-dependencies.jar" )
+File jar = new File(basedir, "target/massembly-306-1-jar-with-dependencies.jar")
 assert jar.isFile() : "Missing " + jar
 def names = []
-new ZipFile( jar ).withCloseable { z -> names = Collections.list( z.entries() ).collect { it.name } }
+new ZipFile( jar ).withCloseable { z ->
+    names = Collections.list( z.entries() ).collect {
+        it.name
+    }
+}
 
 assert names.contains( "org/junit/jupiter/api/Test.class" ) : "The compile scope dependency is missing"
-assert !names.any { it.startsWith( "org/apache/logging/log4j/" ) } : "The provided dependency log4j-api was packed into the jar"
+assert !names.any {
+    it.startsWith( "org/apache/logging/log4j/" )
+} : "The provided dependency log4j-api was packed into the jar"

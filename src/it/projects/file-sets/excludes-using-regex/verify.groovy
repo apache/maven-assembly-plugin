@@ -17,33 +17,33 @@
  * under the License.
  */
 
-import java.util.jar.*;
+import java.util.jar.*
 
 
-File f = new File( basedir, "target/parent-1.0-src.jar" );
-assert f.exists() : "jar is missing";
+File f = new File(basedir, "target/parent-1.0-src.jar")
+assert f.exists() : "jar is missing"
 
-JarFile jf = new JarFile( f );
-JarEntry je = jf.getEntry( "parent-1.0/src/main/java/org/test/target/file.properties" );
+JarFile jf = new JarFile( f )
+JarEntry je = jf.getEntry( "parent-1.0/src/main/java/org/test/target/file.properties" )
 
-assert je != null : "sources for org.test.target package in parent project are missing from jar";
+assert je != null : "sources for org.test.target package in parent project are missing from jar"
 
-je = jf.getEntry( "parent-1.0/child/src/main/resources/target/file.txt" );
+je = jf.getEntry( "parent-1.0/child/src/main/resources/target/file.txt" )
 
-assert je != null : "target/file.txt in child resources is missing from the jar.";
+assert je != null : "target/file.txt in child resources is missing from the jar."
 
-je = jf.getEntry( "parent-1.0/target/omit.txt" );
+je = jf.getEntry( "parent-1.0/target/omit.txt" )
 
-assert je == null : "target/omit.txt in parent project was included the jar.";
+assert je == null : "target/omit.txt in parent project was included the jar."
 
-je = jf.getEntry( "parent-1.0/child/target/omit.txt" );
+je = jf.getEntry( "parent-1.0/child/target/omit.txt" )
 
-assert je == null : "target/omit.txt in child project was included the jar.";
+assert je == null : "target/omit.txt in child project was included the jar."
 
-je = jf.getEntry( "parent-1.0/target/classes/src/omit.txt" );
+je = jf.getEntry( "parent-1.0/target/classes/src/omit.txt" )
 
-assert je == null : "target/classes/src/omit.txt in parent project was included the jar.";
+assert je == null : "target/classes/src/omit.txt in parent project was included the jar."
 
-je = jf.getEntry( "parent-1.0/child/target/classes/src/omit.txt" );
+je = jf.getEntry( "parent-1.0/child/target/classes/src/omit.txt" )
 
-assert je == null : "target/classes/src/omit.txt in child project was included the jar.";
+assert je == null : "target/classes/src/omit.txt in child project was included the jar."

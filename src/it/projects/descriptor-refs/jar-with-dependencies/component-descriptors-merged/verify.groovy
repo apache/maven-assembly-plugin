@@ -17,22 +17,22 @@
  * under the License.
  */
 
-import java.util.jar.*;
+import java.util.jar.*
 
-System.out.println( "Creating JarFile java.io.File." )
-  
-File jarFile = new File( basedir, "child2/target/child2-1.0-SNAPSHOT-jar-with-dependencies.jar" )
-    
-System.out.println( "Checking for existence and file-ishness of: " + jarFile )
- 
-assert ( jarFile.isFile() ) : "jar file is missing or a directory."
-    
+System.out.println("Creating JarFile java.io.File.")
+
+File jarFile = new File(basedir, "child2/target/child2-1.0-SNAPSHOT-jar-with-dependencies.jar")
+
+System.out.println("Checking for existence and file-ishness of: " + jarFile)
+
+assert (jarFile.isFile()) : "jar file is missing or a directory."
+
 System.out.println( "Creating JarFile instance." )
-    
+
 JarFile jf = new JarFile( jarFile )
-    
+
 System.out.println( "Looking for component descriptor jar entry." )
-    
+
 JarEntry je = jf.getEntry( "META-INF/plexus/components.xml" )
 
 assert ( je != null ) : "component descriptor is missing."
@@ -43,8 +43,7 @@ ByteArrayOutputStream baos = new ByteArrayOutputStream()
 byte[] buf = new byte[16]
 int read = -1
 
-while( ( read = instream.read( buf ) ) > -1 )
-{
+while( ( read = instream.read( buf ) ) > -1 ) {
     baos.write( buf, 0, read )
 }
 

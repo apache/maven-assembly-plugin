@@ -17,8 +17,8 @@
  * under the License.
  */
 
-String osVersion = System.getProperty( "os.version" );
-File a = new File( basedir, "target/parent-1.0-bin/child/a/filtered.txt");
+String osVersion = System.getProperty("os.version")
+File a = new File(basedir, "target/parent-1.0-bin/child/a/filtered.txt")
 
-String line = a.withReader( "UTF-8" ) { it.readLine() };
-assert line.endsWith( osVersion ) : "Expected OS version: " + osVersion + "\nLine was: " + line;
+String line = a.withReader("UTF-8") { it.readLine() }
+assert line.endsWith(osVersion) : "Expected OS version: " + osVersion + "\nLine was: " + line

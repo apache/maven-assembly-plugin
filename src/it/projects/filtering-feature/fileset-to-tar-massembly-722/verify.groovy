@@ -20,23 +20,19 @@
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream
 
 // a filtered fileSet written to a tar used to crash the build (MASSEMBLY-722)
-File tarFile = new File( basedir, "target/maven-assembly-plugin-2.5-crash-0.0.1-SNAPSHOT-prod.tar" )
+File tarFile = new File(basedir, "target/maven-assembly-plugin-2.5-crash-0.0.1-SNAPSHOT-prod.tar")
 assert tarFile.isFile() : "Missing " + tarFile
 
 String content = null
 TarArchiveInputStream tar = new TarArchiveInputStream( new FileInputStream( tarFile ) )
-try
-{
-    for ( def entry = tar.nextTarEntry; entry != null; entry = tar.nextTarEntry )
-    {
-        if ( entry.name.endsWith( "/config/my.properties" ) )
-        {
+try {
+    for ( def entry = tar.nextTarEntry; entry != null; entry = tar.nextTarEntry ) {
+        if ( entry.name.endsWith( "/config/my.properties" ) ) {
             content = new String( org.apache.commons.compress.utils.IOUtils.toByteArray( tar ), "ISO-8859-1" )
         }
     }
 }
-finally
-{
+finally {
     tar.close()
 }
 assert content != null : "config/my.properties is missing from the tar"

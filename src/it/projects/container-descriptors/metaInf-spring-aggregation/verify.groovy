@@ -17,23 +17,35 @@
  * under the License.
  */
 
-import java.util.jar.*;
+import java.util.jar.*
 
-JarFile file = new JarFile( new File( basedir, "child2/target/child2-1.0-SNAPSHOT-bin.jar" ) );
-JarEntry handlerEntry = file.getEntry( "META-INF/spring.handlers" );
-assert handlerEntry != null : "Entry META-INF/spring.handlers is missing";
+JarFile file = new JarFile(new File(basedir, "child2/target/child2-1.0-SNAPSHOT-bin.jar"))
+JarEntry handlerEntry = file.getEntry("META-INF/spring.handlers")
+assert handlerEntry != null : "Entry META-INF/spring.handlers is missing"
 
-List handlers = file.getInputStream( handlerEntry ).withCloseable { it.readLines( "UTF-8" ) };
+List handlers = file.getInputStream( handlerEntry ).withCloseable {
+    it.readLines( "UTF-8" )
+}
 
-assert handlers.any { it.endsWith( "AopNamespaceHandler1" ) } : "Cannot find entry 'AopNamespaceHandler1' in: " + handlerEntry.getName();
+assert handlers.any {
+    it.endsWith( "AopNamespaceHandler1" )
+} : "Cannot find entry 'AopNamespaceHandler1' in: " + handlerEntry.getName()
 
-assert handlers.any { it.endsWith( "ContextNamespaceHandler1" ) } : "Cannot find entry 'ContextNamespaceHandler1' in: " + handlerEntry.getName();
+assert handlers.any {
+    it.endsWith( "ContextNamespaceHandler1" )
+} : "Cannot find entry 'ContextNamespaceHandler1' in: " + handlerEntry.getName()
 
-JarEntry schemaEntry = file.getEntry( "META-INF/spring.schemas" );
-assert schemaEntry != null : "Entry META-INF/spring.schemas is missing";
+JarEntry schemaEntry = file.getEntry( "META-INF/spring.schemas" )
+assert schemaEntry != null : "Entry META-INF/spring.schemas is missing"
 
-List schemas = file.getInputStream( schemaEntry ).withCloseable { it.readLines( "UTF-8" ) };
+List schemas = file.getInputStream( schemaEntry ).withCloseable {
+    it.readLines( "UTF-8" )
+}
 
-assert schemas.any { it.endsWith( "spring-aop-3.0.xsd" ) } : "Cannot find entry 'spring-aop-3.0.xsd' in: " + schemaEntry.getName();
+assert schemas.any {
+    it.endsWith( "spring-aop-3.0.xsd" )
+} : "Cannot find entry 'spring-aop-3.0.xsd' in: " + schemaEntry.getName()
 
-assert schemas.any { it.endsWith( "spring-aop-4.0.xsd" ) } : "Cannot find entry 'spring-aop-4.0.xsd' in: " + schemaEntry.getName();
+assert schemas.any {
+    it.endsWith( "spring-aop-4.0.xsd" )
+} : "Cannot find entry 'spring-aop-4.0.xsd' in: " + schemaEntry.getName()

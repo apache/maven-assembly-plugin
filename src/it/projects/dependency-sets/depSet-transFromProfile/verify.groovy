@@ -17,4 +17,4 @@
  * under the License.
  */
 
-return new java.io.File( basedir, "child4/target/child4-1.0-SNAPSHOT-bin/child3-1.0-SNAPSHOT.jar" ).exists();
+return new java.io.File(basedir, "child4/target/child4-1.0-SNAPSHOT-bin/child3-1.0-SNAPSHOT.jar").exists()

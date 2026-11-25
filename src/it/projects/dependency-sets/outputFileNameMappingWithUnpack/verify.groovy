@@ -18,10 +18,10 @@
  */
 
 // verify that the ear is created
-File dirWithMapping = new File( basedir, "target/project-1-bin/some_directory/junit.jar/" );
+File dirWithMapping = new File(basedir, "target/project-1-bin/some_directory/junit.jar/")
 
-assert !dirWithMapping.exists() : "<outputFileNameMapping> should NOT be used when unpack == true.";
+assert !dirWithMapping.exists() : "<outputFileNameMapping> should NOT be used when unpack == true."
 
-File dir = new File( basedir, "target/project-1-bin/some_directory/junit/framework/TestCase.class" );
+File dir = new File( basedir, "target/project-1-bin/some_directory/junit/framework/TestCase.class" )
 
-assert dir.exists() : "Expected unpacked class does not exist in the appropriate outputDirectory within the assembly.";
+assert dir.exists() : "Expected unpacked class does not exist in the appropriate outputDirectory within the assembly."

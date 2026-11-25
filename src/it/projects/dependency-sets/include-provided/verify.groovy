@@ -17,25 +17,25 @@
  * under the License.
  */
 
-import java.util.jar.*;
+import java.util.jar.*
 
 
-System.out.println( "Creating JarFile java.io.File." );
+System.out.println("Creating JarFile java.io.File.")
 
-File jarFile = new File( basedir, "child2/target/child2-1.0-SNAPSHOT-bin.jar" );
+File jarFile = new File(basedir, "child2/target/child2-1.0-SNAPSHOT-bin.jar")
 
-System.out.println( "Checking for existence and file-ishness of: " + jarFile );
+System.out.println("Checking for existence and file-ishness of: " + jarFile)
 
-assert jarFile.exists() && !jarFile.isDirectory() : "jar file is missing or a directory.";
+assert jarFile.exists() && !jarFile.isDirectory() : "jar file is missing or a directory."
 
-System.out.println( "Creating JarFile instance." );
+System.out.println( "Creating JarFile instance." )
 
-JarFile jf = new JarFile( jarFile );
+JarFile jf = new JarFile( jarFile )
 
-System.out.println( "Looking for 'lib/child1.jar' jar entry." );
+System.out.println( "Looking for 'lib/child1.jar' jar entry." )
 
-assert jf.getEntry( "lib/child1.jar" ) != null : "child1 entry is missing.";
+assert jf.getEntry( "lib/child1.jar" ) != null : "child1 entry is missing."
 
-System.out.println( "Looking for absence of 'lib/junit-jupiter-api.jar' jar entry." );
+System.out.println( "Looking for absence of 'lib/junit-jupiter-api.jar' jar entry." )
 
-assert jf.getEntry( "lib/junit-jupiter-api.jar" ) == null : "junit jar should not be present.";
+assert jf.getEntry( "lib/junit-jupiter-api.jar" ) == null : "junit jar should not be present."

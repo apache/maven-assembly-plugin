@@ -17,22 +17,22 @@
  * under the License.
  */
 
-import java.util.zip.*;
+import java.util.zip.*
 
-ZipFile zf = new ZipFile( new File( basedir, "assembly/target/assembly-1-bin.zip" ) );
+ZipFile zf = new ZipFile(new File(basedir, "assembly/target/assembly-1-bin.zip"))
 
-ZipEntry child1InclEntry = zf.getEntry( "child1/org/test/child1/App2.class" );
+ZipEntry child1InclEntry = zf.getEntry("child1/org/test/child1/App2.class")
 
-assert child1InclEntry != null : "Included file from child1 not found.";
+assert child1InclEntry != null : "Included file from child1 not found."
 
-ZipEntry child1ExclEntry = zf.getEntry( "child1/org/test/child1/App.class" );
+ZipEntry child1ExclEntry = zf.getEntry( "child1/org/test/child1/App.class" )
 
-assert child1ExclEntry == null : "Non-included file from child1 should not be present, but was found.";
+assert child1ExclEntry == null : "Non-included file from child1 should not be present, but was found."
 
-ZipEntry child2InclEntry = zf.getEntry( "child2/org/test/child2/App.class" );
+ZipEntry child2InclEntry = zf.getEntry( "child2/org/test/child2/App.class" )
 
-assert child2InclEntry != null : "Included file from child2 not found.";
+assert child2InclEntry != null : "Included file from child2 not found."
 
-ZipEntry child2ExclEntry = zf.getEntry( "child2/org/test/other/App.class" );
+ZipEntry child2ExclEntry = zf.getEntry( "child2/org/test/other/App.class" )
 
-assert child2ExclEntry == null : "Non-included file from child2 should not be present, but was found.";
+assert child2ExclEntry == null : "Non-included file from child2 should not be present, but was found."

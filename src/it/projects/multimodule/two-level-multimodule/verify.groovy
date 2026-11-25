@@ -17,5 +17,5 @@
  * under the License.
  */
 
-assert new File( basedir, "assembly/target/assembly-1.0-SNAPSHOT-bin/modules/child-level1-project1-1.0-SNAPSHOT.jar" ).exists()
-assert new File( basedir, "assembly/target/assembly-1.0-SNAPSHOT-bin/modules/child-level2-project1-1.0-SNAPSHOT.jar" ).exists()
+assert new File(basedir, "assembly/target/assembly-1.0-SNAPSHOT-bin/modules/child-level1-project1-1.0-SNAPSHOT.jar").exists()
+assert new File(basedir, "assembly/target/assembly-1.0-SNAPSHOT-bin/modules/child-level2-project1-1.0-SNAPSHOT.jar").exists()
