@@ -38,8 +38,10 @@ import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugins.assembly.utils.AssemblyFileUtils;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
+import org.codehaus.plexus.archiver.ResourceIterator;
 import org.codehaus.plexus.archiver.UnArchiver;
 import org.codehaus.plexus.components.io.fileselectors.FileInfo;
+import org.codehaus.plexus.components.io.resources.PlexusIoResource;
 
 /**
  * <code>file-aggregator</code>: Generic aggregating handler, configured with filePattern and outputPath.
@@ -51,7 +53,7 @@ public class SimpleAggregatingDescriptorHandler implements ContainerDescriptorHa
     @SuppressWarnings("FieldCanBeLocal")
     private final String commentChars = "#";
 
-    private final StringWriter aggregateWriter = new StringWriter();
+    private StringWriter aggregateWriter = new StringWriter();
 
     private final List<String> filenames = new ArrayList<>();
 
@@ -63,27 +65,44 @@ public class SimpleAggregatingDescriptorHandler implements ContainerDescriptorHa
 
     private boolean overrideFilterAction;
 
+    private boolean collecting;
+
     @Override
     public void finalizeArchiveCreation(final Archiver archiver) {
         checkConfig();
 
-        if (outputPath.endsWith("/")) {
-            throw new ArchiverException("Cannot write aggregated properties to a directory. "
-                    + "You must specify a file name in the outputPath configuration for this"
-                    + " handler. (handler: " + getClass().getName());
+        try {
+            // Finalizers run before the archiver visits its resources, so iterate them here to make
+            // isSelected() collect the matching files before the aggregate is written.
+            collecting = true;
+            try {
+                for (final ResourceIterator it = archiver.getResources(); it.hasNext(); ) {
+                    it.next();
+                }
+            } finally {
+                collecting = false;
+            }
+
+            if (outputPath.endsWith("/")) {
+                throw new ArchiverException("Cannot write aggregated properties to a directory. "
+                        + "You must specify a file name in the outputPath configuration for this"
+                        + " handler. (handler: " + getClass().getName());
+            }
+
+            if (outputPath.startsWith("/")) {
+                outputPath = outputPath.substring(1);
+            }
+
+            final File temp = writePropertiesFile();
+
+            overrideFilterAction = true;
+            archiver.addFile(temp, outputPath);
+        } finally {
+            overrideFilterAction = false;
+            // this component is shared between assemblies and formats, so do not carry content over
+            filenames.clear();
+            aggregateWriter = new StringWriter();
         }
-
-        if (outputPath.startsWith("/")) {
-            outputPath = outputPath.substring(1);
-        }
-
-        final File temp = writePropertiesFile();
-
-        overrideFilterAction = true;
-
-        archiver.addFile(temp, outputPath);
-
-        overrideFilterAction = false;
     }
 
     private File writePropertiesFile() {
@@ -139,8 +158,13 @@ public class SimpleAggregatingDescriptorHandler implements ContainerDescriptorHa
         String name = AssemblyFileUtils.normalizeFileInfo(fileInfo);
 
         if (fileInfo.isFile() && name.matches(filePattern)) {
-            readProperties(fileInfo);
-            filenames.add(name);
+            // Files that reach the archiver are visited by several walks (other finalizers, execute()).
+            // Read them only during our own walk. Files filtered when they are added, which are plain
+            // FileInfo objects rather than archiver resources, are read at that time.
+            if (collecting || !(fileInfo instanceof PlexusIoResource)) {
+                readProperties(fileInfo);
+                filenames.add(name);
+            }
 
             return false;
         }

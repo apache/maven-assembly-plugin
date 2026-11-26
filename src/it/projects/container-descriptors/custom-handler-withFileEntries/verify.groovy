@@ -17,13 +17,13 @@
  * under the License.
  */
 
-// The aggregated content of file.txt is not asserted: the aggregate is written before the fileSet entries are
-// added, see https://github.com/apache/maven-assembly-plugin/issues/1024
 // "bin" lists both files as <file> entries, "bin-mixed" lists one as <file> and the other as <fileSet>
 for (String assemblyId : ["bin", "bin-mixed"]) {
     File a = new File(basedir, "assembly/target/assembly-1-" + assemblyId + "/file.txt")
     File b = new File(basedir, "assembly/target/assembly-1-" + assemblyId + "/b/file.txt")
     assert a.exists() : "File: " + a + " should have been generated, but was not."
+    List<String> lines = a.readLines('UTF-8')
+    assert lines.count("file A") == 1 && lines.count("file B") == 1 : "File: " + a + " should contain lines file A and file B once each, but contained:\n" + lines
     assert !b.exists() : "File: " + b + " should not exist, but does."
 }
 return true
