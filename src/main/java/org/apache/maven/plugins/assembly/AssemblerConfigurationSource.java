@@ -144,6 +144,11 @@ public interface AssemblerConfigurationSource {
     boolean isIgnoreMissingDescriptor();
 
     /**
+     * @return Ignore empty assemblies instead of failing the build.
+     */
+    boolean isIgnoreEmptyAssemblies();
+
+    /**
      * @return The maven session.
      */
     MavenSession getMavenSession();
