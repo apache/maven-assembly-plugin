@@ -42,6 +42,7 @@ import org.apache.maven.plugins.assembly.io.AssemblyReader;
 import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.plugins.assembly.utils.AssemblyFormatUtils;
 import org.apache.maven.plugins.assembly.utils.InterpolationConstants;
+import org.apache.maven.plugins.assembly.utils.MavenBuildTimestamp;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectHelper;
 import org.apache.maven.shared.filtering.MavenReaderFilter;
@@ -699,7 +700,32 @@ public abstract class AbstractAssemblyMojo extends AbstractMojo implements Assem
     }
 
     public Properties getAdditionalProperties() {
-        return additionalProperties;
+        Properties properties = new Properties();
+        properties.putAll(getSpecialFilteringProperties());
+        if (additionalProperties != null) {
+            properties.putAll(additionalProperties);
+        }
+        return properties;
+    }
+
+    /**
+     * Properties that are available during filtering elsewhere in Maven (e.g. {@code ${maven.build.timestamp}} and
+     * {@code ${project.baseUri}} in resource filtering, see MRESOURCES-99) but aren't resolvable by the filtering
+     * component this mojo uses on its own, since they're injected by Maven core's model interpolation rather than
+     * being real System or project properties.
+     *
+     * @return the computed properties, as a base to be overridden by user-configured {@link #additionalProperties}.
+     */
+    private Properties getSpecialFilteringProperties() {
+        Properties properties = new Properties();
+        properties.put("maven.build.timestamp", new MavenBuildTimestamp().formattedTimestamp());
+        final MavenProject project = getProject();
+        if (project != null && project.getBasedir() != null) {
+            properties.put(
+                    "project.baseUri",
+                    project.getBasedir().getAbsoluteFile().toURI().toString());
+        }
+        return properties;
     }
 
     @Override
