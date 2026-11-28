@@ -18,8 +18,10 @@
  */
 package org.apache.maven.plugins.assembly.archive.archiver;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.io.IOUtils;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.FileSet;
 import org.codehaus.plexus.archiver.diags.TrackingArchiver;
@@ -35,6 +38,8 @@ import org.codehaus.plexus.archiver.util.DefaultFileSet;
 import org.codehaus.plexus.components.io.fileselectors.FileInfo;
 import org.codehaus.plexus.components.io.fileselectors.FileSelector;
 import org.codehaus.plexus.components.io.functions.InputStreamTransformer;
+import org.codehaus.plexus.components.io.resources.PlexusIoResource;
+import org.codehaus.plexus.components.io.resources.ResourceFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -162,6 +167,29 @@ class AssemblyProxyArchiverTest {
     }
 
     @Test
+    void addResourceShouldShowTheResourceContentToSelectors() throws Exception {
+        final Archiver delegate = mock(Archiver.class);
+
+        final ContentSelector selector = new ContentSelector();
+        final List<FileSelector> selectors = new ArrayList<>();
+        selectors.add(selector);
+
+        final AssemblyProxyArchiver archiver =
+                new AssemblyProxyArchiver("", delegate, null, selectors, null, new File("."));
+
+        final File inputFile = File.createTempFile("junit", null, temporaryFolder);
+        Files.write(inputFile.toPath(), "raw".getBytes(StandardCharsets.UTF_8));
+        // like a filtered <file> entry: the file holds the raw content, the resource the filtered one
+        final PlexusIoResource resource = ResourceFactory.createResource(
+                inputFile, (res, in) -> new ByteArrayInputStream("filtered".getBytes(StandardCharsets.UTF_8)));
+
+        archiver.addResource(resource, "file.txt", 0644);
+
+        assertEquals("filtered", selector.content);
+        verify(delegate).addResource(resource, "file.txt", 0644);
+    }
+
+    @Test
     void assemblyWorkDir() {
         final Archiver delegate = mock(Archiver.class);
         final List<FileSelector> selectors = new ArrayList<>();
@@ -192,6 +220,19 @@ class AssemblyProxyArchiverTest {
 
         assertEquals("prefix/", delFileSet.getValue().getPrefix());
         assertEquals(delFileSet.getValue().getStreamTransformer(), fileSet.getStreamTransformer());
+    }
+
+    private static final class ContentSelector implements FileSelector {
+
+        private String content;
+
+        @Override
+        public boolean isSelected(final FileInfo fileInfo) throws IOException {
+            try (InputStream in = fileInfo.getContents()) {
+                content = IOUtils.toString(in, StandardCharsets.UTF_8);
+            }
+            return true;
+        }
     }
 
     private static final class CounterSelector implements FileSelector {

@@ -26,4 +26,12 @@ for (String assemblyId : ["bin", "bin-mixed"]) {
     assert lines.count("file A") == 1 && lines.count("file B") == 1 : "File: " + a + " should contain lines file A and file B once each, but contained:\n" + lines
     assert !b.exists() : "File: " + b + " should not exist, but does."
 }
+
+// "bin-filtered" lists a filtered <file> entry, so the aggregate has to get its filtered content
+File filtered = new File(basedir, "assembly/target/assembly-1-bin-filtered/file.txt")
+File c = new File(basedir, "assembly/target/assembly-1-bin-filtered/c/file.txt")
+assert filtered.exists() : "File: " + filtered + " should have been generated, but was not."
+List<String> filteredLines = filtered.readLines('UTF-8')
+assert filteredLines.count("file A") == 1 && filteredLines.count("file C 1") == 1 : "File: " + filtered + " should contain lines file A and file C 1 once each, but contained:\n" + filteredLines
+assert !c.exists() : "File: " + c + " should not exist, but does."
 return true
