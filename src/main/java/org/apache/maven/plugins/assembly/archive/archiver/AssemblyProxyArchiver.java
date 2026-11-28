@@ -644,9 +644,18 @@ public class AssemblyProxyArchiver implements Archiver {
     }
 
     private boolean acceptFile(final File inputFile) {
+        return acceptFile(inputFile, null);
+    }
+
+    /**
+     * @param content the resource to read the contents from, or {@code null} to read them from {@code inputFile}.
+     *            A filtered {@code <file>} entry passes its resource here, so that the selectors see the
+     *            filtered content that goes into the archive.
+     */
+    private boolean acceptFile(final File inputFile, final PlexusIoResource content) {
         if (!Boolean.TRUE.equals(inPublicApi.get())) {
             if (selectors != null) {
-                final FileInfo fileInfo = new DefaultFileInfo(inputFile);
+                final FileInfo fileInfo = new DefaultFileInfo(inputFile, content);
 
                 for (final FileSelector selector : selectors) {
                     try {
@@ -670,7 +679,7 @@ public class AssemblyProxyArchiver implements Archiver {
     @Override
     public void addResource(final PlexusIoResource resource, final String destFileName, final int permissions) {
         File file = new File(resource.getName()); // zOMG.
-        if (acceptFile(file)) {
+        if (acceptFile(file, resource)) {
 
             inPublicApi.set(Boolean.TRUE);
             try {
@@ -819,12 +828,18 @@ public class AssemblyProxyArchiver implements Archiver {
 
         private final File inputFile;
 
-        DefaultFileInfo(final File inputFile) {
+        private final PlexusIoResource content;
+
+        DefaultFileInfo(final File inputFile, final PlexusIoResource content) {
             this.inputFile = inputFile;
+            this.content = content;
         }
 
         @Override
         public InputStream getContents() throws IOException {
+            if (content != null) {
+                return content.getContents();
+            }
             return Files.newInputStream(inputFile.toPath());
         }
 

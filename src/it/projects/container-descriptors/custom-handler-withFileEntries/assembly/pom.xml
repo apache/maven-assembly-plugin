@@ -48,6 +48,7 @@ under the License.
           <descriptors>
             <descriptor>src/assemble/bin.xml</descriptor>
             <descriptor>src/assemble/bin-mixed.xml</descriptor>
+            <descriptor>src/assemble/bin-filtered.xml</descriptor>
           </descriptors>
         </configuration>
         
